@@ -11,21 +11,16 @@ import {
   Dimensions,
   Animated,
 } from 'react-native'
-import Sound from 'react-native-sound'
 import Slider from 'react-native-slider'
-
+import {
+  Player,
+  MediaStates,
+} from 'react-native-audio-toolkit'
 
 const { width } = Dimensions.get('window')
 let margin = Number((width*0.04).toFixed())
 
-let odio = new Sound('https://firebasestorage.googleapis.com/v0/b/talktek-4edac.appspot.com/o/music.mp3?alt=media&token=04465df0-ef82-4a43-ae72-e297a3974e44','',
-  (error) => {
-    if(error) {
-      console.log("fail to load the sound", error);
-    }
-    console.log('duration in seconds: ' + odio.getDuration() + 'number of channels: ' + odio.getNumberOfChannels());
-  }
-)
+const audioUrl = 'https://firebasestorage.googleapis.com/v0/b/talktek-4edac.appspot.com/o/music.mp3?alt=media&token=04465df0-ef82-4a43-ae72-e297a3974e44'
 
 let icons = {
   'play': require('../../assets/img/play@2x.png'),
@@ -36,27 +31,56 @@ export default class GuideList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      startedTime: 0,
-      isPlayable: true,
-      playing: false,
-      active: false,
+      progress: 0,
+      playing: false, // audio playing or not for Icon
+      active: false, // accordion
       animationHeight: new Animated.Value(),
+      duration: 0,
     }
   }
 
-  _onPress() {
-    if(!this.state.playing) {
-      this.setState({playing: true})
-      odio.play((success) => {
-        if(success) {
-          console.log("finishing playgin");
-        } else {
-          console.log("play fail");
+  componentWillMount() {
+    this.player = null
+    this._createPlayer()
+  }
+  
+  // componentDidUpdate() {
+  //   if(this.state.progress == 100) {
+  //     console.log("dkjflkajfasklfajsdklfjklsafjlk");
+  //     this.setState({
+  //       playing: false
+  //     })
+  //   }
+  // }
+
+  _createPlayer() {
+    if(this.player) {
+      this.player.destroy()
+    }
+
+    this.player = new Player(audioUrl)
+      .prepare((err) => {
+        if(err) {
+          console.log("error at _createPlayer()")
+          console.log('err is', err);
         }
       })
+  }
+
+  _onPress() {
+    console.log('playing ?', this.player.isPlaying);
+    console.log('this.state.playing', this.state.playing);
+    if(this.state.playing) {
+      this.setState({ playing: false })
+      this.player.pause()
     } else {
-      this.setState({playing: false})
-      odio.pause()
+      this.setState({ playing: true })
+      this.player.play(() => {
+        this.setState({
+          duration: this.player.duration
+        })
+      })
+      console.log('duration isis', this.state.duration);
     }
   }
 
@@ -68,7 +92,6 @@ export default class GuideList extends Component {
 
   _setMinHeight(event) {
     this.state.animationHeight.setValue(event.nativeEvent.layout.height)
-    console.log('minHeight',event.nativeEvent.layout.height);
     this.setState({
       minHeight: event.nativeEvent.layout.height,
     })
@@ -93,17 +116,43 @@ export default class GuideList extends Component {
     ).start()
   }
 
-  _setCurrentTime(value) {
-    let duration = odio.getDuration()
-    let currentTime = Number((duration*value).toFixed(6))
-    odio.setCurrentTime(currentTime)
+  _seek(value) {
+    if(this.state.playing) {
+      if (this.state.duration) {
+        let seekTime = (value / 100) * this.state.duration
+        this.player.seek(seekTime, () => {
+          this.setState({
+            progress: value
+          })
+        })
+      }
+    }
   }
 
   render() {
-    let icon = icons['play']
+    let icon
     if(this.state.playing) {
       icon  = icons['stop']
+        if (this.state.duration) {
+          setTimeout(() => {
+            if(this.state.progress<=101) {
+            this.setState({
+              progress: this.state.progress + 1
+            })} else {
+              this.player.stop()
+              this.setState({
+                playing: false,
+                progress: 0,
+              })
+            }
+          }, this.state.duration / 97)
+        }
+    } else {
+      icon = icons['play']
     }
+
+    console.log('progress', this.state.progress);
+
     return (
       <View style={styles.container}>
         <Text style={styles.caption}>講單</Text>
@@ -130,11 +179,14 @@ export default class GuideList extends Component {
 
             <View onLayout={this._setMaxHeight.bind(this)}>
               <Slider
-                value={this.state.startedTime}
-                onValueChange={(value) => this._setCurrentTime.bind(this, value)()}
+                value={this.state.progress}
+                step={1}
+                maximumValue={103}
+                onSlidingComplete={(value) => this._seek.bind(this, value)()}
                 trackStyle={styles.track}
                 thumbStyle={styles.trackThumb}
                 minimumTrackTintColor='rgb(31, 191, 179)'
+                thumbTouchSize={{width:20,height:20}}
               />
               <TouchableHighlight onPress={this._onPress.bind(this)}
                                   underlayColor="#fff"
@@ -217,6 +269,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderColor: 'rgb(31, 191, 179)',
     borderWidth: 2,
+    margin: 0,
+    padding: 0,
   },
   pp: {
     flexDirection: 'row',
