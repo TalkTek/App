@@ -36,6 +36,7 @@ export default class GuideList extends Component {
       active: false, // accordion
       animationHeight: new Animated.Value(),
       duration: 0,
+      sliderThumbStatus: true , // true mean disable
     }
   }
 
@@ -44,15 +45,6 @@ export default class GuideList extends Component {
     this._createPlayer()
   }
   
-  // componentDidUpdate() {
-  //   if(this.state.progress == 100) {
-  //     console.log("dkjflkajfasklfajsdklfjklsafjlk");
-  //     this.setState({
-  //       playing: false
-  //     })
-  //   }
-  // }
-
   _createPlayer() {
     if(this.player) {
       this.player.destroy()
@@ -68,19 +60,19 @@ export default class GuideList extends Component {
   }
 
   _onPress() {
-    console.log('playing ?', this.player.isPlaying);
-    console.log('this.state.playing', this.state.playing);
     if(this.state.playing) {
-      this.setState({ playing: false })
+      this.setState({
+        playing: false,
+      })
       this.player.pause()
     } else {
-      this.setState({ playing: true })
       this.player.play(() => {
         this.setState({
-          duration: this.player.duration
+          duration: this.player.duration,
+          playing: true,
+          sliderThumbStatus: false,
         })
       })
-      console.log('duration isis', this.state.duration);
     }
   }
 
@@ -184,9 +176,10 @@ export default class GuideList extends Component {
                 maximumValue={103}
                 onSlidingComplete={(value) => this._seek.bind(this, value)()}
                 trackStyle={styles.track}
-                thumbStyle={styles.trackThumb}
+                thumbStyle={this.state.sliderThumbStatus? styles.trackThumbDisable : styles.trackThumb}
                 minimumTrackTintColor='rgb(31, 191, 179)'
                 thumbTouchSize={{width:20,height:20}}
+                disabled={this.state.sliderThumbStatus}
               />
               <TouchableHighlight onPress={this._onPress.bind(this)}
                                   underlayColor="#fff"
@@ -261,6 +254,15 @@ const styles = StyleSheet.create({
     marginLeft: margin*0.35,
     marginRight: margin*0.35,
   },
+  trackThumbDisable: {
+    top: 22,
+    width: 20,
+    height: 20,
+    borderRadius: 30 / 2,
+    backgroundColor: 'white',
+    borderColor: 'rgb(238, 238, 238)',
+    borderWidth: 2,
+  },
   trackThumb: {
     top: 22,
     width: 20,
@@ -269,8 +271,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderColor: 'rgb(31, 191, 179)',
     borderWidth: 2,
-    margin: 0,
-    padding: 0,
   },
   pp: {
     flexDirection: 'row',
