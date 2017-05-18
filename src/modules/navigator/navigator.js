@@ -5,14 +5,13 @@ import TalkContentScreen  from '../../screens/talkContent'
 // import LoginScreen from '../../screens/auth/Login'
 import MainScreen from '../../screens/Main'
 
-
 export const AppNavigator = StackNavigator({
   TalkList: {screen: TalkListScreen,},
   TalkContent: { screen: TalkContentScreen },
   // Login: { screen: LoginScreen },
   Main: { screen: MainScreen },
 },{
-  initialRouteName: 'TalkContent',
+  initialRouteName: 'Main',
   navigationOptions: {
     title: 'talk',
     headerStyle: {

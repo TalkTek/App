@@ -1,12 +1,12 @@
-/**
- * Created by xiezirui on 2017/5/16.
- */
 // @flow
+'use strict'
+
 import React, { Component } from 'react'
 import { Provider, connect } from 'react-redux';
 import createStore from './lib/configureStore'
-import { StackNavigator, addNavigationHelpers } from 'react-navigation';
+import { addNavigationHelpers } from 'react-navigation';
 import AppNav from './modules/navigator/navigator'
+import CodePush from 'react-native-code-push'
 
 @connect(state => ({
   nav: state.nav
@@ -26,7 +26,12 @@ class AppWithNavState extends Component {
   }
 }
 
-export default class App extends React.Component {
+class App extends React.Component {
+
+  componentDidMount() {
+    CodePush.sync({installMode: CodePush.InstallMode.ON_NEXT_RESTART})
+  }
+
   render () {
     const store = createStore()
     return (
@@ -36,3 +41,11 @@ export default class App extends React.Component {
     )
   }
 }
+
+let codePushOptions = {
+  checkFrequency: CodePush.CheckFrequency.ON_APP_START
+}
+
+App = CodePush(codePushOptions)(App)
+
+export default App

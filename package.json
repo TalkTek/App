@@ -16,6 +16,7 @@
 		"react": "16.0.0-alpha.6",
 		"react-native": "0.44.0",
 		"react-native-audio-toolkit": "^1.0.5",
+		"react-native-code-push": "latest",
 		"react-native-easy-grid": "^0.1.8",
 		"react-native-slider": "^0.9.1",
 		"react-native-sound": "git+https://github.com/zmxv/react-native-sound.git#ba1b244",
