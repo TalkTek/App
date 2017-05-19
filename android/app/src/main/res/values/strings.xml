@@ -1,4 +1,5 @@
 <resources>
     <string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey"></string>
     <string name="app_name">talkTekApp</string>
+    <string name="facebook_app_id">635201980018279</string>
 </resources>
