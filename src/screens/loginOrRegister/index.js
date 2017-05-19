@@ -7,6 +7,7 @@ import {
   Image,
   TouchableHighlight,
   TouchableOpacity,
+  Dimensions
 } from 'react-native'
 import {
   Container,
@@ -19,6 +20,8 @@ import {
   Item,
 } from 'native-base'
 import FBSDK, { LoginManager } from 'react-native-fbsdk'
+
+const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
 
 
 export default class Login extends Component {
@@ -46,22 +49,24 @@ export default class Login extends Component {
         <Content>
           <View style={styles.bg}>
             <Image source={require('../../assets/img/logo.png')} style={styles.logo} />
-            <View style={styles.inputs}>
-              <Input placeholder="輸入Email" />
-              <Input placeholder="輸入密碼" />
-            </View>
-            <Button>
+            <Form style={styles.form}>
+              <Item style={styles.item}>
+                <Input placeholder="輸入Email"/>
+              </Item>
+              <Item style={styles.item}>
+                <Input placeholder="輸入密碼" />
+              </Item>
+            </Form>
+            <Button style={{alignSelf: 'auto'}}>
               <Text>
                 登入
               </Text>
             </Button>
-
             <TouchableOpacity onPress={this._fbAuth}>
-                <Text>
-                  Facebook
-                </Text>
+              <Text>
+                Facebook
+              </Text>
             </TouchableOpacity>
-
             <Icon.Button name="google" backgroundColor="rgb(221, 77, 64)">
               Google
             </Icon.Button>
@@ -80,10 +85,28 @@ const styles = {
     backgroundColor: 'rgb(255, 255, 255)',
   },
   bg: {
-
+    flex: 1,
+    height: screenHeight,
+    alignItems: 'center'
+  },
+  form: {
+    alignSelf: 'stretch',
+    borderWidth: 1,
+    borderColor:'#000033',
+    height:200,
+  },
+  item: {
+    borderWidth: 0,
+    borderColor:'red',
+    alignSelf: 'auto'
   },
   inputs: {
-    flexDirection: 'column'
+    borderWidth: 1,
+    borderColor:'green',
+  },
+  logo: {
+    borderWidth: 1,
+    borderColor:'#000033'
   }
 }
 
