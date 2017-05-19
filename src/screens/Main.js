@@ -24,7 +24,7 @@ export default class Main extends Component {
           NavigationActions.navigate({routeName: 'TalkList'})
         ]
       })
-    ), 3000)
+    ), 1500)
   }
 
   render() {

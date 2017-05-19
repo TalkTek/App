@@ -92,5 +92,27 @@
 	<false/>
 	<key>CodePushDeploymentKey</key>
 	<string>Fa0Ug7tNp1xFH9EShk5GXlBEIXCE4JbRhcGg7</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb635201980018279</string>
+			</array>
+		</dict>
+	</array>
+	<key>FacebookAppID</key>
+	<string>635201980018279</string>
+	<key>FacebookDisplayName</key>
+	<string>talkTek</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
+	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>{human-readable reason for photo access}</string>
 </dict>
 </plist>
