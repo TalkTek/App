@@ -51,14 +51,14 @@ export default class Login extends Component {
             <Image source={require('../../assets/img/logo.png')} style={styles.logo} />
             <Form style={styles.form}>
               <Item style={styles.item}>
-                <Input placeholder="輸入Email"/>
+                <Input placeholder="輸入Email" style={styles.input}/>
               </Item>
-              <Item style={styles.item}>
-                <Input placeholder="輸入密碼" />
+              <Item style={{...styles.item, borderColor: 'transparent'}}>
+                <Input placeholder="輸入密碼" maxLength={1} style={styles.input}/>
               </Item>
             </Form>
-            <Button style={{alignSelf: 'auto'}}>
-              <Text>
+            <Button style={{...styles.baseButton, ...styles.loginButton}}>
+              <Text style={styles.loginText}>
                 登入
               </Text>
             </Button>
@@ -89,25 +89,46 @@ const styles = {
     height: screenHeight,
     alignItems: 'center'
   },
+  logo: {
+    marginTop: 68,
+    height: 150,
+    width: 80,
+  },
   form: {
     alignSelf: 'stretch',
-    borderWidth: 1,
-    borderColor:'#000033',
-    height:200,
+    borderWidth: 1.5,
+    borderColor:'rgb(224, 224, 224)',
+    borderRadius: 8,
+    marginLeft: screenWidth*0.125,
+    marginRight: screenWidth*0.125,
+    marginTop: 40,
+    marginBottom: 8,
+    height: 96,
+    width: screenWidth*0.75,
   },
   item: {
-    borderWidth: 0,
-    borderColor:'red',
-    alignSelf: 'auto'
+    height: 48,
+    marginLeft: 0,
   },
-  inputs: {
-    borderWidth: 1,
-    borderColor:'green',
+  input: {
+    height: 45,
+    width: '100%',
+    paddingLeft: 16,
   },
-  logo: {
-    borderWidth: 1,
-    borderColor:'#000033'
-  }
+  baseButton: {
+    alignSelf: 'auto',
+    width: screenWidth*0.75,
+  },
+  loginButton: {
+    backgroundColor: 'rgb(31, 191, 179)',
+  },
+  loginText: {
+    marginLeft: screenWidth*0.75*0.4,
+    fontSize: 15,
+    fontWeight: '900',
+    height: 21,
+    width: 40,
+  },
 }
 
 
