@@ -11,7 +11,7 @@ export const AppNavigator = StackNavigator({
   Login: { screen: LoginOrRegister },
   Main: { screen: MainScreen }
 }, {
-  initialRouteName: 'TalkContent',
+  initialRouteName: 'Login',
   navigationOptions: {
     title: 'talk',
     headerStyle: {

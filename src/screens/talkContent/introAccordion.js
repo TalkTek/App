@@ -71,12 +71,22 @@ export default class IntroAccordion extends Component {
 
     let introVisibleComponent =
       <Text style={styles.visibleComponent}>
-        在兩性相處上曾跌跌撞撞，經歷過三天小吵五天鬧分手的感情，也遇過動輒以情緒勒索、言語攻擊的伴侶，當然也遇到被劈腿的慘事
+        專家預測,2020年美國將有50%的勞動人口-也就是近6000萬人,都是自由工
+        作者。這告訴我們,未來會有愈來愈多人,不再倚賴公司或公司賦予的職位
+        title,而是用個人品牌和專業在賺錢。
+        我們大膽預言,未來,將是知識型網紅的時代。
       </Text>
 
     let introHiddenComponent  =
       <Text style={styles.hiddenComponent}>
-        。從運動減重、摸索穿搭開始，在瘦了將近20公斤後逐漸建立自信心。與幾任女友交往過程中，發現愛情不只有“追求”要學習，追求之前須先“了解自己想要什麼”，追求成功後更得“了解如何與對方相處”，甚至在一段感情結束後，要知道“如何照顧自己，重新醞釀能量”。
+        這是為什麼我們強烈建議每個人,即.刻.開.始將自己培養成一位知識型網紅。
+        個人的品牌,並非只有像設計師、作家、藝術工作者等才需要培養,或是才能
+        擁有的專利。你心中總會有個聲音,提醒你自己喜歡什麼、擅長什麼,其實,
+        只需要擁有一件熱愛的事物,就可以開始你的知識型網紅成長之路。
+        這次TALK小講將結合案例,手把手告訴你如何從零開始,將自己打造為不怕被
+        未來職場趨勢淘汰的知識型網紅,甚至能獲得個人影響力,領先他人、活出自
+        我,並且從中累積財富。拋開理論,這次我們要送給你的都是乾貨。準備好了,
+        就跟著TALK小講,踏出你的第一步。
       </Text>
 
     return (
@@ -128,12 +138,14 @@ const styles = StyleSheet.create({
   },
   visibleComponent: {
     marginTop: 8,
-    fontSize: 13,
+    fontSize: 14,
     marginLeft: 9,
+    lineHeight: 20,
   },
   hiddenComponent: {
     marginTop: 8,
-    fontSize: 13,
+    fontSize: 14,
+    lineHeight: 20,
     marginLeft: 9,
   },
   icon: {

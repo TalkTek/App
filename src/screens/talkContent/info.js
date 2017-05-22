@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import { Image, View, Text, StyleSheet, Dimensions } from 'react-native'
 import { Left, Right } from 'native-base'
 
-const { width } = Dimensions.get('window')
+const { width, height } = Dimensions.get('window')
 let margin = Number(((width)*0.06).toFixed())
 
 
@@ -20,22 +20,23 @@ export default class Info extends Component {
         <View>
           <Image
             style={styles.bannerImage}
-            source={require('../../assets/img/banner@2x.png')}
+            source={require('../../assets/img/demo_banner.jpg')}
           />
         </View>
         <View style={styles.thumbnail}>
           <Image
-            source={require('../../assets/img/profilePicture2.png')}
+            source={require('../../assets/img/bubu.png')}
             style={styles.thumbnailImage}
           />
           <Text style={styles.thumbnailText}>
-            瑪那熊 | PTT Catch版版主
+            艾希莉布 | Talk小講編輯部
           </Text>
         </View>
         <View style={styles.title}>
           <Text style={styles.titleText}>
-            愛情是場捉迷藏：關係經營的有效方法是你是『抓人鬼』還是『鬼抓你』
+            如何成為用熱愛事物賺錢的
           </Text>
+          <Text style={styles.titleText}>『知識型網紅』？</Text>
         </View>
         <View style={styles.hr}></View>
         <View style={styles.restInfo}>
@@ -58,7 +59,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(255, 255, 255)',
   },
   bannerImage : {
-    width: '100%',
+    resizeMode: 'contain',
+    width: width,
+    height: 140,
   },
   thumbnail: {
     flex: 1,
@@ -71,19 +74,22 @@ const styles = StyleSheet.create({
     height: 32,
     marginLeft: margin,
     marginRight: margin,
+    borderRadius: 15,
   },
   thumbnailText: {
     paddingTop: 8,
-    fontSize: 12,
+    fontSize: 12
   },
   title: {
     marginLeft: margin,
     marginRight: margin,
     padding: 0,
+    marginBottom: 8
   },
   titleText: {
     fontWeight: 'bold',
     fontSize: 18,
+    lineHeight: 20
   },
   hr: {
     marginLeft: margin,

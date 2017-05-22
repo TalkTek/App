@@ -51,10 +51,10 @@ export default class Login extends Component {
             <Image source={require('../../assets/img/logo.png')} style={styles.logo} />
             <Form style={styles.form}>
               <Item style={styles.item}>
-                <Input placeholder="輸入Email" style={styles.input}/>
+                <Input placeholder="輸入Email" style={styles.input} />
               </Item>
               <Item style={{...styles.item, borderColor: 'transparent'}}>
-                <Input placeholder="輸入密碼" maxLength={1} style={styles.input}/>
+                <Input placeholder="輸入密碼" style={styles.input}/>
               </Item>
             </Form>
             <Button style={{...styles.baseButton, ...styles.loginButton}}>
@@ -62,16 +62,19 @@ export default class Login extends Component {
                 登入
               </Text>
             </Button>
-            <TouchableOpacity onPress={this._fbAuth}>
-              <Text>
-                Facebook
-              </Text>
-            </TouchableOpacity>
-            <Icon.Button name="google" backgroundColor="rgb(221, 77, 64)">
-              Google
-            </Icon.Button>
+            <Text style={styles.or}>
+              或透過第三方服務
+            </Text>
+            <Button style={{...styles.baseButton, ...styles.facebookButton}}>
+              <Icon name="facebook-square" size={28} color="white" />
+              <Text style={styles.facebookNGoogleText}>Facebook</Text>
+            </Button>
+            <Button style={{...styles.baseButton, ...styles.googleButton}}>
+              <Icon name="google-plus" size={28} color="white" />
+              <Text style={styles.facebookNGoogleText}>Google</Text>
+            </Button>
             <TouchableHighlight>
-              <Text>註冊新帳號</Text>
+              <Text style={styles.registerText}>註冊新帳號</Text>
             </TouchableHighlight>
           </View>
         </Content>
@@ -82,7 +85,7 @@ export default class Login extends Component {
 
 const styles = {
   container: {
-    backgroundColor: 'rgb(255, 255, 255)',
+    backgroundColor: 'rgb(255, 255, 255)'
   },
   bg: {
     flex: 1,
@@ -92,11 +95,10 @@ const styles = {
   logo: {
     marginTop: 68,
     height: 150,
-    width: 80,
+    width: 80
   },
   form: {
-    alignSelf: 'stretch',
-    borderWidth: 1.5,
+    borderWidth: 2,
     borderColor:'rgb(224, 224, 224)',
     borderRadius: 8,
     marginLeft: screenWidth*0.125,
@@ -104,11 +106,11 @@ const styles = {
     marginTop: 40,
     marginBottom: 8,
     height: 96,
-    width: screenWidth*0.75,
+    width: screenWidth*0.75
   },
   item: {
     height: 48,
-    marginLeft: 0,
+    marginLeft: 0
   },
   input: {
     height: 45,
@@ -117,18 +119,48 @@ const styles = {
   },
   baseButton: {
     alignSelf: 'auto',
-    width: screenWidth*0.75,
+    width: screenWidth*0.75
   },
   loginButton: {
     backgroundColor: 'rgb(31, 191, 179)',
+  },
+  facebookButton: {
+    backgroundColor: 'rgb(58, 88, 151)',
+    justifyContent: 'center',
+    marginBottom: 8
+  },
+  googleButton: {
+    backgroundColor: 'rgb(221, 77, 64)',
+    justifyContent: 'center',
+    marginBottom: 32
   },
   loginText: {
     marginLeft: screenWidth*0.75*0.4,
     fontSize: 15,
     fontWeight: '900',
     height: 21,
-    width: 40,
+    width: 40
   },
+  facebookNGoogleText: {
+    fontSize: 15,
+    marginLeft: 16,
+    letterSpacing: 0,
+    fontWeight: '600'
+  },
+  or: {
+    fontSize: 14,
+    color: 'rgb(158, 158, 158)',
+    marginTop: 24,
+    marginBottom: 24,
+    letterSpacing: -0.2,
+    lineHeight: 17
+  },
+  registerText: {
+    fontSize: 15,
+    color: 'rgb(31, 191, 179)',
+    fontWeight: 'bold',
+    lineHeight: 21
+  }
 }
 
 
