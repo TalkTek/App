@@ -51,8 +51,8 @@ export default class Login extends Component {
       const token = tokenData.accessToken.toString()
 
       // firebase setting
-      const crendential_facebook = firebase.auth.FacebookAuthProvider.credential(token)
-      const user = await firebase.auth().signInWithCredential(crendential_facebook)
+      const credential_facebook = firebase.auth.FacebookAuthProvider.credential(token)
+      const user = await firebase.auth().signInWithCredential(credential_facebook)
 
       // write firebase
       firebase.database().ref(`/users/${user.uid}/profile`).set({
@@ -68,9 +68,14 @@ export default class Login extends Component {
   async _onGoogleSignIn() {
     try {
       const user = await GoogleSignin.signIn()
-      console.log('user is', user);
-    } catch(err) {
-      console.log('error msg is', err);
+      let accessToken = user.accessToken
+      let idToken = user.idToken
+
+      const credential_google = await firebase.auth.GoogleAuthProvider.credential(idToken, accessToken)
+      const userData = await firebase.auth().signInWithCredential(credential_google)
+
+    } catch(error) {
+      console.log('error msg is', error.message);
     }
   }
 
