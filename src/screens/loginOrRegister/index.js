@@ -20,6 +20,7 @@ import {
   Item,
 } from 'native-base'
 import FBSDK, { LoginManager, AccessToken } from 'react-native-fbsdk'
+import { GoogleSignin } from 'react-native-google-signin'
 import firebase from 'firebase'
 import { FIREBASE_CONFIG } from '../../lib/config'
 
@@ -29,6 +30,17 @@ firebase.initializeApp(FIREBASE_CONFIG)
 export default class Login extends Component {
   static navigationOptions = {
     header: null,
+  }
+
+  componentDidMount() {
+    try {
+      GoogleSignin.configure({
+        webClientId: '430072955636-kh5mh67btr7khp4pml100f42rjprovlm.apps.googleusercontent.com',
+        offlineAccess: false
+      })
+    } catch(err) {
+      console.log('err isis', err.message);
+    }
   }
 
   async _onFacebookLogin () {
@@ -50,6 +62,15 @@ export default class Login extends Component {
       })
     } catch(err) {
       console.log('error message is', err.message);
+    }
+  }
+
+  async _onGoogleSignIn() {
+    try {
+      const user = await GoogleSignin.signIn()
+      console.log('user is', user);
+    } catch(err) {
+      console.log('error msg is', err);
     }
   }
 
@@ -79,7 +100,7 @@ export default class Login extends Component {
               <Icon name="facebook-square" size={28} color="white" />
               <Text style={styles.facebookNGoogleText}>Facebook</Text>
             </Button>
-            <Button style={{...styles.baseButton, ...styles.googleButton}}>
+            <Button style={{...styles.baseButton, ...styles.googleButton}} onPress={this._onGoogleSignIn}>
               <Icon name="google-plus" size={28} color="white" />
               <Text style={styles.facebookNGoogleText}>Google</Text>
             </Button>

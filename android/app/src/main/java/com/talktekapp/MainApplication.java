@@ -3,6 +3,7 @@ package com.talktekapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.microsoft.codepush.react.CodePush;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -47,7 +48,8 @@ public class MainApplication extends Application implements ReactApplication {
               new VectorIconsPackage(),
               new RNSoundPackage(),
               new AudioPackage(),
-              new FBSDKPackage(mCallbackManager)
+              new FBSDKPackage(mCallbackManager),
+              new RNGoogleSigninPackage()
       );
     }
   };
