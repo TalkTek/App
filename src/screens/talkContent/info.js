@@ -10,11 +10,11 @@ let margin = Number(((width)*0.06).toFixed())
 
 
 export default class Info extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
   }
 
-  render() {
+  render () {
     return (
       <View style={styles.main}>
         <View>
@@ -38,7 +38,7 @@ export default class Info extends Component {
           </Text>
           <Text style={styles.titleText}>『知識型網紅』？</Text>
         </View>
-        <View style={styles.hr}></View>
+        <View style={styles.hr} />
         <View style={styles.restInfo}>
           <Left>
             <Text style={styles.numberOfListener}>累積100人次收聽</Text>
@@ -61,20 +61,20 @@ const styles = StyleSheet.create({
   bannerImage : {
     resizeMode: 'contain',
     width: width,
-    height: 140,
+    height: 140
   },
   thumbnail: {
     flex: 1,
     flexDirection: 'row',
     paddingTop: 12,
-    paddingBottom: 12,
+    paddingBottom: 12
   },
   thumbnailImage: {
     width: 32,
     height: 32,
     marginLeft: margin,
     marginRight: margin,
-    borderRadius: 15,
+    borderRadius: 15
   },
   thumbnailText: {
     paddingTop: 8,
@@ -118,5 +118,3 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
 })
-
-

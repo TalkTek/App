@@ -19,28 +19,38 @@ import {
   Input,
   Item,
 } from 'native-base'
-import FBSDK, { LoginManager } from 'react-native-fbsdk'
+import FBSDK, { LoginManager, AccessToken } from 'react-native-fbsdk'
+import firebase from 'firebase'
+import { FIREBASE_CONFIG } from '../../lib/config'
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
-
+firebase.initializeApp(FIREBASE_CONFIG)
 
 export default class Login extends Component {
   static navigationOptions = {
     header: null,
   }
 
-  _fbAuth() {
-    LoginManager.logInWithReadPermissions(['public_profile'])
-      .then((result) => {
-        if(result.isCancelled) {
-          console.log('Login Cancel')
-        } else {
-          console.log("Login success " + result.grantedPermissions);
-        }
+  async _onFacebookLogin () {
+    try {
+      // facebook sdk setting
+      const result = await LoginManager.logInWithReadPermissions(['public_profile', 'email'])
+      const tokenData = await AccessToken.getCurrentAccessToken()
+      const token = tokenData.accessToken.toString()
+
+      // firebase setting
+      const crendential_facebook = firebase.auth.FacebookAuthProvider.credential(token)
+      const user = await firebase.auth().signInWithCredential(crendential_facebook)
+
+      // write firebase
+      firebase.database().ref(`/users/${user.uid}/profile`).set({
+        name: user.displayName,
+        email: user.email,
+        avatarUrl: user.photoURL
       })
-      .catch((err) => {
-        console.log('An error occured: ', err);
-      })
+    } catch(err) {
+      console.log('error message is', err.message);
+    }
   }
 
   render() {
@@ -65,7 +75,7 @@ export default class Login extends Component {
             <Text style={styles.or}>
               或透過第三方服務
             </Text>
-            <Button style={{...styles.baseButton, ...styles.facebookButton}}>
+            <Button style={{...styles.baseButton, ...styles.facebookButton}} onPress={this._onFacebookLogin}>
               <Icon name="facebook-square" size={28} color="white" />
               <Text style={styles.facebookNGoogleText}>Facebook</Text>
             </Button>

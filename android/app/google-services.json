@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "430072955636",
+    "project_id": "talk-4d313"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:430072955636:android:294d4a4f9001febe",
+        "android_client_info": {
+          "package_name": "com.talktekapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "430072955636-kh5mh67btr7khp4pml100f42rjprovlm.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "430072955636-aj3nncabrl01t4khlbde9us2udivv2k9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.talktekapp",
+            "certificate_hash": "c190e0ad0f6bab7edb98ce3e2641d480acee9f2f"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmF3KTIk5Ws6hwK6ZlXOc4Uklp2omWCDc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
