@@ -17,6 +17,7 @@ import {
   Item,
 } from 'native-base'
 import firebase from 'firebase'
+import Modal from 'react-native-modalbox'
 // import { FIREBASE_CONFIG } from '../../lib/config'
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
@@ -37,15 +38,37 @@ export default class Register extends Component {
   }
 
   async _onRegister () {
+    let errMsg
     const { email, password, rePassword } = this.state
     try {
       if(password === rePassword) {
         await firebase.auth().createUserWithEmailAndPassword(email, password)
+      } else {
+        errMsg = "密碼不ㄧ致"
+        Toast.show({
+          supportedOrientations: ['portrait'],
+          text: errMsg,
+          position: 'center',
+          buttonText: 'X',
+          type: 'warning',
+        })
       }
     }
-    catch(error) {
-      console.error('error code = '+ error.code);
-      console.error('error.message =' + error.message);
+    catch (error) {
+      if (error.message === 'The email address is badly formatted.') {
+        errMsg = "錯誤的信箱格式"
+      } else if (error.message === 'The email address is already in use by another account.') {
+        errMsg = "此信箱已經被註冊過了"
+      }
+      this.refs.modal.open()
+      // Toast.show({
+      //   supportedOrientations: ['portrait'],
+      //   text: errMsg,
+      //   position: 'center',
+      //   buttonText: 'X',
+      //   type: 'warning',
+      // })
+      console.log(error.message)
     }
   }
 
@@ -94,6 +117,19 @@ export default class Register extends Component {
               </Text>
             </Button>
           </View>
+
+          <Modal
+            style={styles.modal}
+            backdrop={true}
+            position={'center'}
+            ref={"modal"}
+            backdropOpacity={0.3}
+          >
+            <Text style={styles.text}>
+              Modal on top
+            </Text>
+          </Modal>
+
         </Content>
       </Container>
     )
@@ -101,6 +137,18 @@ export default class Register extends Component {
 }
 
 const styles = {
+  text: {
+    fontSize: 15,
+    color: 'white'
+  },
+  modal: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: screenHeight*0.2,
+    width: screenWidth*0.7,
+    backgroundColor: 'rgb(31, 191, 179)',
+    borderRadius: 10,
+  },
   container: {
     backgroundColor: 'rgb(255, 255, 255)'
   },
