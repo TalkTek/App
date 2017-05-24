@@ -2,16 +2,18 @@
 import { StackNavigator } from 'react-navigation'
 import TalkListScreen from '../../screens/talkList'
 import TalkContentScreen from '../../screens/talkContent'
-import LoginOrRegister from '../../screens/loginOrRegister'
+import Login from '../../screens/loginOrRegister/login'
+import Register from '../../screens/loginOrRegister/register'
 import MainScreen from '../../screens/Main'
 
 export const AppNavigator = StackNavigator({
   TalkList: { screen: TalkListScreen },
   TalkContent: { screen: TalkContentScreen },
-  Login: { screen: LoginOrRegister },
+  Login: { screen: Login },
+  Register: { screen: Register },
   Main: { screen: MainScreen }
 }, {
-  initialRouteName: 'Login',
+  initialRouteName: 'Register',
   navigationOptions: {
     title: 'talk',
     headerStyle: {

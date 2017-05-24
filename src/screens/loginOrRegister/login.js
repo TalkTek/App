@@ -32,6 +32,14 @@ export default class Login extends Component {
     header: null,
   }
 
+  constructor (props) {
+    super(props)
+    this.state = {
+      email: '',
+      password: '',
+    }
+  }
+
   componentDidMount() {
     try {
       GoogleSignin.hasPlayServices({ autoResolve: true });
@@ -76,10 +84,18 @@ export default class Login extends Component {
       const credential_google = await firebase.auth.GoogleAuthProvider.credential(idToken, accessToken)
       const userData = await firebase.auth().signInWithCredential(credential_google)
 
-      console.log('userData is', userData)
-
     } catch(error) {
       console.log('error msg is', error.message);
+    }
+  }
+  
+  async _onEmailPasswordLogin() {
+    try {
+      await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+    }
+    catch(error) {
+      console.error(error.code);
+      console.error(error.message);
     }
   }
 
@@ -91,13 +107,21 @@ export default class Login extends Component {
             <Image source={require('../../assets/img/logo.png')} style={styles.logo} />
             <Form style={styles.form}>
               <Item style={styles.item}>
-                <Input placeholder="輸入Email" style={styles.input} />
+                <Input
+                  placeholder="輸入Email"
+                  style={styles.input}
+                  onChangeText={text => this.setState({email: text})}
+                />
               </Item>
               <Item style={{...styles.item, borderColor: 'transparent'}}>
-                <Input placeholder="輸入密碼" style={styles.input}/>
+                <Input
+                  placeholder="輸入密碼"
+                  style={styles.input}
+                  onChangeText={text => this.setState({password: text})}
+                />
               </Item>
             </Form>
-            <Button style={{...styles.baseButton, ...styles.loginButton}}>
+            <Button style={{...styles.baseButton, ...styles.loginButton}} onPress={this._onEmailPasswordLogin}>
               <Text style={styles.loginText}>
                 登入
               </Text>
