@@ -92,6 +92,7 @@ export default class Login extends Component {
   async _onEmailPasswordLogin() {
     try {
       await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+      console.log("Hello world");
     }
     catch(error) {
       console.error(error.code);
@@ -111,6 +112,8 @@ export default class Login extends Component {
                   placeholder="輸入Email"
                   style={styles.input}
                   onChangeText={text => this.setState({email: text})}
+                  keyboardType='email-address'
+                  autoCapitalize='none'
                 />
               </Item>
               <Item style={{...styles.item, borderColor: 'transparent'}}>
@@ -118,10 +121,11 @@ export default class Login extends Component {
                   placeholder="輸入密碼"
                   style={styles.input}
                   onChangeText={text => this.setState({password: text})}
+                  secureTextEntry
                 />
               </Item>
             </Form>
-            <Button style={{...styles.baseButton, ...styles.loginButton}} onPress={this._onEmailPasswordLogin}>
+            <Button style={{...styles.baseButton, ...styles.loginButton}} onPress={this._onEmailPasswordLogin.bind(this)}>
               <Text style={styles.loginText}>
                 登入
               </Text>
@@ -129,11 +133,11 @@ export default class Login extends Component {
             <Text style={styles.or}>
               或透過第三方服務
             </Text>
-            <Button style={{...styles.baseButton, ...styles.facebookButton}} onPress={this._onFacebookLogin}>
+            <Button style={{...styles.baseButton, ...styles.facebookButton}} onPress={this._onFacebookLogin.bind(this)}>
               <Icon name="facebook-square" size={28} color="white" />
               <Text style={styles.facebookNGoogleText}>Facebook</Text>
             </Button>
-            <Button style={{...styles.baseButton, ...styles.googleButton}} onPress={this._onGoogleSignIn}>
+            <Button style={{...styles.baseButton, ...styles.googleButton}} onPress={this._onGoogleSignIn.bind(this)}>
               <Icon name="google-plus" size={28} color="white" />
               <Text style={styles.facebookNGoogleText}>Google</Text>
             </Button>

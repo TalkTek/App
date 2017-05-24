@@ -32,16 +32,20 @@ export default class Register extends Component {
     this.state = {
       email: '',
       password: '',
+      rePassword: ''
     }
   }
 
   async _onRegister () {
+    const { email, password, rePassword } = this.state
     try {
-      await firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+      if(password === rePassword) {
+        await firebase.auth().createUserWithEmailAndPassword(email, password)
+      }
     }
     catch(error) {
-      console.error(error.code);
-      console.error(error.message);
+      console.error('error code = '+ error.code);
+      console.error('error.message =' + error.message);
     }
   }
 
@@ -57,17 +61,28 @@ export default class Register extends Component {
                   placeholder="輸入Email"
                   style={styles.input}
                   onChangeText={text => this.setState({email: text})}
+                  keyboardType='email-address'
+                  autoCapitalize='none'
                 />
               </Item>
-              <Item style={{...styles.item, borderColor: 'transparent'}}>
+              <Item style={styles.item}>
                 <Input
                   placeholder="輸入密碼"
                   style={styles.input}
                   onChangeText={text => this.setState({password: text})}
+                  secureTextEntry
+                />
+              </Item>
+              <Item style={{...styles.item, borderColor: 'transparent'}}>
+                <Input
+                  placeholder="請再輸入密碼"
+                  style={styles.input}
+                  onChangeText={text => this.setState({rePassword: text})}
+                  secureTextEntry
                 />
               </Item>
             </Form>
-            <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={this._onRegister}>
+            <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={this._onRegister.bind(this)}>
               <Text style={styles.registerText}>
                 註冊
               </Text>
@@ -106,7 +121,7 @@ const styles = {
     marginRight: screenWidth*0.125,
     marginTop: 40,
     marginBottom: 8,
-    height: 96,
+    height: 144,
     width: screenWidth*0.75
   },
   item: {
