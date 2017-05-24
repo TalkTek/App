@@ -12,6 +12,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <RNGoogleSignin/RNGoogleSignin.h>
 
 @implementation AppDelegate
 
@@ -42,22 +43,52 @@
   [self.window makeKeyAndVisible];
   return YES;
 }
-  
-  - (BOOL)application:(UIApplication *)application
-              openURL:(NSURL *)url
-              options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
-    
-    BOOL handled = [[FBSDKApplicationDelegate sharedInstance] application:application
-                                                                  openURL:url
-                                                        sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
-                                                               annotation:options[UIApplicationOpenURLOptionsAnnotationKey]
-                    ];
+
+/*
+- (BOOL)application:(UIApplication application
+        openURL:(NSURL url
+        options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> options
+        sourceApplication:(NSString sourceApplication
+        annotation:(id)annotation
+        {
+    BOOL handled = [[FBSDKApplicationDelegate sharedInstance]
+                        application:application
+                        openURL:url
+                        sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+                        annotation:options[UIApplicationOpenURLOptionsAnnotationKey]
+                    ]
+                      ||
+                    [RNGoogleSignin
+                        application:application
+                        openURL:url
+                        sourceApplication:sourceApplication
+                        annotation:annotation];
+
     // Add any custom logic here.
     return handled;
   }
+*/
+
+- (BOOL)application:(UIApplication *)application
+        openURL:(NSURL *)url
+        options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+    if ([url.scheme hasPrefix:@"fb"]) {
+      return [  [FBSDKApplicationDelegate sharedInstance]
+                application:application
+                openURL:url
+                sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+                annotation:options[UIApplicationOpenURLOptionsAnnotationKey]
+      ];
+    } else {
+      return [[GIDSignIn sharedInstance] handleURL:url
+              sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+              annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
+    }
+}
   
-  - (void)applicationDidBecomeActive:(UIApplication *)application {
-    [FBSDKAppEvents activateApp];
-  }
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+  [FBSDKAppEvents activateApp];
+}
 
 @end

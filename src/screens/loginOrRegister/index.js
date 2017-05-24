@@ -7,7 +7,7 @@ import {
   Image,
   TouchableHighlight,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
 } from 'react-native'
 import {
   Container,
@@ -34,7 +34,9 @@ export default class Login extends Component {
 
   componentDidMount() {
     try {
+      GoogleSignin.hasPlayServices({ autoResolve: true });
       GoogleSignin.configure({
+        iosClientId: '430072955636-0c50m0rcd61fcue597jrbir12oagc65t.apps.googleusercontent.com',
         webClientId: '430072955636-kh5mh67btr7khp4pml100f42rjprovlm.apps.googleusercontent.com',
         offlineAccess: false
       })
@@ -73,6 +75,8 @@ export default class Login extends Component {
 
       const credential_google = await firebase.auth.GoogleAuthProvider.credential(idToken, accessToken)
       const userData = await firebase.auth().signInWithCredential(credential_google)
+
+      console.log('userData is', userData)
 
     } catch(error) {
       console.log('error msg is', error.message);
