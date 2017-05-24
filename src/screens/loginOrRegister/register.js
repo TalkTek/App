@@ -50,6 +50,7 @@ export default class Register extends Component {
   }
 
   render() {
+    const { goBack } = this.props.navigation
     return (
       <Container style={styles.container}>
         <Content>
@@ -87,7 +88,7 @@ export default class Register extends Component {
                 註冊
               </Text>
             </Button>
-            <Button style={{...styles.baseButton, ...styles.cancelButton}} onPress={this._onRegister}>
+            <Button style={{...styles.baseButton, ...styles.cancelButton}} onPress={() => goBack()}>
               <Text style={styles.cancelText}>
                 取消
               </Text>

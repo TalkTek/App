@@ -5,8 +5,6 @@ import React, { Component } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import {
   Image,
-  TouchableHighlight,
-  TouchableOpacity,
   Dimensions,
 } from 'react-native'
 import {
@@ -101,6 +99,7 @@ export default class Login extends Component {
   }
 
   render() {
+    const { navigate } = this.props.navigation
     return (
       <Container style={styles.container}>
         <Content>
@@ -141,9 +140,9 @@ export default class Login extends Component {
               <Icon name="google-plus" size={28} color="white" />
               <Text style={styles.facebookNGoogleText}>Google</Text>
             </Button>
-            <TouchableHighlight>
+            <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={() => navigate('Register')}>
               <Text style={styles.registerText}>註冊新帳號</Text>
-            </TouchableHighlight>
+            </Button>
           </View>
         </Content>
       </Container>
@@ -200,7 +199,7 @@ const styles = {
   googleButton: {
     backgroundColor: 'rgb(221, 77, 64)',
     justifyContent: 'center',
-    marginBottom: 32
+    marginBottom: 16
   },
   loginText: {
     marginLeft: screenWidth*0.75*0.4,
@@ -228,7 +227,11 @@ const styles = {
     color: 'rgb(31, 191, 179)',
     fontWeight: 'bold',
     lineHeight: 21
-  }
+  },
+  registerButton: {
+    backgroundColor: 'white',
+    justifyContent: 'center'
+  },
 }
 
 
