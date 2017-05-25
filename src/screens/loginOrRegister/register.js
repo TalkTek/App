@@ -40,7 +40,7 @@ export default class Register extends Component {
   }
 
   async _onRegister () {
-    const { email, password, rePassword, errMsg } = this.state
+    const { email, password, rePassword } = this.state
     try {
       if(password === rePassword) {
         await firebase.auth().createUserWithEmailAndPassword(email, password)

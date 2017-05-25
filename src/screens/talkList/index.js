@@ -36,13 +36,13 @@ export default class TalkList extends Component {
     //   ]
     // }))
   }
-  render() {
+  render () {
     const { navigate } = this.props.navigation
     return (
       <Container>
         <Content style={styles.content}>
           <TouchableOpacity
-            onPress={ () => navigate('TalkContent')}
+            onPress={() => navigate('TalkContent')}
           >
             <Card style={styles.cardContainer}>
               <CardItem style={styles.cardItem}>
@@ -105,7 +105,6 @@ export default class TalkList extends Component {
               </Right>
             </CardItem>
           </Card>
-
         </Content>
       </Container>
     )
@@ -121,7 +120,7 @@ const styles = {
   bannerImage: {
     width: width * 0.82,
     resizeMode: 'contain',
-    height: 120,
+    height: 120
   },
   cardContainer: {
     flex: 1,

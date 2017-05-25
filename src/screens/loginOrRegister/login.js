@@ -30,6 +30,16 @@ export default class Login extends Component {
     header: null,
   }
 
+  componentWillMount () {
+    const { navigate } = this.props.navigation
+    firebase.auth().onAuthStateChanged( user => {
+      console.log("Hello world");
+      if (user) {
+        navigate('TalkList')
+      }
+    })
+  }
+
   constructor (props) {
     super(props)
     this.state = {

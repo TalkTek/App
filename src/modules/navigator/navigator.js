@@ -13,7 +13,7 @@ export const AppNavigator = StackNavigator({
   Register: { screen: Register },
   Main: { screen: MainScreen }
 }, {
-  initialRouteName: 'Register',
+  initialRouteName: 'Main',
   navigationOptions: {
     title: 'talk',
     headerStyle: {
