@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import {
   Image,
   Dimensions,
+  ActivityIndicator
 } from 'react-native'
 import {
   Container,
@@ -21,6 +22,8 @@ import FBSDK, { LoginManager, AccessToken } from 'react-native-fbsdk'
 import { GoogleSignin } from 'react-native-google-signin'
 import firebase from 'firebase'
 import { FIREBASE_CONFIG } from '../../lib/config'
+import Modal from 'react-native-modalbox'
+import { NavigationActions } from 'react-navigation'
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
 firebase.initializeApp(FIREBASE_CONFIG)
@@ -30,21 +33,13 @@ export default class Login extends Component {
     header: null,
   }
 
-  componentWillMount () {
-    const { navigate } = this.props.navigation
-    firebase.auth().onAuthStateChanged( user => {
-      console.log("Hello world");
-      if (user) {
-        navigate('TalkList')
-      }
-    })
-  }
-
   constructor (props) {
     super(props)
     this.state = {
       email: '',
       password: '',
+      errMsg: '',
+      spinningAnimation: false
     }
   }
 
@@ -62,6 +57,7 @@ export default class Login extends Component {
   }
 
   async _onFacebookLogin () {
+    const { navigate, dispatch } = this.props.navigation
     try {
       // facebook sdk setting
       const result = await LoginManager.logInWithReadPermissions(['public_profile', 'email'])
@@ -78,34 +74,71 @@ export default class Login extends Component {
         email: user.email,
         avatarUrl: user.photoURL
       })
+      this.setState({
+        spinningAnimation: true
+      })
+      dispatch(NavigationActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({routeName: 'TalkList'})
+        ]
+      }))
+      this.setState({
+        spinningAnimation: false
+      })
     } catch(err) {
       console.log('error message is', err.message);
+      this.setState({
+        spinningAnimation: false
+      })
     }
   }
 
   async _onGoogleSignIn() {
+    const { navigate } = this.props.navigation
     try {
       const user = await GoogleSignin.signIn()
       let accessToken = user.accessToken
       let idToken = user.idToken
-
       const credential_google = await firebase.auth.GoogleAuthProvider.credential(idToken, accessToken)
       const userData = await firebase.auth().signInWithCredential(credential_google)
-
+      navigate('TalkList')
     } catch(error) {
       console.log('error msg is', error.message);
     }
   }
   
-  async _onEmailPasswordLogin() {
+  async _onEmailPasswordLogin () {
+    const { navigate } = this.props.navigation
     try {
       await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
-      console.log("Hello world");
+      navigate('TalkList')
     }
     catch(error) {
-      console.error(error.code);
-      console.error(error.message);
+      
+      console.log('error is', error);
+      console.log('error message is', error.message)
+      console.log('error code is', error.code);
+      
+      
+      if (error.message === 'The email address is badly formatted.') {
+        this.setState({
+          errMsg: 'Email格式不正確',
+          isOpen: true
+        })
+      } else if ( error.code === 'auth/user-not-found' ) {
+        this.setState({
+          errMsg: '無此帳號',
+          isOpen: true
+        })
+      } else {
+        this.setState({
+          errMsg: error.message,
+          isOpen: true
+        })
+      }
     }
+    this.refs.modal.open()
   }
 
   render() {
@@ -113,6 +146,12 @@ export default class Login extends Component {
     return (
       <Container style={styles.container}>
         <Content>
+          <ActivityIndicator
+            animating={this.state.spinningAnimation}
+            color='red'
+            size='large'
+            style={[styles.spinning, {height: 80}]}
+          />
           <View style={styles.bg}>
             <Image source={require('../../assets/img/logo.png')} style={styles.logo} />
             <Form style={styles.form}>
@@ -154,6 +193,22 @@ export default class Login extends Component {
               <Text style={styles.registerText}>註冊新帳號</Text>
             </Button>
           </View>
+          <Modal
+            style={styles.modal}
+            backdrop={true}
+            position={'center'}
+            ref={"modal"}
+            backdropOpacity={0.3}
+            isOpen={this.state.isOpen}
+          >
+              <Text style={styles.modalHeadlineText}>登入失敗</Text>
+              <Text style={styles.modalErrorMsgText}>
+                {this.state.errMsg}
+              </Text>
+              <Button style={styles.modalButton} onPress={() => this.setState({ isOpen: !this.state.isOpen})}>
+                <Text style={styles.modalButtonText}>確認</Text>
+              </Button>
+          </Modal>
         </Content>
       </Container>
     )
@@ -161,6 +216,33 @@ export default class Login extends Component {
 }
 
 const styles = {
+  modalHeadlineText: {
+    marginTop: 14,
+    marginBottom: 29,
+    fontSize: 15,
+    fontWeight: 'bold'
+  },
+  modalErrorMsgText: {
+    marginBottom: 30,
+    fontSize: 15,
+  },
+  modalButton: {
+    alignSelf: 'auto',
+    backgroundColor: '#fff'
+  },
+  modalButtonText: {
+    color: 'rgb(31, 191, 179)',
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+  modal: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: screenHeight*0.26,
+    width: screenWidth*0.8,
+    backgroundColor: 'white',
+    borderRadius: 10,
+  },
   container: {
     backgroundColor: 'rgb(255, 255, 255)'
   },
@@ -242,6 +324,12 @@ const styles = {
     backgroundColor: 'white',
     justifyContent: 'center'
   },
+  spinning: {
+    position: 'absolute',
+    zIndex: 1,
+    top: screenHeight * 0.45,
+    left: screenWidth * 0.45,
+  }
 }
 
 

@@ -27,15 +27,6 @@ import {
 const { width } = Dimensions.get('window')
 
 export default class TalkList extends Component {
-  componentWillMount () {
-    const { dispatch, navigate } = this.props.navigation
-    // dispatch(NavigationActions.reset({
-    //   index: 1,
-    //   action: [
-    //     navigate('TalkList')
-    //   ]
-    // }))
-  }
   render () {
     const { navigate } = this.props.navigation
     return (

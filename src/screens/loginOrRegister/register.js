@@ -41,9 +41,11 @@ export default class Register extends Component {
 
   async _onRegister () {
     const { email, password, rePassword } = this.state
+    const { navigate } = this.props.navigation
     try {
       if(password === rePassword) {
         await firebase.auth().createUserWithEmailAndPassword(email, password)
+        navigate('TalkList')
       } else {
         this.setState({
           errMsg: '密碼不一致',
@@ -54,7 +56,7 @@ export default class Register extends Component {
     catch (error) {
       if (error.message === 'The email address is badly formatted.') {
         this.setState({
-          errMsg: '信箱格式有誤',
+          errMsg: 'Email或密碼不正確',
           isOpen: true
         })
       } else if (error.message === 'The email address is already in use by another account.') {
@@ -64,7 +66,6 @@ export default class Register extends Component {
         })
       }
       this.refs.modal.open()
-      console.log(error.message)
     }
   }
 
