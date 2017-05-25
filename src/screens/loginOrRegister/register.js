@@ -33,41 +33,37 @@ export default class Register extends Component {
     this.state = {
       email: '',
       password: '',
-      rePassword: ''
+      rePassword: '',
+      errMsg: '',
+      isOpen: false,
     }
   }
 
   async _onRegister () {
-    let errMsg
-    const { email, password, rePassword } = this.state
+    const { email, password, rePassword, errMsg } = this.state
     try {
       if(password === rePassword) {
         await firebase.auth().createUserWithEmailAndPassword(email, password)
       } else {
-        errMsg = "密碼不ㄧ致"
-        Toast.show({
-          supportedOrientations: ['portrait'],
-          text: errMsg,
-          position: 'center',
-          buttonText: 'X',
-          type: 'warning',
+        this.setState({
+          errMsg: '密碼不一致',
+          isOpen: true
         })
       }
     }
     catch (error) {
       if (error.message === 'The email address is badly formatted.') {
-        errMsg = "錯誤的信箱格式"
+        this.setState({
+          errMsg: '信箱格式有誤',
+          isOpen: true
+        })
       } else if (error.message === 'The email address is already in use by another account.') {
-        errMsg = "此信箱已經被註冊過了"
+        this.setState({
+          errMsg: '此信箱已經註冊過了',
+          isOpen: true
+        })
       }
       this.refs.modal.open()
-      // Toast.show({
-      //   supportedOrientations: ['portrait'],
-      //   text: errMsg,
-      //   position: 'center',
-      //   buttonText: 'X',
-      //   type: 'warning',
-      // })
       console.log(error.message)
     }
   }
@@ -124,10 +120,15 @@ export default class Register extends Component {
             position={'center'}
             ref={"modal"}
             backdropOpacity={0.3}
+            isOpen={this.state.isOpen}
           >
-            <Text style={styles.text}>
-              Modal on top
-            </Text>
+              <Text style={styles.modalHeadlineText}>登入失敗</Text>
+              <Text style={styles.modalErrorMsgText}>
+                {this.state.errMsg}
+              </Text>
+              <Button style={styles.modalButton} onPress={() => this.setState({ isOpen: !this.state.isOpen})}>
+                <Text style={styles.modalButtonText}>確認</Text>
+              </Button>
           </Modal>
 
         </Content>
@@ -137,16 +138,31 @@ export default class Register extends Component {
 }
 
 const styles = {
-  text: {
+  modalHeadlineText: {
+    marginTop: 14,
+    marginBottom: 29,
     fontSize: 15,
-    color: 'white'
+    fontWeight: 'bold'
+  },
+  modalErrorMsgText: {
+    marginBottom: 30,
+    fontSize: 15,
+  },
+  modalButton: {
+    alignSelf: 'auto',
+    backgroundColor: '#fff'
+  },
+  modalButtonText: {
+    color: 'rgb(31, 191, 179)',
+    fontWeight: 'bold',
+    fontSize: 15,
   },
   modal: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: screenHeight*0.2,
-    width: screenWidth*0.7,
-    backgroundColor: 'rgb(31, 191, 179)',
+    height: screenHeight*0.26,
+    width: screenWidth*0.8,
+    backgroundColor: 'white',
     borderRadius: 10,
   },
   container: {
