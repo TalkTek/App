@@ -59,6 +59,8 @@ export default class Login extends Component {
   async _onFacebookLogin () {
     const { navigate, dispatch } = this.props.navigation
     try {
+      setTimeout(() => this.refs.spinning.open(), 1500)
+
       // facebook sdk setting
       const result = await LoginManager.logInWithReadPermissions(['public_profile', 'email'])
       const tokenData = await AccessToken.getCurrentAccessToken()
@@ -75,7 +77,7 @@ export default class Login extends Component {
         avatarUrl: user.photoURL
       })
       this.setState({
-        spinningAnimation: true
+        spinningAnimation: false
       })
       dispatch(NavigationActions.reset({
         index: 0,
@@ -83,9 +85,6 @@ export default class Login extends Component {
           NavigationActions.navigate({routeName: 'TalkList'})
         ]
       }))
-      this.setState({
-        spinningAnimation: false
-      })
     } catch(err) {
       console.log('error message is', err.message);
       this.setState({
@@ -115,12 +114,6 @@ export default class Login extends Component {
       navigate('TalkList')
     }
     catch(error) {
-      
-      console.log('error is', error);
-      console.log('error message is', error.message)
-      console.log('error code is', error.code);
-      
-      
       if (error.message === 'The email address is badly formatted.') {
         this.setState({
           errMsg: 'Email格式不正確',
@@ -146,12 +139,6 @@ export default class Login extends Component {
     return (
       <Container style={styles.container}>
         <Content>
-          <ActivityIndicator
-            animating={this.state.spinningAnimation}
-            color='red'
-            size='large'
-            style={[styles.spinning, {height: 80}]}
-          />
           <View style={styles.bg}>
             <Image source={require('../../assets/img/logo.png')} style={styles.logo} />
             <Form style={styles.form}>
@@ -209,6 +196,16 @@ export default class Login extends Component {
                 <Text style={styles.modalButtonText}>確認</Text>
               </Button>
           </Modal>
+          <Modal
+            style={styles.spinningModal}
+            ref={'spinning'}
+          >
+            <ActivityIndicator
+              animating
+              color='white'
+              size='large'
+            />
+          </Modal>
         </Content>
       </Container>
     )
@@ -216,6 +213,11 @@ export default class Login extends Component {
 }
 
 const styles = {
+  spinningModal: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   modalHeadlineText: {
     marginTop: 14,
     marginBottom: 29,
@@ -249,12 +251,13 @@ const styles = {
   bg: {
     flex: 1,
     height: screenHeight,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   logo: {
     marginTop: 68,
     height: 150,
-    width: 80
+    width: 80,
+    zIndex: 0,
   },
   form: {
     borderWidth: 2,
@@ -324,12 +327,6 @@ const styles = {
     backgroundColor: 'white',
     justifyContent: 'center'
   },
-  spinning: {
-    position: 'absolute',
-    zIndex: 1,
-    top: screenHeight * 0.45,
-    left: screenWidth * 0.45,
-  }
 }
 
 
