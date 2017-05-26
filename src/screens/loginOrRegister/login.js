@@ -39,7 +39,6 @@ export default class Login extends Component {
       email: '',
       password: '',
       errMsg: '',
-      spinningAnimation: false
     }
   }
 
@@ -57,7 +56,7 @@ export default class Login extends Component {
   }
 
   async _onFacebookLogin () {
-    const { navigate, dispatch } = this.props.navigation
+    const { dispatch } = this.props.navigation
     try {
       setTimeout(() => this.refs.spinning.open(), 1500)
 
@@ -76,32 +75,46 @@ export default class Login extends Component {
         email: user.email,
         avatarUrl: user.photoURL
       })
-      this.setState({
-        spinningAnimation: false
-      })
+
       dispatch(NavigationActions.reset({
         index: 0,
         actions: [
           NavigationActions.navigate({routeName: 'TalkList'})
         ]
       }))
+
     } catch(err) {
       console.log('error message is', err.message);
-      this.setState({
-        spinningAnimation: false
-      })
     }
   }
 
   async _onGoogleSignIn() {
-    const { navigate } = this.props.navigation
+    const { dispatch } = this.props.navigation
     try {
-      const user = await GoogleSignin.signIn()
-      let accessToken = user.accessToken
-      let idToken = user.idToken
+      this.refs.spinning.open()
+      // google setting
+      const result = await GoogleSignin.signIn()
+      let accessToken = result.accessToken
+      let idToken = result.idToken
+      
+      // firebase google setting
       const credential_google = await firebase.auth.GoogleAuthProvider.credential(idToken, accessToken)
-      const userData = await firebase.auth().signInWithCredential(credential_google)
-      navigate('TalkList')
+      const user = await firebase.auth().signInWithCredential(credential_google)
+      
+
+      firebase.database().ref(`/users/${user.uid}/profile`).set({
+        name: user.displayName,
+        email: user.email,
+        avatarUrl: user.photoURL
+      })
+      
+      dispatch(NavigationActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({routeName: 'TalkList'})
+        ]
+      }))
+
     } catch(error) {
       console.log('error msg is', error.message);
     }
