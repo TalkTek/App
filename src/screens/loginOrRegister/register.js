@@ -5,6 +5,7 @@ import React, { Component } from 'react'
 import {
   Image,
   Dimensions,
+  Platform
 } from 'react-native'
 import {
   Container,
@@ -201,7 +202,8 @@ const styles = {
   },
   baseButton: {
     alignSelf: 'auto',
-    width: screenWidth*0.75
+    width: screenWidth*0.75,
+    elevation: (Platform.OS ==='android') ? 0 : 3,
   },
   registerButton: {
     backgroundColor: 'rgb(31, 191, 179)',

@@ -6,7 +6,9 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import {
   Image,
   Dimensions,
-  ActivityIndicator
+  ActivityIndicator,
+  TouchableOpacity,
+  Platform,
 } from 'react-native'
 import {
   Container,
@@ -39,6 +41,8 @@ export default class Login extends Component {
       email: '',
       password: '',
       errMsg: '',
+      isOpen: false,
+      spinningIsOpen: false,
     }
   }
 
@@ -84,6 +88,9 @@ export default class Login extends Component {
       }))
 
     } catch(err) {
+      setTimeout(() => this.setState({
+        spinningIsOpen: false
+      }),1000)
       console.log('error message is', err.message);
     }
   }
@@ -91,7 +98,6 @@ export default class Login extends Component {
   async _onGoogleSignIn() {
     const { dispatch } = this.props.navigation
     try {
-      this.refs.spinning.open()
       // google setting
       const result = await GoogleSignin.signIn()
       let accessToken = result.accessToken
@@ -148,6 +154,7 @@ export default class Login extends Component {
   }
 
   render() {
+    console.log('this.state.spinningIsOpen', this.state.spinningIsOpen);
     const { navigate } = this.props.navigation
     return (
       <Container style={styles.container}>
@@ -173,7 +180,10 @@ export default class Login extends Component {
                 />
               </Item>
             </Form>
-            <Button style={{...styles.baseButton, ...styles.loginButton}} onPress={this._onEmailPasswordLogin.bind(this)}>
+            <Button
+              style={{...styles.baseButton, ...styles.loginButton}}
+              onPress={this._onEmailPasswordLogin.bind(this)}
+            >
               <Text style={styles.loginText}>
                 登入
               </Text>
@@ -212,6 +222,7 @@ export default class Login extends Component {
           <Modal
             style={styles.spinningModal}
             ref={'spinning'}
+            isOpen={this.state.spinningIsOpen}
           >
             <ActivityIndicator
               animating
@@ -229,7 +240,7 @@ const styles = {
   spinningModal: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   modalHeadlineText: {
     marginTop: 14,
@@ -294,7 +305,8 @@ const styles = {
   },
   baseButton: {
     alignSelf: 'auto',
-    width: screenWidth*0.75
+    width: screenWidth*0.75,
+    elevation: (Platform.OS === 'android') ? 0 : 3,
   },
   loginButton: {
     backgroundColor: 'rgb(31, 191, 179)',
