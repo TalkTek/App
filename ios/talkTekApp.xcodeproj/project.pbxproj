@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -61,6 +62,8 @@
 		67F6645E377F499DAA816118 /* libRNSound.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B94F75DBFF86440CA029EB3B /* libRNSound.a */; };
 		69C66507787248FCAF1FF11D /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83D7B15A1C2549F8A1F4D578 /* libCodePush.a */; };
 		6BE52EC6E14A4A2A9C356286 /* Georgia.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 074320414EB94338BA6D45F5 /* Georgia.ttf */; };
+		6D4C2B151EDEFCC700768D8D /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D4C2B141EDEFCC700768D8D /* Launch Screen.storyboard */; };
+		6D4C2B171EDFE8C100768D8D /* launch_image.png in Resources */ = {isa = PBXBuildFile; fileRef = 6D4C2B161EDFE8C100768D8D /* launch_image.png */; };
 		6D6B3CD91ECC1C9B005B149E /* libReactNativeAudioToolkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D6B3CD81ECC1C90005B149E /* libReactNativeAudioToolkit.a */; };
 		6DC1943E1ECE9858006AA0A3 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DC1943A1ECE9858006AA0A3 /* Bolts.framework */; };
 		6DC1943F1ECE9858006AA0A3 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DC1943A1ECE9858006AA0A3 /* Bolts.framework */; };
@@ -393,6 +396,8 @@
 		5F4195E052F24B74929F5420 /* Rubik-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-BoldItalic.ttf"; path = "../node_modules/native-base/Fonts/Rubik-BoldItalic.ttf"; sourceTree = "<group>"; };
 		608E959404D9423598FC9CCA /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 		616E5C7192564C988E81F911 /* SanFranciscoThin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SanFranciscoThin.ttf; path = "../node_modules/native-base/Fonts/SanFranciscoThin.ttf"; sourceTree = "<group>"; };
+		6D4C2B141EDEFCC700768D8D /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		6D4C2B161EDFE8C100768D8D /* launch_image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = launch_image.png; sourceTree = "<group>"; };
 		6D6B3CD31ECC1C90005B149E /* ReactNativeAudioToolkit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeAudioToolkit.xcodeproj; path = "../node_modules/react-native-audio-toolkit/ios/ReactNativeAudioToolkit/ReactNativeAudioToolkit.xcodeproj"; sourceTree = "<group>"; };
 		6DC1943A1ECE9858006AA0A3 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		6DC1943B1ECE9858006AA0A3 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
@@ -605,6 +610,7 @@
 		13B07FAE1A68108700A75B9A /* talkTekApp */ = {
 			isa = PBXGroup;
 			children = (
+				6D4C2B161EDFE8C100768D8D /* launch_image.png */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -612,6 +618,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				6D4C2B141EDEFCC700768D8D /* Launch Screen.storyboard */,
 			);
 			name = talkTekApp;
 			sourceTree = "<group>";
@@ -1304,6 +1311,7 @@
 				83760C666769419997C66DAC /* Rubik-Light.ttf in Resources */,
 				9BE3ECCD5D9D4017AA33B9DE /* Rubik-LightItalic.ttf in Resources */,
 				F436B234CC32431AB5029E94 /* Rubik-Medium.ttf in Resources */,
+				6D4C2B171EDFE8C100768D8D /* launch_image.png in Resources */,
 				2210322A103B4032A8102B7F /* Rubik-MediumItalic.ttf in Resources */,
 				2A4C62E8C61D43DDB49EED20 /* Rubik-Regular.ttf in Resources */,
 				EDA3990447E04D5EABB24CD3 /* SF-UI-Text-Regular.otf in Resources */,
@@ -1315,6 +1323,7 @@
 				AEB258CEC8004E04B440C0EE /* Times New Roman.ttf in Resources */,
 				7193D8D661C44BCEB80D879E /* Zocial.ttf in Resources */,
 				D23A06E3EA084303939A44ED /* rubicon-icon-font.ttf in Resources */,
+				6D4C2B151EDEFCC700768D8D /* Launch Screen.storyboard in Resources */,
 				B3BCC57B2B66482CB64FEA10 /* Entypo.ttf in Resources */,
 				E1E7B60C7CE6487AB2682D2B /* EvilIcons.ttf in Resources */,
 				07E428600AD140B28E123C67 /* FontAwesome.ttf in Resources */,

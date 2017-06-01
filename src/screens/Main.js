@@ -14,41 +14,39 @@ export default class Main extends Component {
     header: null,
   }
 
-  componentDidMount() {
+  componentWillMount () {
     const { dispatch } = this.props.navigation
     firebase.auth().onAuthStateChanged( user => {
       if (user) {
-        setTimeout(
-          () => dispatch(
+        // setTimeout(
+          dispatch(
             NavigationActions.reset({
             index: 0,
             actions: [
               NavigationActions.navigate({routeName: 'TalkList'})
             ]
           }))
-        , 1500)
+        // , 1500)
       } else {
-        setTimeout(
-          () => dispatch(
+        // setTimeout(
+          dispatch(
             NavigationActions.reset({
             index: 0,
             actions: [
               NavigationActions.navigate({routeName: 'Login'})
             ]
           }))
-          , 1500)
+          // , 1500)
       }
     })
   }
 
+  componentDidMount() {
+
+  }
+
   render() {
-    return (
-      <Container style={styles.container}>
-        <View style={styles.bg}>
-          <Image source={require('../assets/img/logo.png')} style={styles.img}/>
-        </View>
-      </Container>
-    )
+    return null
   }
 }
 

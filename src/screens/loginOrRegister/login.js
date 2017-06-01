@@ -69,9 +69,12 @@ export default class Login extends Component {
       const tokenData = await AccessToken.getCurrentAccessToken()
       const token = tokenData.accessToken.toString()
 
+      console.log("Hello world");
       // firebase setting
       const credential_facebook = firebase.auth.FacebookAuthProvider.credential(token)
       const user = await firebase.auth().signInWithCredential(credential_facebook)
+
+      console.log('user isx', user );
 
       // write firebase
       firebase.database().ref(`/users/${user.uid}/profile`).set({
@@ -87,11 +90,22 @@ export default class Login extends Component {
         ]
       }))
 
-    } catch(err) {
-      setTimeout(() => this.setState({
-        spinningIsOpen: false
-      }),1000)
-      console.log('error message is', err.message);
+    } catch(error) {
+      // setTimeout(() => this.setState({
+      //   spinningIsOpen: false
+      // }),1000)
+
+      if ( error.code === "auth/account-exists-with-different-credential" ) {
+        this.setState({
+          errMsg: '請改用Google登入或一般登入',
+          isOpen: true,
+        })
+        this.refs.modal.open()
+      }
+      console.log('error.credential', error.credential);
+
+      console.log('error message is', error.message);
+      console.log('error code is', error.code);
     }
   }
 
@@ -107,22 +121,22 @@ export default class Login extends Component {
       const credential_google = await firebase.auth.GoogleAuthProvider.credential(idToken, accessToken)
       const user = await firebase.auth().signInWithCredential(credential_google)
       
-
       firebase.database().ref(`/users/${user.uid}/profile`).set({
         name: user.displayName,
         email: user.email,
         avatarUrl: user.photoURL
       })
-      
+
       dispatch(NavigationActions.reset({
         index: 0,
         actions: [
           NavigationActions.navigate({routeName: 'TalkList'})
         ]
       }))
-
     } catch(error) {
-      console.log('error msg is', error.message);
+      console.log('error message is', error.message);
+      console.log('error code is', error.code);
+
     }
   }
   
@@ -207,7 +221,7 @@ export default class Login extends Component {
             style={styles.modal}
             backdrop={true}
             position={'center'}
-            ref={"modal"}
+            ref={'modal'}
             backdropOpacity={0.3}
             isOpen={this.state.isOpen}
           >
@@ -245,16 +259,19 @@ const styles = {
   modalHeadlineText: {
     marginTop: 14,
     marginBottom: 29,
-    fontSize: 15,
-    fontWeight: 'bold'
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   modalErrorMsgText: {
-    marginBottom: 30,
     fontSize: 15,
+    marginHorizontal: 13,
+    marginBottom: 16,
   },
   modalButton: {
+    marginTop: 13,
+    marginBottom: 5,
     alignSelf: 'auto',
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
   modalButtonText: {
     color: 'rgb(31, 191, 179)',
@@ -262,9 +279,8 @@ const styles = {
     fontSize: 15,
   },
   modal: {
-    justifyContent: 'center',
     alignItems: 'center',
-    height: screenHeight*0.26,
+    height: screenHeight*0.23,
     width: screenWidth*0.8,
     backgroundColor: 'white',
     borderRadius: 10,
