@@ -21,8 +21,6 @@
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
-		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
@@ -62,8 +60,8 @@
 		67F6645E377F499DAA816118 /* libRNSound.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B94F75DBFF86440CA029EB3B /* libRNSound.a */; };
 		69C66507787248FCAF1FF11D /* libCodePush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83D7B15A1C2549F8A1F4D578 /* libCodePush.a */; };
 		6BE52EC6E14A4A2A9C356286 /* Georgia.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 074320414EB94338BA6D45F5 /* Georgia.ttf */; };
-		6D4C2B151EDEFCC700768D8D /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D4C2B141EDEFCC700768D8D /* Launch Screen.storyboard */; };
-		6D4C2B171EDFE8C100768D8D /* launch_image.png in Resources */ = {isa = PBXBuildFile; fileRef = 6D4C2B161EDFE8C100768D8D /* launch_image.png */; };
+		6D4C2B191EE011D600768D8D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		6D4C2B1A1EE011D900768D8D /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D4C2B141EDEFCC700768D8D /* Launch Screen.storyboard */; };
 		6D6B3CD91ECC1C9B005B149E /* libReactNativeAudioToolkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D6B3CD81ECC1C90005B149E /* libReactNativeAudioToolkit.a */; };
 		6DC1943E1ECE9858006AA0A3 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DC1943A1ECE9858006AA0A3 /* Bolts.framework */; };
 		6DC1943F1ECE9858006AA0A3 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DC1943A1ECE9858006AA0A3 /* Bolts.framework */; };
@@ -73,14 +71,12 @@
 		6DC194431ECE9858006AA0A3 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DC1943C1ECE9858006AA0A3 /* FBSDKLoginKit.framework */; };
 		6DC194441ECE9858006AA0A3 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DC1943D1ECE9858006AA0A3 /* FBSDKShareKit.framework */; };
 		6DC194451ECE9858006AA0A3 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DC1943D1ECE9858006AA0A3 /* FBSDKShareKit.framework */; };
-		6DF3E9311ED4327900D7A8AB /* GoogleSdk in Resources */ = {isa = PBXBuildFile; fileRef = 6DF3E9301ED4327900D7A8AB /* GoogleSdk */; };
 		6DF3E9351ED4328500D7A8AB /* GoogleAppUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DF3E9321ED4328500D7A8AB /* GoogleAppUtilities.framework */; };
 		6DF3E9361ED4328500D7A8AB /* GoogleAuthUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DF3E9331ED4328500D7A8AB /* GoogleAuthUtilities.framework */; };
 		6DF3E9371ED4328500D7A8AB /* GoogleNetworkingUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DF3E9341ED4328500D7A8AB /* GoogleNetworkingUtilities.framework */; };
 		6DF3E93B1ED4328900D7A8AB /* GoogleSignIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DF3E9381ED4328900D7A8AB /* GoogleSignIn.framework */; };
 		6DF3E93C1ED4328900D7A8AB /* GoogleSymbolUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DF3E9391ED4328900D7A8AB /* GoogleSymbolUtilities.framework */; };
 		6DF3E93D1ED4328900D7A8AB /* GoogleUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6DF3E93A1ED4328900D7A8AB /* GoogleUtilities.framework */; };
-		6DF3E93F1ED432B700D7A8AB /* GoogleSignIn.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6DF3E93E1ED432B700D7A8AB /* GoogleSignIn.bundle */; };
 		702B3A0FB9464D8FBCC92EDA /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 41A425C84E0044FD8ADB7615 /* MaterialIcons.ttf */; };
 		7193D8D661C44BCEB80D879E /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A072656BE3FA4DEABECCAB3B /* Zocial.ttf */; };
 		753B9DF00A02403CACE41CC4 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6E566A8FCD744F40BF260F29 /* SimpleLineIcons.ttf */; };
@@ -1284,9 +1280,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				6DF3E93F1ED432B700D7A8AB /* GoogleSignIn.bundle in Resources */,
+				6D4C2B1A1EE011D900768D8D /* Launch Screen.storyboard in Resources */,
+				6D4C2B191EE011D600768D8D /* Images.xcassets in Resources */,
 				82D4EF9847C247C38835CA9D /* Andale Mono.ttf in Resources */,
 				5E236CE9B1394A81957981C7 /* Arial Black.ttf in Resources */,
 				54DA3F0EACD940FA99F11947 /* Arial.ttf in Resources */,
@@ -1311,7 +1306,6 @@
 				83760C666769419997C66DAC /* Rubik-Light.ttf in Resources */,
 				9BE3ECCD5D9D4017AA33B9DE /* Rubik-LightItalic.ttf in Resources */,
 				F436B234CC32431AB5029E94 /* Rubik-Medium.ttf in Resources */,
-				6D4C2B171EDFE8C100768D8D /* launch_image.png in Resources */,
 				2210322A103B4032A8102B7F /* Rubik-MediumItalic.ttf in Resources */,
 				2A4C62E8C61D43DDB49EED20 /* Rubik-Regular.ttf in Resources */,
 				EDA3990447E04D5EABB24CD3 /* SF-UI-Text-Regular.otf in Resources */,
@@ -1323,11 +1317,9 @@
 				AEB258CEC8004E04B440C0EE /* Times New Roman.ttf in Resources */,
 				7193D8D661C44BCEB80D879E /* Zocial.ttf in Resources */,
 				D23A06E3EA084303939A44ED /* rubicon-icon-font.ttf in Resources */,
-				6D4C2B151EDEFCC700768D8D /* Launch Screen.storyboard in Resources */,
 				B3BCC57B2B66482CB64FEA10 /* Entypo.ttf in Resources */,
 				E1E7B60C7CE6487AB2682D2B /* EvilIcons.ttf in Resources */,
 				07E428600AD140B28E123C67 /* FontAwesome.ttf in Resources */,
-				6DF3E9311ED4327900D7A8AB /* GoogleSdk in Resources */,
 				9D1B392EA08B450E8F7AB3D0 /* Foundation.ttf in Resources */,
 				303F9089D36E48AF8F9F6AA2 /* Ionicons.ttf in Resources */,
 				085C268B430540F38DAA0963 /* MaterialCommunityIcons.ttf in Resources */,

@@ -62,39 +62,34 @@ export default class Login extends Component {
   async _onFacebookLogin () {
     const { dispatch } = this.props.navigation
     try {
-      setTimeout(() => this.refs.spinning.open(), 1500)
+      setTimeout(() => this.refs.spinning.open(), 1200)
 
-      // facebook sdk setting
       const result = await LoginManager.logInWithReadPermissions(['public_profile', 'email'])
-      const tokenData = await AccessToken.getCurrentAccessToken()
-      const token = tokenData.accessToken.toString()
+      if(result.isCancelled) {
+        setTimeout( () => this.setState({ spinningIsOpen: false }), 1200)
+      } else {
+        const tokenData = await AccessToken.getCurrentAccessToken()
+        const token = tokenData.accessToken.toString()
 
-      console.log("Hello world");
-      // firebase setting
-      const credential_facebook = firebase.auth.FacebookAuthProvider.credential(token)
-      const user = await firebase.auth().signInWithCredential(credential_facebook)
+        // firebase setting
+        const credential_facebook = firebase.auth.FacebookAuthProvider.credential(token)
+        const user = await firebase.auth().signInWithCredential(credential_facebook)
 
-      console.log('user isx', user );
+        // write firebase
+        firebase.database().ref(`/users/${user.uid}/profile`).set({
+          name: user.displayName,
+          email: user.email,
+          avatarUrl: user.photoURL
+        })
 
-      // write firebase
-      firebase.database().ref(`/users/${user.uid}/profile`).set({
-        name: user.displayName,
-        email: user.email,
-        avatarUrl: user.photoURL
-      })
-
-      dispatch(NavigationActions.reset({
-        index: 0,
-        actions: [
-          NavigationActions.navigate({routeName: 'TalkList'})
-        ]
-      }))
-
+        dispatch(NavigationActions.reset({
+          index: 0,
+          actions: [
+            NavigationActions.navigate({routeName: 'TalkList'})
+          ]
+        }))
+      }
     } catch(error) {
-      // setTimeout(() => this.setState({
-      //   spinningIsOpen: false
-      // }),1000)
-
       if ( error.code === "auth/account-exists-with-different-credential" ) {
         this.setState({
           errMsg: '請改用Google登入或一般登入',
@@ -102,6 +97,10 @@ export default class Login extends Component {
         })
         this.refs.modal.open()
       }
+
+      this.setState({
+        spinningIsOpen: false
+      })
       console.log('error.credential', error.credential);
 
       console.log('error message is', error.message);
