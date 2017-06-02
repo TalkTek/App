@@ -3,6 +3,7 @@ package com.talktekapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.idehub.GoogleAnalyticsBridge.GoogleAnalyticsBridgePackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.microsoft.codepush.react.CodePush;
@@ -44,6 +45,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+            new GoogleAnalyticsBridgePackage(),
               new CodePush("Fa0Ug7tNp1xFH9EShk5GXlBEIXCE4JbRhcGg7", getApplicationContext(), BuildConfig.DEBUG),
               new VectorIconsPackage(),
               new RNSoundPackage(),

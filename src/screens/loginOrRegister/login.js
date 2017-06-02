@@ -26,6 +26,12 @@ import firebase from 'firebase'
 import { FIREBASE_CONFIG } from '../../lib/config'
 import Modal from 'react-native-modalbox'
 import { NavigationActions } from 'react-navigation'
+import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge'
+
+let tracker = new GoogleAnalyticsTracker('UA-100326178-1',{ test: 3})
+
+tracker.trackScreenView('Login')
+
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
 firebase.initializeApp(FIREBASE_CONFIG)

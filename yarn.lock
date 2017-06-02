@@ -4085,6 +4085,10 @@ react-native-fbsdk@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/react-native-fbsdk/-/react-native-fbsdk-0.5.0.tgz#3ccd67d189755df11d366b8de9acb91ea2300e6e"
 
+react-native-google-analytics-bridge@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-google-analytics-bridge/-/react-native-google-analytics-bridge-5.0.1.tgz#b4b4eb00e1316d1aaa9f02304912355f8a5797e2"
+
 react-native-google-signin@^0.10.0:
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/react-native-google-signin/-/react-native-google-signin-0.10.0.tgz#cc47d3726165735ee61e3a4a589c2ced888f1a98"
