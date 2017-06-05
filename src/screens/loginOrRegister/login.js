@@ -28,10 +28,9 @@ import Modal from 'react-native-modalbox'
 import { NavigationActions } from 'react-navigation'
 import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge'
 
-let tracker = new GoogleAnalyticsTracker('UA-100326178-1',{ test: 3})
+let tracker = new GoogleAnalyticsTracker('UA-100475279-1',{ test: 3})
 
 tracker.trackScreenView('Login')
-
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
 firebase.initializeApp(FIREBASE_CONFIG)
@@ -68,6 +67,7 @@ export default class Login extends Component {
   async _onFacebookLogin () {
     const { dispatch } = this.props.navigation
     try {
+      tracker.trackEvent('FacebookLogin', 'Click')
       setTimeout(() => this.refs.spinning.open(), 1200)
 
       const result = await LoginManager.logInWithReadPermissions(['public_profile', 'email'])
@@ -108,7 +108,6 @@ export default class Login extends Component {
         spinningIsOpen: false
       })
       console.log('error.credential', error.credential);
-
       console.log('error message is', error.message);
       console.log('error code is', error.code);
     }
@@ -117,15 +116,16 @@ export default class Login extends Component {
   async _onGoogleSignIn() {
     const { dispatch } = this.props.navigation
     try {
+      tracker.trackEvent('GoogleLogin', 'Click')
       // google setting
       const result = await GoogleSignin.signIn()
       let accessToken = result.accessToken
       let idToken = result.idToken
-      
+
       // firebase google setting
       const credential_google = await firebase.auth.GoogleAuthProvider.credential(idToken, accessToken)
       const user = await firebase.auth().signInWithCredential(credential_google)
-      
+
       firebase.database().ref(`/users/${user.uid}/profile`).set({
         name: user.displayName,
         email: user.email,
@@ -150,6 +150,7 @@ export default class Login extends Component {
     try {
       await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
       navigate('TalkList')
+      tracker.trackEvent('EmailPasswordLogin', 'Fill In')
     }
     catch(error) {
       if (error.message === 'The email address is badly formatted.') {
@@ -173,7 +174,6 @@ export default class Login extends Component {
   }
 
   render() {
-    console.log('this.state.spinningIsOpen', this.state.spinningIsOpen);
     const { navigate } = this.props.navigation
     return (
       <Container style={styles.container}>
@@ -262,19 +262,14 @@ const styles = {
     justifyContent: 'center',
   },
   modalHeadlineText: {
-    marginTop: 14,
-    marginBottom: 29,
     fontSize: 16,
     fontWeight: 'bold',
   },
   modalErrorMsgText: {
-    fontSize: 15,
+    fontSize: 16,
     marginHorizontal: 13,
-    marginBottom: 16,
   },
   modalButton: {
-    marginTop: 13,
-    marginBottom: 5,
     alignSelf: 'auto',
     backgroundColor: '#fff',
   },
@@ -285,7 +280,9 @@ const styles = {
   },
   modal: {
     alignItems: 'center',
-    height: screenHeight*0.23,
+    justifyContent: 'space-between',
+    paddingTop: 12,
+    height: screenHeight*0.2624,
     width: screenWidth*0.8,
     backgroundColor: 'white',
     borderRadius: 10,
