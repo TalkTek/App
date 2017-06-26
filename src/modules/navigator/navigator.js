@@ -51,8 +51,8 @@ const AppNavigator = TabNavigator(
           <Image
             source={
               focused
-                ? require('../../assets/img/tabIcon/lecture/lecture_active.png')
-                : require('../../assets/img/tabIcon/lecture/lecture_inactive.png')
+                ? require('../../assets/img/tabIcon/lecture/lec_active.png')
+                : require('../../assets/img/tabIcon/lecture/lec_inactive.png')
             }
           />
         )
