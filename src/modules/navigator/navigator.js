@@ -94,21 +94,21 @@ const MemberCenterScreen = StackNavigator({
 
 const AppNavigator = TabNavigator(
   {
-    Lecture: {
-      screen: LectureScreen,
-      navigationOptions: {
-        tabBarLabel: '小講',
-        tabBarIcon: ({tintColor, focused}) => (
-          <Image
-            source={
-              focused
-                ? require('../../assets/img/tabIcon/lecture/lec_active.png')
-                : require('../../assets/img/tabIcon/lecture/lec_inactive.png')
-            }
-          />
-        )
-      }
-    },
+    // Lecture: {
+    //   screen: LectureScreen,
+    //   navigationOptions: {
+    //     tabBarLabel: '小講',
+    //     tabBarIcon: ({tintColor, focused}) => (
+    //       <Image
+    //         source={
+    //           focused
+    //             ? require('../../assets/img/tabIcon/lecture/lec_active.png')
+    //             : require('../../assets/img/tabIcon/lecture/lec_inactive.png')
+    //         }
+    //       />
+    //     )
+    //   }
+    // },
     KnowledgeCapsule: {
       screen: CapsuleScreen,
       navigationOptions: {

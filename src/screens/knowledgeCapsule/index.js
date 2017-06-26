@@ -8,21 +8,22 @@ import {
   StyleSheet
 } from 'react-native'
 import firebase from 'firebase'
+import AudioUnit from '../../components/AudioUnit'
 
 export default class KnowledgeCapsule extends Component {
 
   componentWillMount () {
-    console.log('hello worldBBBBBBBBB')
     let capsuleRef = firebase.database().ref('capsule').limitToLast(10)
-    capsuleRef.once('value', (snapshot) => {
-      console.log('value is', snapshot.val())
-    })
-      .catch(error => console.log('error is', error))
+    capsuleRef
+      .once('value', (snapshot) => {
+        console.log('value is', snapshot.val())
+      })
+      .catch(error => console.warn('error: get capsule data from firebase. message is: ', error))
   }
 
   render () {
     return (
-      <Text>Hello world</Text>
+      <AudioUnit/>
     )
   }
 }
