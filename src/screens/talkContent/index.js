@@ -8,15 +8,15 @@ import GuideList from './guideList'
 import { Container, Content } from 'native-base'
 
 class TalkContent extends Component {
-  render() {
+  render () {
     return (
       <Container>
         <Content>
           <Info />
-          <View style={styles.division}></View>
+          <View style={styles.division} />
           <IntroAccordion />
-          <View style={styles.division}></View>
-          <GuideList/>
+          <View style={styles.division} />
+          <GuideList />
         </Content>
       </Container>
     )

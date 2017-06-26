@@ -6,8 +6,7 @@ import { Image, View, Text, StyleSheet, Dimensions } from 'react-native'
 import { Left, Right } from 'native-base'
 
 const { width, height } = Dimensions.get('window')
-let margin = Number(((width)*0.06).toFixed())
-
+let margin = Number(((width) * 0.06).toFixed())
 
 export default class Info extends Component {
   constructor (props) {
@@ -58,7 +57,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: 'rgb(255, 255, 255)',
   },
-  bannerImage : {
+  bannerImage: {
     resizeMode: 'contain',
     width: width,
     height: 140

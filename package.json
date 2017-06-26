@@ -25,7 +25,7 @@
 		"react-native-slider": "^0.9.1",
 		"react-native-sound": "git+https://github.com/zmxv/react-native-sound.git#ba1b244",
 		"react-native-vector-icons": "^4.1.1",
-		"react-navigation": "git+https://github.com/react-community/react-navigation.git#880e93c",
+		"react-navigation": "git+https://github.com/react-community/react-navigation.git#a2fdb6d",
 		"react-redux": "^5.0.4",
 		"redux": "^3.6.0",
 		"redux-action": "^1.2.2",
