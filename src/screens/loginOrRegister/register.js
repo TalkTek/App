@@ -27,6 +27,7 @@ const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
 export default class Register extends Component {
   static navigationOptions = {
     header: null,
+    tabBarVisible: false,
   }
 
   constructor (props) {

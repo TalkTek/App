@@ -18,7 +18,7 @@ const LectureScreen = StackNavigator({
   Register: { screen: Register },
   Main: { screen: MainScreen }
 }, {
-  initialRouteName: 'TalkList',
+  initialRouteName: 'Main',
   navigationOptions: {
     title: '小講',
     headerStyle: {
