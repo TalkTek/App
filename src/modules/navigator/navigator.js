@@ -20,7 +20,7 @@ const LectureScreen = StackNavigator({
 }, {
   initialRouteName: 'TalkList',
   navigationOptions: {
-    title: 'talk',
+    title: '小講',
     headerStyle: {
       backgroundColor: 'rgb(31, 191, 179)',
       height: 64
@@ -41,6 +41,57 @@ const LectureScreen = StackNavigator({
   }
 })
 
+const CapsuleScreen = StackNavigator({
+  KnowledgeCapsuleScreen: { screen: KnowledgeCapsule }
+}, {
+  navigationOptions: {
+    title: '知識膠囊',
+    headerStyle: {
+      backgroundColor: 'rgb(31, 191, 179)',
+      height: 64
+    },
+    headerTitleStyle: {
+      fontSize: 17,
+      lineHeight: 22,
+      color: 'rgb(255, 255, 255)'
+    },
+    headerBackTitle: 'back',
+    headerBackTitleStyle: {
+      fontSize: 15,
+      fontWeight: 'bold',
+      lineHeight: 22,
+      color: 'rgb(255, 255, 255)'
+    },
+    headerTintColor: 'white'
+  }
+})
+
+const MemberCenterScreen = StackNavigator({
+  MemberCenterScreen: { screen: MemberCenter }
+}, {
+  navigationOptions: {
+    title: '我的',
+    headerStyle: {
+      backgroundColor: 'rgb(31, 191, 179)',
+      height: 64
+    },
+    headerTitleStyle: {
+      fontSize: 17,
+      lineHeight: 22,
+      color: 'rgb(255, 255, 255)'
+    },
+    headerBackTitle: 'back',
+    headerBackTitleStyle: {
+      fontSize: 15,
+      fontWeight: 'bold',
+      lineHeight: 22,
+      color: 'rgb(255, 255, 255)'
+    },
+    headerTintColor: 'white'
+  }
+
+})
+
 const AppNavigator = TabNavigator(
   {
     Lecture: {
@@ -59,7 +110,7 @@ const AppNavigator = TabNavigator(
       }
     },
     KnowledgeCapsule: {
-      screen: KnowledgeCapsule,
+      screen: CapsuleScreen,
       navigationOptions: {
         tabBarLabel: '知識膠囊',
         tabBarIcon: ({tintColor, focused}) => (
@@ -74,7 +125,7 @@ const AppNavigator = TabNavigator(
       }
     },
     MemberCenter: {
-      screen: MemberCenter,
+      screen: MemberCenterScreen,
       navigationOptions: {
         tabBarLabel: '我的',
         tabBarIcon: ({tintColor, focused}) => (
@@ -91,7 +142,7 @@ const AppNavigator = TabNavigator(
   },
   {
     tabBarOptions: {
-      activeTintColor: Platform.OS === 'ios' ? '#e91e63' : '#fff'
+      activeTintColor: Platform.OS === 'ios' ? 'rgb(31, 191, 179)' : '#fff'
     }
   }
 )
