@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux'
 // import { persistStore, autoRehydrate } from 'redux-persist';
 import { AsyncStorage } from 'react-native';
 import middlewares from './middlewares'
-import reducer from '../modules/reducer'
+import reducer from '../reducer/index'
 
 const enhancers = [
   // autoRehydrate(),

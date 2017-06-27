@@ -1,22 +1,19 @@
 // @flow
-import AppNavigator from './navigator'
+import AppNavigator from '../../lib/navigator'
 import { NavigationActions } from 'react-navigation'
 
-export default (state, action) =>  {
+export default (state, action) => {
 
   let nextState
 
-  switch(action.type) {
+  switch (action.type) {
     case 'TalkContent':
       nextState = AppNavigator.router.getStateForAction(NavigationActions.navigate({ routeName: 'TalkContent' }), state)
       break
     default:
       nextState = AppNavigator.router.getStateForAction(action, state)
-      break;
+      break
   }
 
   return nextState || state
-};
-
-
-
+}

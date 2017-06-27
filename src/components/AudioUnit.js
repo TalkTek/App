@@ -87,7 +87,6 @@ export default class AudioUnit extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    // height: 122,
     borderWidth: 1,
     borderColor: '#000033',
     overflow: 'hidden'
@@ -97,5 +96,6 @@ const styles = StyleSheet.create({
 AudioUnit.propTypes = {
   title: PropTypes.string,
   audioLength: PropTypes.number,
-  audioUrl: PropTypes.string
+  audioUrl: PropTypes.string,
+  active: PropTypes.bool,
 }

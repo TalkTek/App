@@ -2,6 +2,9 @@
 'use strict'
 
 import React, { Component } from 'react'
+import { bindActionCreators } from 'redux'
+import * as globalActions from '../../reducer/global/globalAction'
+import { connect } from 'react-redux'
 import {
   Text,
   View,
@@ -10,8 +13,19 @@ import {
 import firebase from 'firebase'
 import AudioUnit from '../../components/AudioUnit'
 
-export default class KnowledgeCapsule extends Component {
+const mapStateToProps = (state) => {
+  return {
+    playing: state.playing
+  }
+}
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    actions: bindActionCreators(dispatch, globalActions)
+  }
+}
+
+class KnowledgeCapsule extends Component {
   componentWillMount () {
     let capsuleRef = firebase.database().ref('capsule').limitToLast(10)
     capsuleRef
@@ -20,10 +34,11 @@ export default class KnowledgeCapsule extends Component {
       })
       .catch(error => console.warn('error: get capsule data from firebase. message is: ', error))
   }
-
   render () {
     return (
-      <AudioUnit/>
+      <AudioUnit />
     )
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(KnowledgeCapsule)

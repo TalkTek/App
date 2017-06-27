@@ -2,13 +2,13 @@
 
 import React from 'react'
 import { StackNavigator, TabNavigator } from 'react-navigation'
-import TalkListScreen from '../../screens/talkList'
-import TalkContentScreen from '../../screens/talkContent'
-import Login from '../../screens/loginOrRegister/login'
-import Register from '../../screens/loginOrRegister/register'
-import MainScreen from '../../screens/Main'
-import KnowledgeCapsule from '../../screens/knowledgeCapsule'
-import MemberCenter from '../../screens/memberCenter'
+import TalkListScreen from '../screens/talkList/index'
+import TalkContentScreen from '../screens/talkContent/index'
+import Login from '../screens/loginOrRegister/login'
+import Register from '../screens/loginOrRegister/register'
+import MainScreen from '../screens/Main'
+import KnowledgeCapsule from '../screens/knowledgeCapsule/index'
+import MemberCenter from '../screens/memberCenter/index'
 import { Platform, Image } from 'react-native'
 
 const LectureScreen = StackNavigator({
@@ -117,8 +117,8 @@ const AppNavigator = TabNavigator(
           <Image
             source={
               focused
-                ? require('../../assets/img/tabIcon/knowledgeCapsule/cap_active.png')
-                : require('../../assets/img/tabIcon/knowledgeCapsule/cap_inactive.png')
+                ? require('../assets/img/tabIcon/knowledgeCapsule/cap_active.png')
+                : require('../assets/img/tabIcon/knowledgeCapsule/cap_inactive.png')
             }
           />
         )
@@ -132,8 +132,8 @@ const AppNavigator = TabNavigator(
           <Image
             source={
               focused
-                ? require('../../assets/img/tabIcon/memberCenter/member_active.png')
-                : require('../../assets/img/tabIcon/memberCenter/member_inactive.png')
+                ? require('../assets/img/tabIcon/memberCenter/member_active.png')
+                : require('../assets/img/tabIcon/memberCenter/member_inactive.png')
             }
           />
         )

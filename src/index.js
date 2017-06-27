@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import { Provider, connect } from 'react-redux';
 import createStore from './lib/configureStore'
 import { addNavigationHelpers } from 'react-navigation';
-import AppNav from './modules/navigator/navigator'
+import AppNav from './lib/navigator'
 import CodePush from 'react-native-code-push'
 
 @connect(state => ({
