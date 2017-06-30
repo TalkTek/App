@@ -63,6 +63,12 @@ export default class AudioUnit extends Component {
     ).start()
   }
 
+  onPress = () => {
+    if(this.props.playing) {
+
+    }
+  }
+
   render () {
     return (
       <Animated.View
@@ -76,8 +82,12 @@ export default class AudioUnit extends Component {
             <Text>Press Me</Text>
           </TouchableHighlight>
         </View>
-        <View onLayout={this.setAudioElementHeight}>
-          <Text>HEY I'm here</Text>
+        <View onLayout={this.setAudioElementHeight} style={styles.popAudioBar}>
+          <TouchableHighlight
+
+          >
+            <Text>Hello world</Text>
+          </TouchableHighlight>
         </View>
       </Animated.View>
     )
@@ -90,6 +100,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#000033',
     overflow: 'hidden'
+  },
+  popAudioBar: {
+
   }
 })
 
@@ -98,4 +111,5 @@ AudioUnit.propTypes = {
   audioLength: PropTypes.number,
   audioUrl: PropTypes.string,
   active: PropTypes.bool,
+  playing: PropTypes.bool,
 }
