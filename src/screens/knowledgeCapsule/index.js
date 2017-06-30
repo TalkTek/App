@@ -9,21 +9,33 @@ import {
   TouchableHighlight,
   Animated,
   Dimensions,
+  Image
 } from 'react-native'
 import {
   Container,
   Content,
   View,
   Text,
+  Left,
+  Right,
+  Button,
 } from 'native-base'
 
 import firebase from 'firebase'
 import AudioUnit from '../../components/AudioUnit'
 import Player from 'react-native-audio-toolkit'
+import WelcomeText from 'react-native/local-cli/templates/HelloNavigation/views/welcome/WelcomeText.android'
 
 const { width : screenWidth, height: screenHeight } = Dimensions.get('window')
 
 console.log('screenHeight', screenHeight);
+console.log('screenWidth', screenWidth);
+
+let buttons = {
+  'play': require('../../assets/img/audioElement/play.png'),
+  'stop': require('../../assets/img/audioElement/pause.png'),
+  'close': require('../../assets/img/close.png')
+}
 
 const mapStateToProps = (state) => {
   return {
@@ -40,7 +52,7 @@ const mapDispatchToProps = (dispatch) => {
 class KnowledgeCapsule extends Component {
 
   state = {
-    popoutAudioBarHeight: new Animated.Value(screenHeight),
+    popoutAudioBarHeight: new Animated.Value(screenHeight-160),
     audioPopBarOpen: false,
   }
 
@@ -65,7 +77,6 @@ class KnowledgeCapsule extends Component {
 
   togglePlayAudioBar = () => {
     const { popoutAudioBarHeight } = this.state
-    // popoutAudioBarHeight.setValue(screenHeight)
 
     Animated.spring(
       popoutAudioBarHeight,
@@ -74,11 +85,8 @@ class KnowledgeCapsule extends Component {
       }
     ).start()
   }
-  
 
   render () {
-
-
     return (
       <Container style={styles.container}>
         <Content>
@@ -91,10 +99,29 @@ class KnowledgeCapsule extends Component {
           <Animated.View
             style={[styles.popoutAudioPlayBar, {top: this.state.popoutAudioBarHeight} ]}
           >
-            <TouchableHighlight
+            <Button
+              transparent
             >
-              <Text>Hello world</Text>
-            </TouchableHighlight>
+              <Image
+                source={buttons.play}
+                style={styles.playPauseButton}
+              />
+            </Button>
+            <View style={styles.popoutAudioBarDes}>
+              <Text style={styles.popoutAudioBarText}>
+                別期待你的男人一心多用
+              </Text>
+              <Text style={styles.popoutAudioBarNumber}>
+                04:10
+              </Text>
+            </View>
+            <Button
+            >
+              <Image
+                source={buttons.close}
+                style={styles.open}
+              />
+            </Button>
           </Animated.View>
         </Content>
       </Container>
@@ -110,8 +137,32 @@ const styles = {
     position: 'absolute',
     width: screenWidth,
     height: 48,
-    backgroundColor: 'rgb(245, 245, 245)'
+    backgroundColor: 'rgb(245, 245, 245)',
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  playPauseButton: {
+    width: 32,
+    height: 32,
+  },
+  popoutAudioBarDes: {
+    width: screenWidth*0.68,
+  },
+  popoutAudioBarNumber: {
+    fontSize: 10,
+    color: 'rgb(33, 33, 33)'
+  },
+  popoutAudioBarText: {
+    fontWeight: '900',
+    fontSize: 13,
+    color: 'rgb(33, 33, 33)'
+  },
+  open: {
+    width: 20,
+    height: 20,
   }
 }
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(KnowledgeCapsule)
