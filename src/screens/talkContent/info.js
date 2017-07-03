@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(255, 255, 255)',
   },
   bannerImage: {
-    resizeMode: 'contain',
+    resizeMode: 'cover',
     width: width,
     height: 140
   },
