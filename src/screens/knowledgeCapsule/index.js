@@ -22,15 +22,15 @@ import {
   List,
   ListItem,
 } from 'native-base'
-
 import firebase from 'firebase'
+import styles from './styles'
 import AudioUnit from '../../components/AudioUnit'
 import Player from 'react-native-audio-toolkit'
 import WelcomeText from 'react-native/local-cli/templates/HelloNavigation/views/welcome/WelcomeText.android'
 import ob from 'lodash/object'
 
-const { width : screenWidth, height: screenHeight } = Dimensions.get('window')
 
+const { width : screenWidth, height: screenHeight } = Dimensions.get('window')
 console.log('screenHeight', screenHeight);
 console.log('screenWidth', screenWidth);
 
@@ -101,20 +101,29 @@ class KnowledgeCapsule extends Component {
 
   render () {
     const { audioUnit } = this.state
-    console.log('audioUnit ', this.state.audioUnit);
     let CapUnit
     if(audioUnit) {
       CapUnit = audioUnit.map((cap, i) => {
-        console.log('cap is', cap);
-        console.log('i is', i);
         return (
-          <View key={i}>
-            <Text>{cap.title}</Text>
+          <View key={i} style={styles.capContainer}>
+            <View style={styles.capStyle}>
+              <Text style={styles.capTitle}>
+                {cap.title}
+              </Text>
+            </View>
             {
-              Object.values(cap.audios).map( (audio, i) =>
-                <View key={i*2}>
-                  <Text>{audio.audioName}</Text>
-                  <Text>{audio.length}</Text>
+              Object.values(cap.audios).map((audio, i) =>
+                <View key={i*2} style={styles.capUnit}>
+                  <TouchableHighlight
+                    style={styles.capPlayPauseButton}
+                  >
+                    <Image
+                      source={buttons.play}
+                      style={styles.capPlayPauseButtonImage}
+                    />
+                  </TouchableHighlight>
+                  <Text style={styles.capAudioText}>{audio.audioName}</Text>
+                  <Text style={styles.audioLengthText}>{audio.length}</Text>
                 </View>
               )
             }
@@ -173,46 +182,5 @@ class KnowledgeCapsule extends Component {
     )
   }
 }
-
-const styles = {
-  container: {
-    backgroundColor: 'white',
-  },
-  banner: {
-    resizeMode: 'cover',
-    width: screenWidth,
-    height: 160
-  },
-  popoutAudioPlayBar: {
-    position: 'absolute',
-    width: screenWidth,
-    height: 48,
-    backgroundColor: 'rgb(245, 245, 245)',
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  playPauseButton: {
-    width: 32,
-    height: 32,
-  },
-  popoutAudioBarDes: {
-    width: screenWidth*0.68,
-  },
-  popoutAudioBarNumber: {
-    fontSize: 10,
-    color: 'rgb(33, 33, 33)'
-  },
-  popoutAudioBarText: {
-    fontWeight: '900',
-    fontSize: 13,
-    color: 'rgb(33, 33, 33)'
-  },
-  open: {
-    width: 20,
-    height: 20,
-  }
-}
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(KnowledgeCapsule)
