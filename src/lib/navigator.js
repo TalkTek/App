@@ -143,7 +143,12 @@ const AppNavigator = TabNavigator(
   {
     tabBarOptions: {
       activeTintColor: Platform.OS === 'ios' ? 'rgb(31, 191, 179)' : '#fff',
-      style: { height: 49, backgroundColor: 'white' }
+      style: {
+        height: 49,
+        backgroundColor: 'white',
+        borderTopColor: 'rgb(224, 224, 224)',
+        borderTopWidth: 1
+      }
     }
   }
 )

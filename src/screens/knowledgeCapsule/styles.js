@@ -21,7 +21,9 @@ export default {
   },
   playPauseButton: {
     width: 32,
-    height: 32
+    height: 32,
+    marginLeft: 16,
+    marginRight: 12
   },
   popoutAudioBarDes: {
     width: screenWidth * 0.68
@@ -41,21 +43,19 @@ export default {
   },
   capContainer: {
     paddingHorizontal: 16,
-    paddingVertical: 0,
+    paddingVertical: 0
   },
-  capStyle: {
+  capTitle: {
     paddingHorizontal: 8,
     paddingVertical: 16,
     borderBottomColor: 'rgb(224, 224, 224)',
     borderBottomWidth: 1
   },
-  capTitle: {
+  capTitleText: {
     fontSize: 15,
     color: 'rgb(33, 33, 33)'
   },
   capUnit: {
-    flexDirection: 'row',
-    alignItems: 'center',
     paddingVertical: 16,
     borderBottomColor: 'rgb(224, 224, 224)',
     borderBottomWidth: 1
@@ -63,11 +63,21 @@ export default {
   capPlayPauseButton: {
     marginRight: 8
   },
+  capAudio: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
   capPlayPauseButtonImage: {
     width: 24,
-    height: 24
+    height: 24,
+    marginRight: 12
   },
-  capAudioText: {
+  capAudioTextPlaying: {
+    fontSize: 15,
+    width: screenWidth * 0.7,
+    color: 'rgb(31, 191, 179)'
+  },
+  capAudioTextNotPlaying: {
     fontSize: 15,
     width: screenWidth * 0.7,
   },

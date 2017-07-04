@@ -24,8 +24,8 @@ import {
 } from 'native-base'
 import firebase from 'firebase'
 import styles from './styles'
+import { Player } from 'react-native-audio-toolkit'
 import AudioUnit from '../../components/AudioUnit'
-import Player from 'react-native-audio-toolkit'
 import WelcomeText from 'react-native/local-cli/templates/HelloNavigation/views/welcome/WelcomeText.android'
 import ob from 'lodash/object'
 
@@ -36,7 +36,7 @@ console.log('screenWidth', screenWidth);
 
 let buttons = {
   'play': require('../../assets/img/audioElement/play.png'),
-  'stop': require('../../assets/img/audioElement/pause.png'),
+  'pause': require('../../assets/img/audioElement/pause.png'),
   'expand': require('../../assets/img/knowledgeCapsule/expend.png')
 }
 
@@ -54,42 +54,89 @@ const mapDispatchToProps = (dispatch) => {
 
 class KnowledgeCapsule extends Component {
 
+  player = null
+
   state = {
     popoutAudioBarHeight: new Animated.Value(screenHeight),
     audioPopBarOpen: false,
     capsuleData: null,
     audioUnit: [],
+    player: null,
+    audioName: null,
+    audioLength: null,
+    playPauseButton: true, //true mean playable
   }
 
   componentWillMount () {
     // get back data from firebase
     let capsuleRef = firebase.database().ref('capsules').limitToLast(10)
+    let audios = []
     capsuleRef
       .once('value', snapshot => {
         console.log('sna', snapshot.val());
         Object.values(snapshot.val()).forEach(cap => {
+          Object.values(cap.audios).forEach((audio) => {
+            audios = [...audios, {
+              active: false,
+              name: audio.audioName,
+              length: audio.length,
+              url: audio.url
+            }]
+          })
           this.setState({
             audioUnit: [...this.state.audioUnit, {
-              audios: cap.audios,
+              audios: audios,
               title: cap.title
             }]
           })
+          audios = []
         })
-        console.log('audioUnit', this.state.audioUnit);
       })
       .catch(error => console.warn('error: get capsule data from firebase. message is: ', error))
     // create audio player
-    this.player = null
   }
 
-  createPlayer = () => {
-    if (this.player) {
+  createPlayer = (url) => {
+    if(this.player) {
       this.player.destroy()
     }
+    this.player = new Player(url)
+      .prepare(error => {
+        if(error) {
+          console.log('error at createPlayer, error is => ', error);
+        }
+      })
   }
 
-  togglePlayAudioBar = () => {
-    const { popoutAudioBarHeight } = this.state
+  playOrPause = () => {
+    this.player.playPause((error, playing) => {
+      if(error) {
+        console.log('playPause error msg is', error);
+      }
+      this.setState({
+        playPauseButton: this.player && !playing
+      })
+    })
+  }
+
+
+  togglePlayAudioBar = (audio, i, j) => {
+    const { popoutAudioBarHeight, audioUnit } = this.state
+    console.log('i=> ', i);
+    console.log('j=> ', j);
+
+    this.setState({
+      audioLength: audio.length,
+      audioName: audio.name,
+    })
+    console.log('before change', audioUnit[i].audios[j].active  );
+
+    audioUnit[i].audios[j].active = true
+
+    console.log('after change', audioUnit[i].audios[j].active  );
+
+    this.createPlayer(audio.url)
+    this.playOrPause()
 
     Animated.spring(
       popoutAudioBarHeight,
@@ -100,30 +147,39 @@ class KnowledgeCapsule extends Component {
   }
 
   render () {
-    const { audioUnit } = this.state
     let CapUnit
+    const {
+      audioUnit,
+      audioName,
+      audioLength,
+      playPauseButton
+    } = this.state
     if(audioUnit) {
       CapUnit = audioUnit.map((cap, i) => {
         return (
           <View key={i} style={styles.capContainer}>
-            <View style={styles.capStyle}>
-              <Text style={styles.capTitle}>
+            <View style={styles.capTitle}>
+              <Text style={styles.capTitleText}>
                 {cap.title}
               </Text>
             </View>
             {
-              Object.values(cap.audios).map((audio, i) =>
-                <View key={i*2} style={styles.capUnit}>
+              cap.audios.map((audio, j) =>
+                <View key={j} style={styles.capUnit}>
                   <TouchableHighlight
                     style={styles.capPlayPauseButton}
+                    onPress={this.togglePlayAudioBar.bind(this, audio, i, j)}
+                    underlayColor="#fff"
                   >
-                    <Image
-                      source={buttons.play}
-                      style={styles.capPlayPauseButtonImage}
-                    />
+                    <View style={styles.capAudio}>
+                      <Image
+                        source={playPauseButton ? buttons.play : buttons.pause}
+                        style={styles.capPlayPauseButtonImage}
+                      />
+                      <Text style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>{audio.name}</Text>
+                      <Text style={styles.audioLengthText}>{audio.length}</Text>
+                    </View>
                   </TouchableHighlight>
-                  <Text style={styles.capAudioText}>{audio.audioName}</Text>
-                  <Text style={styles.audioLengthText}>{audio.length}</Text>
                 </View>
               )
             }
@@ -142,30 +198,24 @@ class KnowledgeCapsule extends Component {
             />
           </View>
           {CapUnit? CapUnit : <Text>123</Text>}
-
-          {/*<TouchableHighlight*/}
-            {/*onPress={this.togglePlayAudioBar}*/}
-            {/*underlayColor="#fff"*/}
-          {/*>*/}
-            {/*<Text>Press Me</Text>*/}
-          {/*</TouchableHighlight>*/}
           <Animated.View
             style={[styles.popoutAudioPlayBar, {top: this.state.popoutAudioBarHeight} ]}
           >
-            <Button
+            <TouchableHighlight
               transparent
+              onPress={this.playOrPause}
             >
               <Image
-                source={buttons.play}
+                source={playPauseButton ? buttons.pause : buttons.play}
                 style={styles.playPauseButton}
               />
-            </Button>
+            </TouchableHighlight>
             <View style={styles.popoutAudioBarDes}>
               <Text style={styles.popoutAudioBarText}>
-                別期待你的男人一心多用
+                {audioName}
               </Text>
               <Text style={styles.popoutAudioBarNumber}>
-                04:10
+                {audioLength}
               </Text>
             </View>
             <Button
