@@ -64,7 +64,7 @@ class KnowledgeCapsule extends Component {
     player: null,
     audioName: null,
     audioLength: null,
-    playPauseButton: true, //true mean playable
+    playState: 'notPlaying',
     lastPick: {
       i: null,
       j: null
@@ -103,6 +103,9 @@ class KnowledgeCapsule extends Component {
   createPlayer = (url) => {
     if(this.player) {
       this.player.destroy()
+      this.setState({
+        playState: 'notPlaying',
+      })
     }
     this.player = new Player(url)
       .prepare(error => {
@@ -113,27 +116,28 @@ class KnowledgeCapsule extends Component {
   }
 
   playOrPause = () => {
-    this.player.playPause((error, playing) => {
-      if(error) {
-        console.log('playPause error msg is', error);
-      }
+    const { playState } = this.state
+    if(playState ==='notPlaying' && this.player) {
       this.setState({
-        playPauseButton: this.player && !playing
+        playState: 'playing'
       })
-    })
+      this.player.play()
+    } else if (!this.player) {
+      console.log('player is not found',);
+    } else {
+      this.setState({
+        playState: 'notPlaying'
+      })
+      this.player.pause()
+    }
   }
 
 
-  togglePlayAudioBar = (audio, i, j) => {
+  togglePlayAudioBar = async (audio, i, j) => {
     const { popoutAudioBarHeight, audioUnit, lastPick } = this.state
-    
-    console.log('audioUnitxxx', audioUnit);
-
     if(lastPick.i !== null && lastPick.j !== null) {
       audioUnit[lastPick.i].audios[lastPick.j].active = false
     }
-
-    console.log('before change', audioUnit[i].audios[j].active  );
 
     audioUnit[i].audios[j].active = true
 
@@ -146,10 +150,8 @@ class KnowledgeCapsule extends Component {
       },
     })
 
-    console.log('after change', audioUnit[i].audios[j].active  );
-
-    this.createPlayer(audio.url)
-    this.playOrPause()
+    await this.createPlayer(audio.url)
+    await this.playOrPause()
 
     Animated.spring(
       popoutAudioBarHeight,
@@ -165,7 +167,7 @@ class KnowledgeCapsule extends Component {
       audioUnit,
       audioName,
       audioLength,
-      playPauseButton
+      playState
     } = this.state
     if(audioUnit) {
       CapUnit = audioUnit.map((cap, i) => {
@@ -217,9 +219,10 @@ class KnowledgeCapsule extends Component {
             <TouchableHighlight
               transparent
               onPress={this.playOrPause}
+              underlayColor="#fff"
             >
               <Image
-                source={playPauseButton ? buttons.pause : buttons.play}
+                source={ playState === 'playing' ? buttons.pause : buttons.play}
                 style={styles.playPauseButton}
               />
             </TouchableHighlight>
