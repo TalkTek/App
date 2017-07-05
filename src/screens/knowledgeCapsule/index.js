@@ -186,7 +186,7 @@ class KnowledgeCapsule extends Component {
                   >
                     <View style={styles.capAudio}>
                       <Image
-                        source={playPauseButton ? buttons.play : buttons.pause}
+                        source={audio.active ? buttons.pause : buttons.play}
                         style={styles.capPlayPauseButtonImage}
                       />
                       <Text style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>{audio.name}</Text>
