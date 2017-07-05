@@ -65,6 +65,10 @@ class KnowledgeCapsule extends Component {
     audioName: null,
     audioLength: null,
     playPauseButton: true, //true mean playable
+    lastPick: {
+      i: null,
+      j: null
+    }
   }
 
   componentWillMount () {
@@ -121,17 +125,26 @@ class KnowledgeCapsule extends Component {
 
 
   togglePlayAudioBar = (audio, i, j) => {
-    const { popoutAudioBarHeight, audioUnit } = this.state
-    console.log('i=> ', i);
-    console.log('j=> ', j);
+    const { popoutAudioBarHeight, audioUnit, lastPick } = this.state
+    
+    console.log('audioUnitxxx', audioUnit);
+
+    if(lastPick.i !== null && lastPick.j !== null) {
+      audioUnit[lastPick.i].audios[lastPick.j].active = false
+    }
+
+    console.log('before change', audioUnit[i].audios[j].active  );
+
+    audioUnit[i].audios[j].active = true
 
     this.setState({
       audioLength: audio.length,
       audioName: audio.name,
+      lastPick: {
+        i: i,
+        j: j
+      },
     })
-    console.log('before change', audioUnit[i].audios[j].active  );
-
-    audioUnit[i].audios[j].active = true
 
     console.log('after change', audioUnit[i].audios[j].active  );
 
