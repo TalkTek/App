@@ -9,6 +9,7 @@ import Register from '../screens/loginOrRegister/register'
 import MainScreen from '../screens/Main'
 import KnowledgeCapsule from '../screens/knowledgeCapsule/index'
 import MemberCenter from '../screens/memberCenter/index'
+import PlayAudio from '../screens/playAudio'
 import { Platform, Image } from 'react-native'
 
 const LectureScreen = StackNavigator({
@@ -42,8 +43,11 @@ const LectureScreen = StackNavigator({
 })
 
 const CapsuleScreen = StackNavigator({
-  KnowledgeCapsuleScreen: { screen: KnowledgeCapsule }
+  KnowledgeCapsuleScreen: { screen: KnowledgeCapsule },
+  PlayAudioScreen: { screen: PlayAudio }
 }, {
+  initialRouteName: 'PlayAudioScreen',
+  mode: 'modal',
   navigationOptions: {
     title: '知識膠囊',
     headerStyle: {
@@ -63,7 +67,7 @@ const CapsuleScreen = StackNavigator({
       color: 'rgb(255, 255, 255)'
     },
     headerTintColor: 'white'
-  }
+  },
 })
 
 const MemberCenterScreen = StackNavigator({

@@ -26,10 +26,6 @@ import {
 import firebase from 'firebase'
 import styles from './styles'
 import { Player } from 'react-native-audio-toolkit'
-import AudioUnit from '../../components/AudioUnit'
-import WelcomeText from 'react-native/local-cli/templates/HelloNavigation/views/welcome/WelcomeText.android'
-import ob from 'lodash/object'
-
 
 const { width : screenWidth, height: screenHeight } = Dimensions.get('window')
 console.log('screenHeight', screenHeight);
@@ -172,6 +168,7 @@ class KnowledgeCapsule extends Component {
       audioLength,
       playState
     } = this.state
+    const { navigate } = this.props.navigation
     if(audioUnit) {
       CapUnit = audioUnit.map((cap, i) => {
         return (
@@ -239,6 +236,7 @@ class KnowledgeCapsule extends Component {
           </View>
           <Button
             transparent
+            onPress={() => navigate('PlayAudioScreen')}
           >
             <Image
               source={buttons.expand}
