@@ -36,9 +36,11 @@ console.log('screenHeight', screenHeight);
 console.log('screenWidth', screenWidth);
 
 let buttons = {
-  'play': require('../../assets/img/audioElement/play.png'),
+  'playingOnAudioBar': require('../../assets/img/audioElement/play.png'),
+  'playing': require('../../assets/img/audioElement/playing2.png'),
   'pause': require('../../assets/img/audioElement/pause.png'),
-  'expand': require('../../assets/img/knowledgeCapsule/expend.png')
+  'expand': require('../../assets/img/knowledgeCapsule/expend.png'),
+  'playable': require('../../assets/img/audioElement/playing1.png')
 }
 
 const mapStateToProps = (state) => {
@@ -189,7 +191,7 @@ class KnowledgeCapsule extends Component {
                   >
                     <View style={styles.capAudio}>
                       <Image
-                        source={audio.active ? buttons.pause : buttons.play}
+                        source={audio.active ? buttons.playing : buttons.playable}
                         style={styles.capPlayPauseButtonImage}
                       />
                       <Text style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>{audio.name}</Text>
@@ -211,8 +213,8 @@ class KnowledgeCapsule extends Component {
               style={styles.banner}
               source={require('../../assets/img/knowledgeCapsule/banner.png')}
             />
-            {CapUnit? CapUnit : <Text>123</Text>}
           </View>
+          {CapUnit? CapUnit : <Text>123</Text>}
         </Content>
         <Animated.View
           style={[styles.popoutAudioPlayBar, {top: this.state.popoutAudioBarHeight} ]}
@@ -223,7 +225,7 @@ class KnowledgeCapsule extends Component {
             underlayColor="#fff"
           >
             <Image
-              source={ playState === 'playing' ? buttons.pause : buttons.play}
+              source={ playState === 'playing' ? buttons.pause : buttons.playingOnAudioBar}
               style={styles.playPauseButton}
             />
           </TouchableHighlight>
