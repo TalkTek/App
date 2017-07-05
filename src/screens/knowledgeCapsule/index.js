@@ -21,6 +21,7 @@ import {
   Button,
   List,
   ListItem,
+  Footer,
 } from 'native-base'
 import firebase from 'firebase'
 import styles from './styles'
@@ -205,45 +206,44 @@ class KnowledgeCapsule extends Component {
     return (
       <Container style={styles.container}>
         <Content>
-          <View
-          >
+          <View>
             <Image
               style={styles.banner}
               source={require('../../assets/img/knowledgeCapsule/banner.png')}
             />
+            {CapUnit? CapUnit : <Text>123</Text>}
           </View>
-          {CapUnit? CapUnit : <Text>123</Text>}
-          <Animated.View
-            style={[styles.popoutAudioPlayBar, {top: this.state.popoutAudioBarHeight} ]}
-          >
-            <TouchableHighlight
-              transparent
-              onPress={this.playOrPause}
-              underlayColor="#fff"
-            >
-              <Image
-                source={ playState === 'playing' ? buttons.pause : buttons.play}
-                style={styles.playPauseButton}
-              />
-            </TouchableHighlight>
-            <View style={styles.popoutAudioBarDes}>
-              <Text style={styles.popoutAudioBarText}>
-                {audioName}
-              </Text>
-              <Text style={styles.popoutAudioBarNumber}>
-                {audioLength}
-              </Text>
-            </View>
-            <Button
-              transparent
-            >
-              <Image
-                source={buttons.expand}
-                style={styles.open}
-              />
-            </Button>
-          </Animated.View>
         </Content>
+        <Animated.View
+          style={[styles.popoutAudioPlayBar, {top: this.state.popoutAudioBarHeight} ]}
+        >
+          <TouchableHighlight
+            transparent
+            onPress={this.playOrPause}
+            underlayColor="#fff"
+          >
+            <Image
+              source={ playState === 'playing' ? buttons.pause : buttons.play}
+              style={styles.playPauseButton}
+            />
+          </TouchableHighlight>
+          <View style={styles.popoutAudioBarDes}>
+            <Text style={styles.popoutAudioBarText}>
+              {audioName}
+            </Text>
+            <Text style={styles.popoutAudioBarNumber}>
+              {audioLength}
+            </Text>
+          </View>
+          <Button
+            transparent
+          >
+            <Image
+              source={buttons.expand}
+              style={styles.open}
+            />
+          </Button>
+        </Animated.View>
       </Container>
     )
   }
