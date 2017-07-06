@@ -34,7 +34,7 @@ export default {
     color: 'rgb(33 ,33 ,33)'
   },
   audioType: {
-    marginBottom: 32
+    marginBottom: 20
   },
   slider: {
     width: screenWidth * 0.83,

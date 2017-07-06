@@ -63,6 +63,7 @@ class KnowledgeCapsule extends Component {
     player: null,
     audioName: null,
     audioLength: null,
+    audioUrl: null,
     playState: 'notPlaying',
     lastPick: {
       i: null,
@@ -143,6 +144,7 @@ class KnowledgeCapsule extends Component {
     this.setState({
       audioLength: audio.length,
       audioName: audio.name,
+      audioUrl: audio.url,
       lastPick: {
         i: i,
         j: j
@@ -166,6 +168,7 @@ class KnowledgeCapsule extends Component {
       audioUnit,
       audioName,
       audioLength,
+      audioUrl,
       playState
     } = this.state
     const { navigate } = this.props.navigation
@@ -236,7 +239,17 @@ class KnowledgeCapsule extends Component {
           </View>
           <Button
             transparent
-            onPress={() => navigate('PlayAudioScreen')}
+            onPress={() => navigate(
+              'PlayAudioScreen',
+              {
+                title: audioName,
+                audioLength: audioLength,
+                audioUrl: audioUrl,
+                player: this.player,
+                playState: playState,
+                playOrPauseFunc: this.playOrPause
+              }
+            )}
           >
             <Image
               source={buttons.expand}

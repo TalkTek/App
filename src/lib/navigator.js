@@ -46,7 +46,7 @@ const CapsuleScreen = StackNavigator({
   KnowledgeCapsuleScreen: { screen: KnowledgeCapsule },
   PlayAudioScreen: { screen: PlayAudio }
 }, {
-  initialRouteName: 'PlayAudioScreen',
+  // initialRouteName: 'PlayAudioScreen',
   mode: 'modal',
   navigationOptions: {
     title: '知識膠囊',

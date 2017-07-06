@@ -2,6 +2,7 @@
 'use strict'
 
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import {
   Container,
   View,
@@ -20,71 +21,148 @@ import {
 } from 'react-native'
 import styles from './styles'
 import Slider from 'react-native-slider'
+import { Player } from 'react-native-audio-toolkit'
 
 
-const buttons = {
-  close: require('../../assets/img/playAudio/close.png'),
-  footer: {
-    active: {
-      goodActive: {
-        link: require('../../assets/img/playAudio/goodActive.png'),
-        name: '203'
-      },
-      timerActive: {
-        link: require('../../assets/img/playAudio/timerActive.png'),
-        name: '20:39'
-      },
-    },
-    notActive: {
-      good: {
-        link: require('../../assets/img/playAudio/good.png'),
-        name: '203'
-      },
-      timer: {
-        link: require('../../assets/img/playAudio/timer.png'),
-        name: '20:39'
-      },
-      addSpeed: {
-        link: require('../../assets/img/playAudio/addSpeed.png'),
-        name: '速率'
-      },
-      word: {
-        link: require('../../assets/img/playAudio/word.png'),
-        name: '文檔'
-      },
-      more: {
-        link: require('../../assets/img/playAudio/more.png'),
-        name: '更多'
-      }
-    }
-  },
-  body: {
-    backward15: {
-      link: require('../../assets/img/audioElement/backward15.png')
-    },
-    backward: {
-      link: require('../../assets/img/audioElement/backward.png')
-    },
-    play: {
-      link: require('../../assets/img/playAudio/play.png')
-    },
-    forward: {
-      link: require('../../assets/img/audioElement/forward.png')
-    },
-    forward15: {
-      link: require('../../assets/img/audioElement/forward15.png')
-    },
-  }
-}
+// const buttons = {
+//   close: require('../../assets/img/playAudio/close.png'),
+//   footer: {
+//     active: {
+//       goodActive: {
+//         link: require('../../assets/img/playAudio/goodActive.png'),
+//         name: '203'
+//       },
+//       timerActive: {
+//         link: require('../../assets/img/playAudio/timerActive.png'),
+//         name: '20:39'
+//       },
+//     },
+//     notActive: {
+//       good: {
+//         link: require('../../assets/img/playAudio/good.png'),
+//         name: '203'
+//       },
+//       timer: {
+//         link: require('../../assets/img/playAudio/timer.png'),
+//         name: '20:39'
+//       },
+//       addSpeed: {
+//         link: require('../../assets/img/playAudio/addSpeed.png'),
+//         name: '速率'
+//       },
+//       word: {
+//         link: require('../../assets/img/playAudio/word.png'),
+//         name: '文檔'
+//       },
+//       more: {
+//         link: require('../../assets/img/playAudio/more.png'),
+//         name: '更多'
+//       }
+//     }
+//   },
+//   body: {
+//     backward15: {
+//       link: require('../../assets/img/audioElement/backward15.png')
+//     },
+//     backward: {
+//       link: require('../../assets/img/audioElement/backward.png')
+//     },
+//     play: {
+//       link: require('../../assets/img/playAudio/play.png')
+//     },
+//     forward: {
+//       link: require('../../assets/img/audioElement/forward.png')
+//     },
+//     forward15: {
+//       link: require('../../assets/img/audioElement/forward15.png')
+//     },
+//   }
+// }
 
 export default class PlayAudio extends Component {
   static navigationOptions = {
     header: null,
     tabBarVisible: false,
   }
+
+  state = {
+    playState: null // need to use redux to solve it
+  }
+
+  buttons = {
+    close: require('../../assets/img/playAudio/close.png'),
+    footer: {
+      active: {
+        goodActive: {
+          link: require('../../assets/img/playAudio/goodActive.png'),
+          name: '203'
+        },
+        timerActive: {
+          link: require('../../assets/img/playAudio/timerActive.png'),
+          name: '20:39'
+        },
+      },
+      notActive: {
+        good: {
+          link: require('../../assets/img/playAudio/good.png'),
+          name: '203'
+        },
+        timer: {
+          link: require('../../assets/img/playAudio/timer.png'),
+          name: '20:39'
+        },
+        addSpeed: {
+          link: require('../../assets/img/playAudio/addSpeed.png'),
+          name: '速率'
+        },
+        word: {
+          link: require('../../assets/img/playAudio/word.png'),
+          name: '文檔'
+        },
+        more: {
+          link: require('../../assets/img/playAudio/more.png'),
+          name: '更多'
+        }
+      }
+    },
+    body: {
+      backward15: {
+        twoState: false,
+        link: require('../../assets/img/audioElement/backward15.png')
+      },
+      backward: {
+        twoState: false,
+        link: require('../../assets/img/audioElement/backward.png')
+      },
+      playOrPause: {
+        twoState: true,
+        playLink: require('../../assets/img/playAudio/play.png'),
+        pauseLink: require('../../assets/img/audioElement/pause.png'),
+        func: this.props.navigation.state.params.playOrPauseFunc
+      },
+      forward: {
+        twoState: false,
+        link: require('../../assets/img/audioElement/forward.png')
+      },
+      forward15: {
+        twoState: false,
+        link: require('../../assets/img/audioElement/forward15.png')
+      },
+    }
+  }
+
   render () {
-    const { goBack } = this.props.navigation
-    const footerButtons = Object.values(buttons.footer.notActive).map((button, i) => {
+    const {
+      goBack,
+    } = this.props.navigation
+    const {
+      audioLength,
+      player,
+      title,
+      playState,
+      playOrPauseFunc
+    } = this.props.navigation.state.params
+    const footerButtons = Object.values(this.buttons.footer.notActive).map((button, i) => {
       return (
         <TouchableHighlight
           transparent
@@ -105,12 +183,18 @@ export default class PlayAudio extends Component {
       )
     })
 
-    const bodyButtons = Object.values(buttons.body).map((button, i) => (
+    const bodyButtons = Object.values(this.buttons.body).map((button, i) => (
       <TouchableHighlight
         key={i}
+        onPress={() => button.func()}
       >
         <Image
-          source={button.link}
+          source={button.twoState
+            ? (playState === 'playing'
+              ? button.pauseLink : button.playLink
+            )
+            : button.link
+          }
           style={styles.bodyImages}
         />
       </TouchableHighlight>
@@ -127,7 +211,7 @@ export default class PlayAudio extends Component {
               onPress={() => goBack()}
             >
               <Image
-                source={buttons.close}
+                source={this.buttons.close}
               />
             </Button>
           </Right>
@@ -141,7 +225,7 @@ export default class PlayAudio extends Component {
           <View style={styles.body}>
             <View style={styles.title}>
               <Text style={styles.titleText}>
-                別期待你的男人一心多用 
+                {title}
               </Text>
             </View>
             <View style={styles.audioType}>
@@ -153,7 +237,7 @@ export default class PlayAudio extends Component {
               <View style={styles.sliderTime}>
                 <Text style={styles.sliderTimeText}>00:48</Text>
                 <Text/>
-                <Text style={styles.sliderTimeText}>02:56</Text>
+                <Text style={styles.sliderTimeText}>{audioLength}</Text>
               </View>
               <Slider
                 minimumTrackTintColor='rgb(31, 191, 179)'
@@ -173,4 +257,8 @@ export default class PlayAudio extends Component {
       </Container>
     )
   }
+}
+
+PlayAudio.propTypes = {
+  navigation: PropTypes.object.isRequired
 }
