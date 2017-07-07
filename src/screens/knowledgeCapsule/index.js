@@ -3,7 +3,7 @@
 
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
-import * as globalActions from '../../reducer/global/globalAction'
+import audioActions from '../../reducer/audio/audioAction'
 import { connect } from 'react-redux'
 import {
   TouchableHighlight,
@@ -41,13 +41,13 @@ let buttons = {
 
 const mapStateToProps = (state) => {
   return {
-    playing: state.playing
+    playState: state.audio.playState
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    actions: bindActionCreators(dispatch, globalActions)
+    actions: bindActionCreators(audioActions, dispatch)
   }
 }
 
@@ -72,6 +72,7 @@ class KnowledgeCapsule extends Component {
   }
 
   componentWillMount () {
+    console.log('this.props.actions', this.props.actions);
     // get back data from firebase
     let capsuleRef = firebase.database().ref('capsules').limitToLast(10)
     let audios = []
@@ -103,9 +104,7 @@ class KnowledgeCapsule extends Component {
   createPlayer = (url) => {
     if(this.player) {
       this.player.destroy()
-      this.setState({
-        playState: 'notPlaying',
-      })
+      this.props.actions.changePlayingState('notPlaying')
     }
     this.player = new Player(url)
       .prepare(error => {
@@ -116,18 +115,14 @@ class KnowledgeCapsule extends Component {
   }
 
   playOrPause = () => {
-    const { playState } = this.state
+    const { playState, actions } = this.props
     if(playState ==='notPlaying' && this.player) {
-      this.setState({
-        playState: 'playing'
-      })
+      actions.changePlayingState('playing')
       this.player.play()
     } else if (!this.player) {
       console.log('player is not found',);
     } else {
-      this.setState({
-        playState: 'notPlaying'
-      })
+      actions.changePlayingState('notPlaying')
       this.player.pause()
     }
   }
@@ -169,8 +164,11 @@ class KnowledgeCapsule extends Component {
       audioName,
       audioLength,
       audioUrl,
-      playState
     } = this.state
+    const {
+      playState
+    } = this.props
+
     const { navigate } = this.props.navigation
     if(audioUnit) {
       CapUnit = audioUnit.map((cap, i) => {
@@ -246,7 +244,6 @@ class KnowledgeCapsule extends Component {
                 audioLength: audioLength,
                 audioUrl: audioUrl,
                 player: this.player,
-                playState: playState,
                 playOrPauseFunc: this.playOrPause
               }
             )}

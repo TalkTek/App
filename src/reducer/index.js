@@ -2,9 +2,9 @@
 
 import { combineReducers } from 'redux'
 import nav from './navigator/navigatorReducer'
-import global from './global/globalReducer'
+import audio from './audio/audioReducer'
 
 export default combineReducers({
   nav,
-  global
+  audio
 })
