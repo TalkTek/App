@@ -28,7 +28,10 @@ import { Player } from 'react-native-audio-toolkit'
 
 const mapStateToProps = (state) => {
   return {
-    playState: state.audio.playState
+    playState: state.audio.playState,
+    audioName: state.audio.playingAudioInfo.audioName,
+    audioLength: state.audio.playingAudioInfo.audioLength,
+    audioUrl: state.audio.playingAudioInfo.audioUrl
   }
 }
 
@@ -101,7 +104,8 @@ class PlayAudio extends Component {
       },
       forward: {
         twoState: false,
-        link: require('../../assets/img/audioElement/forward.png')
+        link: require('../../assets/img/audioElement/forward.png'),
+        func: this.props.navigation.state.params.forward
       },
       forward15: {
         twoState: false,
@@ -115,13 +119,13 @@ class PlayAudio extends Component {
       goBack,
     } = this.props.navigation
     const {
-      audioLength,
       player,
-      title,
       playOrPauseFunc
     } = this.props.navigation.state.params
     const {
       playState,
+      audioName,
+      audioLength
     } = this.props
     const footerButtons = Object.values(this.buttons.footer.notActive).map((button, i) => {
       return (
@@ -187,7 +191,7 @@ class PlayAudio extends Component {
           <View style={styles.body}>
             <View style={styles.title}>
               <Text style={styles.titleText}>
-                {title}
+                {audioName}
               </Text>
             </View>
             <View style={styles.audioType}>

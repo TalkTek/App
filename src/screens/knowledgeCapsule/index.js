@@ -41,7 +41,15 @@ let buttons = {
 
 const mapStateToProps = (state) => {
   return {
-    playState: state.audio.playState
+    playState: state.audio.playState,
+    capsules: state.audio.capsules,
+    audioName: state.audio.playingAudioInfo.audioName,
+    audioLength: state.audio.playingAudioInfo.audioLength,
+    audioUrl: state.audio.playingAudioInfo.audioUrl,
+    audioPos: {
+      i: state.audio.audioPos.i,
+      j: state.audio.audioPos.j
+    }
   }
 }
 
@@ -59,12 +67,7 @@ class KnowledgeCapsule extends Component {
     popoutAudioBarHeight: new Animated.Value(screenHeight),
     audioPopBarOpen: false,
     capsuleData: null,
-    audioUnit: [],
     player: null,
-    audioName: null,
-    audioLength: null,
-    audioUrl: null,
-    playState: 'notPlaying',
     lastPick: {
       i: null,
       j: null
@@ -72,13 +75,13 @@ class KnowledgeCapsule extends Component {
   }
 
   componentWillMount () {
-    console.log('this.props.actions', this.props.actions);
     // get back data from firebase
     let capsuleRef = firebase.database().ref('capsules').limitToLast(10)
     let audios = []
+    let capsules = []
     capsuleRef
       .once('value', snapshot => {
-        console.log('sna', snapshot.val());
+        // console.log('sna', snapshot.val());
         Object.values(snapshot.val()).forEach(cap => {
           Object.values(cap.audios).forEach((audio) => {
             audios = [...audios, {
@@ -88,17 +91,19 @@ class KnowledgeCapsule extends Component {
               url: audio.url
             }]
           })
-          this.setState({
-            audioUnit: [...this.state.audioUnit, {
-              audios: audios,
-              title: cap.title
-            }]
-          })
+          capsules = [
+            ...capsules,
+            {
+              title: cap.title,
+              audios
+            }
+          ]
           audios = []
         })
+        // store knowledge audios into redux store
+        this.props.actions.storeCapsulesAudios(capsules)
       })
       .catch(error => console.warn('error: get capsule data from firebase. message is: ', error))
-    // create audio player
   }
 
   createPlayer = (url) => {
@@ -114,6 +119,38 @@ class KnowledgeCapsule extends Component {
       })
   }
 
+  forward = async () => {
+    let next
+    const { capsules, audioPos, actions } = this.props
+    let pos = capsules[audioPos.i].audios.length
+
+    if (audioPos.j + 1 < pos) {
+      next = capsules[audioPos.i].audios[audioPos.j + 1]
+      actions.settingPlayingAudioInfo(next.name, next.length, next.url)
+      await this.toggleButtonColor(audioPos.i, audioPos.j + 1)
+      await actions.settingNewAudioPos(audioPos.i, audioPos.j + 1)
+      await this.createPlayer(next.url)
+      await this.playOrPause()
+    } else {
+      if ( audioPos.i === capsules.length - 1) {
+        // if audio reach end of audio's list, then recycle it
+        next = capsules[0].audios[0]
+        actions.settingPlayingAudioInfo(next.name, next.length, next.url)
+        await this.toggleButtonColor(0, 0)
+        await actions.settingNewAudioPos(0, 0)
+        await this.createPlayer(next.url)
+        await this.playOrPause()
+      } else {
+        next = capsules[audioPos.i + 1].audios[0]
+        actions.settingPlayingAudioInfo(next.name, next.length, next.url)
+        await this.toggleButtonColor(audioPos.i + 1, 0)
+        await actions.settingNewAudioPos(audioPos.i + 1, 0)
+        await this.createPlayer(next.url)
+        await this.playOrPause()
+      }
+    }
+  }
+
   playOrPause = () => {
     const { playState, actions } = this.props
     if(playState ==='notPlaying' && this.player) {
@@ -127,25 +164,27 @@ class KnowledgeCapsule extends Component {
     }
   }
 
+  toggleButtonColor = (i, j) => {
+    const { capsules, audioPos } = this.props
+    if (audioPos.i !== '' && audioPos.j !== '') {
+      capsules[audioPos.i].audios[audioPos.j].active = false
+    }
+    capsules[i].audios[j].active = true
+  }
 
   togglePlayAudioBar = async (audio, i, j) => {
-    const { popoutAudioBarHeight, audioUnit, lastPick } = this.state
-    if(lastPick.i !== null && lastPick.j !== null) {
-      audioUnit[lastPick.i].audios[lastPick.j].active = false
-    }
+    const { popoutAudioBarHeight, lastPick } = this.state
+    const { audioPos } = this.props
+    const { capsules, actions } = this.props
 
-    audioUnit[i].audios[j].active = true
+    actions.settingNewAudioPos(i, j)
+    actions.settingPlayingAudioInfo(
+      audio.name,
+      audio.length,
+      audio.url
+    )
 
-    this.setState({
-      audioLength: audio.length,
-      audioName: audio.name,
-      audioUrl: audio.url,
-      lastPick: {
-        i: i,
-        j: j
-      },
-    })
-
+    await this.toggleButtonColor(i, j)
     await this.createPlayer(audio.url)
     await this.playOrPause()
 
@@ -157,21 +196,23 @@ class KnowledgeCapsule extends Component {
     ).start()
   }
 
+  onEndReached = () => {
+    console.log('hello world')
+  }
+
   render () {
     let CapUnit
     const {
-      audioUnit,
+      playState,
+      capsules,
       audioName,
       audioLength,
-      audioUrl,
-    } = this.state
-    const {
-      playState
+      audioUrl
     } = this.props
 
     const { navigate } = this.props.navigation
-    if(audioUnit) {
-      CapUnit = audioUnit.map((cap, i) => {
+    if(capsules) {
+      CapUnit = capsules.map((cap, i) => {
         return (
           <View key={i} style={styles.capContainer}>
             <View style={styles.capTitle}>
@@ -240,11 +281,9 @@ class KnowledgeCapsule extends Component {
             onPress={() => navigate(
               'PlayAudioScreen',
               {
-                title: audioName,
-                audioLength: audioLength,
-                audioUrl: audioUrl,
                 player: this.player,
-                playOrPauseFunc: this.playOrPause
+                playOrPauseFunc: this.playOrPause,
+                forward: this.forward
               }
             )}
           >
