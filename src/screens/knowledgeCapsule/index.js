@@ -65,13 +65,8 @@ class KnowledgeCapsule extends Component {
 
   state = {
     popoutAudioBarHeight: new Animated.Value(screenHeight),
-    audioPopBarOpen: false,
-    capsuleData: null,
-    player: null,
-    lastPick: {
-      i: null,
-      j: null
-    }
+    offsetY: 0,
+    audioBarActive: false
   }
 
   componentWillMount () {
@@ -172,8 +167,7 @@ class KnowledgeCapsule extends Component {
     capsules[i].audios[j].active = true
   }
 
-  togglePlayAudioBar = async (audio, i, j) => {
-    const { popoutAudioBarHeight, lastPick } = this.state
+  onPressAudio = async (audio, i, j) => {
     const { audioPos } = this.props
     const { capsules, actions } = this.props
 
@@ -183,11 +177,20 @@ class KnowledgeCapsule extends Component {
       audio.length,
       audio.url
     )
+    
+    this.setState({
+      audioBarActive: true
+    })
 
     await this.toggleButtonColor(i, j)
     await this.createPlayer(audio.url)
     await this.playOrPause()
+    this.toggleAudioBarUp()
 
+  }
+
+  toggleAudioBarUp = () => {
+    const { popoutAudioBarHeight } = this.state
     Animated.spring(
       popoutAudioBarHeight,
       {
@@ -196,8 +199,31 @@ class KnowledgeCapsule extends Component {
     ).start()
   }
 
-  onEndReached = () => {
-    console.log('hello world')
+  toggleAudioBarDown = () => {
+    const { popoutAudioBarHeight } = this.state
+    Animated.spring(
+      popoutAudioBarHeight,
+      {
+        toValue: screenHeight
+      }
+    ).start()
+  }
+
+  onScroll = (event) => {
+    let currentOffsetY = event.nativeEvent.contentOffset.y
+    const diff = currentOffsetY - this.state.offsetY
+
+    if (Math.abs(diff) < 2) {
+      console.log('unclear')
+    } else if (diff<0) {
+      this.toggleAudioBarUp()
+    } else {
+      this.toggleAudioBarDown()
+    }
+
+    this.setState({
+      offsetY: currentOffsetY
+    })
   }
 
   render () {
@@ -209,6 +235,8 @@ class KnowledgeCapsule extends Component {
       audioLength,
       audioUrl
     } = this.props
+
+    const { audioBarActive } = this.state
 
     const { navigate } = this.props.navigation
     if(capsules) {
@@ -225,7 +253,7 @@ class KnowledgeCapsule extends Component {
                 <View key={j} style={styles.capUnit}>
                   <TouchableHighlight
                     style={styles.capPlayPauseButton}
-                    onPress={this.togglePlayAudioBar.bind(this, audio, i, j)}
+                    onPress={this.onPressAudio.bind(this, audio, i, j)}
                     underlayColor="#fff"
                   >
                     <View style={styles.capAudio}>
@@ -246,13 +274,16 @@ class KnowledgeCapsule extends Component {
     }
     return (
       <Container style={styles.container}>
-        <Content>
-          <View>
-            <Image
-              style={styles.banner}
-              source={require('../../assets/img/knowledgeCapsule/banner.png')}
-            />
-          </View>
+        <View>
+          <Image
+            style={styles.banner}
+            source={require('../../assets/img/knowledgeCapsule/banner.png')}
+          />
+        </View>
+        <Content
+          onScroll={audioBarActive ? this.onScroll : null}
+          style={{ marginBottom: 20 }}
+        >
           {CapUnit? CapUnit : <Text>123</Text>}
         </Content>
         <Animated.View

@@ -43,7 +43,7 @@ export default {
   },
   capContainer: {
     paddingHorizontal: 16,
-    paddingVertical: 0
+    paddingVertical: 0,
   },
   capTitle: {
     paddingHorizontal: 8,
