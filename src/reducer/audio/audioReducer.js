@@ -2,7 +2,7 @@ import { handleActions } from 'redux-actions'
 
 const initialState = {
   playState: 'notPlaying',
-  capsules: undefined,
+  capsules: [],
   playingAudioInfo: {
     audioName: '',
     audioLength: '',
@@ -21,10 +21,10 @@ export default handleActions({
       playState: action.payload
     }
   },
-  'STORE_CAPSULES_AUDIOS': (state, action) => {
+  'STORE_CAPSULE_AUDIOS': (state, action) => {
     return {
       ...state,
-      capsules: action.payload
+      capsules: state.capsules.concat(action.payload)
     }
   },
   'SETTING_PLAYING_AUDIO_INFO': (state, action) => {

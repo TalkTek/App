@@ -94,7 +94,8 @@ class PlayAudio extends Component {
       },
       backward: {
         twoState: false,
-        link: require('../../assets/img/audioElement/backward.png')
+        link: require('../../assets/img/audioElement/backward.png'),
+        func: this.props.navigation.state.params.backward
       },
       playOrPause: {
         twoState: true,
