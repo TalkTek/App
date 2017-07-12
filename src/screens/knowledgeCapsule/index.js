@@ -272,47 +272,54 @@ class KnowledgeCapsule extends Component {
     const { lastKey } = this.state
     const { actions } = this.props
 
-    firebase.database()
-      .ref('capsules')
-      .orderByKey()
-      .endAt(lastKey)
-      .limitToLast(3)
-      .on('child_added', (snapshot, prevChildKey) => {
+    if(lastKey === null ) {
+      return
+    } else {
+      firebase.database()
+        .ref('capsules')
+        .orderByKey()
+        .endAt(lastKey)
+        .limitToLast(3)
+        .on('child_added', (snapshot, prevChildKey) => {
 
-        if(snapshot.key !== lastKey) {
-
-           this.setState({
-          lastKey: prevChildKey
-        })
-
-        let cap = snapshot.val()
-        let audios = []
-        let capsule = []
-
-        Object.values(cap.audios).forEach((audio) => {
-          audios = [...audios, {
-            active: false,
-            name: audio.audioName,
-            length: audio.length,
-            url: audio.url
-          }]
-        })
-
-        capsule = [
-          ...capsule,
-          {
-            title: cap.title,
-            audios
+          if (lastKey === null) {
+            return
           }
-        ]
 
-        actions.storeCapsuleAudios(capsule)
+          if (snapshot.key !== lastKey) {
 
-        audios = []
-        capsule = []
+            this.setState({
+              lastKey: prevChildKey
+            })
 
-        }
-      })
+            let cap = snapshot.val()
+            let audios = []
+            let capsule = []
+
+            Object.values(cap.audios).forEach((audio) => {
+              audios = [...audios, {
+                active: false,
+                name: audio.audioName,
+                length: audio.length,
+                url: audio.url
+              }]
+            })
+
+            capsule = [
+              ...capsule,
+              {
+                title: cap.title,
+                audios
+              }
+            ]
+
+            actions.storeCapsuleAudios(capsule)
+
+            audios = []
+            capsule = []
+          }
+        })
+    }
   }
 
   render () {
