@@ -25,7 +25,9 @@ import {
 } from 'native-base'
 import firebase from 'firebase'
 import styles from './styles'
-import { Player } from 'react-native-audio-toolkit'
+import {
+  Player,
+} from 'react-native-audio-toolkit'
 
 const { width : screenWidth, height: screenHeight } = Dimensions.get('window')
 console.log('screenHeight', screenHeight);
@@ -46,6 +48,9 @@ const mapStateToProps = (state) => {
     audioName: state.audio.playingAudioInfo.audioName,
     audioLength: state.audio.playingAudioInfo.audioLength,
     audioUrl: state.audio.playingAudioInfo.audioUrl,
+    currentTime: state.audio.audioCurrentTime.formatted,
+    audioSecTime: state.audio.audioCurrentTime.sec,
+    seekState: state.audio.seekState,
     audioPos: {
       i: state.audio.audioPos.i,
       j: state.audio.audioPos.j
@@ -61,6 +66,8 @@ const mapDispatchToProps = (dispatch) => {
 
 class KnowledgeCapsule extends Component {
 
+  interval = null
+
   player = null
 
   state = {
@@ -70,8 +77,8 @@ class KnowledgeCapsule extends Component {
     lastKey: null // firebase last key
   }
 
-  componentWillMount () {
-    // get back data from firebase
+  componentDidMount () {
+    // get data from firebase
     let capsuleRef = firebase.database().ref('capsules').orderByKey().limitToLast(2)
     capsuleRef
       .on('child_added', (snapshot, prevChildKey) => {
@@ -80,8 +87,6 @@ class KnowledgeCapsule extends Component {
         let capsule = []
         let cap = snapshot.val()
         
-        console.log('cap is', cap)
-
         this.setState({
           lastKey: prevChildKey
         })
@@ -107,7 +112,6 @@ class KnowledgeCapsule extends Component {
 
         audios = []
         capsule = []
-        // store knowledge audios into redux store
       })
   }
 
@@ -192,12 +196,94 @@ class KnowledgeCapsule extends Component {
     const { playState, actions } = this.props
     if(playState ==='notPlaying' && this.player) {
       actions.changePlayingState('playing')
-      this.player.play()
+      // react-native-audio-toolkit fucking bug
+      // only get current time after calling pause
+      this.player.pause(() => {
+        this.player.play()
+        this.audioPlayingTimerStart()
+      })
     } else if (!this.player) {
       console.log('player is not found',);
     } else {
       actions.changePlayingState('notPlaying')
-      this.player.pause()
+      this.player.pause(() => {
+        clearInterval(this.interval)
+      })
+    }
+  }
+
+  audioPlayingTimerStart = () => {
+    const { actions, audioSecTime, seekState } = this.props
+    let formatted
+    let secTime
+
+    // it's the react-native-audio-toolkit bugs
+    // so we need to make up for this
+    let outdatedValue = audioSecTime * 1000
+    let nowValue
+
+    if(this.player) {
+      this.interval = setInterval(() => {
+
+        console.log('this.palyerCCCCCurrentTime', this.player.currentTime)
+        
+        if(this.player.currentTime && (this.player.currentTime > 0)) {
+
+          nowValue = this.player.currentTime
+
+          if(nowValue < outdatedValue) {
+            nowValue = outdatedValue + 350
+          }
+
+          let min = Math.floor(nowValue / 60000)
+          let sec = Math.floor(nowValue / 1000) - min*60
+
+          if( sec < 10 ) { sec = "0" + sec}
+          if( min < 10 ) { min = "0" + min}
+
+          formatted = min+":"+sec
+          secTime = Math.floor(nowValue / 1000)
+
+          console.log('this.secTime in kcs', secTime)
+          actions.settingAudioPlayingTime(secTime, formatted)
+          outdatedValue = nowValue
+
+        } else {
+          clearInterval(this.interval)
+          formatted = "00:00"
+          actions.settingAudioPlayingTime(0, formatted)
+          actions.changePlayingState('notPlaying')
+        }
+      }, 500)
+    } else {
+      console.log("player is null, so no audio current time")
+    }
+  }
+
+  seek = (value) => {
+    const { actions } = this.props
+    if(this.player) {
+      if(this.player.duration) {
+        let percent = Number((value / (this.player.duration/1000)).toFixed(2))
+        let position = percent * this.player.duration
+        this.player.seek(position, async () => {
+
+          clearInterval(this.interval)
+
+          let sec = Math.floor(value%60)
+          let min = Math.floor(value/60)
+          
+          if(sec<10) { sec = "0"+sec }
+          if(min<10) { min = "0"+min }
+
+          let formatted = min+':'+sec
+
+          console.log('seek===>Value', value)
+          
+          await actions.settingAudioPlayingTime(value, formatted)
+          await this.audioPlayingTimerStart()
+        })
+      }
     }
   }
 
@@ -329,7 +415,8 @@ class KnowledgeCapsule extends Component {
       capsules,
       audioName,
       audioLength,
-      audioUrl
+      audioUrl,
+      currentTime
     } = this.props
 
     const { audioBarActive } = this.state
@@ -378,7 +465,6 @@ class KnowledgeCapsule extends Component {
         </View>
         <Content
           onScroll={audioBarActive ? this.onScroll : null}
-          style={{ marginBottom: 20 }}
           onMomentumScrollEnd={this.onScrollEndReached}
         >
           {CapUnit? CapUnit : <Text>123</Text>}
@@ -401,7 +487,7 @@ class KnowledgeCapsule extends Component {
               {audioName}
             </Text>
             <Text style={styles.popoutAudioBarNumber}>
-              {audioLength}
+              {currentTime ? currentTime : '00:00'}
             </Text>
           </View>
           <Button
@@ -412,7 +498,8 @@ class KnowledgeCapsule extends Component {
                 player: this.player,
                 playOrPauseFunc: this.playOrPause,
                 forward: this.forward,
-                backward: this.backward
+                backward: this.backward,
+                seek: this.seek
               }
             )}
           >

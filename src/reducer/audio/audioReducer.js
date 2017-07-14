@@ -11,6 +11,10 @@ const initialState = {
   audioPos: {
     i: '',
     j: ''
+  },
+  audioCurrentTime: {
+    sec: null,
+    formatted: null
   }
 }
 
@@ -33,7 +37,8 @@ export default handleActions({
       playingAudioInfo: {
         audioName: action.payload.audioName,
         audioLength: action.payload.audioLength,
-        audioUrl: action.payload.audioUrl
+        audioUrl: action.payload.audioUrl,
+        timeToPlaying: action.payload.audioPlayingTimer
       }
     }
   },
@@ -43,6 +48,15 @@ export default handleActions({
       audioPos: {
         i: action.payload.i,
         j: action.payload.j
+      }
+    }
+  },
+  'SETTING_AUDIO_PLAYING_TIME': (state, action) => {
+    return {
+      ...state,
+      audioCurrentTime: {
+        sec: action.payload.sec,
+        formatted: action.payload.formatted
       }
     }
   }

@@ -31,7 +31,9 @@ const mapStateToProps = (state) => {
     playState: state.audio.playState,
     audioName: state.audio.playingAudioInfo.audioName,
     audioLength: state.audio.playingAudioInfo.audioLength,
-    audioUrl: state.audio.playingAudioInfo.audioUrl
+    audioUrl: state.audio.playingAudioInfo.audioUrl,
+    currentTime: state.audio.audioCurrentTime.formatted,
+    secTime: Number(state.audio.audioCurrentTime.sec)
   }
 }
 
@@ -115,19 +117,36 @@ class PlayAudio extends Component {
     }
   }
 
+  _onSlidingComplete = (value) => {
+    const { seek } = this.props.navigation.state.params
+    console.log('onSliding value is', value)
+    seek(value)
+  }
+
   render () {
     const {
       goBack,
     } = this.props.navigation
     const {
       player,
-      playOrPauseFunc
+      playOrPauseFunc,
+      seek,
     } = this.props.navigation.state.params
     const {
       playState,
       audioName,
-      audioLength
+      audioLength,
+      currentTime
     } = this.props
+
+    let duration = 1000000
+
+    if(player.duration > 0) {
+      duration = Number((player.duration/1000).toFixed()) + 2
+    }
+
+    console.log('this.secTime in PlayAudio', this.props.secTime)
+
     const footerButtons = Object.values(this.buttons.footer.notActive).map((button, i) => {
       return (
         <TouchableHighlight
@@ -167,6 +186,7 @@ class PlayAudio extends Component {
       </TouchableHighlight>
     ))
 
+
     return (
       <Container style={styles.container}>
         <Header style={styles.header}>
@@ -202,11 +222,15 @@ class PlayAudio extends Component {
             </View>
             <View style={styles.slider}>
               <View style={styles.sliderTime}>
-                <Text style={styles.sliderTimeText}>00:48</Text>
+                <Text style={styles.sliderTimeText}>{currentTime}</Text>
                 <Text/>
                 <Text style={styles.sliderTimeText}>{audioLength}</Text>
               </View>
               <Slider
+                value={this.props.secTime}
+                step={1}
+                maximumValue={duration}
+                onSlidingComplete={this._onSlidingComplete}
                 minimumTrackTintColor='rgb(31, 191, 179)'
                 thumbTouchSize={{width: 20, height: 20}}
                 trackStyle={styles.track}
