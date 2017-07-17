@@ -46,10 +46,8 @@ const mapStateToProps = (state) => {
   return {
     playState: state.audio.playState,
     capsules: state.audio.capsules,
-    audioName: state.audio.playingAudioInfo.audioName,
-    audioLength: state.audio.playingAudioInfo.audioLength,
-    audioUrl: state.audio.playingAudioInfo.audioUrl,
-    currentTime: state.audio.audioCurrentTime.formatted,
+    audioName: state.audio.playingAudioInfo.name,
+    currentTime: state.audio.playingAudioInfo.currentTime.formatted,
     audioSecTime: state.audio.audioCurrentTime.sec,
     seekState: state.audio.seekState,
     isCpAudioLoaded: state.audio.isCpAudioLoaded,
@@ -233,9 +231,6 @@ class KnowledgeCapsule extends Component {
 
     if(this.player) {
       this.interval = setInterval(() => {
-
-        console.log('this.palyerCCCCCurrentTime', this.player.currentTime)
-        
         if(this.player.currentTime && (this.player.currentTime > 0)) {
 
           nowValue = this.player.currentTime
@@ -262,6 +257,8 @@ class KnowledgeCapsule extends Component {
           formatted = "00:00"
           actions.settingAudioPlayingTime(0, formatted)
           actions.changePlayingState('notPlaying')
+          this.forward()
+          this.forceUpdate()
         }
       }, 500)
     } else {
@@ -307,6 +304,8 @@ class KnowledgeCapsule extends Component {
   onPressAudio = async (audio, i, j) => {
     const { audioPos } = this.props
     const { capsules, actions } = this.props
+    
+    console.log('audio content', audio)
 
     actions.settingNewAudioPos(i, j)
     actions.settingPlayingAudioInfo(
@@ -423,8 +422,6 @@ class KnowledgeCapsule extends Component {
       playState,
       capsules,
       audioName,
-      audioLength,
-      audioUrl,
       currentTime,
       isCpAudioLoaded
     } = this.props
@@ -455,7 +452,7 @@ class KnowledgeCapsule extends Component {
                         style={styles.capPlayPauseButtonImage}
                       />
                       <Text style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>{audio.name}</Text>
-                      <Text style={styles.audioLengthText}>{audio.length}</Text>
+                      <Text style={styles.audioLengthText}>{audio.length.formatted}</Text>
                     </View>
                   </TouchableHighlight>
                 </View>

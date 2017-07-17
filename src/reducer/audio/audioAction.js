@@ -5,15 +5,18 @@ import {
 export default createActions({
   'CHANGE_PLAYING_STATE': playState => playState,
   'STORE_CAPSULE_AUDIOS': audios => audios,
-  'SETTING_PLAYING_AUDIO_INFO': (audioName, audioLength, audioUrl) => ({
-    audioName,
-    audioLength,
-    audioUrl
-  }),
-  'SETTING_NEW_AUDIO_POS': (i, j) => ({i, j}),
-  'SETTING_AUDIO_PLAYING_TIME': (sec, formatted) => ({
-    sec,
-    formatted
+  'SETTING_PLAYING_AUDIO_INFO': (
+    name,
+    length,
+    currentTime,
+    url,
+    pos
+  ) => ({
+    name,
+    length,
+    currentTime,
+    url,
+    pos
   }),
   'LOAD_CP_AUDIO_SUCCESS': state => state
 })
