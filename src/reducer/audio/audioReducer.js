@@ -15,7 +15,8 @@ const initialState = {
   audioCurrentTime: {
     sec: null,
     formatted: null
-  }
+  },
+  isCpAudioLoaded: false
 }
 
 export default handleActions({
@@ -58,6 +59,12 @@ export default handleActions({
         sec: action.payload.sec,
         formatted: action.payload.formatted
       }
+    }
+  },
+  'LOAD_CP_AUDIO_SUCCESS': (state, action) => {
+    return {
+      ...state,
+      isCpAudioLoaded: true
     }
   }
 }, initialState)

@@ -1,6 +1,6 @@
 import { Dimensions } from 'react-native'
 
-const { width: screenWidth } = Dimensions.get('window')
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 export default {
   container: {
     backgroundColor: 'white'
@@ -9,6 +9,10 @@ export default {
     resizeMode: 'cover',
     width: screenWidth,
     height: 160
+  },
+  loading: {
+    height: screenHeight * 0.59,
+    justifyContent: 'center',
   },
   popoutAudioPlayBar: {
     position: 'absolute',
@@ -79,7 +83,7 @@ export default {
   },
   capAudioTextNotPlaying: {
     fontSize: 15,
-    width: screenWidth * 0.7,
+    width: screenWidth * 0.7
   },
   audioLengthText: {
     fontSize: 13,

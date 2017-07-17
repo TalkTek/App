@@ -15,4 +15,5 @@ export default createActions({
     sec,
     formatted
   }),
+  'LOAD_CP_AUDIO_SUCCESS': state => state
 })

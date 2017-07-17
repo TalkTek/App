@@ -142,7 +142,7 @@ class PlayAudio extends Component {
     let duration = 1000000
 
     if(player.duration > 0) {
-      duration = Number((player.duration/1000).toFixed()) + 2
+      duration = Number((player.duration/1000).toFixed())
     }
 
     console.log('this.secTime in PlayAudio', this.props.secTime)

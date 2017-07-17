@@ -9,7 +9,8 @@ import {
   TouchableHighlight,
   Animated,
   Dimensions,
-  Image
+  Image,
+  ActivityIndicator
 } from 'react-native'
 import {
   Container,
@@ -21,7 +22,7 @@ import {
   Button,
   List,
   ListItem,
-  Footer,
+  Footer
 } from 'native-base'
 import firebase from 'firebase'
 import styles from './styles'
@@ -51,6 +52,7 @@ const mapStateToProps = (state) => {
     currentTime: state.audio.audioCurrentTime.formatted,
     audioSecTime: state.audio.audioCurrentTime.sec,
     seekState: state.audio.seekState,
+    isCpAudioLoaded: state.audio.isCpAudioLoaded,
     audioPos: {
       i: state.audio.audioPos.i,
       j: state.audio.audioPos.j
@@ -74,10 +76,12 @@ class KnowledgeCapsule extends Component {
     popoutAudioBarHeight: new Animated.Value(screenHeight),
     offsetY: 0,
     audioBarActive: false,
-    lastKey: null // firebase last key
+    lastKey: null, // firebase last key
   }
 
   componentDidMount () {
+    const { actions } = this.props
+
     // get data from firebase
     let capsuleRef = firebase.database().ref('capsules').orderByKey().limitToLast(2)
     capsuleRef
@@ -108,7 +112,8 @@ class KnowledgeCapsule extends Component {
           }
         ]
 
-        this.props.actions.storeCapsuleAudios(capsule)
+        actions.storeCapsuleAudios(capsule)
+        actions.loadCpAudioSuccess()
 
         audios = []
         capsule = []
@@ -120,7 +125,9 @@ class KnowledgeCapsule extends Component {
       this.player.destroy()
       this.props.actions.changePlayingState('notPlaying')
     }
-    this.player = new Player(url)
+    this.player = new Player(url, {
+      autoDestroy: false
+    })
       .prepare(error => {
         if(error) {
           console.log('error at createPlayer, error is => ', error);
@@ -195,12 +202,14 @@ class KnowledgeCapsule extends Component {
   playOrPause = () => {
     const { playState, actions } = this.props
     if(playState ==='notPlaying' && this.player) {
+      console.log('this.player', this.player)
       actions.changePlayingState('playing')
       // react-native-audio-toolkit fucking bug
       // only get current time after calling pause
       this.player.pause(() => {
-        this.player.play()
-        this.audioPlayingTimerStart()
+        this.player.play(() => {
+          this.audioPlayingTimerStart()
+        })
       })
     } else if (!this.player) {
       console.log('player is not found',);
@@ -409,14 +418,15 @@ class KnowledgeCapsule extends Component {
   }
 
   render () {
-    let CapUnit
+    let CapUnit = null
     const {
       playState,
       capsules,
       audioName,
       audioLength,
       audioUrl,
-      currentTime
+      currentTime,
+      isCpAudioLoaded
     } = this.props
 
     const { audioBarActive } = this.state
@@ -467,7 +477,18 @@ class KnowledgeCapsule extends Component {
           onScroll={audioBarActive ? this.onScroll : null}
           onMomentumScrollEnd={this.onScrollEndReached}
         >
-          {CapUnit? CapUnit : <Text>123</Text>}
+          {
+            isCpAudioLoaded
+              ? CapUnit
+              :
+              <View style={styles.loading}>
+                <ActivityIndicator
+                  animating
+                  color="black"
+                  size="large"
+                />
+              </View>
+          }
         </Content>
         <Animated.View
           style={[styles.popoutAudioPlayBar, {top: this.state.popoutAudioBarHeight} ]}
