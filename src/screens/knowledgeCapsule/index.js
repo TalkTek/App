@@ -193,7 +193,7 @@ class KnowledgeCapsule extends Component {
                         style={styles.capPlayPauseButtonImage}
                       />
                       <Text style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>{audio.name}</Text>
-                      <Text style={styles.audioLengthText}>{audio.length}</Text>
+                      <Text style={styles.audioLengthText}>{audio.length.formatted}</Text>
                     </View>
                   </TouchableHighlight>
                 </View>
