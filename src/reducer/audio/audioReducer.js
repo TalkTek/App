@@ -16,9 +16,10 @@ const initialState = {
     },
     url: '',
     pos: {
-      i: '',
-      j: ''
-    }
+      i: 0,
+      j: 0
+    },
+    from: ''
   }
 }
 
@@ -39,7 +40,7 @@ export default handleActions({
     return {
       ...state,
       playingAudioInfo: {
-        name: action.payload.audioName,
+        name: action.payload.name,
         length: {
           sec: action.payload.length.sec,
           formatted: action.payload.length.formatted
@@ -48,11 +49,12 @@ export default handleActions({
           sec: action.payload.currentTime.sec,
           formatted: action.payload.currentTime.formatted
         },
-        url: action.payload.audioUrl,
+        url: action.payload.url,
         pos: {
           i: action.payload.pos.i,
           j: action.payload.pos.j
-        }
+        },
+        from: action.payload.from
       }
     }
   },

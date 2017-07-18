@@ -10,13 +10,15 @@ export default createActions({
     length,
     currentTime,
     url,
-    pos
+    pos,
+    from
   ) => ({
     name,
     length,
     currentTime,
     url,
-    pos
+    pos,
+    from
   }),
   'LOAD_CP_AUDIO_SUCCESS': state => state
 })
