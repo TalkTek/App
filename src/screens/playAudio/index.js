@@ -29,12 +29,12 @@ import { Player } from 'react-native-audio-toolkit'
 const mapStateToProps = (state) => {
   return {
     playState: state.audio.playState,
-    audioName: state.audio.playingAudioInfo.audioName,
-    audioUrl: state.audio.playingAudioInfo.audioUrl,
-    audioLengthFormatted: state.audio.playingAudioInfo.audioLength.formatted,
-    audioLengthSec: Number(state.audio.playingAudioInfo.audioLength.sec),
-    currentTimeFormatted: state.audio.audioCurrentTime.formatted,
-    currentTimeSec: Number(state.audio.audioCurrentTime.sec)
+    audioName: state.audio.playingAudioInfo.name,
+    audioUrl: state.audio.playingAudioInfo.url,
+    audioLengthFormatted: state.audio.playingAudioInfo.length.formatted,
+    audioLengthSec: Number(state.audio.playingAudioInfo.length.sec),
+    currentTimeFormatted: state.audio.playingAudioInfo.currentTime.formatted,
+    currentTimeSec: Number(state.audio.playingAudioInfo.currentTime.sec)
   }
 }
 
@@ -215,7 +215,7 @@ class PlayAudio extends Component {
             </View>
             <View style={styles.slider}>
               <View style={styles.sliderTime}>
-                <Text style={styles.sliderTimeText}>{currentTimeFormatted}</Text>
+                <Text style={styles.sliderTimeText}>{currentTimeFormatted ? currentTimeFormatted : '00:00'}</Text>
                 <Text/>
                 <Text style={styles.sliderTimeText}>{audioLengthFormatted}</Text>
               </View>

@@ -137,27 +137,31 @@ class KnowledgeCapsule extends Component {
     const { capsules, playingAudioPos, actions } = this.props
     let pos = capsules[playingAudioPos.i].audios.length
 
+    clearInterval(this.interval)
+
+    // find the next position where we choice in screen
     if (playingAudioPos.j + 1 < pos) {
       next = capsules[playingAudioPos.i].audios[playingAudioPos.j + 1]
-      await actions.settingPlayingAudioInfo(
-              next.name,
-              next.length,
-              {
-                sec: null,
-                formatted: ''
-              },
-              next.url,
-              {
-                i: playingAudioPos.i,
-                j: playingAudioPos.j + 1
-              },
-              'forwardFunction: notChange'
-            )
       await this.toggleButtonColor(playingAudioPos.i, playingAudioPos.j + 1)
+      await actions.settingPlayingAudioInfo(
+        next.name,
+        next.length,
+        {
+          sec: null,
+          formatted: ''
+        },
+        next.url,
+        {
+          i: playingAudioPos.i,
+          j: playingAudioPos.j + 1
+        },
+        'forwardFunction: notChange'
+      )
     } else {
         if ( playingAudioPos.i === capsules.length - 1) {
           // if audio reach end of audio's list, then recycle it
           next = capsules[0].audios[0]
+          await this.toggleButtonColor(0, 0)
           await actions.settingPlayingAudioInfo(
             next.name,
             next.length,
@@ -173,10 +177,10 @@ class KnowledgeCapsule extends Component {
             },
             'forwardFunction: changeToBegin'
           )
-          await this.toggleButtonColor(0, 0)
         } else {
           next = capsules[playingAudioPos.i + 1].audios[0]
           actions.settingPlayingAudioInfo(next.name, next.length, next.url)
+          await this.toggleButtonColor(playingAudioPos.i + 1, 0)
           await actions.settingPlayingAudioInfo(
             next.name,
             next.length,
@@ -192,7 +196,6 @@ class KnowledgeCapsule extends Component {
             },
             'forwardFunction: changeToNext'
           )
-          await this.toggleButtonColor(playingAudioPos.i + 1, 0)
         }
     }
     await this.createPlayer(next.url)
@@ -203,8 +206,11 @@ class KnowledgeCapsule extends Component {
     let next
     const { capsules, playingAudioPos, actions } = this.props
 
+    clearInterval(this.interval)
+
     if(playingAudioPos.j - 1 >= 0) {
       next = capsules[playingAudioPos.i].audios[playingAudioPos.j - 1]
+      await this.toggleButtonColor(playingAudioPos.i, playingAudioPos.j -1)
       await actions.settingPlayingAudioInfo(
         next.name,
         next.length,
@@ -220,11 +226,11 @@ class KnowledgeCapsule extends Component {
         },
         'BackwardFunction: Not change'
       )
-      await this.toggleButtonColor(playingAudioPos.i, playingAudioPos.j -1)
     } else {
       if ( playingAudioPos.i === 0) {
         // if audio reach Top of audio's list, then recycle it
         next = capsules[0].audios[0]
+        await this.toggleButtonColor(0, 0)
         await actions.settingPlayingAudioInfo(
           next.name,
           next.length,
@@ -240,10 +246,10 @@ class KnowledgeCapsule extends Component {
           },
           'BackwardFunction: forward to Begin'
         )
-        await this.toggleButtonColor(0, 0)
       } else {
         let maxLength = capsules[playingAudioPos.i -1].audios.length - 1
         next = capsules[playingAudioPos.i - 1].audios[maxLength]
+        await this.toggleButtonColor(playingAudioPos.i - 1, maxLength)
         await actions.settingPlayingAudioInfo(
           next.name,
           next.length,
@@ -259,7 +265,6 @@ class KnowledgeCapsule extends Component {
           },
           'BackwardFunction: forward'
         )
-        await this.toggleButtonColor(playingAudioPos.i - 1, maxLength)
       }
     }
     await this.createPlayer(next.url)
@@ -293,70 +298,81 @@ class KnowledgeCapsule extends Component {
       audioName,
       audioLength,
       audioUrl,
-      playingAudioPos
+      playingAudioPos,
+      currentTimeSec,
+      playState
     } = this.props
 
     let currentTimeformatted
-    let currentTimeSec
+    let currentTimeSecNow
 
     // it's the react-native-audio-toolkit bugs
-    // so we need to make up for this
-    let outdatedValue = 0
+    // if we seek somewhere we want to listen
+    // the currentTime of player's property will lose time
+    // so we need to supple it
+    let outdatedValue = currentTimeSec * 1000
     let nowValue
 
     if(this.player) {
       this.interval = setInterval(() => {
-        if(this.player.currentTime && (this.player.currentTime > 0)) {
+        if (playState === 'playing') {
+          if (this.player.currentTime && (this.player.currentTime > 0)) {
+            console.log('currentTime from audioPlayingTimer', this.player.currentTime)
+            console.log('nowValue from audioPlayingTimer', nowValue)
+            console.log('outDataValue from audioPlayingTimer', outdatedValue)
 
-          nowValue = this.player.currentTime
+            nowValue = this.player.currentTime
 
-          if(nowValue < outdatedValue) {
-            nowValue = outdatedValue + 350
+            // if seek, we supple some time
+            if (nowValue < outdatedValue) {
+              nowValue = outdatedValue + 350
+            }
+
+            let min = Math.floor(nowValue / 60000)
+            let sec = Math.floor(nowValue / 1000) - min * 60
+
+            if (sec < 10) { sec = "0" + sec}
+            if (min < 10) { min = "0" + min}
+
+            currentTimeformatted = min + ":" + sec
+            currentTimeSecNow = Math.floor(nowValue / 1000)
+
+            actions.settingPlayingAudioInfo(
+              audioName,
+              audioLength,
+              {
+                sec: currentTimeSecNow,
+                formatted: currentTimeformatted
+              },
+              audioUrl,
+              playingAudioPos,
+              'audioPlayingTimerStart: running'
+            )
+
+            outdatedValue = nowValue
+          } else {
+            console.log('this.playerTime from out', this.player.currentTime)
+            clearInterval(this.interval)
+            currentTimeformatted = "00:00"
+
+            actions.settingPlayingAudioInfo(
+              audioName,
+              audioLength,
+              {
+                sec: 0,
+                formatted: currentTimeformatted
+              },
+              audioUrl,
+              playingAudioPos,
+              'audioPlayingTimerStart: stoping'
+            )
+            actions.changePlayingState('notPlaying')
           }
 
-          let min = Math.floor(nowValue / 60000)
-          let sec = Math.floor(nowValue / 1000) - min*60
-
-          if( sec < 10 ) { sec = "0" + sec}
-          if( min < 10 ) { min = "0" + min}
-
-          currentTimeformatted = min+":"+sec
-          currentTimeSec = Math.floor(nowValue / 1000)
-
-          actions.settingPlayingAudioInfo(
-            audioName,
-            audioLength,
-            {
-              sec: currentTimeSec,
-              formatted: currentTimeformatted
-            },
-            audioUrl,
-            playingAudioPos,
-            'audioPlayingTimerStart: running'
-          )
-
-          outdatedValue = nowValue
-        } else {
-          clearInterval(this.interval)
-          currentTimeformatted = "00:00"
-
-          actions.settingPlayingAudioInfo(
-            audioName,
-            audioLength,
-            {
-              sec: 0,
-              formatted: currentTimeformatted
-            },
-            audioUrl,
-            playingAudioPos,
-            'audioPlayingTimerStart: stoping'
-          )
-          actions.changePlayingState('notPlaying')
+          // if(currentTimeSec === )
+          //   this.forward()
+          // this.forceUpdate()
         }
-
-        // if(currentTimeSec === )
-        //   this.forward()
-        // this.forceUpdate()
       }, 500)
     } else {
       console.log("player is null, so no audio current time")
@@ -373,7 +389,15 @@ class KnowledgeCapsule extends Component {
     } = this.props
     if(this.player) {
       if(this.player.duration) {
+
+
+        console.log('valueSeek from seek', value)
+
         let percent = Number((value / audioLength.sec ).toFixed(2))
+
+        console.log('audioLength.sec from seek', audioLength.sec)
+        console.log('percent from seek', percent)
+
         let position = percent * this.player.duration
         this.player.seek(position, async () => {
 
@@ -466,7 +490,7 @@ class KnowledgeCapsule extends Component {
     let currentOffsetY = event.nativeEvent.contentOffset.y
     const diff = currentOffsetY - this.state.offsetY
 
-    if (Math.abs(diff) < 3) {
+    if (Math.abs(diff) < 5) {
       console.log('unclear')
     } else if (diff<0) {
       this.toggleAudioBarUp()

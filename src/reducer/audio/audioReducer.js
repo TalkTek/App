@@ -16,8 +16,8 @@ const initialState = {
     },
     url: '',
     pos: {
-      i: 0,
-      j: 0
+      i: '',
+      j: ''
     },
     from: ''
   }
