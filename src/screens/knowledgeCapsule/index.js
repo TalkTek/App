@@ -351,7 +351,7 @@ class KnowledgeCapsule extends Component {
 
             outdatedValue = nowValue
           } else {
-            console.log('this.playerTime from out', this.player.currentTime)
+            // when the audio end
             clearInterval(this.interval)
             currentTimeformatted = "00:00"
 
@@ -367,11 +367,9 @@ class KnowledgeCapsule extends Component {
               'audioPlayingTimerStart: stoping'
             )
             actions.changePlayingState('notPlaying')
-          }
 
-          // if(currentTimeSec === )
-          //   this.forward()
-          // this.forceUpdate()
+            this.forward()
+          }
         }
       }, 500)
     } else {
