@@ -28,7 +28,13 @@ import { Player } from 'react-native-audio-toolkit'
 
 const mapStateToProps = (state) => {
   return {
-    playState: state.audio.playState
+    playState: state.audio.playState,
+    audioName: state.audio.playingAudioInfo.name,
+    audioUrl: state.audio.playingAudioInfo.url,
+    audioLengthFormatted: state.audio.playingAudioInfo.length.formatted,
+    audioLengthSec: Number(state.audio.playingAudioInfo.length.sec),
+    currentTimeFormatted: state.audio.playingAudioInfo.currentTime.formatted,
+    currentTimeSec: Number(state.audio.playingAudioInfo.currentTime.sec)
   }
 }
 
@@ -45,7 +51,8 @@ class PlayAudio extends Component {
   }
 
   state = {
-    playState: null // need to use redux to solve it
+    playState: null, // need to use redux to solve it
+    value: 0,
   }
 
   buttons = {
@@ -91,7 +98,8 @@ class PlayAudio extends Component {
       },
       backward: {
         twoState: false,
-        link: require('../../assets/img/audioElement/backward.png')
+        link: require('../../assets/img/audioElement/backward.png'),
+        func: this.props.navigation.state.params.backward
       },
       playOrPause: {
         twoState: true,
@@ -101,7 +109,8 @@ class PlayAudio extends Component {
       },
       forward: {
         twoState: false,
-        link: require('../../assets/img/audioElement/forward.png')
+        link: require('../../assets/img/audioElement/forward.png'),
+        func: this.props.navigation.state.params.forward
       },
       forward15: {
         twoState: false,
@@ -110,19 +119,28 @@ class PlayAudio extends Component {
     }
   }
 
+  _onSlidingComplete = (value) => {
+    const { seek } = this.props.navigation.state.params
+    seek(value)
+  }
+
   render () {
     const {
       goBack,
     } = this.props.navigation
     const {
-      audioLength,
       player,
-      title,
-      playOrPauseFunc
+      playOrPauseFunc,
+      seek,
     } = this.props.navigation.state.params
     const {
       playState,
+      audioName,
+      audioLengthFormatted,
+      audioLengthSec,
+      currentTimeFormatted,
     } = this.props
+
     const footerButtons = Object.values(this.buttons.footer.notActive).map((button, i) => {
       return (
         <TouchableHighlight
@@ -187,7 +205,7 @@ class PlayAudio extends Component {
           <View style={styles.body}>
             <View style={styles.title}>
               <Text style={styles.titleText}>
-                {title}
+                {audioName}
               </Text>
             </View>
             <View style={styles.audioType}>
@@ -197,11 +215,15 @@ class PlayAudio extends Component {
             </View>
             <View style={styles.slider}>
               <View style={styles.sliderTime}>
-                <Text style={styles.sliderTimeText}>00:48</Text>
+                <Text style={styles.sliderTimeText}>{currentTimeFormatted ? currentTimeFormatted : '00:00'}</Text>
                 <Text/>
-                <Text style={styles.sliderTimeText}>{audioLength}</Text>
+                <Text style={styles.sliderTimeText}>{audioLengthFormatted}</Text>
               </View>
               <Slider
+                value={this.props.currentTimeSec}
+                step={1}
+                maximumValue={audioLengthSec}
+                onSlidingComplete={this._onSlidingComplete}
                 minimumTrackTintColor='rgb(31, 191, 179)'
                 thumbTouchSize={{width: 20, height: 20}}
                 trackStyle={styles.track}
