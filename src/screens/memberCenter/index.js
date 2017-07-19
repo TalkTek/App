@@ -4,15 +4,15 @@
 import React, { Component } from 'react'
 import {
   View,
-  ScrollView,
   Text,
   Image,
-  FlatList,
   Button,
   TouchableOpacity
 } from 'react-native'
 import {
-  Thumbnail
+  Thumbnail,
+  Container,
+  Content
 } from 'native-base'
 import styles from './styles'
 
@@ -33,22 +33,24 @@ export default class MemberCenter extends Component {
 
   _renderListItem(rowData) {
     return (
-      <TouchableOpacity 
-        onPress={() => this.props.navigation.navigate(rowData.item.target)} style={[styles.mainBackground, styles.listItem]}>
+      <TouchableOpacity
+        key={rowData.key}
+        onPress={() => this.props.navigation.navigate(rowData.target)} 
+        style={[styles.mainBackground, styles.listItem]}>
         <View style={styles.listItemLeft}>
           <Image 
-            source={rowData.item.icon}
+            source={rowData.icon}
             style={styles.listIcon}
           />
           <Text 
             style={styles.listText}
           >
-            {rowData.item.text}
+            {rowData.text}
           </Text>
           {
-            rowData.item.rightText &&
+            rowData.rightText &&
             <Text style={styles.listRightText}>
-              {rowData.item.rightText}
+              {rowData.rightText}
             </Text>
           }
         </View>
@@ -63,45 +65,42 @@ export default class MemberCenter extends Component {
 
   render() {
     return (
-      <ScrollView style={styles.container}>
-        <View style={[styles.mainBackground, styles.avatar]}>
-          <Image 
-            source={require('../../assets/img/memberCenter/profileIcon.png')}
-            style={styles.avatarImg}
-            large
-          />
-          <Text style={styles.email}>
-            wangshihe@gmail.com
-          </Text>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('MemberInfo')} style={styles.moreInfo}>
-            <Image source={require('../../assets/img/memberCenter/enter.png')} />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.container}>
-          <FlatList
-            data={this.listsData.my}
-            renderItem={this._renderListItem.bind(this)}
-            style={styles.selectList}
-          />
-          <FlatList
-            data={this.listsData.coin}
-            renderItem={this._renderListItem.bind(this)}
-            style={styles.selectList}
-          />
-          <FlatList
-            data={this.listsData.other}
-            renderItem={this._renderListItem.bind(this)}
-            style={styles.selectList}
-          />
-          <View style={styles.logout}>
-            <Button 
-              color="#212121" 
-              title="登出"
-              onPress={() => {}}
+      <Container style={styles.container}>
+        <Content>
+          <View style={[styles.mainBackground, styles.avatar]}>
+            <Image 
+              source={require('../../assets/img/memberCenter/profileIcon.png')}
+              style={styles.avatarImg}
+              large
             />
+            <Text style={styles.email}>
+              wangshihe@gmail.com
+            </Text>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('MemberInfo')} style={styles.moreInfo}>
+              <Image source={require('../../assets/img/memberCenter/enter.png')} />
+            </TouchableOpacity>
           </View>
-        </View>
-      </ScrollView>
+          <View style={styles.container}>
+            
+            <View style={styles.selectList}>
+              { this.listsData.my.map(this._renderListItem.bind(this)) }
+            </View>
+            <View style={styles.selectList}>
+              { this.listsData.coin.map(this._renderListItem.bind(this)) }
+            </View>
+            <View style={styles.selectList}>
+              { this.listsData.other.map(this._renderListItem.bind(this)) }
+            </View>
+            <View style={styles.logout}>
+              <Button 
+                color="#212121" 
+                title="登出"
+                onPress={() => {}}
+              />
+            </View>
+          </View>
+        </Content>
+      </Container>
     )
   }
 }
