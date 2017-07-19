@@ -34,32 +34,22 @@ class MyTalk extends Component {
             source={require('../../assets/img/memberCenter/profileIcon.png')}
             small
           />
-          <Text
-            style={myTalkStyle.author}
-          >
+          <Text style={myTalkStyle.author}>
             { data.author }
           </Text>
         </View>
-        <View
-          style={myTalkStyle.contentWrapper}
-        >
-          <Text
-            style={myTalkStyle.content}
-          >
+        <View style={myTalkStyle.contentWrapper}>
+          <Text style={myTalkStyle.content}>
             { data.content }
           </Text>
           {
             data.cost && 
-            <Text
-              style={myTalkStyle.cost}
-            >
+            <Text style={myTalkStyle.cost}>
               -{ data.cost }
             </Text>
           }
         </View>
-        <Text
-          style={myTalkStyle.date}
-        >
+        <Text style={myTalkStyle.date}>
           { data.date }
         </Text>
       </View>

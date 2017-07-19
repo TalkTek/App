@@ -41,26 +41,18 @@ class PointCenter extends Component {
         key={data.title}
         onPress={this._selectItem.bind(this, index)}
       >
-        <Text
-          style={[pointCenterStyle.textCenter, pointCenterStyle.smallText]}
-        >
+        <Text style={[pointCenterStyle.textCenter, pointCenterStyle.smallText]}>
           { data.title }
         </Text>
         <View style={pointCenterStyle.pointCostWrapper}>
-          <Text 
-            style={[pointCenterStyle.buyPointText, pointCenterStyle.bigText]}
-          >
+          <Text style={[pointCenterStyle.buyPointText, pointCenterStyle.bigText]}>
             { data.point }點
           </Text>
-          <Text
-            style={[pointCenterStyle.myPointText, pointCenterStyle.bigText]}
-          >
+          <Text style={[pointCenterStyle.myPointText, pointCenterStyle.bigText]}>
             $ { data.cost }
           </Text>
         </View>
-        <Text
-          style={[pointCenterStyle.textCenter, pointCenterStyle.otherText]}
-        >
+        <Text style={[pointCenterStyle.textCenter, pointCenterStyle.otherText]}>
           { data.other }
         </Text>
       </TouchableOpacity>
@@ -72,12 +64,8 @@ class PointCenter extends Component {
     return (
       <Container style={pointCenterStyle.container}>
         <Content>
-          <View 
-            style={pointCenterStyle.nowPoint}
-          >
-            <Text
-              style={pointCenterStyle.myPointText}
-            >
+          <View style={pointCenterStyle.nowPoint}>
+            <Text style={pointCenterStyle.myPointText}>
               目前持有點數：{ this.point.myPoint } 點
             </Text>
           </View>
@@ -88,9 +76,7 @@ class PointCenter extends Component {
               style={pointCenterStyle.paymentBtn}
               onPress={() => this.props.navigation.goBack()}
             >
-              <Text
-                style={pointCenterStyle.btnColor}
-              >
+              <Text style={pointCenterStyle.btnColor}>
                 進行付款
               </Text>
             </TouchableOpacity>

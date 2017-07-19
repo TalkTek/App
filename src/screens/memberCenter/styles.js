@@ -183,7 +183,7 @@ const myPointStyle = {
     fontSize: 13
   },
   pointList: {
-    ...myTalkStyle.container,
+    backgroundColor: '#fff',
     paddingLeft: 24,
     paddingRight: 16,
     paddingTop: 16,
@@ -275,9 +275,53 @@ const pointCenterStyle = {
   }
 }
 
+const feedBackStyle = {
+  content: {
+    ...myTalkStyle.container,
+    paddingLeft: 16,
+    paddingRight: 16
+  },
+  textLabel: {
+    marginTop: 16,
+    paddingLeft: 8,
+    paddingRight: 8,
+    color: 'rgb(158, 158, 158)'
+  },
+  input: {
+    backgroundColor: '#fff',
+    borderColor: 'rgb(224, 224, 224)',
+    borderWidth: 1,
+    borderRadius: 8,
+    marginTop: 4
+  },
+  mutiInput: {
+    minHeight: 96
+  },
+  sendBtn: {
+    ...pointCenterStyle.paymentBtn,
+    marginLeft: 0,
+    marginRight: 0,
+    marginTop: 24
+  },
+  sendText: {
+    color: '#fff'
+  }
+}
+
+const applyStyle = {
+  welcomeJoin: {
+    ...myTalkStyle.container,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 80
+  }
+}
+
 export { 
   memberInfoStyle, 
   myTalkStyle, 
   myPointStyle, 
-  pointCenterStyle 
+  pointCenterStyle,
+  feedBackStyle,
+  applyStyle
 }

@@ -36,15 +36,14 @@ export default class MemberCenter extends Component {
       <TouchableOpacity
         key={rowData.key}
         onPress={() => this.props.navigation.navigate(rowData.target)} 
-        style={[styles.mainBackground, styles.listItem]}>
+        style={[styles.mainBackground, styles.listItem]}
+        >
         <View style={styles.listItemLeft}>
           <Image 
             source={rowData.icon}
             style={styles.listIcon}
           />
-          <Text 
-            style={styles.listText}
-          >
+          <Text style={styles.listText}>
             {rowData.text}
           </Text>
           {
