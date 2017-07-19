@@ -132,4 +132,82 @@ const memberInfoStyle = {
   }
 }
 
-export { memberInfoStyle }
+const myTalkStyle = {
+  container: {
+    backgroundColor: 'rgb(250, 250, 250)',
+  },
+  card: {
+    flexDirection: 'column',
+    paddingLeft: 24,
+    paddingRight: 24,
+    paddingTop: 16,
+    paddingBottom: 16,
+    borderColor: 'rgb(245, 245, 245)',
+    borderStyle: 'solid',
+    borderBottomWidth: 1
+  },
+  authorInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  author: {
+    marginLeft: 16,
+    fontSize: 12
+  },
+  contentWrapper: {
+    flexDirection: 'row'
+  },
+  content: {
+    paddingTop: 4,
+    paddingBottom: 4,
+    fontSize: 13,
+    flex: 9
+  },
+  date: {
+    color: 'rgb(158, 158, 158)',
+    fontSize: 13
+  },
+  cost: {
+    flex: 1,
+    color: 'rgb(31, 191, 179)'
+  }
+}
+
+const myPointStyle = {
+  container: {
+    ...style.container,
+    paddingTop: 16,
+    paddingBottom: 4,
+    paddingLeft: 24,
+    paddingRight: 24,
+    fontSize: 13
+  },
+  pointList: {
+    ...myTalkStyle.container,
+    paddingLeft: 24,
+    paddingRight: 16,
+    paddingTop: 16,
+    paddingBottom: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent:'space-between',
+  },
+  coin: {
+    width: 24,
+    height: 24,
+    flex: 1
+  },
+  pointText: {
+    flex: 3,
+    paddingLeft: 13,
+    color: 'rgb(31, 191, 179)'
+  },
+  term: {
+    flex: 3
+  },
+  enterIcon: {
+    flex: 0
+  }
+}
+
+export { memberInfoStyle, myTalkStyle, myPointStyle }
