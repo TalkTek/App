@@ -12,7 +12,7 @@ import MemberCenter from '../screens/memberCenter/index'
 import MemberInfo from '../screens/memberCenter/memberInfo'
 import MyTalk from '../screens/memberCenter/myTalk'
 import MyPoint from '../screens/memberCenter/myPoint'
-import Fillup from '../screens/memberCenter/fillup'
+import PointCenter from '../screens/memberCenter/pointCenter'
 import Feedback from '../screens/memberCenter/feedback'
 import Apply from '../screens/memberCenter/apply'
 import PlayAudio from '../screens/playAudio'
@@ -81,7 +81,7 @@ const MemberCenterScreen = StackNavigator({
   MemberInfo : { screen: MemberInfo, navigationOptions: { title: '個人資料' }},
   MyTalk: { screen: MyTalk, navigationOptions: { title: '我的小講' } },
   MyPoint: { screen: MyPoint, navigationOptions: { title: '我的點數' } },
-  Fillup: { screen: Fillup, navigationOptions: { title: '儲值中心' } },
+  Fillup: { screen: PointCenter, navigationOptions: { title: '儲值中心' } },
   Feedback: { screen: Feedback, navigationOptions: { title: '意見回饋' } },
   Apply: { screen: Apply, navigationOptions: { title: '成為講師' } }
 }, {

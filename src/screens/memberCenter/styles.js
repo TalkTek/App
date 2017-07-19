@@ -175,7 +175,7 @@ const myTalkStyle = {
 
 const myPointStyle = {
   container: {
-    ...style.container,
+    ...myTalkStyle.container,
     paddingTop: 16,
     paddingBottom: 4,
     paddingLeft: 24,
@@ -210,4 +210,74 @@ const myPointStyle = {
   }
 }
 
-export { memberInfoStyle, myTalkStyle, myPointStyle }
+const pointCenterStyle = {
+  container: style.container,
+  nowPoint: {
+    paddingTop: 32,
+    paddingBottom: 32,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  myPointText: {
+    color: 'rgb(33, 33, 33)',
+    textAlign: 'center',
+  },
+  selector: {
+    ...myTalkStyle.container,
+    borderColor: 'rgb(224, 224, 224)',
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 16,
+    marginLeft: 16,
+    marginRight: 16,
+    marginBottom: 8,
+    justifyContent: 'center'
+  },
+  pointCostWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 16
+  },
+  buyPointText: {
+    color: 'rgb(31, 191, 179)',
+    marginRight: 10
+  },
+  otherText: {
+    marginTop: 16,
+    color: 'rgb(158, 158, 158)'
+  },
+  smallText: {
+    fontSize: 13
+  },
+  bigText: {
+    fontSize: 18
+  },
+  textCenter: {
+    textAlign: 'center'
+  },
+  paymentBtn: {
+    backgroundColor: 'rgb(31, 191, 179)',
+    marginLeft: 16,
+    marginRight: 16,
+    marginTop: 24,
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    borderRadius: 8
+  },
+  btnColor: {
+    color: '#fff'
+  },
+  selected: {
+    borderColor: 'rgb(31, 191, 179)',
+    borderWidth: 2,
+    marginBottom: 7
+  }
+}
+
+export { 
+  memberInfoStyle, 
+  myTalkStyle, 
+  myPointStyle, 
+  pointCenterStyle 
+}
