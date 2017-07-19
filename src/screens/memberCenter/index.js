@@ -8,7 +8,8 @@ import {
   Text,
   Image,
   FlatList,
-  Button
+  Button,
+  TouchableOpacity
 } from 'react-native'
 import {
   Thumbnail
@@ -16,27 +17,27 @@ import {
 import styles from './styles'
 
 export default class MemberCenter extends Component {
-  
   listsData = {
     my: [
-      { target: '', icon: 'enter.png', text: '我的小講' }
+      { key: 'iconmyTalk', icon: require(`../../assets/img/memberCenter/iconmyTalk.png`), target: 'MyTalk', text: '我的小講' }
     ],
     coin: [
-      { target: '', icon: '', rightText: '500點', text: '我的點數' },
-      { target: '', icon: '', text: '儲值中心' }
+      { key: 'iconMypoint', icon: require(`../../assets/img/memberCenter/iconMypoint.png`), target: 'MyPoint', rightText: '500點', text: '我的點數' },
+      { key: 'iconFillup', icon: require(`../../assets/img/memberCenter/iconFillup.png`), target: 'Fillup', text: '儲值中心' }
     ],
     other: [
-      { target: '', icon: '', text: '意見回饋' },
-      { target: '', icon: '', text: '成為講師' }
+      { key: 'iconFeedback', icon: require(`../../assets/img/memberCenter/iconFeedback.png`), target: 'Feedback', text: '意見回饋' },
+      { key: 'iconApply', icon: require(`../../assets/img/memberCenter/iconApply.png`), target: 'Apply', text: '成為講師' }
     ]
   }
 
   _renderListItem(rowData) {
     return (
-      <View key={rowData.item.text} style={[styles.mainBackground, styles.listItem]}>
+      <TouchableOpacity 
+        onPress={() => this.props.navigation.navigate(rowData.item.target)} style={[styles.mainBackground, styles.listItem]}>
         <View style={styles.listItemLeft}>
           <Image 
-            source={require('../../assets/img/tabIcon/lecture/lec_active.png')} 
+            source={rowData.item.icon}
             style={styles.listIcon}
           />
           <Text 
@@ -56,7 +57,7 @@ export default class MemberCenter extends Component {
             source={require('../../assets/img/memberCenter/enter.png')}
           />
         </View>
-      </View>
+      </TouchableOpacity>
     )
   }
 
@@ -65,38 +66,39 @@ export default class MemberCenter extends Component {
       <ScrollView style={styles.container}>
         <View style={[styles.mainBackground, styles.avatar]}>
           <Image 
-            source={require('../../assets/img/banner.png')}
+            source={require('../../assets/img/memberCenter/profileIcon.png')}
             style={styles.avatarImg}
             large
           />
           <Text style={styles.email}>
-            a9650615@gmail.com
+            wangshihe@gmail.com
           </Text>
-          <View style={styles.moreInfo}>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('MemberInfo')} style={styles.moreInfo}>
             <Image source={require('../../assets/img/memberCenter/enter.png')} />
-          </View>
+          </TouchableOpacity>
         </View>
-        <View style={[styles.container]}>
+        <View style={styles.container}>
           <FlatList
-            key="my"
             data={this.listsData.my}
-            renderItem={this._renderListItem}
+            renderItem={this._renderListItem.bind(this)}
             style={styles.selectList}
           />
           <FlatList
-            key="coin"
             data={this.listsData.coin}
-            renderItem={this._renderListItem}
+            renderItem={this._renderListItem.bind(this)}
             style={styles.selectList}
           />
           <FlatList
-            key="other"
             data={this.listsData.other}
-            renderItem={this._renderListItem}
+            renderItem={this._renderListItem.bind(this)}
             style={styles.selectList}
           />
           <View style={styles.logout}>
-            <Button color="#212121" title="登出" />
+            <Button 
+              color="#212121" 
+              title="登出"
+              onPress={() => {}}
+            />
           </View>
         </View>
       </ScrollView>

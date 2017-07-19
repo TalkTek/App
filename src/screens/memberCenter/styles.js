@@ -55,7 +55,7 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingRight: 10
+    paddingRight: 15
   },
   listItemMore: {
     width: 32,
@@ -69,6 +69,6 @@ export default StyleSheet.create({
     marginRight: 16,
     marginBottom: 16,
     marginTop: 24,
-    borderRadius: 3
+    borderRadius: 8
   }
 })
