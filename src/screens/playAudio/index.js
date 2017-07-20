@@ -94,7 +94,8 @@ class PlayAudio extends Component {
     body: {
       backward15: {
         twoState: false,
-        link: require('../../assets/img/audioElement/backward15.png')
+        link: require('../../assets/img/audioElement/backward15.png'),
+        func: this.props.navigation.state.params.backward15s
       },
       backward: {
         twoState: false,
@@ -114,7 +115,8 @@ class PlayAudio extends Component {
       },
       forward15: {
         twoState: false,
-        link: require('../../assets/img/audioElement/forward15.png')
+        link: require('../../assets/img/audioElement/forward15.png'),
+        func: this.props.navigation.state.params.forward15s
       },
     }
   }

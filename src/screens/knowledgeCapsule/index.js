@@ -271,6 +271,24 @@ class KnowledgeCapsule extends Component {
     await this.playOrPause()
   }
 
+  forward15s() {
+    let forwardTime = this.props.currentTimeSec + 15
+    this.seek(
+      forwardTime > Number(this.props.audioLength.sec)?
+        Number(this.props.audioLength.sec):
+        forwardTime
+    )
+  }
+
+  backward15s() {
+    let backwardTime = this.props.currentTimeSec - 15
+    this.seek(
+      backwardTime < 0?
+        0:
+        backwardTime
+    )
+  }
+
   playOrPause = () => {
     const { playState, actions } = this.props
     if(playState ==='notPlaying' && this.player) {
@@ -656,7 +674,9 @@ class KnowledgeCapsule extends Component {
                 playOrPauseFunc: this.playOrPause,
                 forward: this.forward,
                 backward: this.backward,
-                seek: this.seek
+                seek: this.seek,
+                forward15s: this.forward15s.bind(this),
+                backward15s: this.backward15s.bind(this)
               }
             )}
           >
