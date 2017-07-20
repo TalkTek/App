@@ -5,6 +5,8 @@ const initialState = {
   capsules: [],
   isCpAudioLoaded: false,
   playingAudioInfo: {
+    parentKey: '',
+    capsulesId: '',
     name: '',
     length: {
       sec: null,
@@ -40,6 +42,8 @@ export default handleActions({
     return {
       ...state,
       playingAudioInfo: {
+        parentKey: action.payload.parentKey || state.playingAudioInfo.parentKey ,
+        capsulesId: action.payload.id || state.playingAudioInfo.capsulesId,
         name: action.payload.name,
         length: {
           sec: action.payload.length.sec,
