@@ -5,6 +5,7 @@ const initialState = {
   capsules: [],
   isCpAudioLoaded: false,
   playingAudioInfo: {
+    audioIsGood: false,
     parentKey: '',
     capsulesId: '',
     name: '',
@@ -42,6 +43,7 @@ export default handleActions({
     return {
       ...state,
       playingAudioInfo: {
+        ...state.playingAudioInfo,
         parentKey: action.payload.parentKey || state.playingAudioInfo.parentKey ,
         capsulesId: action.payload.id || state.playingAudioInfo.capsulesId,
         name: action.payload.name,
@@ -66,6 +68,24 @@ export default handleActions({
     return {
       ...state,
       isCpAudioLoaded: true
+    }
+  },
+  'CP_AUDIO_GOOD': (state, action) => {
+    return {
+      ...state,
+      playingAudioInfo: {
+        ...state.playingAudioInfo,
+        audioIsGood: true
+      }
+    }
+  },
+  'CP_AUDIO_NOT_GOOD': (state, action) => {
+    return {
+      ...state,
+      playingAudioInfo: {
+        ...state.playingAudioInfo,
+        audioIsGood: false
+      }
     }
   }
 }, initialState)

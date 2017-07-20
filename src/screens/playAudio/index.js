@@ -28,6 +28,9 @@ import { Player } from 'react-native-audio-toolkit'
 
 const mapStateToProps = (state) => {
   return {
+    audioIsGood: state.audio.playingAudioInfo.audioIsGood,
+    capsulesId: state.audio.playingAudioInfo.capsulesId,
+    parentKey: state.audio.playingAudioInfo.parentKey,
     playState: state.audio.playState,
     audioName: state.audio.playingAudioInfo.name,
     audioUrl: state.audio.playingAudioInfo.url,
@@ -58,38 +61,29 @@ class PlayAudio extends Component {
   buttons = {
     close: require('../../assets/img/playAudio/close.png'),
     footer: {
-      active: {
-        goodActive: {
-          link: require('../../assets/img/playAudio/goodActive.png'),
-          name: '203'
-        },
-        timerActive: {
-          link: require('../../assets/img/playAudio/timerActive.png'),
-          name: '20:39'
-        },
-      },
-      notActive: {
-        good: {
-          link: require('../../assets/img/playAudio/good.png'),
-          name: '203'
+       good: {
+          notActive: require('../../assets/img/playAudio/good.png'),
+          active: require('../../assets/img/playAudio/goodActive.png'),
+          checkActive: 'audioIsGood',
+          name: '203',
+          func: this._audioIsGood
         },
         timer: {
-          link: require('../../assets/img/playAudio/timer.png'),
+          notActive: require('../../assets/img/playAudio/timer.png'),
           name: '20:39'
         },
         addSpeed: {
-          link: require('../../assets/img/playAudio/addSpeed.png'),
+          notActive: require('../../assets/img/playAudio/addSpeed.png'),
           name: '速率'
         },
         word: {
-          link: require('../../assets/img/playAudio/word.png'),
+          notActive: require('../../assets/img/playAudio/word.png'),
           name: '文檔'
         },
         more: {
-          link: require('../../assets/img/playAudio/more.png'),
+          notActive: require('../../assets/img/playAudio/more.png'),
           name: '更多'
         }
-      }
     },
     body: {
       backward15: {
@@ -126,6 +120,13 @@ class PlayAudio extends Component {
     seek(value)
   }
 
+  _audioIsGood() {
+    // console.log(this.props.capsulesId, this.props.parentKey)
+    this.props.audioIsGood ?
+      this.props.actions.cpAudioNotGood(this.props.capsulesId, this.props.parentKey, 'mNkzekSKH6VGqMzXDX56S40anTa2'): // this Id is an Example
+      this.props.actions.cpAudioGood(this.props.capsulesId, this.props.parentKey, 'mNkzekSKH6VGqMzXDX56S40anTa2')
+  }
+
   render () {
     const {
       goBack,
@@ -143,15 +144,17 @@ class PlayAudio extends Component {
       currentTimeFormatted,
     } = this.props
 
-    const footerButtons = Object.values(this.buttons.footer.notActive).map((button, i) => {
+    const footerButtons = Object.values(this.buttons.footer).map((button, i) => {
       return (
         <TouchableHighlight
           transparent
           key={i}
+          onPress={typeof button.func === 'function'? button.func.bind(this): null}
+          underlayColor="#fff"
         >
           <View style={styles.footerFunUnit}>
             <Image
-              source={button.link}
+              source={this.props[button.checkActive]? button.active: button.notActive}
               style={styles.footerImages}
             />
             <Text
