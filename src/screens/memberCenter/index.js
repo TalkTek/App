@@ -15,6 +15,17 @@ import {
   Content
 } from 'native-base'
 import styles from './styles'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import memberAction from '../../reducer/member/memberAction'
+
+@connect(state => ({
+  memberUid: state.member.uid,
+  memberEmail: state.member.email,
+  memberAvatar: state.member.avatarUrl
+}), dispatch => ({
+  logout: bindActionCreators(memberAction.logoutMember, dispatch)
+}))
 
 export default class MemberCenter extends Component {
   listsData = {
@@ -29,6 +40,10 @@ export default class MemberCenter extends Component {
       { key: 'iconFeedback', icon: require(`../../assets/img/memberCenter/iconFeedback.png`), target: 'Feedback', text: '意見回饋' },
       { key: 'iconApply', icon: require(`../../assets/img/memberCenter/iconApply.png`), target: 'Apply', text: '成為講師' }
     ]
+  }
+
+  _logout() {
+    this.props.logout()
   }
 
   _renderListItem(rowData) {
@@ -62,22 +77,44 @@ export default class MemberCenter extends Component {
     )
   }
 
+  _renderUserAvater() {
+    return (
+      <View style={[styles.mainBackground, styles.avatar]}>
+        <Image 
+          source={
+            this.props.memberUid?
+            { uri: this.props.memberAvatar }:
+            require('../../assets/img/memberCenter/profileIcon.png')
+          }
+          style={styles.avatarImg}
+          large
+        />
+        <Text 
+          style={styles.email} 
+          onPress={() => {
+            if (!this.props.memberUid) {
+              this.props.navigation.navigate('Login')
+            }
+          }}
+        >
+          { this.props.memberUid? this.props.memberEmail: '登入' }
+        </Text>
+        {
+          this.props.memberUid &&
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('MemberInfo')} style={styles.moreInfo}>
+            <Image source={require('../../assets/img/memberCenter/enter.png')} />
+          </TouchableOpacity>
+        }
+      </View>
+    )
+  }
+
   render() {
     return (
       <Container style={styles.container}>
         <Content>
-          <View style={[styles.mainBackground, styles.avatar]}>
-            <Image 
-              source={require('../../assets/img/memberCenter/profileIcon.png')}
-              style={styles.avatarImg}
-              large
-            />
-            <Text style={styles.email}>
-              wangshihe@gmail.com
-            </Text>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('MemberInfo')} style={styles.moreInfo}>
-              <Image source={require('../../assets/img/memberCenter/enter.png')} />
-            </TouchableOpacity>
+          <View>
+            { this._renderUserAvater() }
           </View>
           <View style={styles.container}>
             
@@ -90,13 +127,16 @@ export default class MemberCenter extends Component {
             <View style={styles.selectList}>
               { this.listsData.other.map(this._renderListItem.bind(this)) }
             </View>
-            <View style={styles.logout}>
-              <Button 
-                color="#212121" 
-                title="登出"
-                onPress={() => {}}
-              />
-            </View>
+            {
+              this.props.memberUid &&
+              <View style={styles.logout}>
+                <Button 
+                  color="#212121" 
+                  title="登出"
+                  onPress={this._logout.bind(this)}
+                />
+              </View>
+            }
           </View>
         </Content>
       </Container>

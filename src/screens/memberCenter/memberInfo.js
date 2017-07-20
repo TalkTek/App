@@ -15,10 +15,16 @@ import {
   Container
 } from 'native-base'
 import { memberInfoStyle } from './styles'
+import { connect } from 'react-redux'
+
+@connect(state => ({
+  memberEmail: state.member.email,
+  memberPhoto: state.member.avatarUrl
+}))
 
 class MemberInfo extends Component {
   formData = {
-    account: { text: '帳號' },
+    Email: { text: '帳號' },
     password: { text: '設定密碼' },
     gender: { text: '性別' },
     birthday: { text: '生日' }
@@ -30,13 +36,14 @@ class MemberInfo extends Component {
 
   _renderFormComponent(key) {
     let data = this.formData[key]
+    let value = this.props[`member${key}`]
     return (
       <View key={key} style={memberInfoStyle.formInput}>
         <View style={memberInfoStyle.input}>
           <Text style={memberInfoStyle.inputLabel}>{data.text}</Text>
         </View>
         <View style={memberInfoStyle.inputArea}>
-          <Input style={memberInfoStyle.textInput} />
+          <Input style={memberInfoStyle.textInput} defaultValue={value} />
         </View>
       </View>
     )
@@ -48,7 +55,9 @@ class MemberInfo extends Component {
         <Content>
           <View style={memberInfoStyle.avatar}>
             <Thumbnail 
-              source={require('../../assets/img/memberCenter/profileIcon.png')}
+              source={{
+                uri: this.props.memberPhoto
+              }}
               style={memberInfoStyle.avatarImg}
             />
             <TouchableOpacity
