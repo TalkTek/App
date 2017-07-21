@@ -46,6 +46,7 @@ export default createActions({
     likeCounter
   }),
   'LOAD_CP_AUDIO_SUCCESS': state => state,
+  'CP_AUDIO_GOOD_CHECK': audioIsGood => ({ audioIsGood }),
   'CP_AUDIO_GOOD_CHANGE': (isGood, capsulesId, parentKey, userId) => {
     audioLike[isGood? 'cpAudioGood': 'cpAudioNotGood'](capsulesId, parentKey, userId)
     

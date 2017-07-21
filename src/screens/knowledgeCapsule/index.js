@@ -135,6 +135,12 @@ class KnowledgeCapsule extends Component {
       })
   }
 
+  async checkSongIsLiked(capsuleId) {
+    let snapshot = 
+      await firebase.database().ref(`users/mNkzekSKH6VGqMzXDX56S40anTa2/favorite/${capsuleId}`).once('value') //this userID is sample
+    this.props.actions.cpAudioGoodCheck(snapshot.exists())
+  }
+
   componentDidMount () {
     // get data from firebase
     let capsuleRef = firebase.database().ref('capsules').orderByKey().limitToLast(2)
@@ -229,6 +235,7 @@ class KnowledgeCapsule extends Component {
           )
         }
     }
+    this.checkSongIsLiked(next.id)
     await this.createPlayer(next.url)
     await this.playOrPause()
   }
@@ -307,6 +314,7 @@ class KnowledgeCapsule extends Component {
         )
       }
     }
+    this.checkSongIsLiked(next.id)
     await this.createPlayer(next.url)
     await this.playOrPause()
   }
@@ -519,6 +527,7 @@ class KnowledgeCapsule extends Component {
       audioBarActive: true
     })
 
+    this.checkSongIsLiked(audio.id)
     await this.toggleButtonColor(i, j)
     await this.createPlayer(audio.url)
     await this.playOrPause()

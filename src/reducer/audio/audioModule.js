@@ -14,7 +14,7 @@ export default {
         .once('value')
     
     audio = audios.val()
-    console.log(audios.val())
+    
     if (!audio.likeCounter) {
       audio.likeCounter = 1
     } else {
