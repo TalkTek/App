@@ -136,6 +136,31 @@ class KnowledgeCapsule extends Component {
       })
   }
 
+  async _updateCapsuleInfo(capsuleId, parentKey) {
+    let snapshot = 
+      await firebase.database().ref(`capsules/${parentKey}/audios/${capsuleId}`)
+        .once('value')
+    
+    let data = snapshot.val()
+    console.log(data)
+    await this.props.actions.settingPlayingAudioInfo(
+      data.audioName,
+      data.length,
+      {
+        sec: null,
+        formatted: ''
+      },
+      this.props.audioUrl,
+      this.props.playingAudioPos,
+      'update Info',
+      capsuleId,
+      parentKey,
+      data.likeCounter
+    )
+    
+    this.checkSongIsLiked(capsuleId)
+  }
+
   async checkSongIsLiked(capsuleId) {
     let snapshot = 
       await firebase.database().ref(`users/${this.props.memberUid}/favorite/${capsuleId}`).once('value')
@@ -236,7 +261,7 @@ class KnowledgeCapsule extends Component {
           )
         }
     }
-    this.checkSongIsLiked(next.id)
+    this._updateCapsuleInfo(next.id, next.parentKey)
     await this.createPlayer(next.url)
     await this.playOrPause()
   }
@@ -315,7 +340,7 @@ class KnowledgeCapsule extends Component {
         )
       }
     }
-    this.checkSongIsLiked(next.id)
+    this._updateCapsuleInfo(next.id, next.parentKey)
     await this.createPlayer(next.url)
     await this.playOrPause()
   }
@@ -528,7 +553,7 @@ class KnowledgeCapsule extends Component {
       audioBarActive: true
     })
 
-    this.checkSongIsLiked(audio.id)
+    this._updateCapsuleInfo(audio.id, audio.parentKey)
     await this.toggleButtonColor(i, j)
     await this.createPlayer(audio.url)
     await this.playOrPause()
