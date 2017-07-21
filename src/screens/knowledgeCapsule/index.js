@@ -44,6 +44,7 @@ let buttons = {
 
 const mapStateToProps = (state) => {
   return {
+    memberUid: state.member.uid,
     playState: state.audio.playState,
     capsules: state.audio.capsules,
     capsuleId: state.audio.id,
@@ -137,7 +138,7 @@ class KnowledgeCapsule extends Component {
 
   async checkSongIsLiked(capsuleId) {
     let snapshot = 
-      await firebase.database().ref(`users/mNkzekSKH6VGqMzXDX56S40anTa2/favorite/${capsuleId}`).once('value') //this userID is sample
+      await firebase.database().ref(`users/${this.props.memberUid}/favorite/${capsuleId}`).once('value')
     this.props.actions.cpAudioGoodCheck(snapshot.exists())
   }
 

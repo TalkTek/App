@@ -28,6 +28,7 @@ import { Player } from 'react-native-audio-toolkit'
 
 const mapStateToProps = (state) => {
   return {
+    memberUid: state.member.uid,
     likeCounter: state.audio.playingAudioInfo.likeCounter,
     audioIsGood: state.audio.playingAudioInfo.audioIsGood,
     capsulesId: state.audio.playingAudioInfo.capsulesId,
@@ -128,7 +129,7 @@ class PlayAudio extends Component {
         !this.props.audioIsGood,
         this.props.capsulesId,
         this.props.parentKey,
-        'mNkzekSKH6VGqMzXDX56S40anTa2' // this ID is an example
+        this.props.memberUid
       )
   }
 
