@@ -7,7 +7,9 @@ const initMemberState = {
   email: null,
   name: null,
   uid: null,
-  from: null
+  from: null,
+  birthday: null,
+  gender: null
 }
 
 export default handleActions({
@@ -18,7 +20,9 @@ export default handleActions({
       email: action.payload.email,
       name: action.payload.name,
       uid: action.payload.uid,
-      from: action.payload.from
+      from: action.payload.from,
+      birthday: action.payload.birthday,
+      gender: action.payload.gender
     }
   },
   'LOGOUT_MEMBER': (memberState) => {
@@ -29,7 +33,9 @@ export default handleActions({
       ...memberState, 
       avatarUrl: action.payload.avatarUrl || memberState.avatarUrl,
       email: action.payload.email || memberState.email,
-      name: action.payload.name || memberState.name
+      name: action.payload.name || memberState.name,
+      birthday: action.payload.birthday || memberState.birthday,
+      gender: action.payload.gender || memberState.gender
     }
   }
 }, initMemberState)
