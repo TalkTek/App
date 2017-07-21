@@ -6,7 +6,8 @@ const initMemberState = {
   avatarUrl: null,
   email: null,
   name: null,
-  uid: null
+  uid: null,
+  from: null
 }
 
 export default handleActions({
@@ -16,10 +17,19 @@ export default handleActions({
       avatarUrl: action.payload.avatarUrl,
       email: action.payload.email,
       name: action.payload.name,
-      uid: action.payload.uid
+      uid: action.payload.uid,
+      from: action.payload.from
     }
   },
   'LOGOUT_MEMBER': (memberState) => {
     return initMemberState
+  },
+  'SAVE_MEMBER_CHANGE': (memberState, action) => {
+    return { 
+      ...memberState, 
+      avatarUrl: action.payload.avatarUrl || memberState.avatarUrl,
+      email: action.payload.email || memberState.email,
+      name: action.payload.name || memberState.name
+    }
   }
 }, initMemberState)

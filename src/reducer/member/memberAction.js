@@ -8,5 +8,16 @@ export default createActions({
   'LOGOUT_MEMBER': async () => {
     await firebase.auth().signOut()
     return null
+  },
+  'SAVE_MEMBER_CHANGE': memberState => {
+    firebase.database().ref(`users/${memberState.memberUid}/profile`)
+      .once('value')
+      .then(async snapshot => {
+        let data = snapshot.val()
+        await firebase.database().ref(`users/${memberState.memberUid}/profile`)
+          .set(Object.assign(data, memberState.post))    
+      })
+
+    return memberState.post
   }
 })

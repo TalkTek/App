@@ -84,7 +84,8 @@ export default class Login extends Component {
         firebase.database().ref(`/users/${user.uid}/profile`).set({
           name: user.displayName,
           email: user.email,
-          avatarUrl: user.photoURL
+          avatarUrl: user.photoURL,
+          from: 'Facebook'
         })
 
         dispatch(NavigationActions.reset({
@@ -128,7 +129,8 @@ export default class Login extends Component {
       firebase.database().ref(`/users/${user.uid}/profile`).set({
         name: user.displayName,
         email: user.email,
-        avatarUrl: user.photoURL
+        avatarUrl: user.photoURL,
+        from: 'Google'
       })
 
       dispatch(NavigationActions.reset({
