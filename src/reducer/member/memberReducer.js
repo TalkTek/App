@@ -13,7 +13,10 @@ export default handleActions({
   'CHANGE_MEMBER_STATE': (memberState, action) => {
     return { 
       ...memberState, 
-      ...action.payload 
+      avatarUrl: action.payload.avatarUrl,
+      email: action.payload.email,
+      name: action.payload.name,
+      uid: action.payload.uid
     }
   },
   'LOGOUT_MEMBER': (memberState) => {

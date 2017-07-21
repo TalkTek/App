@@ -24,8 +24,8 @@ import { connect } from 'react-redux'
 
 class MemberInfo extends Component {
   formData = {
-    Email: { text: '帳號' },
-    password: { text: '設定密碼' },
+    Email: { text: '帳號', readOnly: true },
+    name: { text: '名稱' },
     gender: { text: '性別' },
     birthday: { text: '生日' }
   }
@@ -43,7 +43,7 @@ class MemberInfo extends Component {
           <Text style={memberInfoStyle.inputLabel}>{data.text}</Text>
         </View>
         <View style={memberInfoStyle.inputArea}>
-          <Input style={memberInfoStyle.textInput} defaultValue={value} />
+          <Input style={memberInfoStyle.textInput} defaultValue={value} editable={!data.readOnly} />
         </View>
       </View>
     )
