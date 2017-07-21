@@ -112,7 +112,8 @@ class KnowledgeCapsule extends Component {
                 id: audio.id,
                 name: audio.audioName,
                 length: audio.length,
-                url: audio.url
+                url: audio.url,
+                likeCounter: audio.likeCounter || 0
               }]
             })
 
@@ -178,7 +179,8 @@ class KnowledgeCapsule extends Component {
         },
         'forwardFunction: notChange',
         next.id,
-        next.parentKey
+        next.parentKey,
+        next.likeCounter
       )
     } else {
         if ( playingAudioPos.i === capsules.length - 1) {
@@ -200,7 +202,8 @@ class KnowledgeCapsule extends Component {
             },
             'forwardFunction: changeToBegin',
             next.id,
-            next.parentKey
+            next.parentKey,
+            next.likeCounter
           )
         } else {
           next = capsules[playingAudioPos.i + 1].audios[0]
@@ -221,7 +224,8 @@ class KnowledgeCapsule extends Component {
             },
             'forwardFunction: changeToNext',
             next.id,
-            next.parentKey
+            next.parentKey,
+            next.likeCounter
           )
         }
     }
@@ -253,7 +257,8 @@ class KnowledgeCapsule extends Component {
         },
         'BackwardFunction: Not change',
         next.id,
-        next.parentKey
+        next.parentKey,
+        next.likeCounter
       )
     } else {
       if ( playingAudioPos.i === 0) {
@@ -275,7 +280,8 @@ class KnowledgeCapsule extends Component {
           },
           'BackwardFunction: forward to Begin',
           next.id,
-          next.parentKey
+          next.parentKey,
+          next.likeCounter
         )
       } else {
         let maxLength = capsules[playingAudioPos.i -1].audios.length - 1
@@ -296,7 +302,8 @@ class KnowledgeCapsule extends Component {
           },
           'BackwardFunction: forward',
           next.id,
-          next.parentKey
+          next.parentKey,
+          next.likeCounter
         )
       }
     }
@@ -504,7 +511,8 @@ class KnowledgeCapsule extends Component {
       },
       'onPressAudio',
       audio.id,
-      audio.parentKey
+      audio.parentKey,
+      audio.likeCounter
     )
     
     this.setState({

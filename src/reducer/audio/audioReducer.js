@@ -5,6 +5,7 @@ const initialState = {
   capsules: [],
   isCpAudioLoaded: false,
   playingAudioInfo: {
+    likeCounter: 0,
     audioIsGood: false,
     parentKey: '',
     capsulesId: '',
@@ -44,7 +45,8 @@ export default handleActions({
       ...state,
       playingAudioInfo: {
         ...state.playingAudioInfo,
-        parentKey: action.payload.parentKey || state.playingAudioInfo.parentKey ,
+        likeCounter: action.payload.likeCounter || state.playingAudioInfo.likeCounter,
+        parentKey: action.payload.parentKey || state.playingAudioInfo.parentKey,
         capsulesId: action.payload.id || state.playingAudioInfo.capsulesId,
         name: action.payload.name,
         length: {
@@ -70,21 +72,15 @@ export default handleActions({
       isCpAudioLoaded: true
     }
   },
-  'CP_AUDIO_GOOD': (state, action) => {
+  'CP_AUDIO_GOOD_CHANGE': (state, action) => {
+    console.log(action.payload.isGood)
     return {
       ...state,
       playingAudioInfo: {
         ...state.playingAudioInfo,
-        audioIsGood: true
-      }
-    }
-  },
-  'CP_AUDIO_NOT_GOOD': (state, action) => {
-    return {
-      ...state,
-      playingAudioInfo: {
-        ...state.playingAudioInfo,
-        audioIsGood: false
+        audioIsGood: action.payload.isGood,
+        likeCounter: 
+          state.playingAudioInfo.likeCounter + (action.payload.isGood ? 1: -1)
       }
     }
   }

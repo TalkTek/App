@@ -28,6 +28,7 @@ import { Player } from 'react-native-audio-toolkit'
 
 const mapStateToProps = (state) => {
   return {
+    likeCounter: state.audio.playingAudioInfo.likeCounter,
     audioIsGood: state.audio.playingAudioInfo.audioIsGood,
     capsulesId: state.audio.playingAudioInfo.capsulesId,
     parentKey: state.audio.playingAudioInfo.parentKey,
@@ -65,8 +66,8 @@ class PlayAudio extends Component {
           notActive: require('../../assets/img/playAudio/good.png'),
           active: require('../../assets/img/playAudio/goodActive.png'),
           checkActive: 'audioIsGood',
-          name: '203',
-          func: this._audioIsGood
+          name: 'likeCounter',
+          func: this._audioIsGoodToggle
         },
         timer: {
           notActive: require('../../assets/img/playAudio/timer.png'),
@@ -120,11 +121,15 @@ class PlayAudio extends Component {
     seek(value)
   }
 
-  _audioIsGood() {
-    // console.log(this.props.capsulesId, this.props.parentKey)
-    this.props.audioIsGood ?
-      this.props.actions.cpAudioNotGood(this.props.capsulesId, this.props.parentKey, 'mNkzekSKH6VGqMzXDX56S40anTa2'): // this Id is an Example
-      this.props.actions.cpAudioGood(this.props.capsulesId, this.props.parentKey, 'mNkzekSKH6VGqMzXDX56S40anTa2')
+  _audioIsGoodToggle() {
+    this.props
+      .actions
+      .cpAudioGoodChange(
+        !this.props.audioIsGood,
+        this.props.capsulesId,
+        this.props.parentKey,
+        'mNkzekSKH6VGqMzXDX56S40anTa2' // this ID is an example
+      )
   }
 
   render () {
@@ -160,7 +165,7 @@ class PlayAudio extends Component {
             <Text
               style={styles.footerText}
             >
-              {button.name}
+              {!isNaN(this.props[button.name])? this.props[button.name]: button.name}
             </Text>
           </View>
         </TouchableHighlight>

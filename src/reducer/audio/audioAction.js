@@ -2,6 +2,24 @@ import {
   createActions
 } from 'redux-actions'
 import firebase from 'firebase'
+import audioModule from './audioModule'
+
+let audioLike = createActions({
+  'CP_AUDIO_GOOD': async (capsulesId, parentKey, userId) => {
+    let likeCounter = await audioModule.cpAudioGood(capsulesId, parentKey, userId)
+    
+    return {
+      likeCounter
+    }
+  },
+  'CP_AUDIO_NOT_GOOD': async (capsulesId, parentKey, userId) => {
+    let likeCounter = await audioModule.cpAudioNotGood(capsulesId, parentKey, userId)
+
+    return {
+      likeCounter
+    } 
+  }
+})
 
 export default createActions({
   'CHANGE_PLAYING_STATE': playState => playState,
@@ -14,7 +32,8 @@ export default createActions({
     pos,
     from,
     id,
-    parentKey
+    parentKey,
+    likeCounter
   ) => ({
     name,
     length,
@@ -23,45 +42,15 @@ export default createActions({
     pos,
     from,
     id,
-    parentKey
+    parentKey,
+    likeCounter
   }),
   'LOAD_CP_AUDIO_SUCCESS': state => state,
-  'CP_AUDIO_GOOD': (capsulesId, parentKey, userId) => {
-    firebase.database()
-      .ref(`users/${userId}/favorite/${capsulesId}`)
-      .set({
-        parentKey
-      })
-      firebase.database()
-        .ref(`capsules/${parentKey}/audios/${capsulesId}`)
-        .once('value')
-        .then((audios) => {
-        let audio = audios.val()
-        if (!audio.counter) {
-          audio.counter = 1
-        } else {
-          audio.counter ++
-        }
-        audios.ref.update(audio)  
-      })
-    return 
-  },
-  'CP_AUDIO_NOT_GOOD': (capsulesId, parentKey, userId) => {
-    firebase.database()
-      .ref(`users/${userId}/favorite/${capsulesId}`)
-      .remove()
-    firebase.database()
-      .ref(`capsules/${parentKey}/audios/${capsulesId}`)
-      .once('value')
-      .then((audios) => {
-        let audio = audios.val()
-        if (!audio.counter) {
-          audio.counter = 0
-        } else {
-          audio.counter --
-        }
-        audios.ref.update(audio)
-      })
-    return
+  'CP_AUDIO_GOOD_CHANGE': (isGood, capsulesId, parentKey, userId) => {
+    audioLike[isGood? 'cpAudioGood': 'cpAudioNotGood'](capsulesId, parentKey, userId)
+    
+    return {
+      isGood
+    }
   }
 })
