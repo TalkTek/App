@@ -42,11 +42,11 @@ export default class MemberCenter extends Component {
     ]
   }
 
-  _logout() {
+  _logout = () => {
     this.props.logout()
   }
 
-  _renderListItem(rowData) {
+  _renderListItem = (rowData) => {
     return (
       <TouchableOpacity
         key={rowData.key}
@@ -77,7 +77,7 @@ export default class MemberCenter extends Component {
     )
   }
 
-  _renderUserAvater() {
+  _renderUserAvater = () => {
     return (
       <View style={[styles.mainBackground, styles.avatar]}>
         <Image 
@@ -119,13 +119,13 @@ export default class MemberCenter extends Component {
           <View style={styles.container}>
             
             <View style={styles.selectList}>
-              { this.listsData.my.map(this._renderListItem.bind(this)) }
+              { this.listsData.my.map(this._renderListItem) }
             </View>
             <View style={styles.selectList}>
-              { this.listsData.coin.map(this._renderListItem.bind(this)) }
+              { this.listsData.coin.map(this._renderListItem) }
             </View>
             <View style={styles.selectList}>
-              { this.listsData.other.map(this._renderListItem.bind(this)) }
+              { this.listsData.other.map(this._renderListItem) }
             </View>
             {
               this.props.memberUid &&
@@ -133,7 +133,7 @@ export default class MemberCenter extends Component {
                 <Button 
                   color="#212121" 
                   title="登出"
-                  onPress={this._logout.bind(this)}
+                  onPress={this._logout}
                 />
               </View>
             }
