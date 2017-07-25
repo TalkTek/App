@@ -46,7 +46,12 @@ export default class Register extends Component {
     const { navigate } = this.props.navigation
     try {
       if(password === rePassword) {
-        await firebase.auth().createUserWithEmailAndPassword(email, password)
+        let user = await firebase.auth().createUserWithEmailAndPassword(email, password)
+        firebase.database().ref(`/users/${user.uid}/profile`).set({
+          name: user.displayName,
+          email: user.email,
+          avatarUrl: user.photoURL
+        })
         navigate('TalkList')
       } else {
         this.setState({

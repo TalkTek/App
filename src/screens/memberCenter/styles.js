@@ -89,15 +89,15 @@ const memberInfoStyle = {
     borderRadius: 6,
     borderWidth: 1,
     borderStyle: 'solid',
-    marginTop: 16,
-    paddingTop: 5,
-    paddingBottom: 5,
-    paddingLeft: 10,
-    paddingRight: 10
+    marginTop: 16
   },
   uploadBtnText: {
     backgroundColor: 'transparent',
-    fontSize: 15
+    fontSize: 15,
+    marginTop: 5,
+    marginBottom: 5,
+    marginLeft: 10,
+    marginRight: 10
   },
   form: {
     ...style.mainBackground,
@@ -138,10 +138,10 @@ const myTalkStyle = {
   },
   card: {
     flexDirection: 'column',
-    paddingLeft: 24,
-    paddingRight: 24,
-    paddingTop: 16,
-    paddingBottom: 16,
+    marginLeft: 24,
+    marginRight: 24,
+    marginTop: 16,
+    marginBottom: 16,
     borderColor: 'rgb(245, 245, 245)',
     borderStyle: 'solid',
     borderBottomWidth: 1

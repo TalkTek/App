@@ -15,22 +15,29 @@ import {
 import { feedBackStyle } from './styles'
 
 class Feedback extends Component {
+  content = [
+    '姓名（必填）',
+    'Email（必填）'
+  ]
+
   render() {
     return (
       <Container>
         <Content style={feedBackStyle.content}>
-          <Text style={feedBackStyle.textLabel}>
-            姓名（必填）
-          </Text>
-          <View style={feedBackStyle.input}>
-            <Input />
-          </View>
-          <Text style={feedBackStyle.textLabel}>
-            Email（必填）
-          </Text>
-          <View style={feedBackStyle.input}>
-            <Input />
-          </View>
+          {
+            this.content.map((val, i) => {
+              return (
+                <View key={i}>
+                  <Text style={feedBackStyle.textLabel}>
+                    {val}
+                  </Text>
+                  <View style={feedBackStyle.input}>
+                    <Input />
+                  </View>
+                </View>
+              )
+            })
+          }
           <Text style={feedBackStyle.textLabel}>
             內容（必填）
           </Text>
