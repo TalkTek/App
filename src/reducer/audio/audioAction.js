@@ -4,25 +4,6 @@ import {
 import firebase from 'firebase'
 import AudioModule from '../../api/audioModule'
 
-let audioApi = new AudioModule()
-
-let audioLike = createActions({
-  'CP_AUDIO_GOOD': async (capsulesId, parentKey, userId) => {
-    let likeCounter = await audioApi.cpAudioGood(capsulesId, parentKey, userId)
-
-    return {
-      likeCounter
-    }
-  },
-  'CP_AUDIO_NOT_GOOD': async (capsulesId, parentKey, userId) => {
-    let likeCounter = await audioApi.cpAudioNotGood(capsulesId, parentKey, userId)
-
-    return {
-      likeCounter
-    } 
-  }
-})
-
 export default createActions({
   'CHANGE_PLAYING_STATE': playState => playState,
   'STORE_CAPSULE_AUDIOS': audios => audios,
@@ -48,13 +29,13 @@ export default createActions({
     likeCounter
   }),
   'LOAD_CP_AUDIO_SUCCESS': state => state,
-  'CP_AUDIO_GOOD_CHECK': audioIsGood => ({ audioIsGood }),
-  'CP_AUDIO_GOOD_CHANGE': (isGood, capsulesId, parentKey, userId) => {
-    audioLike[isGood? 'cpAudioGood': 'cpAudioNotGood'](capsulesId, parentKey, userId)
-    
-    return {
-      isGood
-    }
-  },
-  'CP_AUDIO_INFO': () => ({})
+  'CP_AUDIO_GOOD_CHANGE': (isGood, capsulesId, parentKey, userId) => ({
+    isGood,
+    capsulesId,
+    parentKey,
+    userId
+  }),
+  'CP_AUDIO_GOOD_CHANGE_SUCCESS': state => state,
+  'CP_AUDIO_INFO_GET': state => state,
+  'CP_AUDIO_INFO_GET_SUCCESS': state => state
 })

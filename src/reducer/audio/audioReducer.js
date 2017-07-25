@@ -66,13 +66,29 @@ export default handleActions({
       }
     }
   },
+  'CP_AUDIO_INFO_GET_SUCCESS': (state, action) => {
+    if (action.payload)
+      return {
+        ...state,
+        playingAudioInfo: {
+          ...state.playingAudioInfo,
+          audioIsGood: action.payload.audioIsGood,
+          likeCounter: action.payload.likeCounter,
+          parentKey: action.payload.parentKey || state.playingAudioInfo.parentKey,
+          capsulesId: action.payload.id || state.playingAudioInfo.capsulesId,
+          name: action.payload.audioName,
+          url: action.payload.url
+        }
+      }
+    return state
+  },
   'LOAD_CP_AUDIO_SUCCESS': (state, action) => {
     return {
       ...state,
       isCpAudioLoaded: true
     }
   },
-  'CP_AUDIO_GOOD_CHANGE': (state, action) => {
+  'CP_AUDIO_GOOD_CHANGE_SUCCESS': (state, action) => {
     return {
       ...state,
       playingAudioInfo: {
@@ -80,15 +96,6 @@ export default handleActions({
         audioIsGood: action.payload.isGood,
         likeCounter: 
           state.playingAudioInfo.likeCounter + (action.payload.isGood ? 1: -1)
-      }
-    }
-  },
-  'CP_AUDIO_GOOD_CHECK': (state, action) => {
-    return {
-      ...state,
-      playingAudioInfo: {
-        ...state.playingAudioInfo,
-        audioIsGood: action.payload.audioIsGood
       }
     }
   }

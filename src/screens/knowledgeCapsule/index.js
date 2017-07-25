@@ -136,35 +136,15 @@ class KnowledgeCapsule extends Component {
       })
   }
 
-  async _updateCapsuleInfo(capsuleId, parentKey) {
-    let snapshot = 
-      await firebase.database().ref(`capsules/${parentKey}/audios/${capsuleId}`)
-        .once('value')
+  _updateCapsuleInfo = (capsuleId, parentKey) => {
     
-    let data = snapshot.val()
-    console.log(data)
-    await this.props.actions.settingPlayingAudioInfo(
-      data.audioName,
-      data.length,
+    this.props.actions.cpAudioInfoGet(
       {
-        sec: null,
-        formatted: ''
-      },
-      this.props.audioUrl,
-      this.props.playingAudioPos,
-      'update Info',
-      capsuleId,
-      parentKey,
-      data.likeCounter
+        parentKey,
+        capsuleId,
+        memberUid: this.props.memberUid
+      }
     )
-    
-    this.checkSongIsLiked(capsuleId)
-  }
-
-  async checkSongIsLiked(capsuleId) {
-    let snapshot = 
-      await firebase.database().ref(`users/${this.props.memberUid}/favorite/${capsuleId}`).once('value')
-    this.props.actions.cpAudioGoodCheck(snapshot.exists())
   }
 
   componentDidMount () {

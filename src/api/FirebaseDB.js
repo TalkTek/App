@@ -23,13 +23,17 @@ export default class FirebaseDB {
     return this.firebase.ref(`${path}`).update(value)
   }
 
+  async _read(path) {
+    return await this.firebase.ref(`${path}`).once('value')
+  }
+
   /**
    * read data from path 
    * @param {string} path 
    * @return {Promise}
    */
   async readOnce(path = '') {
-    let data = await this.firebase.ref(`${path}`).once('value')
+    let data = await this._read(path)
     return data.val()
   }
 
@@ -40,5 +44,15 @@ export default class FirebaseDB {
    */
   remove(path = '') {
     return this.firebase.ref(path).remove()
+  }
+
+  /**
+   * check ref path is exists
+   * @param {string} path
+   * @return {Promise} 
+   */
+  async exists(path = '') {
+    let snapshot = await this._read(path)
+    return snapshot.exists()
   }
 }

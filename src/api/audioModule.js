@@ -35,4 +35,11 @@ export default class AudioModule extends FirebaseDB {
     this.update(path, audio)
     return audio.likeCounter
   }
+
+  async checkAudioIsLiked(capsuleId, memberUid) {
+    let isLiked = 
+      await this.exists(`users/${memberUid}/favorite/${capsuleId}`)
+    
+    return isLiked  
+  }
 }
