@@ -31,7 +31,7 @@ export default class Main extends Component {
     this.props.member.changeMemberState({ ...snapshot.val(), uid: user.uid })
   }
 
-  componentWillMount () {
+  componentDidMount () {
     const { dispatch } = this.props.navigation
     firebase.auth().onAuthStateChanged( user => {
       if (user) {
