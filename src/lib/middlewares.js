@@ -8,7 +8,12 @@ const loggerMiddlewares = createLogger({
   duration: true,
 })
 
-export default [
+const middlewares = [
   sagaMiddlewares,
   loggerMiddlewares,
 ]
+
+export { 
+  sagaMiddlewares, 
+  middlewares as default
+}

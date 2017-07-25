@@ -9,7 +9,7 @@ let audioApi = new AudioModule()
 let audioLike = createActions({
   'CP_AUDIO_GOOD': async (capsulesId, parentKey, userId) => {
     let likeCounter = await audioApi.cpAudioGood(capsulesId, parentKey, userId)
-    
+
     return {
       likeCounter
     }
@@ -55,5 +55,6 @@ export default createActions({
     return {
       isGood
     }
-  }
+  },
+  'CP_AUDIO_INFO': () => ({})
 })
