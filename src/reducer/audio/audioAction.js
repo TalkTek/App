@@ -2,18 +2,20 @@ import {
   createActions
 } from 'redux-actions'
 import firebase from 'firebase'
-import audioModule from './audioModule'
+import AudioModule from '../../api/audioModule'
+
+let audioApi = new AudioModule()
 
 let audioLike = createActions({
   'CP_AUDIO_GOOD': async (capsulesId, parentKey, userId) => {
-    let likeCounter = await audioModule.cpAudioGood(capsulesId, parentKey, userId)
+    let likeCounter = await audioApi.cpAudioGood(capsulesId, parentKey, userId)
     
     return {
       likeCounter
     }
   },
   'CP_AUDIO_NOT_GOOD': async (capsulesId, parentKey, userId) => {
-    let likeCounter = await audioModule.cpAudioNotGood(capsulesId, parentKey, userId)
+    let likeCounter = await audioApi.cpAudioNotGood(capsulesId, parentKey, userId)
 
     return {
       likeCounter

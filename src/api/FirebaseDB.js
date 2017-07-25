@@ -1,7 +1,8 @@
-import firebase from './firebase'
+import Firebase from 'firebase'
 
-export default class FirebaseDB extends firebase {
-  
+export default class FirebaseDB {
+  firebase = Firebase.database()
+
   /**
    * write data from path
    * @param {string} path
@@ -9,7 +10,7 @@ export default class FirebaseDB extends firebase {
    * @return {Promise}
    */
   write(path = '', value) {
-    return this.firebase.database().ref(`${path}`).set(value)
+    return this.firebase.ref(`${path}`).set(value)
   }
 
   /**
@@ -19,7 +20,7 @@ export default class FirebaseDB extends firebase {
    * @return {Promise} 
    */
   update(path = '', value) {
-    return this.firebase.database().ref(`${path}`).update(value)
+    return this.firebase.ref(`${path}`).update(value)
   }
 
   /**
@@ -27,7 +28,17 @@ export default class FirebaseDB extends firebase {
    * @param {string} path 
    * @return {Promise}
    */
-  readOnce(path = '') {
-    return this.firebase.database().ref(`${path}`).once('value')
+  async readOnce(path = '') {
+    let data = await this.firebase.ref(`${path}`).once('value')
+    return data.val()
+  }
+
+  /**
+   * delete data from path
+   * @param {string} path
+   * @return {Promise}
+   */
+  remove(path = '') {
+    return this.firebase.ref(path).remove()
   }
 }
