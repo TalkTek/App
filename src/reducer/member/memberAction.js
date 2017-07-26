@@ -19,5 +19,7 @@ export default createActions({
       })
 
     return memberState.post
-  }
+  },
+  'MEMBER_CAPSULE_GET': state => state,
+  'MEMBER_CAPSULE_GET_SUCCESS': state => state
 })

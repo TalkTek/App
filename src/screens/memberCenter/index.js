@@ -30,7 +30,8 @@ import memberAction from '../../reducer/member/memberAction'
 export default class MemberCenter extends Component {
   listsData = {
     my: [
-      { key: 'iconmyTalk', icon: require(`../../assets/img/memberCenter/iconmyTalk.png`), target: 'MyTalk', text: '我的小講' }
+      { key: 'iconmyTalk', icon: require(`../../assets/img/memberCenter/iconmyTalk.png`), target: 'MyTalk', text: '我的小講' },
+      { key: 'iconmyCapsule', icon: require(`../../assets/img/memberCenter/iconmyTalk.png`), target: 'MyCapsule', text: '我的膠囊收藏' }
     ],
     coin: [
       { key: 'iconMypoint', icon: require(`../../assets/img/memberCenter/iconMypoint.png`), target: 'MyPoint', rightText: '500點', text: '我的點數' },
