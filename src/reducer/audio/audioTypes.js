@@ -1,4 +1,4 @@
-import KeyMirror from 'keymirror'
+import KeyMirror from 'key-mirror'
 
 export default KeyMirror({
   CP_AUDIO_INFO_GET: null,

@@ -9,7 +9,8 @@ const initMemberState = {
   uid: null,
   from: null,
   birthday: null,
-  gender: null
+  gender: null,
+  favoriteCapsule: []
 }
 
 export default handleActions({
@@ -36,6 +37,13 @@ export default handleActions({
       name: action.payload.name || memberState.name,
       birthday: action.payload.birthday || memberState.birthday,
       gender: action.payload.gender || memberState.gender
+    }
+  },
+  'MEMBER_CAPSULE_GET_SUCCESS': (memberState, action) => {
+    // console.log(action)
+    return {
+      ...memberState,
+      favoriteCapsule: action.payload.capsules
     }
   }
 }, initMemberState)
