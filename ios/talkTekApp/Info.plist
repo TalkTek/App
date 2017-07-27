@@ -25,7 +25,7 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb156556004916783</string>
+				<string>fb635201980018279</string>
 			</array>
 		</dict>
 		<dict>
@@ -54,9 +54,9 @@
 	<key>CodePushDeploymentKey</key>
 	<string>hFjwiHph5qufoAm1JxHx8jbCP1nM4JbRhcGg7</string>
 	<key>FacebookAppID</key>
-	<string>156556004916783</string>
+	<string>635201980018279</string>
 	<key>FacebookDisplayName</key>
-	<string>TalkTekProduction</string>
+	<string>talkTek</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
