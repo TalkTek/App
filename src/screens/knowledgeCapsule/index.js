@@ -44,8 +44,10 @@ let buttons = {
 
 const mapStateToProps = (state) => {
   return {
+    memberUid: state.member.uid,
     playState: state.audio.playState,
     capsules: state.audio.capsules,
+    capsuleId: state.audio.id,
     audioName: state.audio.playingAudioInfo.name,
     currentTimeFormatted: state.audio.playingAudioInfo.currentTime.formatted,
     currentTimeSec: state.audio.playingAudioInfo.currentTime.sec,
@@ -78,47 +80,77 @@ class KnowledgeCapsule extends Component {
     lastKey: null, // firebase last key
   }
 
-  componentDidMount () {
+  resolveData(capsuleRef) {
     const { actions } = this.props
 
-    // get data from firebase
-    let capsuleRef = firebase.database().ref('capsules').orderByKey().limitToLast(2)
     capsuleRef
-      .on('child_added', (snapshot, prevChildKey) => {
-
+      .once('value')
+      .then((snapshot) => {
+        let capPush = snapshot.val()
         let audios = []
         let capsule = []
-        let cap = snapshot.val()
-        
-        this.setState({
-          lastKey: prevChildKey
-        })
+        let lastKey = true
 
-        Object.values(cap.audios).forEach((audio) => {
-          audios = [...audios, {
-            active: false,
-            name: audio.audioName,
-            length: audio.length,
-            url: audio.url
-          }]
-        })
-
-        capsule = [
-          ...capsule,
-          {
-            title: cap.title,
-            audios
+        // parent loop
+        Object.keys(capPush).forEach((parentKey, index) => {
+          if (index === 0) {
+            if (this.state.lastKey === parentKey)
+              lastKey = null
+            else
+              lastKey = parentKey
+            
+            this.setState({
+              lastKey: lastKey
+            })
           }
-        ]
 
-        actions.storeCapsuleAudios(capsule)
-        actions.loadCpAudioSuccess()
+          if ( lastKey ) {
+            //capsule loop
+            Object.values(capPush[parentKey].audios).forEach((audio) => {
+              audios = [...audios, {
+                active: false,
+                parentKey,
+                id: audio.id,
+                name: audio.audioName,
+                length: audio.length,
+                url: audio.url,
+                likeCounter: audio.likeCounter || 0
+              }]
+            })
 
-        audios = []
-        capsule = []
-      }, err => {
-        console.error('loaded capsules from Firebase error message is', err)
+            capsule = [
+              ...capsule,
+              {
+                title: capPush[parentKey].title,
+                audios
+              }
+            ]
+
+            actions.storeCapsuleAudios(capsule)
+            actions.loadCpAudioSuccess()
+          }
+          
+          audios = []
+          capsule = []
+        })
       })
+  }
+
+  _updateCapsuleInfo = (capsuleId, parentKey) => {
+    
+    this.props.actions.cpAudioInfoGet(
+      {
+        parentKey,
+        capsuleId,
+        memberUid: this.props.memberUid
+      }
+    )
+  }
+
+  componentDidMount () {
+    // get data from firebase
+    let capsuleRef = firebase.database().ref('capsules').orderByKey().limitToLast(2)
+    this.resolveData(capsuleRef)
   }
 
   createPlayer = (url) => {
@@ -157,7 +189,10 @@ class KnowledgeCapsule extends Component {
           i: playingAudioPos.i,
           j: playingAudioPos.j + 1
         },
-        'forwardFunction: notChange'
+        'forwardFunction: notChange',
+        next.id,
+        next.parentKey,
+        next.likeCounter
       )
     } else {
         if ( playingAudioPos.i === capsules.length - 1) {
@@ -177,7 +212,10 @@ class KnowledgeCapsule extends Component {
               j: 0,
 
             },
-            'forwardFunction: changeToBegin'
+            'forwardFunction: changeToBegin',
+            next.id,
+            next.parentKey,
+            next.likeCounter
           )
         } else {
           next = capsules[playingAudioPos.i + 1].audios[0]
@@ -196,10 +234,14 @@ class KnowledgeCapsule extends Component {
               j: 0,
 
             },
-            'forwardFunction: changeToNext'
+            'forwardFunction: changeToNext',
+            next.id,
+            next.parentKey,
+            next.likeCounter
           )
         }
     }
+    this._updateCapsuleInfo(next.id, next.parentKey)
     await this.createPlayer(next.url)
     await this.playOrPause()
   }
@@ -226,7 +268,10 @@ class KnowledgeCapsule extends Component {
           j: playingAudioPos.j - 1,
 
         },
-        'BackwardFunction: Not change'
+        'BackwardFunction: Not change',
+        next.id,
+        next.parentKey,
+        next.likeCounter
       )
     } else {
       if ( playingAudioPos.i === 0) {
@@ -246,7 +291,10 @@ class KnowledgeCapsule extends Component {
             j: 0,
 
           },
-          'BackwardFunction: forward to Begin'
+          'BackwardFunction: forward to Begin',
+          next.id,
+          next.parentKey,
+          next.likeCounter
         )
       } else {
         let maxLength = capsules[playingAudioPos.i -1].audios.length - 1
@@ -265,12 +313,34 @@ class KnowledgeCapsule extends Component {
             j: maxLength,
 
           },
-          'BackwardFunction: forward'
+          'BackwardFunction: forward',
+          next.id,
+          next.parentKey,
+          next.likeCounter
         )
       }
     }
+    this._updateCapsuleInfo(next.id, next.parentKey)
     await this.createPlayer(next.url)
     await this.playOrPause()
+  }
+
+  forward15s() {
+    let forwardTime = this.props.currentTimeSec + 15
+    this.seek(
+      forwardTime > Number(this.props.audioLength.sec)?
+        Number(this.props.audioLength.sec):
+        forwardTime
+    )
+  }
+
+  backward15s() {
+    let backwardTime = this.props.currentTimeSec - 15
+    this.seek(
+      backwardTime < 0?
+        0:
+        backwardTime
+    )
   }
 
   playOrPause = () => {
@@ -453,13 +523,17 @@ class KnowledgeCapsule extends Component {
       {
         i,j
       },
-      'onPressAudio'
+      'onPressAudio',
+      audio.id,
+      audio.parentKey,
+      audio.likeCounter
     )
     
     this.setState({
       audioBarActive: true
     })
 
+    this._updateCapsuleInfo(audio.id, audio.parentKey)
     await this.toggleButtonColor(i, j)
     await this.createPlayer(audio.url)
     await this.playOrPause()
@@ -510,50 +584,14 @@ class KnowledgeCapsule extends Component {
     if(lastKey === null ) {
       return
     } else {
-      firebase.database()
-        .ref('capsules')
-        .orderByKey()
-        .endAt(lastKey)
-        .limitToLast(3)
-        .on('child_added', (snapshot, prevChildKey) => {
+      let capsuleRef =
+        firebase.database()
+          .ref('capsules')
+          .endAt(lastKey)
+          .orderByKey()
+          .limitToLast(3)
 
-          if (lastKey === null) {
-            return
-          }
-
-          if (snapshot.key !== lastKey) {
-
-            this.setState({
-              lastKey: prevChildKey
-            })
-
-            let cap = snapshot.val()
-            let audios = []
-            let capsule = []
-
-            Object.values(cap.audios).forEach((audio) => {
-              audios = [...audios, {
-                active: false,
-                name: audio.audioName,
-                length: audio.length,
-                url: audio.url
-              }]
-            })
-
-            capsule = [
-              ...capsule,
-              {
-                title: cap.title,
-                audios
-              }
-            ]
-
-            actions.storeCapsuleAudios(capsule)
-
-            audios = []
-            capsule = []
-          }
-        })
+      this.resolveData(capsuleRef)
     }
   }
 
@@ -593,7 +631,7 @@ class KnowledgeCapsule extends Component {
                         style={styles.capPlayPauseButtonImage}
                       />
                       <Text style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>{audio.name}</Text>
-                      <Text style={styles.audioLengthText}>{audio.length.formatted}</Text>
+                      <Text style={styles.audioLengthText}>{audio.length?audio.length.formatted:''}</Text>
                     </View>
                   </TouchableHighlight>
                 </View>
@@ -658,7 +696,9 @@ class KnowledgeCapsule extends Component {
                 playOrPauseFunc: this.playOrPause,
                 forward: this.forward,
                 backward: this.backward,
-                seek: this.seek
+                seek: this.seek,
+                forward15s: this.forward15s.bind(this),
+                backward15s: this.backward15s.bind(this)
               }
             )}
           >

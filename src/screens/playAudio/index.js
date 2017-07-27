@@ -28,6 +28,11 @@ import { Player } from 'react-native-audio-toolkit'
 
 const mapStateToProps = (state) => {
   return {
+    memberUid: state.member.uid,
+    likeCounter: state.audio.playingAudioInfo.likeCounter,
+    audioIsGood: state.audio.playingAudioInfo.audioIsGood,
+    capsulesId: state.audio.playingAudioInfo.capsulesId,
+    parentKey: state.audio.playingAudioInfo.parentKey,
     playState: state.audio.playState,
     audioName: state.audio.playingAudioInfo.name,
     audioUrl: state.audio.playingAudioInfo.url,
@@ -58,43 +63,35 @@ class PlayAudio extends Component {
   buttons = {
     close: require('../../assets/img/playAudio/close.png'),
     footer: {
-      active: {
-        goodActive: {
-          link: require('../../assets/img/playAudio/goodActive.png'),
-          name: '203'
-        },
-        timerActive: {
-          link: require('../../assets/img/playAudio/timerActive.png'),
-          name: '20:39'
-        },
-      },
-      notActive: {
-        good: {
-          link: require('../../assets/img/playAudio/good.png'),
-          name: '203'
+       good: {
+          notActive: require('../../assets/img/playAudio/good.png'),
+          active: require('../../assets/img/playAudio/goodActive.png'),
+          checkActive: 'audioIsGood',
+          name: 'likeCounter',
+          func: this._audioIsGoodToggle
         },
         timer: {
-          link: require('../../assets/img/playAudio/timer.png'),
+          notActive: require('../../assets/img/playAudio/timer.png'),
           name: '20:39'
         },
         addSpeed: {
-          link: require('../../assets/img/playAudio/addSpeed.png'),
+          notActive: require('../../assets/img/playAudio/addSpeed.png'),
           name: '速率'
         },
         word: {
-          link: require('../../assets/img/playAudio/word.png'),
+          notActive: require('../../assets/img/playAudio/word.png'),
           name: '文檔'
         },
         more: {
-          link: require('../../assets/img/playAudio/more.png'),
+          notActive: require('../../assets/img/playAudio/more.png'),
           name: '更多'
         }
-      }
     },
     body: {
       backward15: {
         twoState: false,
-        link: require('../../assets/img/audioElement/backward15.png')
+        link: require('../../assets/img/audioElement/backward15.png'),
+        func: this.props.navigation.state.params.backward15s
       },
       backward: {
         twoState: false,
@@ -114,7 +111,8 @@ class PlayAudio extends Component {
       },
       forward15: {
         twoState: false,
-        link: require('../../assets/img/audioElement/forward15.png')
+        link: require('../../assets/img/audioElement/forward15.png'),
+        func: this.props.navigation.state.params.forward15s
       },
     }
   }
@@ -122,6 +120,17 @@ class PlayAudio extends Component {
   _onSlidingComplete = (value) => {
     const { seek } = this.props.navigation.state.params
     seek(value)
+  }
+
+  _audioIsGoodToggle() {
+    this.props
+      .actions
+      .cpAudioGoodChange(
+        !this.props.audioIsGood,
+        this.props.capsulesId,
+        this.props.parentKey,
+        this.props.memberUid
+      )
   }
 
   render () {
@@ -141,21 +150,23 @@ class PlayAudio extends Component {
       currentTimeFormatted,
     } = this.props
 
-    const footerButtons = Object.values(this.buttons.footer.notActive).map((button, i) => {
+    const footerButtons = Object.values(this.buttons.footer).map((button, i) => {
       return (
         <TouchableHighlight
           transparent
           key={i}
+          onPress={typeof button.func === 'function'? button.func.bind(this): null}
+          underlayColor="#fff"
         >
           <View style={styles.footerFunUnit}>
             <Image
-              source={button.link}
+              source={this.props[button.checkActive]? button.active: button.notActive}
               style={styles.footerImages}
             />
             <Text
               style={styles.footerText}
             >
-              {button.name}
+              {!isNaN(this.props[button.name])? this.props[button.name]: button.name}
             </Text>
           </View>
         </TouchableHighlight>

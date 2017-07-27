@@ -39,12 +39,17 @@ export default class Register extends Component {
 
   async _onRegister () {
     const { email, password, rePassword } = this.state
-    const { navigate, reset, dispatch } = this.props.navigation
+    const { dispatch } = this.props.navigation
       if(password === rePassword) {
-        firebase
+        let user = await firebase
           .auth()
           .createUserWithEmailAndPassword(email, password)
           .then(() => {
+            firebase.database().ref(`/users/${user.uid}/profile`).set({
+              name: user.displayName,
+              email: user.email,
+              avatarUrl: user.photoURL
+            })
             dispatch(
               NavigationActions.reset({
                 index: 0,

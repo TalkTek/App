@@ -5,6 +5,10 @@ const initialState = {
   capsules: [],
   isCpAudioLoaded: false,
   playingAudioInfo: {
+    likeCounter: 0,
+    audioIsGood: false,
+    parentKey: '',
+    capsulesId: '',
     name: '',
     length: {
       sec: null,
@@ -40,6 +44,10 @@ export default handleActions({
     return {
       ...state,
       playingAudioInfo: {
+        ...state.playingAudioInfo,
+        likeCounter: action.payload.likeCounter || state.playingAudioInfo.likeCounter,
+        parentKey: action.payload.parentKey || state.playingAudioInfo.parentKey,
+        capsulesId: action.payload.id || state.playingAudioInfo.capsulesId,
         name: action.payload.name,
         length: {
           sec: action.payload.length.sec,
@@ -58,10 +66,37 @@ export default handleActions({
       }
     }
   },
+  'CP_AUDIO_INFO_GET_SUCCESS': (state, action) => {
+    if (action.payload)
+      return {
+        ...state,
+        playingAudioInfo: {
+          ...state.playingAudioInfo,
+          audioIsGood: action.payload.audioIsGood,
+          likeCounter: action.payload.likeCounter,
+          parentKey: action.payload.parentKey || state.playingAudioInfo.parentKey,
+          capsulesId: action.payload.id || state.playingAudioInfo.capsulesId,
+          name: action.payload.audioName,
+          url: action.payload.url
+        }
+      }
+    return state
+  },
   'LOAD_CP_AUDIO_SUCCESS': (state, action) => {
     return {
       ...state,
       isCpAudioLoaded: true
+    }
+  },
+  'CP_AUDIO_GOOD_CHANGE_SUCCESS': (state, action) => {
+    return {
+      ...state,
+      playingAudioInfo: {
+        ...state.playingAudioInfo,
+        audioIsGood: action.payload.isGood,
+        likeCounter: 
+          state.playingAudioInfo.likeCounter + (action.payload.isGood ? 1: -1)
+      }
     }
   }
 }, initialState)

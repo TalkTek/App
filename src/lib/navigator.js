@@ -9,6 +9,12 @@ import Register from '../screens/loginOrRegister/register'
 import MainScreen from '../screens/Main'
 import KnowledgeCapsule from '../screens/knowledgeCapsule/index'
 import MemberCenter from '../screens/memberCenter/index'
+import MemberInfo from '../screens/memberCenter/memberInfo'
+import MyTalk from '../screens/memberCenter/myTalk'
+import MyPoint from '../screens/memberCenter/myPoint'
+import PointCenter from '../screens/memberCenter/pointCenter'
+import Feedback from '../screens/memberCenter/feedback'
+import Apply from '../screens/memberCenter/apply'
 import PlayAudio from '../screens/playAudio'
 import { Platform, Image } from 'react-native'
 
@@ -74,7 +80,13 @@ const CapsuleScreen = StackNavigator({
 })
 
 const MemberCenterScreen = StackNavigator({
-  MemberCenterScreen: { screen: MemberCenter }
+  MemberCenterScreen: { screen: MemberCenter },
+  MemberInfo : { screen: MemberInfo, navigationOptions: { title: '個人資料' }},
+  MyTalk: { screen: MyTalk, navigationOptions: { title: '我的小講' } },
+  MyPoint: { screen: MyPoint, navigationOptions: { title: '我的點數' } },
+  Fillup: { screen: PointCenter, navigationOptions: { title: '儲值中心' } },
+  Feedback: { screen: Feedback, navigationOptions: { title: '意見回饋' } },
+  Apply: { screen: Apply, navigationOptions: { title: '成為講師' } }
 }, {
   navigationOptions: {
     title: '我的',
@@ -105,15 +117,15 @@ const AppNavigator = TabNavigator(
     //   screen: LectureScreen,
     //   navigationOptions: {
     //     tabBarLabel: '小講',
-    //     tabBarIcon: ({tintColor, focused}) => (
-    //       <Image
-    //         source={
-    //           focused
-    //             ? require('../assets/img/tabIcon/lecture/lec_active.png')
-    //             : require('../assets/img/tabIcon/lecture/lec_inactive.png')
-    //         }
-    //       />
-    //     )
+    //     // tabBarIcon: ({tintColor, focused}) => (
+    //     //   <Image
+    //     //     source={
+    //     //       focused
+    //     //         ? require('../assets/img/tabIcon/lecture/lec_active.png')
+    //     //         : require('../assets/img/tabIcon/lecture/lec_inactive.png')
+    //     //     }
+    //     //   />
+    //     // )
     //   }
     // },
     KnowledgeCapsule: {
