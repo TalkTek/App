@@ -37,5 +37,7 @@ export default createActions({
   }),
   'CP_AUDIO_GOOD_CHANGE_SUCCESS': state => state,
   'CP_AUDIO_INFO_GET': state => state,
-  'CP_AUDIO_INFO_GET_SUCCESS': state => state
+  'CP_AUDIO_INFO_GET_SUCCESS': state => state,
+  'CP_AUDIO_GET_DOC': state => state,
+  'CP_AUDIO_GET_DOC_SUCCESS': state => state
 })

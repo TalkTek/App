@@ -80,7 +80,8 @@ class PlayAudio extends Component {
         },
         word: {
           notActive: require('../../assets/img/playAudio/word.png'),
-          name: '文檔'
+          name: '文檔',
+          func: () => this.props.navigation.navigate('PlayerDocScreen')
         },
         more: {
           notActive: require('../../assets/img/playAudio/more.png'),

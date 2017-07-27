@@ -5,6 +5,7 @@ const initialState = {
   capsules: [],
   isCpAudioLoaded: false,
   playingAudioInfo: {
+    draft: '',
     likeCounter: 0,
     audioIsGood: false,
     parentKey: '',
@@ -94,9 +95,16 @@ export default handleActions({
       playingAudioInfo: {
         ...state.playingAudioInfo,
         audioIsGood: action.payload.isGood,
-        likeCounter: 
+        likeCounter:
           state.playingAudioInfo.likeCounter + (action.payload.isGood ? 1: -1)
       }
     }
-  }
+  },
+  'CP_AUDIO_GET_DOC_SUCCESS': (state, { payload: draft }) => ({
+    ...state,
+    playingAudioInfo: {
+      ...state.playingAudioInfo,
+      draft: draft.draft
+    }
+  })
 }, initialState)

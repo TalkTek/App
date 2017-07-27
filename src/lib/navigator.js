@@ -11,11 +11,13 @@ import KnowledgeCapsule from '../screens/knowledgeCapsule/index'
 import MemberCenter from '../screens/memberCenter/index'
 import MemberInfo from '../screens/memberCenter/memberInfo'
 import MyTalk from '../screens/memberCenter/myTalk'
+import MyCapsule from '../screens/memberCenter/myCapsule'
 import MyPoint from '../screens/memberCenter/myPoint'
 import PointCenter from '../screens/memberCenter/pointCenter'
 import Feedback from '../screens/memberCenter/feedback'
 import Apply from '../screens/memberCenter/apply'
 import PlayAudio from '../screens/playAudio'
+import PlayerDoc from '../screens/playAudio/playerDoc'
 import { Platform, Image } from 'react-native'
 
 const LectureScreen = StackNavigator({
@@ -50,7 +52,8 @@ const LectureScreen = StackNavigator({
 
 const CapsuleScreen = StackNavigator({
   KnowledgeCapsuleScreen: { screen: KnowledgeCapsule },
-  PlayAudioScreen: { screen: PlayAudio }
+  PlayAudioScreen: { screen: PlayAudio },
+  PlayerDocScreen: { screen: PlayerDoc }
 }, {
   // initialRouteName: 'PlayAudioScreen',
   mode: 'modal',
@@ -73,13 +76,14 @@ const CapsuleScreen = StackNavigator({
       color: 'rgb(255, 255, 255)'
     },
     headerTintColor: 'white'
-  },
+  }
 })
 
 const MemberCenterScreen = StackNavigator({
   MemberCenterScreen: { screen: MemberCenter },
   MemberInfo : { screen: MemberInfo, navigationOptions: { title: '個人資料' }},
   MyTalk: { screen: MyTalk, navigationOptions: { title: '我的小講' } },
+  MyCapsule: { screen: MyCapsule, navigationOptions: { title: '我的膠囊' } },
   MyPoint: { screen: MyPoint, navigationOptions: { title: '我的點數' } },
   Fillup: { screen: PointCenter, navigationOptions: { title: '儲值中心' } },
   Feedback: { screen: Feedback, navigationOptions: { title: '意見回饋' } },
