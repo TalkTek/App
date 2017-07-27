@@ -317,10 +317,10 @@ const applyStyle = {
   }
 }
 
-export { 
-  memberInfoStyle, 
-  myTalkStyle, 
-  myPointStyle, 
+export {
+  memberInfoStyle,
+  myTalkStyle,
+  myPointStyle,
   pointCenterStyle,
   feedBackStyle,
   applyStyle
