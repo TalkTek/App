@@ -116,6 +116,8 @@ class KnowledgeCapsule extends Component {
 
         audios = []
         capsule = []
+      }, err => {
+        console.error('loaded capsules from Firebase error message is', err)
       })
   }
 

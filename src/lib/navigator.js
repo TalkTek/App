@@ -15,9 +15,9 @@ import { Platform, Image } from 'react-native'
 const LectureScreen = StackNavigator({
   TalkList: { screen: TalkListScreen },
   TalkContent: { screen: TalkContentScreen },
-  Login: { screen: Login },
-  Register: { screen: Register },
-  Main: { screen: MainScreen }
+  // Login: { screen: Login },
+  // Register: { screen: Register },
+  // Main: { screen: MainScreen }
 }, {
   initialRouteName: 'Main',
   navigationOptions: {
@@ -44,9 +44,12 @@ const LectureScreen = StackNavigator({
 
 const CapsuleScreen = StackNavigator({
   KnowledgeCapsuleScreen: { screen: KnowledgeCapsule },
-  PlayAudioScreen: { screen: PlayAudio }
+  PlayAudioScreen: { screen: PlayAudio },
+  Main: { screen: MainScreen },
+  Login: { screen: Login },
+  Register: { screen: Register }
 }, {
-  // initialRouteName: 'PlayAudioScreen',
+  initialRouteName: 'Main',
   mode: 'modal',
   navigationOptions: {
     title: '知識膠囊',

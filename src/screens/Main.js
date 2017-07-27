@@ -2,22 +2,19 @@
 'use strict'
 
 import React, { Component } from 'react'
-import {
-  Image,
-} from 'react-native'
 import { Container, View } from 'native-base'
-import { FIREBASE_CONFIG } from '../lib/config'
+import  CONFIG  from '../lib/config'
 import firebase from 'firebase'
 import { NavigationActions } from 'react-navigation'
 
-firebase.initializeApp(FIREBASE_CONFIG)
+firebase.initializeApp(CONFIG.FIREBASE.PRODUCTION)
 
 export default class Main extends Component {
   static navigationOptions = {
     header: null,
   }
 
-  componentWillMount () {
+  componentDidMount () {
     const { dispatch } = this.props.navigation
     firebase.auth().onAuthStateChanged( user => {
       if (user) {
@@ -25,7 +22,7 @@ export default class Main extends Component {
             NavigationActions.reset({
             index: 0,
             actions: [
-              NavigationActions.navigate({routeName: 'TalkList'})
+              NavigationActions.navigate({routeName: 'KnowledgeCapsuleScreen'})
             ]
           }))
       } else {

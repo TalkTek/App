@@ -26,6 +26,7 @@ import firebase from 'firebase'
 import Modal from 'react-native-modalbox'
 import { NavigationActions } from 'react-navigation'
 import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge'
+import { loginStyles as styles } from './styles'
 
 let tracker = new GoogleAnalyticsTracker('UA-100475279-1',{ test: 3})
 
@@ -54,8 +55,8 @@ export default class Login extends Component {
     try {
       GoogleSignin.hasPlayServices({ autoResolve: true });
       GoogleSignin.configure({
-        iosClientId: '430072955636-0c50m0rcd61fcue597jrbir12oagc65t.apps.googleusercontent.com',
-        webClientId: '430072955636-kh5mh67btr7khp4pml100f42rjprovlm.apps.googleusercontent.com',
+        iosClientId: '483803817924-ting9fedaqcoecl7iricui9nu44m7d9o.apps.googleusercontent.com',
+        webClientId: '483803817924-pv0hqspovoot6d3s74egaa9dsi533g1n.apps.googleusercontent.com',
         offlineAccess: false
       })
     } catch(err) {
@@ -75,22 +76,19 @@ export default class Login extends Component {
       } else {
         const tokenData = await AccessToken.getCurrentAccessToken()
         const token = tokenData.accessToken.toString()
-
         // firebase setting
         const credential_facebook = firebase.auth.FacebookAuthProvider.credential(token)
         const user = await firebase.auth().signInWithCredential(credential_facebook)
-
         // write firebase
         firebase.database().ref(`/users/${user.uid}/profile`).set({
           name: user.displayName,
           email: user.email,
           avatarUrl: user.photoURL
         })
-
         dispatch(NavigationActions.reset({
           index: 0,
           actions: [
-            NavigationActions.navigate({routeName: 'TalkList'})
+            NavigationActions.navigate({routeName: 'KnowledgeCapsuleScreen'})
           ]
         }))
       }
@@ -106,9 +104,9 @@ export default class Login extends Component {
       this.setState({
         spinningIsOpen: false
       })
-      console.log('error.credential', error.credential);
-      console.log('error message is', error.message);
-      console.log('error code is', error.code);
+      console.error('error.credential', error.credential);
+      console.error('error message is', error.message);
+      console.error('error code is', error.code);
     }
   }
 
@@ -134,7 +132,7 @@ export default class Login extends Component {
       dispatch(NavigationActions.reset({
         index: 0,
         actions: [
-          NavigationActions.navigate({routeName: 'TalkList'})
+          NavigationActions.navigate({routeName: 'KnowledgeCapsuleScreen'})
         ]
       }))
     } catch(error) {
@@ -148,7 +146,7 @@ export default class Login extends Component {
     const { navigate } = this.props.navigation
     try {
       await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
-      navigate('TalkList')
+      navigate('KnowledgeCapsuleScreen')
       tracker.trackEvent('EmailPasswordLogin', 'Fill In')
     }
     catch(error) {
@@ -217,9 +215,14 @@ export default class Login extends Component {
               <Icon name="google-plus" size={28} color="white" />
               <Text style={styles.facebookNGoogleText}>Google</Text>
             </Button>
-            <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={() => navigate('Register')}>
-              <Text style={styles.registerText}>註冊新帳號</Text>
-            </Button>
+            <View style={styles.footer}>
+              <Button style={styles.footerButton} onPress={() => navigate('Register')}>
+                <Text style={styles.registerText}>註冊新帳號</Text>
+              </Button>
+              <Button style={styles.footerButton} onPress={() => navigate('Register')}>
+                <Text style={styles.registerText}>忘記密碼</Text>
+              </Button>
+            </View>
           </View>
           <Modal
             style={styles.modal}
@@ -252,123 +255,6 @@ export default class Login extends Component {
       </Container>
     )
   }
-}
-
-const styles = {
-  spinningModal: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  modalHeadlineText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  modalErrorMsgText: {
-    fontSize: 16,
-    marginHorizontal: 13,
-  },
-  modalButton: {
-    alignSelf: 'auto',
-    backgroundColor: '#fff',
-  },
-  modalButtonText: {
-    color: 'rgb(31, 191, 179)',
-    fontWeight: 'bold',
-    fontSize: 15,
-  },
-  modal: {
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: 12,
-    height: screenHeight*0.2624,
-    width: screenWidth*0.8,
-    backgroundColor: 'white',
-    borderRadius: 10,
-  },
-  container: {
-    backgroundColor: 'rgb(255, 255, 255)'
-  },
-  bg: {
-    flex: 1,
-    height: screenHeight,
-    alignItems: 'center',
-  },
-  logo: {
-    marginTop: 68,
-    height: 150,
-    width: 80,
-    zIndex: 0,
-  },
-  form: {
-    borderWidth: 2,
-    borderColor:'rgb(224, 224, 224)',
-    borderRadius: 8,
-    marginLeft: screenWidth*0.125,
-    marginRight: screenWidth*0.125,
-    marginTop: 40,
-    marginBottom: 8,
-    height: 96,
-    width: screenWidth*0.75
-  },
-  item: {
-    height: 48,
-    marginLeft: 0
-  },
-  input: {
-    height: 45,
-    width: '100%',
-    paddingLeft: 16,
-  },
-  baseButton: {
-    alignSelf: 'auto',
-    width: screenWidth*0.75,
-    elevation: (Platform.OS === 'android') ? 0 : 3,
-  },
-  loginButton: {
-    backgroundColor: 'rgb(31, 191, 179)',
-  },
-  facebookButton: {
-    backgroundColor: 'rgb(58, 88, 151)',
-    justifyContent: 'center',
-    marginBottom: 8
-  },
-  googleButton: {
-    backgroundColor: 'rgb(221, 77, 64)',
-    justifyContent: 'center',
-    marginBottom: 16
-  },
-  loginText: {
-    marginLeft: screenWidth*0.75*0.4,
-    fontSize: 15,
-    fontWeight: '900',
-    height: 21,
-    width: 40
-  },
-  facebookNGoogleText: {
-    fontSize: 15,
-    marginLeft: 16,
-    letterSpacing: 0,
-    fontWeight: '600'
-  },
-  or: {
-    fontSize: 14,
-    color: 'rgb(158, 158, 158)',
-    marginTop: 24,
-    marginBottom: 24,
-    letterSpacing: -0.2,
-    lineHeight: 17
-  },
-  registerText: {
-    fontSize: 15,
-    color: 'rgb(31, 191, 179)',
-    fontWeight: 'bold',
-    lineHeight: 21
-  },
-  registerButton: {
-    backgroundColor: 'white',
-    justifyContent: 'center'
-  },
 }
 
 

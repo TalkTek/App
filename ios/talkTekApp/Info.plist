@@ -25,17 +25,17 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb635201980018279</string>
+				<string>fb156556004916783</string>
 			</array>
 		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.googleusercontent.apps.430072955636-0c50m0rcd61fcue597jrbir12oagc65t</string>
+			<string>com.googleusercontent.apps.483803817924-ting9fedaqcoecl7iricui9nu44m7d9o</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.430072955636-0c50m0rcd61fcue597jrbir12oagc65t</string>
+				<string>com.googleusercontent.apps.483803817924-ting9fedaqcoecl7iricui9nu44m7d9o</string>
 			</array>
 		</dict>
 		<dict>
@@ -54,9 +54,9 @@
 	<key>CodePushDeploymentKey</key>
 	<string>hFjwiHph5qufoAm1JxHx8jbCP1nM4JbRhcGg7</string>
 	<key>FacebookAppID</key>
-	<string>635201980018279</string>
+	<string>156556004916783</string>
 	<key>FacebookDisplayName</key>
-	<string>talkTek</string>
+	<string>TalkTekProduction</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
