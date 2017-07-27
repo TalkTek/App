@@ -10,7 +10,8 @@ import {
   Animated,
   Dimensions,
   Image,
-  ActivityIndicator
+  ActivityIndicator,
+  Platform
 } from 'react-native'
 import {
   Container,
@@ -167,8 +168,10 @@ class KnowledgeCapsule extends Component {
         }
         this.player.play()
         this.props.actions.changePlayingState('playing')
-        setInterval(() => {            
+        this.interval = setInterval(() => {
           console.log('currentTime from audioPlayingTimer', this.player.currentTime)
+            if( this.props.playState === 'playing' && this.player.currentTime !== -1){  
+
             let min = Math.floor( this.player.currentTime/ 60000)
             let sec = Math.floor(this.player.currentTime / 1000) - min * 60
 
@@ -189,6 +192,28 @@ class KnowledgeCapsule extends Component {
               this.props.playingAudioPos,
               'audioPlayingTimerStart: running'
             )
+      }
+          else if( this.player.currentTime === -1) { 
+            // when the audio end
+            clearInterval(this.interval)
+            let currentTimeformatted = "00:00"
+
+            this.props.actions.settingPlayingAudioInfo(
+              this.props.audioName,
+              this.props.audioLength,
+              {
+                sec: 0,
+                formatted: currentTimeformatted
+              },
+              this.props.audioUrl,
+              this.props.playingAudioPos,
+              'audioPlayingTimerStart: stoping'
+            )
+            this.props.actions.changePlayingState('notPlaying')
+
+            console.log('go to forward')
+            this.forward()
+          }
         },500)
       })
   }
@@ -377,7 +402,7 @@ class KnowledgeCapsule extends Component {
       // react-native-audio-toolkit bug
       // only get current time after calling pause
       this.player.play()
-      this.audioPlayingTimerStart()
+      //this.audioPlayingTimerStart()
       // this.player.pause(() => {
       //   this.player.play(() => {
       //     this.audioPlayingTimerStart()
@@ -389,7 +414,8 @@ class KnowledgeCapsule extends Component {
     } else {
       actions.changePlayingState('notPlaying')
       this.player.pause(() => {
-        clearInterval(this.interval)
+        //clearInterval(this.interval)
+        console.log('pause')
       })
     }
   }
@@ -501,7 +527,7 @@ class KnowledgeCapsule extends Component {
         let position = percent * this.player.duration
         this.player.seek(position, async () => {
 
-          clearInterval(this.interval)
+          //clearInterval(this.interval)
 
           let sec = Math.floor(value%60)
           let min = Math.floor(value/60)
@@ -522,7 +548,7 @@ class KnowledgeCapsule extends Component {
             playingAudioPos,
             'seekFunction'
           )
-          await this.audioPlayingTimerStart()
+          //await this.audioPlayingTimerStart()
         })
       }
     }
@@ -575,7 +601,7 @@ class KnowledgeCapsule extends Component {
     Animated.spring(
       popoutAudioBarHeight,
       {
-        toValue: screenHeight - 160
+        toValue: Platform.OS === 'ios' ? (screenHeight - 160) : (screenHeight - 185),
       }
     ).start()
   }

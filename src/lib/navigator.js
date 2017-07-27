@@ -110,21 +110,21 @@ const MemberCenterScreen = StackNavigator({
 
 const AppNavigator = TabNavigator(
   {
-    // Lecture: {
-    //   screen: LectureScreen,
-    //   navigationOptions: {
-    //     tabBarLabel: '小講',
-    //     // tabBarIcon: ({tintColor, focused}) => (
-    //     //   <Image
-    //     //     source={
-    //     //       focused
-    //     //         ? require('../assets/img/tabIcon/lecture/lec_active.png')
-    //     //         : require('../assets/img/tabIcon/lecture/lec_inactive.png')
-    //     //     }
-    //     //   />
-    //     // )
-    //   }
-    // },
+    Lecture: {
+      screen: LectureScreen,
+      navigationOptions: {
+        tabBarLabel: '小講'
+        // tabBarIcon: ({tintColor, focused}) => (
+        //   <Image
+        //     source={
+        //       focused
+        //         ? require('../assets/img/tabIcon/lecture/lec_active.png')
+        //         : require('../assets/img/tabIcon/lecture/lec_inactive.png')
+        //     }
+        //   />
+        // )
+      }
+    },
     KnowledgeCapsule: {
       screen: CapsuleScreen,
       navigationOptions: {
@@ -157,8 +157,10 @@ const AppNavigator = TabNavigator(
     }
   },
   {
+    tabBarPosition: 'bottom',
     tabBarOptions: {
-      activeTintColor: Platform.OS === 'ios' ? 'rgb(31, 191, 179)' : '#fff',
+      activeTintColor: Platform.OS === 'ios' ? 'rgb(31, 191, 179)' : 'rgb(31, 191, 179)',
+      inactiveTintColor: Platform.OS === 'android' ? 'rgb(224, 224, 224)' : 'rgb(224, 224, 224)',
       style: {
         height: 49,
         backgroundColor: 'white',
