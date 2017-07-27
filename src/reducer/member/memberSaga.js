@@ -11,7 +11,7 @@ import MemberModule from '../../api/memberModule'
  * subroutines
  */
 
-function * getMemberCapsule(data) {
+function * getMemberCapsule (data) {
   let capsules = yield call(() => new MemberModule().getLikeCapsule(data.payload))
   yield put({
     type: 'MEMBER_CAPSULE_GET_SUCCESS',
@@ -21,12 +21,17 @@ function * getMemberCapsule(data) {
   })
 }
 
+function * changeMember ({ payload: {post, memberUid} }) {
+  yield call(() => new MemberModule().changeMemberProfile(memberUid, post))
+}
+
 /**
  * watcher
  */
 
-function * member() {
+function * member () {
   yield takeLatest(MemberTypes.MEMBER_CAPSULE_GET, getMemberCapsule)
+  yield takeLatest(MemberTypes.SAVE_MEMBER_CHANGE, changeMember)
 }
 
 export default [
