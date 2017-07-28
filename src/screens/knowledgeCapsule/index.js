@@ -32,7 +32,7 @@ import {
   Player,
 } from 'react-native-audio-toolkit'
 
-const { width : screenWidth, height: screenHeight } = Dimensions.get('window')
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 console.log('screenHeight', screenHeight);
 console.log('screenWidth', screenWidth);
 
@@ -101,13 +101,13 @@ class KnowledgeCapsule extends Component {
               lastKey = null
             else
               lastKey = parentKey
-            
+
             this.setState({
               lastKey: lastKey
             })
           }
 
-          if ( lastKey ) {
+          if (lastKey) {
             //capsule loop
             Object.values(capPush[parentKey].audios).forEach((audio) => {
               audios = [...audios, {
@@ -132,7 +132,7 @@ class KnowledgeCapsule extends Component {
             actions.storeCapsuleAudios(capsule)
             actions.loadCpAudioSuccess()
           }
-          
+
           audios = []
           capsule = []
         })
@@ -140,7 +140,7 @@ class KnowledgeCapsule extends Component {
   }
 
   _updateCapsuleInfo = (capsuleId, parentKey) => {
-    
+
     this.props.actions.cpAudioInfoGet(
       {
         parentKey,
@@ -150,7 +150,7 @@ class KnowledgeCapsule extends Component {
     )
   }
 
-  componentDidMount () {
+  componentDidMount() {
     // get data from firebase
     let capsuleRef = firebase.database().ref('capsules').orderByKey().limitToLast(2)
     this.resolveData(capsuleRef)
@@ -158,28 +158,39 @@ class KnowledgeCapsule extends Component {
   }
 
   createPlayer = (url) => {
-    if(this.player) {
+    if (this.player) {
       this.player.destroy()
       this.props.actions.changePlayingState('notPlaying')
       console.log('Player Destroy')
     }
     console.log('Player create')
+    let t0 = performance.now()
     this.player = new Player(url)
       .prepare(error => {
-        if(error) {
+        if (error) {
           console.log('error at createPlayer, error is => ', error);
         }
         this.player.play()
+        let t1 = performance.now()
+        console.log('time to load audio is ' + (t1 - t0) + 'ms')
+        this.props.ga.gaSetEvent({
+          category: 'capsule',
+          action: 'Per Audio loading time',
+          value: {
+            label: 'loading time',
+            value: parseInt(t1 - t0)
+          }
+        })
         this.props.actions.changePlayingState('playing')
         this.interval = setInterval(() => {
           console.log('currentTime from audioPlayingTimer', this.player.currentTime)
-            if( this.props.playState === 'playing' && this.player.currentTime !== -1){  
+          if (this.props.playState === 'playing' && this.player.currentTime !== -1) {
 
-            let min = Math.floor( this.player.currentTime/ 60000)
+            let min = Math.floor(this.player.currentTime / 60000)
             let sec = Math.floor(this.player.currentTime / 1000) - min * 60
 
-            if (sec < 10) { sec = "0" + sec}
-            if (min < 10) { min = "0" + min}
+            if (sec < 10) { sec = "0" + sec }
+            if (min < 10) { min = "0" + min }
 
             let currentTimeformatted = min + ":" + sec
             let currentTimeSecNow = Math.floor(this.player.currentTime / 1000)
@@ -195,8 +206,8 @@ class KnowledgeCapsule extends Component {
               this.props.playingAudioPos,
               'audioPlayingTimerStart: running'
             )
-      }
-          else if( this.player.currentTime === -1) { 
+          }
+          else if (this.player.currentTime === -1) {
             // when the audio end
             clearInterval(this.interval)
             let currentTimeformatted = "00:00"
@@ -217,7 +228,7 @@ class KnowledgeCapsule extends Component {
             console.log('go to forward')
             this.forward()
           }
-        },500)
+        }, 500)
       })
   }
 
@@ -250,51 +261,51 @@ class KnowledgeCapsule extends Component {
         next.likeCounter
       )
     } else {
-        if ( playingAudioPos.i === capsules.length - 1) {
-          // if audio reach end of audio's list, then recycle it
-          next = capsules[0].audios[0]
-          await this.toggleButtonColor(0, 0)
-          await actions.settingPlayingAudioInfo(
-            next.name,
-            next.length,
-            {
-              sec: null,
-              formatted: ''
-            },
-            next.url,
-            {
-              i: 0,
-              j: 0,
+      if (playingAudioPos.i === capsules.length - 1) {
+        // if audio reach end of audio's list, then recycle it
+        next = capsules[0].audios[0]
+        await this.toggleButtonColor(0, 0)
+        await actions.settingPlayingAudioInfo(
+          next.name,
+          next.length,
+          {
+            sec: null,
+            formatted: ''
+          },
+          next.url,
+          {
+            i: 0,
+            j: 0,
 
-            },
-            'forwardFunction: changeToBegin',
-            next.id,
-            next.parentKey,
-            next.likeCounter
-          )
-        } else {
-          next = capsules[playingAudioPos.i + 1].audios[0]
-          actions.settingPlayingAudioInfo(next.name, next.length, next.url)
-          await this.toggleButtonColor(playingAudioPos.i + 1, 0)
-          await actions.settingPlayingAudioInfo(
-            next.name,
-            next.length,
-            {
-              sec: null,
-              formatted: ''
-            },
-            next.url,
-            {
-              i: playingAudioPos.i + 1,
-              j: 0,
+          },
+          'forwardFunction: changeToBegin',
+          next.id,
+          next.parentKey,
+          next.likeCounter
+        )
+      } else {
+        next = capsules[playingAudioPos.i + 1].audios[0]
+        actions.settingPlayingAudioInfo(next.name, next.length, next.url)
+        await this.toggleButtonColor(playingAudioPos.i + 1, 0)
+        await actions.settingPlayingAudioInfo(
+          next.name,
+          next.length,
+          {
+            sec: null,
+            formatted: ''
+          },
+          next.url,
+          {
+            i: playingAudioPos.i + 1,
+            j: 0,
 
-            },
-            'forwardFunction: changeToNext',
-            next.id,
-            next.parentKey,
-            next.likeCounter
-          )
-        }
+          },
+          'forwardFunction: changeToNext',
+          next.id,
+          next.parentKey,
+          next.likeCounter
+        )
+      }
     }
     this._updateCapsuleInfo(next.id, next.parentKey)
     await this.createPlayer(next.url)
@@ -307,9 +318,9 @@ class KnowledgeCapsule extends Component {
 
     clearInterval(this.interval)
 
-    if(playingAudioPos.j - 1 >= 0) {
+    if (playingAudioPos.j - 1 >= 0) {
       next = capsules[playingAudioPos.i].audios[playingAudioPos.j - 1]
-      await this.toggleButtonColor(playingAudioPos.i, playingAudioPos.j -1)
+      await this.toggleButtonColor(playingAudioPos.i, playingAudioPos.j - 1)
       await actions.settingPlayingAudioInfo(
         next.name,
         next.length,
@@ -329,7 +340,7 @@ class KnowledgeCapsule extends Component {
         next.likeCounter
       )
     } else {
-      if ( playingAudioPos.i === 0) {
+      if (playingAudioPos.i === 0) {
         // if audio reach Top of audio's list, then recycle it
         next = capsules[0].audios[0]
         await this.toggleButtonColor(0, 0)
@@ -352,7 +363,7 @@ class KnowledgeCapsule extends Component {
           next.likeCounter
         )
       } else {
-        let maxLength = capsules[playingAudioPos.i -1].audios.length - 1
+        let maxLength = capsules[playingAudioPos.i - 1].audios.length - 1
         next = capsules[playingAudioPos.i - 1].audios[maxLength]
         await this.toggleButtonColor(playingAudioPos.i - 1, maxLength)
         await actions.settingPlayingAudioInfo(
@@ -383,8 +394,8 @@ class KnowledgeCapsule extends Component {
   forward15s() {
     let forwardTime = this.props.currentTimeSec + 15
     this.seek(
-      forwardTime > Number(this.props.audioLength.sec)?
-        Number(this.props.audioLength.sec):
+      forwardTime > Number(this.props.audioLength.sec) ?
+        Number(this.props.audioLength.sec) :
         forwardTime
     )
   }
@@ -392,15 +403,15 @@ class KnowledgeCapsule extends Component {
   backward15s() {
     let backwardTime = this.props.currentTimeSec - 15
     this.seek(
-      backwardTime < 0?
-        0:
+      backwardTime < 0 ?
+        0 :
         backwardTime
     )
   }
 
   playOrPause = () => {
     const { playState, actions } = this.props
-    if(playState ==='notPlaying' && this.player) {
+    if (playState === 'notPlaying' && this.player) {
       actions.changePlayingState('playing')
       // react-native-audio-toolkit bug
       // only get current time after calling pause
@@ -413,7 +424,7 @@ class KnowledgeCapsule extends Component {
       // })
       console.log('change state to playing')
     } else if (!this.player) {
-      console.log('player is not found',);
+      console.log('player is not found', );
     } else {
       actions.changePlayingState('notPlaying')
       this.player.pause(() => {
@@ -421,10 +432,10 @@ class KnowledgeCapsule extends Component {
         console.log('pause')
       })
     }
-    
+
     this.props.ga.gaSetEvent({
       category: 'capsule',
-      action: playState==='notPlaying'? 'playing': 'notPlaying',
+      action: playState === 'notPlaying' ? 'playing' : 'notPlaying',
       value: {
         capsuleId: this.props.capsuleId,
         audioName: this.props.audioName
@@ -453,7 +464,7 @@ class KnowledgeCapsule extends Component {
     let outdatedValue = currentTimeSec * 1000
     let nowValue
 
-    if(this.player) {
+    if (this.player) {
       this.interval = setInterval(() => {
         if (playState === 'playing') {
           if (this.player.currentTime && (this.player.currentTime > 0)) {
@@ -471,8 +482,8 @@ class KnowledgeCapsule extends Component {
             let min = Math.floor(nowValue / 60000)
             let sec = Math.floor(nowValue / 1000) - min * 60
 
-            if (sec < 10) { sec = "0" + sec}
-            if (min < 10) { min = "0" + min}
+            if (sec < 10) { sec = "0" + sec }
+            if (min < 10) { min = "0" + min }
 
             currentTimeformatted = min + ":" + sec
             currentTimeSecNow = Math.floor(nowValue / 1000)
@@ -533,13 +544,13 @@ class KnowledgeCapsule extends Component {
       audioUrl,
       playingAudioPos
     } = this.props
-    if(this.player) {
-      if(this.player.duration) {
+    if (this.player) {
+      if (this.player.duration) {
 
 
         console.log('valueSeek from seek', value)
 
-        let percent = Number((value / audioLength.sec ).toFixed(2))
+        let percent = Number((value / audioLength.sec).toFixed(2))
 
         console.log('audioLength.sec from seek', audioLength.sec)
         console.log('percent from seek', percent)
@@ -549,13 +560,13 @@ class KnowledgeCapsule extends Component {
 
           //clearInterval(this.interval)
 
-          let sec = Math.floor(value%60)
-          let min = Math.floor(value/60)
-          
-          if(sec<10) { sec = "0"+sec }
-          if(min<10) { min = "0"+min }
+          let sec = Math.floor(value % 60)
+          let min = Math.floor(value / 60)
 
-          let formatted = min+':'+sec
+          if (sec < 10) { sec = "0" + sec }
+          if (min < 10) { min = "0" + min }
+
+          let formatted = min + ':' + sec
 
           await actions.settingPlayingAudioInfo(
             audioName,
@@ -583,13 +594,13 @@ class KnowledgeCapsule extends Component {
   }
 
   onPressAudio = async (audio, i, j) => {
-    
+
     clearInterval(this.interval)
     const { actions } = this.props
-    
+
     console.log('audio is', audio)
     this.props.ga.gaSetEvent({
-      category: 'capsule', 
+      category: 'capsule',
       action: 'play audio',
       value: {
         capsuleId: audio.id,
@@ -608,14 +619,14 @@ class KnowledgeCapsule extends Component {
       },
       audio.url,
       {
-        i,j
+        i, j
       },
       'onPressAudio',
       audio.id,
       audio.parentKey,
       audio.likeCounter
     )
-    
+
     this.setState({
       audioBarActive: true
     })
@@ -652,7 +663,7 @@ class KnowledgeCapsule extends Component {
 
     if (Math.abs(diff) < 5) {
       console.log('unclear')
-    } else if (diff<0) {
+    } else if (diff < 0) {
       this.toggleAudioBarUp()
     } else {
       this.toggleAudioBarDown()
@@ -667,7 +678,7 @@ class KnowledgeCapsule extends Component {
     const { lastKey } = this.state
     const { actions } = this.props
 
-    if(lastKey === null ) {
+    if (lastKey === null) {
       return
     } else {
       let capsuleRef =
@@ -681,7 +692,7 @@ class KnowledgeCapsule extends Component {
     }
   }
 
-  render () {
+  render() {
     let CapUnit = null
     const {
       playState,
@@ -694,7 +705,7 @@ class KnowledgeCapsule extends Component {
     const { audioBarActive } = this.state
 
     const { navigate } = this.props.navigation
-    if(capsules) {
+    if (capsules) {
       CapUnit = capsules.map((cap, i) => {
         return (
           <View key={i} style={styles.capContainer}>
@@ -717,7 +728,7 @@ class KnowledgeCapsule extends Component {
                         style={styles.capPlayPauseButtonImage}
                       />
                       <Text style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>{audio.name}</Text>
-                      <Text style={styles.audioLengthText}>{audio.length?audio.length.formatted:''}</Text>
+                      <Text style={styles.audioLengthText}>{audio.length ? audio.length.formatted : ''}</Text>
                     </View>
                   </TouchableHighlight>
                 </View>
@@ -753,7 +764,7 @@ class KnowledgeCapsule extends Component {
           }
         </Content>
         <Animated.View
-          style={[styles.popoutAudioPlayBar, {top: this.state.popoutAudioBarHeight} ]}
+          style={[styles.popoutAudioPlayBar, { top: this.state.popoutAudioBarHeight }]}
         >
           <TouchableHighlight
             transparent
@@ -761,7 +772,7 @@ class KnowledgeCapsule extends Component {
             underlayColor="#fff"
           >
             <Image
-              source={ playState === 'playing' ? buttons.pause : buttons.playingOnAudioBar}
+              source={playState === 'playing' ? buttons.pause : buttons.playingOnAudioBar}
               style={styles.playPauseButton}
             />
           </TouchableHighlight>
