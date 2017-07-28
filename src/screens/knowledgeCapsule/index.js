@@ -11,7 +11,8 @@ import {
   Animated,
   Dimensions,
   Image,
-  ActivityIndicator
+  ActivityIndicator,
+  Platform
 } from 'react-native'
 import {
   Container,
@@ -160,12 +161,63 @@ class KnowledgeCapsule extends Component {
     if(this.player) {
       this.player.destroy()
       this.props.actions.changePlayingState('notPlaying')
+      console.log('Player Destroy')
     }
+    console.log('Player create')
     this.player = new Player(url)
       .prepare(error => {
         if(error) {
           console.log('error at createPlayer, error is => ', error);
         }
+        this.player.play()
+        this.props.actions.changePlayingState('playing')
+        this.interval = setInterval(() => {
+          console.log('currentTime from audioPlayingTimer', this.player.currentTime)
+            if( this.props.playState === 'playing' && this.player.currentTime !== -1){  
+
+            let min = Math.floor( this.player.currentTime/ 60000)
+            let sec = Math.floor(this.player.currentTime / 1000) - min * 60
+
+            if (sec < 10) { sec = "0" + sec}
+            if (min < 10) { min = "0" + min}
+
+            let currentTimeformatted = min + ":" + sec
+            let currentTimeSecNow = Math.floor(this.player.currentTime / 1000)
+
+            this.props.actions.settingPlayingAudioInfo(
+              this.props.audioName,
+              this.props.audioLength,
+              {
+                sec: currentTimeSecNow,
+                formatted: currentTimeformatted
+              },
+              this.props.audioUrl,
+              this.props.playingAudioPos,
+              'audioPlayingTimerStart: running'
+            )
+      }
+          else if( this.player.currentTime === -1) { 
+            // when the audio end
+            clearInterval(this.interval)
+            let currentTimeformatted = "00:00"
+
+            this.props.actions.settingPlayingAudioInfo(
+              this.props.audioName,
+              this.props.audioLength,
+              {
+                sec: 0,
+                formatted: currentTimeformatted
+              },
+              this.props.audioUrl,
+              this.props.playingAudioPos,
+              'audioPlayingTimerStart: stoping'
+            )
+            this.props.actions.changePlayingState('notPlaying')
+
+            console.log('go to forward')
+            this.forward()
+          }
+        },500)
       })
   }
 
@@ -352,17 +404,21 @@ class KnowledgeCapsule extends Component {
       actions.changePlayingState('playing')
       // react-native-audio-toolkit bug
       // only get current time after calling pause
-      this.player.pause(() => {
-        this.player.play(() => {
-          this.audioPlayingTimerStart()
-        })
-      })
+      this.player.play()
+      //this.audioPlayingTimerStart()
+      // this.player.pause(() => {
+      //   this.player.play(() => {
+      //     this.audioPlayingTimerStart()
+      //   })
+      // })
+      console.log('change state to playing')
     } else if (!this.player) {
       console.log('player is not found',);
     } else {
       actions.changePlayingState('notPlaying')
       this.player.pause(() => {
-        clearInterval(this.interval)
+        //clearInterval(this.interval)
+        console.log('pause')
       })
     }
     
@@ -401,9 +457,9 @@ class KnowledgeCapsule extends Component {
       this.interval = setInterval(() => {
         if (playState === 'playing') {
           if (this.player.currentTime && (this.player.currentTime > 0)) {
-            console.log('currentTime from audioPlayingTimer', this.player.currentTime)
-            console.log('nowValue from audioPlayingTimer', nowValue)
-            console.log('outDataValue from audioPlayingTimer', outdatedValue)
+            //console.log('currentTime from audioPlayingTimer', this.player.currentTime)
+            //console.log('nowValue from audioPlayingTimer', nowValue)
+            //console.log('outDataValue from audioPlayingTimer', outdatedValue)
 
             nowValue = this.player.currentTime
 
@@ -444,23 +500,23 @@ class KnowledgeCapsule extends Component {
               }
             })
             // when the audio end
-            clearInterval(this.interval)
-            currentTimeformatted = "00:00"
+            // clearInterval(this.interval)
+            // currentTimeformatted = "00:00"
 
-            actions.settingPlayingAudioInfo(
-              audioName,
-              audioLength,
-              {
-                sec: 0,
-                formatted: currentTimeformatted
-              },
-              audioUrl,
-              playingAudioPos,
-              'audioPlayingTimerStart: stoping'
-            )
-            actions.changePlayingState('notPlaying')
+            // actions.settingPlayingAudioInfo(
+            //   audioName,
+            //   audioLength,
+            //   {
+            //     sec: 0,
+            //     formatted: currentTimeformatted
+            //   },
+            //   audioUrl,
+            //   playingAudioPos,
+            //   'audioPlayingTimerStart: stoping'
+            // )
+            // actions.changePlayingState('notPlaying')
 
-            this.forward()
+            // this.forward()
           }
         }
       }, 500)
@@ -491,7 +547,7 @@ class KnowledgeCapsule extends Component {
         let position = percent * this.player.duration
         this.player.seek(position, async () => {
 
-          clearInterval(this.interval)
+          //clearInterval(this.interval)
 
           let sec = Math.floor(value%60)
           let min = Math.floor(value/60)
@@ -512,7 +568,7 @@ class KnowledgeCapsule extends Component {
             playingAudioPos,
             'seekFunction'
           )
-          await this.audioPlayingTimerStart()
+          //await this.audioPlayingTimerStart()
         })
       }
     }
@@ -527,6 +583,8 @@ class KnowledgeCapsule extends Component {
   }
 
   onPressAudio = async (audio, i, j) => {
+    
+    clearInterval(this.interval)
     const { actions } = this.props
     
     console.log('audio is', audio)
@@ -538,6 +596,8 @@ class KnowledgeCapsule extends Component {
         name: audio.name
       }
     })
+
+    await this.toggleButtonColor(i, j)
     // initialize playing audio
     actions.settingPlayingAudioInfo(
       audio.name,
@@ -561,9 +621,8 @@ class KnowledgeCapsule extends Component {
     })
 
     this._updateCapsuleInfo(audio.id, audio.parentKey)
-    await this.toggleButtonColor(i, j)
+    //await this.playOrPause()
     await this.createPlayer(audio.url)
-    await this.playOrPause()
     this.toggleAudioBarUp()
   }
 
@@ -572,7 +631,7 @@ class KnowledgeCapsule extends Component {
     Animated.spring(
       popoutAudioBarHeight,
       {
-        toValue: screenHeight - 160
+        toValue: Platform.OS === 'ios' ? (screenHeight - 160) : (screenHeight - 185),
       }
     ).start()
   }

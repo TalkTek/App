@@ -233,6 +233,9 @@ export default class Login extends Component {
             <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={() => navigate('Register')}>
               <Text style={styles.registerText}>註冊新帳號</Text>
             </Button>
+            <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={() => navigate('Forgetpw')}>
+              <Text style={styles.registerText}>忘記密碼</Text>
+            </Button>
           </View>
           <Modal
             style={styles.modal}
