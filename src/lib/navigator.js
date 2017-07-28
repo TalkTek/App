@@ -6,6 +6,7 @@ import TalkListScreen from '../screens/talkList/index'
 import TalkContentScreen from '../screens/talkContent/index'
 import Login from '../screens/loginOrRegister/login'
 import Register from '../screens/loginOrRegister/register'
+import Forgetpw from '../screens/loginOrRegister/forgetpw'
 import MainScreen from '../screens/Main'
 import KnowledgeCapsule from '../screens/knowledgeCapsule/index'
 import MemberCenter from '../screens/memberCenter/index'
@@ -23,6 +24,7 @@ const LectureScreen = StackNavigator({
   TalkContent: { screen: TalkContentScreen },
   Login: { screen: Login },
   Register: { screen: Register },
+  Forgetpw: { screen: Forgetpw },
   Main: { screen: MainScreen }
 }, {
   initialRouteName: 'Main',

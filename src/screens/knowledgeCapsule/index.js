@@ -563,10 +563,13 @@ class KnowledgeCapsule extends Component {
   }
 
   onPressAudio = async (audio, i, j) => {
+    
+    clearInterval(this.interval)
     const { actions } = this.props
     
     console.log('audio is', audio)
 
+    await this.toggleButtonColor(i, j)
     // initialize playing audio
     actions.settingPlayingAudioInfo(
       audio.name,
@@ -590,9 +593,8 @@ class KnowledgeCapsule extends Component {
     })
 
     this._updateCapsuleInfo(audio.id, audio.parentKey)
-    await this.toggleButtonColor(i, j)
-    await this.createPlayer(audio.url)
     //await this.playOrPause()
+    await this.createPlayer(audio.url)
     this.toggleAudioBarUp()
   }
 
