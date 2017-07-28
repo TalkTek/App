@@ -38,7 +38,6 @@ function * setAudioGoodState (data) {
 }
 
 function * getAudioDoc (data) {
-  console.log(data)
   let { capsuleId, parentKey } = data.payload
   let draft = yield call(() => new AudioModule().getAudioDoc(capsuleId, parentKey))
 

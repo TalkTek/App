@@ -1,8 +1,6 @@
 import {
   createActions
 } from 'redux-actions'
-import firebase from 'firebase'
-import AudioModule from '../../api/audioModule'
 
 export default createActions({
   'CHANGE_PLAYING_STATE': playState => playState,

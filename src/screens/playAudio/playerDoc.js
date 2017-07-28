@@ -16,6 +16,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { StyleSheet } from 'react-native'
 import audioAction from '../../reducer/audio/audioAction'
+import analyticAction from '../../reducer/analytic/analyticAction'
 import HtmlView from 'react-native-htmlview'
 import styles from './styles'
 
@@ -24,7 +25,8 @@ import styles from './styles'
   parentKey: state.audio.playingAudioInfo.parentKey,
   draft: state.audio.playingAudioInfo.draft
 }), (dispatch) => ({
-  action: bindActionCreators(audioAction, dispatch)
+  action: bindActionCreators(audioAction, dispatch),
+  ga: bindActionCreators(analyticAction, dispatch)
 }))
 
 class PlayerDoc extends Component {
@@ -35,6 +37,7 @@ class PlayerDoc extends Component {
   componentDidMount() {
     let { capsuleId, parentKey } = this.props
     this.props.action.cpAudioGetDoc({capsuleId, parentKey})
+    this.props.ga.gaSetScreen('PlayerDoc')
   }
 
   render () {

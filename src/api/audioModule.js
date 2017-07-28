@@ -44,7 +44,7 @@ export default class AudioModule extends FirebaseDB {
   }
 
   async getAudioDoc (capsuleId, parentKey) {
-    console.log(`capsules/${parentKey}/audios/${capsuleId}/draft`)
+    // console.log(`capsules/${parentKey}/audios/${capsuleId}/draft`)
     let draft = await this.readOnce(`capsules/${parentKey}/audios/${capsuleId}/draft`)
 
     return draft

@@ -5,6 +5,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { bindActionCreators } from 'redux'
 import audioActions from '../../reducer/audio/audioAction'
+import analyticAction from '../../reducer/analytic/analyticAction'
 import { connect } from 'react-redux'
 import {
   Container,
@@ -45,7 +46,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    actions: bindActionCreators(audioActions, dispatch)
+    actions: bindActionCreators(audioActions, dispatch),
+    ga: bindActionCreators(analyticAction, dispatch)
   }
 }
 
@@ -118,12 +120,41 @@ class PlayAudio extends Component {
     }
   }
 
+  componentDidMount() {
+    this.props.ga.gaSetScreen('PlayAudio')
+    this.props.ga.gaSetEvent({
+      category: 'capsule',
+      action: 'open player',
+      value: {
+        capsuleId: this.props.capsulesId,
+        audioName: this.props.audioName
+      }
+    })
+  }
+
   _onSlidingComplete = (value) => {
     const { seek } = this.props.navigation.state.params
     seek(value)
+    this.props.ga.gaSetEvent({
+      category: 'capsule',
+      action: 'seek',
+      value: {
+        capsulesId: this.props.capsulesId,
+        audioName: this.props.audioName,
+        seek
+      }
+    })
   }
 
   _audioIsGoodToggle() {
+    this.props.ga.gaSetEvent({
+      category: 'capsule',
+      action: this.props.audioIsGood? 'audio not good' : 'audio good',
+      value: {
+        capsulesId: this.props.capsulesId,
+        audioName: this.props.audioName
+      }
+    })
     this.props
       .actions
       .cpAudioGoodChange(
@@ -132,6 +163,29 @@ class PlayAudio extends Component {
         this.props.parentKey,
         this.props.memberUid
       )
+  }
+
+  _buttonGaEvent(type) {
+    if (type !== 'playOrPause')
+    this.props.ga.gaSetEvent({
+      category: 'capsule',
+      action: type,
+      value: {
+        capsuleId: this.props.capsulesId,
+        name: this.props.audioName
+      }
+    })
+  }
+
+  _gaGoBack() {
+    this.props.ga.gaSetEvnet({
+      category: 'capsule',
+      action: 'close player',
+      value: {
+        capsuleId: this.props.capsuleId,
+        name: this.props.audioName
+      }
+    })
   }
 
   render () {
@@ -174,23 +228,29 @@ class PlayAudio extends Component {
       )
     })
 
-    const bodyButtons = Object.values(this.buttons.body).map((button, i) => (
-      <TouchableHighlight
-        key={i}
-        onPress={() => button.func()}
-        underlayColor="#fff"
-      >
-        <Image
-          source={button.twoState
-            ? (playState === 'playing'
-              ? button.pauseLink : button.playLink
-            )
-            : button.link
-          }
-          style={styles.bodyImages}
-        />
-      </TouchableHighlight>
-    ))
+    const bodyButtons = Object.keys(this.buttons.body).map((buttonKey, i) => {
+      let button = this.buttons.body[buttonKey]
+      return (
+        <TouchableHighlight
+          key={i}
+          onPress={() => { 
+            this._buttonGaEvent(buttonKey)
+            button.func() 
+          }}
+          underlayColor="#fff"
+        >
+          <Image
+            source={button.twoState
+              ? (playState === 'playing'
+                ? button.pauseLink : button.playLink
+              )
+              : button.link
+            }
+            style={styles.bodyImages}
+          />
+        </TouchableHighlight>
+      )
+    })
 
     return (
       <Container style={styles.container}>

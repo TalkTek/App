@@ -4,6 +4,7 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import audioActions from '../../reducer/audio/audioAction'
+import analyticActions from '../../reducer/analytic/analyticAction'
 import { connect } from 'react-redux'
 import {
   TouchableHighlight,
@@ -47,7 +48,7 @@ const mapStateToProps = (state) => {
     memberUid: state.member.uid,
     playState: state.audio.playState,
     capsules: state.audio.capsules,
-    capsuleId: state.audio.id,
+    capsuleId: state.audio.playingAudioInfo.capsulesId,
     audioName: state.audio.playingAudioInfo.name,
     currentTimeFormatted: state.audio.playingAudioInfo.currentTime.formatted,
     currentTimeSec: state.audio.playingAudioInfo.currentTime.sec,
@@ -63,7 +64,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    actions: bindActionCreators(audioActions, dispatch)
+    actions: bindActionCreators(audioActions, dispatch),
+    ga: bindActionCreators(analyticActions, dispatch)
   }
 }
 
@@ -151,6 +153,7 @@ class KnowledgeCapsule extends Component {
     // get data from firebase
     let capsuleRef = firebase.database().ref('capsules').orderByKey().limitToLast(2)
     this.resolveData(capsuleRef)
+    this.props.ga.gaSetScreen('KnowledgeCapsule')
   }
 
   createPlayer = (url) => {
@@ -362,6 +365,15 @@ class KnowledgeCapsule extends Component {
         clearInterval(this.interval)
       })
     }
+    
+    this.props.ga.gaSetEvent({
+      category: 'capsule',
+      action: playState==='notPlaying'? 'playing': 'notPlaying',
+      value: {
+        capsuleId: this.props.capsuleId,
+        audioName: this.props.audioName
+      }
+    })
   }
 
   audioPlayingTimerStart = () => {
@@ -423,6 +435,14 @@ class KnowledgeCapsule extends Component {
 
             outdatedValue = nowValue
           } else {
+            this.props.ga.gaSetEvent({
+              category: 'capsule',
+              action: 'audio end',
+              value: {
+                audioName,
+                capsuleId: this.props.capsuleId
+              }
+            })
             // when the audio end
             clearInterval(this.interval)
             currentTimeformatted = "00:00"
@@ -510,7 +530,14 @@ class KnowledgeCapsule extends Component {
     const { actions } = this.props
     
     console.log('audio is', audio)
-
+    this.props.ga.gaSetEvent({
+      category: 'capsule', 
+      action: 'play audio',
+      value: {
+        capsuleId: audio.id,
+        name: audio.name
+      }
+    })
     // initialize playing audio
     actions.settingPlayingAudioInfo(
       audio.name,

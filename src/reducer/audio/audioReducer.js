@@ -46,7 +46,7 @@ export default handleActions({
       ...state,
       playingAudioInfo: {
         ...state.playingAudioInfo,
-        likeCounter: action.payload.likeCounter || state.playingAudioInfo.likeCounter,
+        likeCounter: action.payload.likeCounter || state.playingAudioInfo.likeCounter || 0,
         parentKey: action.payload.parentKey || state.playingAudioInfo.parentKey,
         capsulesId: action.payload.id || state.playingAudioInfo.capsulesId,
         name: action.payload.name,
