@@ -206,9 +206,12 @@ class PlayAudio extends Component {
             </Button>
           </Right>
         </Header>
-        <Content>
-          <View style={styles.banner}>
+        <Content
+          directionalLockEnabled
+        >
+          <View>
            <Image
+             style={styles.banner}
              source={require('../../assets/img/knowledgeCapsule/banner.png')}
            />
           </View>

@@ -664,6 +664,7 @@ class KnowledgeCapsule extends Component {
         <Content
           onScroll={audioBarActive ? this.onScroll : null}
           onMomentumScrollEnd={this.onScrollEndReached}
+          directionalLockEnabled
         >
           {
             isCpAudioLoaded
