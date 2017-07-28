@@ -7,6 +7,7 @@ import createStore from './lib/configureStore'
 import { addNavigationHelpers } from 'react-navigation';
 import AppNav from './lib/navigator'
 import CodePush from 'react-native-code-push'
+import './lib/global'
 
 @connect(state => ({
   nav: state.nav

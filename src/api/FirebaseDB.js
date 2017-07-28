@@ -1,7 +1,9 @@
 import Firebase from 'firebase'
 
 export default class FirebaseDB {
-  firebase = Firebase.database()
+  database = Firebase.database()
+  storage = Firebase.storage()
+
 
   /**
    * write data from path
@@ -10,7 +12,7 @@ export default class FirebaseDB {
    * @return {Promise}
    */
   write(path = '', value) {
-    return this.firebase.ref(`${path}`).set(value)
+    return this.database.ref(`${path}`).set(value)
   }
 
   /**
@@ -20,11 +22,11 @@ export default class FirebaseDB {
    * @return {Promise} 
    */
   update(path = '', value) {
-    return this.firebase.ref(`${path}`).update(value)
+    return this.database.ref(`${path}`).update(value)
   }
 
   async _read(path) {
-    return await this.firebase.ref(`${path}`).once('value')
+    return await this.database.ref(`${path}`).once('value')
   }
 
   /**
@@ -43,7 +45,7 @@ export default class FirebaseDB {
    * @return {Promise}
    */
   remove(path = '') {
-    return this.firebase.ref(path).remove()
+    return this.database.ref(path).remove()
   }
 
   /**
@@ -55,4 +57,15 @@ export default class FirebaseDB {
     let snapshot = await this._read(path)
     return snapshot.exists()
   }
+
+  // /**
+  //  * download audio file by downloadUrl
+  //  * @param {string} path
+  //  * @return {Promise}
+  //  */
+  // async download(path= '') {
+  //   this.storage.ref(path).getDownloadURL(url => {
+  //
+  //   })
+  // }
 }
