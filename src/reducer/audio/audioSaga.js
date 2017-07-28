@@ -25,7 +25,7 @@ function * getAudioInfo(data) {
   })
 }
 
-function * setAudioGoodState(data) {
+function * setAudioGoodState (data) {
   const { isGood, capsulesId, parentKey, userId } = data.payload
   let likeCounter = yield call(() => new AudioModule()[isGood? 'cpAudioGood': 'cpAudioNotGood'](capsulesId, parentKey, userId))
   

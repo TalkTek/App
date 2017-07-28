@@ -24,7 +24,6 @@ import {
 } from 'react-native'
 import styles from './styles'
 import Slider from 'react-native-slider'
-import { Player } from 'react-native-audio-toolkit'
 
 const mapStateToProps = (state) => {
   return {

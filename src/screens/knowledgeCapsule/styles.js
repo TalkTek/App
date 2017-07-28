@@ -78,12 +78,14 @@ export default {
   },
   capAudioTextPlaying: {
     fontSize: 15,
-    width: screenWidth * 0.7,
-    color: 'rgb(31, 191, 179)'
+    width: screenWidth * 0.65,
+    color: 'rgb(31, 191, 179)',
+    marginRight: 5
   },
   capAudioTextNotPlaying: {
     fontSize: 15,
-    width: screenWidth * 0.7
+    width: screenWidth * 0.65,
+    marginRight: 5
   },
   audioLengthText: {
     fontSize: 13,
