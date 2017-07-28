@@ -18,13 +18,15 @@ import styles from './styles'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import memberAction from '../../reducer/member/memberAction'
+import analyticAction from '../../reducer/analytic/analyticAction'
 
 @connect(state => ({
   memberUid: state.member.uid,
   memberEmail: state.member.email,
   memberAvatar: state.member.avatarUrl
 }), dispatch => ({
-  logout: bindActionCreators(memberAction.logoutMember, dispatch)
+  logout: bindActionCreators(memberAction.logoutMember, dispatch),
+  ga: bindActionCreators(analyticAction, dispatch)
 }))
 
 export default class MemberCenter extends Component {
@@ -41,6 +43,10 @@ export default class MemberCenter extends Component {
       { key: 'iconFeedback', icon: require(`../../assets/img/memberCenter/iconFeedback.png`), target: 'Feedback', text: '意見回饋' },
       { key: 'iconApply', icon: require(`../../assets/img/memberCenter/iconApply.png`), target: 'Apply', text: '成為講師' }
     ]
+  }
+
+  componentDidMount() {
+    this.props.ga.gaSetScreen('MemberCenter')
   }
 
   _logout = () => {
