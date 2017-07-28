@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import {
   View,
-  Text
+  Text,
+  ActivityIndicator
 } from 'react-native'
 import {
   Container,
@@ -53,6 +54,8 @@ class PlayerDoc extends Component {
         marginLeft: 20,
         marginRight: 20
       },
+      loading: {
+      },
       element: {
         p: {
           marginTop: 0,
@@ -77,11 +80,21 @@ class PlayerDoc extends Component {
           </Right>
         </Header>
         <Content>
-          <HtmlView
-            value={this.props.draft}
-            style={style.htmlView}
-            stylesheet={style.element}
-          />
+          {
+            this.props.draft?
+            <HtmlView
+              value={this.props.draft}
+              style={style.htmlView}
+              stylesheet={style.element}
+            />: 
+            <View>
+              <ActivityIndicator 
+                animating
+                color="black"
+                size="large"
+              />
+            </View>
+          }
         </Content>
       </Container>
     )
