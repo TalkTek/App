@@ -20,6 +20,7 @@ import { memberInfoStyle } from './styles'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import memberAction from '../../reducer/member/memberAction'
+import analyticAction from '../../reducer/analytic/analyticAction'
 
 let state = {
   email: '',
@@ -36,6 +37,8 @@ let state = {
   memberFrom: state.member.from,
   memberGender: state.member.gender,
   memberBirthday: state.member.birthday
+}), (dispatch) => ({
+  ga: bindActionCreators(analyticAction, dispatch)
 }))
 
 class MemberInfo extends Component {
@@ -65,6 +68,7 @@ class MemberInfo extends Component {
       birthday: this.props.memberBirthday || new Date(),
       genderValue: this.props.memberGender || 'unknow'
     })
+    this.props.ga.gaSetScreen('MemberInfo')
   }
 
   _renderFormElement(key, data) {
