@@ -153,10 +153,6 @@ class KnowledgeCapsule extends Component {
     this.resolveData(capsuleRef)
   }
 
-  componentWillUnmount () {
-    clearInterval(this.interval)
-  }
-
   createPlayer = (url) => {
     if(this.player) {
       this.player.destroy()
@@ -166,6 +162,8 @@ class KnowledgeCapsule extends Component {
       .prepare(error => {
         if(error) {
           console.log('error at createPlayer, error is => ', error);
+        } else {
+          this.playOrPause()
         }
       })
   }
@@ -548,7 +546,7 @@ class KnowledgeCapsule extends Component {
 
     await this.createPlayer(audio.url)
     await this._updateCapsuleInfo(audio.id, audio.parentKey)
-    await this.playOrPause()
+    // await this.playOrPause()
     this.toggleAudioBarUp()
   }
 
