@@ -7,6 +7,7 @@ import createStore from './lib/configureStore'
 import { addNavigationHelpers } from 'react-navigation';
 import AppNav from './lib/navigator'
 import CodePush from 'react-native-code-push'
+import PopOutAudioBar from './components/popOutAudioBar'
 import './lib/global'
 
 @connect(state => ({
@@ -27,6 +28,8 @@ class AppWithNavState extends Component {
   }
 }
 
+import { View,StatusBar} from 'react-native'
+
 class App extends React.Component {
 
   componentDidMount() {
@@ -37,7 +40,9 @@ class App extends React.Component {
     const store = createStore()
     return (
       <Provider store={store}>
-        <AppWithNavState />
+        <PopOutAudioBar>
+          <AppWithNavState/>
+        </PopOutAudioBar>
       </Provider>
     )
   }
