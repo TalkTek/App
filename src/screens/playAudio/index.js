@@ -53,6 +53,7 @@ class PlayAudio extends Component {
     header: null,
     tabBarVisible: false,
   }
+  
 
   state = {
     playState: null, // need to use redux to solve it

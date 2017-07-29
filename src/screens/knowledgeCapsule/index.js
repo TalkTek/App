@@ -71,7 +71,7 @@ class KnowledgeCapsule extends Component {
 
   interval = null
 
-  player = null
+  // player = null
 
   state = {
     popoutAudioBarHeight: new Animated.Value(screenHeight),
@@ -114,7 +114,8 @@ class KnowledgeCapsule extends Component {
                 name: audio.audioName,
                 length: audio.length,
                 url: audio.url,
-                likeCounter: audio.likeCounter || 0
+                likeCounter: audio.likeCounter || 0,
+                audioIsGood: audio.audioIsGood,
               }]
             })
 
@@ -153,19 +154,24 @@ class KnowledgeCapsule extends Component {
     this.resolveData(capsuleRef)
   }
 
+  componentWillUnmount () {
+    clearInterval(this.interval)
+    playerGlobal = null
+  }
+
   createPlayer = (url) => {
-    if(this.player) {
-      this.player.destroy()
+    if(playerGlobal) {
+      playerGlobal.destroy()
       this.props.actions.changePlayingState('notPlaying')
     }
-    this.player = new Player(url)
-      .prepare(error => {
-        if(error) {
-          console.log('error at createPlayer, error is => ', error);
-        } else {
-          this.playOrPause()
-        }
-      })
+    playerGlobal = new Player(url)
+    .prepare(error => {
+      if(error) {
+        console.log('error at createPlayer, error is => ', error);
+      } else {
+        this.playOrPause()
+      }
+    })
   }
 
   forward = async () => {
@@ -351,20 +357,20 @@ class KnowledgeCapsule extends Component {
 
   playOrPause = () => {
     const { playState, actions } = this.props
-    if(playState ==='notPlaying' && this.player) {
+    if(playState ==='notPlaying' && playerGlobal) {
       actions.changePlayingState('playing')
       // react-native-audio-toolkit bug
       // only get current time after calling pause
-      this.player.pause(() => {
-        this.player.play(() => {
+      playerGlobal.pause(() => {
+        playerGlobal.play(() => {
           this.audioPlayingTimerStart()
         })
       })
-    } else if (!this.player) {
+    } else if (!playerGlobal) {
       console.log('player is not found',);
     } else {
       actions.changePlayingState('notPlaying')
-      this.player.pause(() => {
+      playerGlobal.pause(() => {
         clearInterval(this.interval)
       })
     }
@@ -391,15 +397,15 @@ class KnowledgeCapsule extends Component {
     let outdatedValue = currentTimeSec * 1000
     let nowValue
 
-    if(this.player) {
+    if(playerGlobal) {
       this.interval = setInterval(() => {
         if (playState === 'playing') {
-          if (this.player.currentTime && (this.player.currentTime > 0)) {
-            console.log('currentTime from audioPlayingTimer', this.player.currentTime)
+          if (playerGlobal.currentTime && (playerGlobal.currentTime > 0)) {
+            console.log('currentTime from audioPlayingTimer', playerGlobal.currentTime)
             console.log('nowValue from audioPlayingTimer', nowValue)
             console.log('outDataValue from audioPlayingTimer', outdatedValue)
 
-            nowValue = this.player.currentTime
+            nowValue = playerGlobal.currentTime
 
             // if seek, we supple some time
             if (nowValue < outdatedValue) {
@@ -463,8 +469,8 @@ class KnowledgeCapsule extends Component {
       audioUrl,
       playingAudioPos
     } = this.props
-    if(this.player) {
-      if(this.player.duration) {
+    if(playerGlobal) {
+      if(playerGlobal.duration) {
 
 
         console.log('valueSeek from seek', value)
@@ -474,8 +480,8 @@ class KnowledgeCapsule extends Component {
         console.log('audioLength.sec from seek', audioLength.sec)
         console.log('percent from seek', percent)
 
-        let position = percent * this.player.duration
-        this.player.seek(position, async () => {
+        let position = percent * playerGlobal.duration
+        playerGlobal.seek(position, async () => {
 
           clearInterval(this.interval)
 
@@ -703,7 +709,7 @@ class KnowledgeCapsule extends Component {
             onPress={() => navigate(
               'PlayAudioScreen',
               {
-                player: this.player,
+                player: playerGlobal,
                 playOrPauseFunc: this.playOrPause,
                 forward: this.forward,
                 backward: this.backward,

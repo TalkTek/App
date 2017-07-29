@@ -12,6 +12,7 @@ import MemberCenter from '../screens/memberCenter/index'
 import MemberInfo from '../screens/memberCenter/memberInfo'
 import MyTalk from '../screens/memberCenter/myTalk'
 import MyPoint from '../screens/memberCenter/myPoint'
+import MyCapsule from '../screens/memberCenter/myCapsule'
 import PointCenter from '../screens/memberCenter/pointCenter'
 import Feedback from '../screens/memberCenter/feedback'
 import Apply from '../screens/memberCenter/apply'
@@ -83,6 +84,7 @@ const MemberCenterScreen = StackNavigator({
   MemberCenterScreen: { screen: MemberCenter },
   MemberInfo : { screen: MemberInfo, navigationOptions: { title: '個人資料' }},
   MyTalk: { screen: MyTalk, navigationOptions: { title: '我的小講' } },
+  MyCapsule: { screen: MyCapsule, navigationOptions: {title: '我的膠囊收藏'}},
   MyPoint: { screen: MyPoint, navigationOptions: { title: '我的點數' } },
   Fillup: { screen: PointCenter, navigationOptions: { title: '儲值中心' } },
   Feedback: { screen: Feedback, navigationOptions: { title: '意見回饋' } },
