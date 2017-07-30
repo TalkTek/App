@@ -4,6 +4,7 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import audioActions from '../../reducer/audio/audioAction'
+import globalActions from '../../reducer/global/globalAction'
 import { connect } from 'react-redux'
 import {
   TouchableHighlight,
@@ -44,6 +45,7 @@ let buttons = {
 
 const mapStateToProps = (state) => {
   return {
+    offsetY: state.global.viewInfo.offset.y,
     memberUid: state.member.uid,
     playState: state.audio.playState,
     capsules: state.audio.capsules,
@@ -62,8 +64,9 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
+  console.log('globalActions', globalActions)
   return {
-    actions: bindActionCreators(audioActions, dispatch)
+    actions: bindActionCreators({...globalActions, ...audioActions}, dispatch)
   }
 }
 
@@ -577,17 +580,24 @@ class KnowledgeCapsule extends Component {
   }
 
   onScroll = (event) => {
+    // const { actions } = this.props
+    const {
+      _toggleAudioBarUp,
+      _toggleAudioBarDown
+    } = this.props.navigation
     let currentOffsetY = event.nativeEvent.contentOffset.y
+    console.log('currentOffsetY', currentOffsetY)
     const diff = currentOffsetY - this.state.offsetY
 
     if (Math.abs(diff) < 5) {
       console.log('unclear')
     } else if (diff<0) {
-      this.toggleAudioBarUp()
+      _toggleAudioBarUp()
     } else {
-      this.toggleAudioBarDown()
+      _toggleAudioBarDown()
     }
 
+    // actions.settingViewOffset(0, currentOffsetY)
     this.setState({
       offsetY: currentOffsetY
     })
@@ -623,7 +633,16 @@ class KnowledgeCapsule extends Component {
 
     const { audioBarActive } = this.state
 
-    const { navigate } = this.props.navigation
+    const {
+      navigate,
+      _onPress,
+      _playOrPause,
+      _forward,
+      _forward15s,
+      _backward,
+      _backward15s,
+      _seek,
+    } = this.props.navigation
     if(capsules) {
       CapUnit = capsules.map((cap, i) => {
         return (
@@ -638,7 +657,7 @@ class KnowledgeCapsule extends Component {
                 <View key={j} style={styles.capUnit}>
                   <TouchableHighlight
                     style={styles.capPlayPauseButton}
-                    onPress={this.onPressAudio.bind(this, audio, i, j)}
+                    onPress={_onPress.bind(this, audio, i, j)}
                     underlayColor="#fff"
                   >
                     <View style={styles.capAudio}>
@@ -666,9 +685,8 @@ class KnowledgeCapsule extends Component {
           />
         </View>
         <Content
-          onScroll={audioBarActive ? this.onScroll : null}
+          onScroll={true ? this.onScroll : null}
           onMomentumScrollEnd={this.onScrollEndReached}
-          directionalLockEnabled
         >
           {
             isCpAudioLoaded
@@ -688,7 +706,7 @@ class KnowledgeCapsule extends Component {
         >
           <TouchableHighlight
             transparent
-            onPress={this.playOrPause}
+            onPress={_playOrPause}
             underlayColor="#fff"
           >
             <Image
@@ -709,13 +727,12 @@ class KnowledgeCapsule extends Component {
             onPress={() => navigate(
               'PlayAudioScreen',
               {
-                player: playerGlobal,
-                playOrPauseFunc: this.playOrPause,
-                forward: this.forward,
-                backward: this.backward,
-                seek: this.seek,
-                forward15s: this.forward15s,
-                backward15s: this.backward15s
+                playOrPauseFunc: _playOrPause,
+                forward: _forward,
+                backward: _backward,
+                seek: _seek,
+                forward15s: _forward15s,
+                backward15s: _backward15s,
               }
             )}
           >

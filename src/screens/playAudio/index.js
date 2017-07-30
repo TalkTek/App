@@ -138,7 +138,6 @@ class PlayAudio extends Component {
       goBack,
     } = this.props.navigation
     const {
-      player,
       playOrPauseFunc,
       seek,
     } = this.props.navigation.state.params
