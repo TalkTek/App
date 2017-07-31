@@ -54,7 +54,7 @@ class MemberInfo extends Component {
 
   state = {
     genderValue: 'unknow',
-    birthday: new Date()
+    birthday: undefined
   }
 
   static navigationOptions = (navigation) => ({
@@ -65,9 +65,9 @@ class MemberInfo extends Component {
     state['email'] = this.props.memberEmail
     state['name'] = this.props.memberName
     state['gender'] = this.props.memberGender || 'unknow'
-    state['birthday'] = this.props.memberBirthday
+    state['birthday'] = this.props.memberBirthday || undefined
     this.setState({
-      birthday: this.props.memberBirthday || new Date(),
+      birthday: this.props.memberBirthday || undefined,
       genderValue: this.props.memberGender || 'unknow'
     })
     this.props.ga.gaSetScreen('MemberInfo')
@@ -94,9 +94,11 @@ class MemberInfo extends Component {
     switch(key) {
       case 'gender': 
           return (
-            <Picker mode="dropdown" iosHeader="請選擇" 
+            <Picker mode="dropdown" iosHeader="請選擇"
+              placeHolder="請選擇"
               selectedValue={this.state.genderValue}
               color={memberInfoStyle.textInput.color}
+              style={{width: Platform.OS === "ios" ? undefined : 250}}
               onValueChange={(data) => {
                 this.setState({ genderValue: data })
                 state['gender'] = data
