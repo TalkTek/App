@@ -115,10 +115,10 @@ class MemberInfo extends Component {
               style={memberInfoStyle.inputArea}
             />:
             <TouchableOpacity 
-              style={memberInfoStyle.inputArea}
+              style={[memberInfoStyle.inputArea, memberInfoStyle.dateSelect]}
               onPress={this._openAndroidDatePicker}
             >
-              <Text>{this.state['birthday']||'選擇生日'}</Text>
+              <Text style={memberInfoStyle.textInput}>{this.state['birthday']||'選擇生日'}</Text>
             </TouchableOpacity>
         )
         break
