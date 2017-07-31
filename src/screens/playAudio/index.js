@@ -25,7 +25,6 @@ import {
 } from 'react-native'
 import styles from './styles'
 import Slider from 'react-native-slider'
-import { Player } from 'react-native-audio-toolkit'
 
 const mapStateToProps = (state) => {
   return {
@@ -268,9 +267,12 @@ class PlayAudio extends Component {
             </Button>
           </Right>
         </Header>
-        <Content>
-          <View style={styles.banner}>
+        <Content
+          directionalLockEnabled
+        >
+          <View>
            <Image
+             style={styles.banner}
              source={require('../../assets/img/knowledgeCapsule/banner.png')}
            />
           </View>

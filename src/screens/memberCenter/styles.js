@@ -127,6 +127,12 @@ const memberInfoStyle = {
   textInput: {
     color: 'rgb(31, 191, 179)'
   },
+  dateSelect: {
+    paddingTop: 15,
+    paddingLeft: 5,
+    paddingBottom: 15,
+    paddingRight: 5
+  },
   saveButton: {
     fontSize: 10
   }

@@ -19,10 +19,9 @@ import {
 } from 'native-base'
 import firebase from 'firebase'
 import Modal from 'react-native-modalbox'
-// import { FIREBASE_CONFIG } from '../../lib/config'
+import { NavigationActions } from 'react-navigation'
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
-// firebase.initializeApp(FIREBASE_CONFIG)
 
 export default class Register extends Component {
   static navigationOptions = {
@@ -30,50 +29,63 @@ export default class Register extends Component {
     tabBarVisible: false,
   }
 
-  constructor (props) {
-    super(props)
-    this.state = {
-      email: '',
-      password: '',
-      rePassword: '',
-      errMsg: '',
-      isOpen: false,
-    }
+  state = {
+    email: '',
+    password: '',
+    rePassword: '',
+    errMsg: '',
+    isOpen: false,
   }
 
   async _onRegister () {
     const { email, password, rePassword } = this.state
-    const { navigate } = this.props.navigation
-    try {
+    const { dispatch } = this.props.navigation
       if(password === rePassword) {
-        let user = await firebase.auth().createUserWithEmailAndPassword(email, password)
-        firebase.database().ref(`/users/${user.uid}/profile`).set({
-          name: user.displayName,
-          email: user.email,
-          avatarUrl: user.photoURL
-        })
-        navigate('TalkList')
+        let user = await firebase
+          .auth()
+          .createUserWithEmailAndPassword(email, password)
+          .then(() => {
+            firebase.database().ref(`/users/${user.uid}/profile`).set({
+              name: user.displayName,
+              email: user.email,
+              avatarUrl: user.photoURL
+            })
+            dispatch(
+              NavigationActions.reset({
+                index: 0,
+                actions: [
+                  NavigationActions.navigate({
+                    routeName: 'KnowledgeCapsuleScreen'
+                  })
+                ]
+              })
+            )
+          })
+          .catch(error => {
+            if (error.message === 'The email address is badly formatted.') {
+              this.setState({
+                errMsg: 'Email或密碼不正確',
+                isOpen: true
+              })
+            } else if (error.message === 'The email address is already in use by another account.') {
+              this.setState({
+                errMsg: '此信箱已經註冊過了',
+                isOpen: true
+              })
+            } else if (error.message === 'Password should at least 6 characters') {
+              this.setState({
+                errMsg: '密碼至少要六位數',
+                isOpen: true
+              })
+            }
+            this.refs.modal.open()
+          })
       } else {
         this.setState({
           errMsg: '密碼不一致',
           isOpen: true
         })
       }
-    }
-    catch (error) {
-      if (error.message === 'The email address is badly formatted.') {
-        this.setState({
-          errMsg: 'Email或密碼不正確',
-          isOpen: true
-        })
-      } else if (error.message === 'The email address is already in use by another account.') {
-        this.setState({
-          errMsg: '此信箱已經註冊過了',
-          isOpen: true
-        })
-      }
-      this.refs.modal.open()
-    }
   }
 
   render() {

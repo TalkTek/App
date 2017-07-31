@@ -2,18 +2,15 @@
 'use strict'
 
 import React, { Component } from 'react'
-import {
-  Image,
-} from 'react-native'
 import { Container, View } from 'native-base'
-import { FIREBASE_CONFIG } from '../lib/config'
+import  CONFIG  from '../lib/config'
 import firebase from 'firebase'
 import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import memberAction from '../reducer/member/memberAction'
 
-firebase.initializeApp(FIREBASE_CONFIG)
+firebase.initializeApp(CONFIG.FIREBASE.PRODUCTION)
 
 @connect(state => ({
 
@@ -39,7 +36,7 @@ export default class Main extends Component {
             NavigationActions.reset({
             index: 0,
             actions: [
-              NavigationActions.navigate({routeName: 'TalkList'})
+              NavigationActions.navigate({routeName: 'KnowledgeCapsuleScreen'})
             ]
           }))
         this._readUserData(user)

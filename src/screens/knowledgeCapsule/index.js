@@ -169,6 +169,8 @@ class KnowledgeCapsule extends Component {
       .prepare(error => {
         if (error) {
           console.log('error at createPlayer, error is => ', error);
+        } else {
+          this.playOrPause()
         }
         this.player.play()
         let t1 = performance.now()
@@ -237,7 +239,9 @@ class KnowledgeCapsule extends Component {
     const { capsules, playingAudioPos, actions } = this.props
     let pos = capsules[playingAudioPos.i].audios.length
 
-    clearInterval(this.interval)
+    if(this.interval){
+      clearInterval(this.interval)
+    }
 
     // find the next position where we choice in screen
     if (playingAudioPos.j + 1 < pos) {
@@ -316,7 +320,9 @@ class KnowledgeCapsule extends Component {
     let next
     const { capsules, playingAudioPos, actions } = this.props
 
-    clearInterval(this.interval)
+    if(this.interval){
+      clearInterval(this.interval)
+    }
 
     if (playingAudioPos.j - 1 >= 0) {
       next = capsules[playingAudioPos.i].audios[playingAudioPos.j - 1]
@@ -391,7 +397,7 @@ class KnowledgeCapsule extends Component {
     await this.playOrPause()
   }
 
-  forward15s() {
+  forward15s = () => {
     let forwardTime = this.props.currentTimeSec + 15
     this.seek(
       forwardTime > Number(this.props.audioLength.sec) ?
@@ -400,7 +406,7 @@ class KnowledgeCapsule extends Component {
     )
   }
 
-  backward15s() {
+  backward15s = () => {
     let backwardTime = this.props.currentTimeSec - 15
     this.seek(
       backwardTime < 0 ?
@@ -608,9 +614,15 @@ class KnowledgeCapsule extends Component {
       }
     })
 
+    if(this.interval) {
+      clearInterval(this.interval)
+    }
+
+    // need to place before the action of settingPlayingAudioInfo
     await this.toggleButtonColor(i, j)
+
     // initialize playing audio
-    actions.settingPlayingAudioInfo(
+    await actions.settingPlayingAudioInfo(
       audio.name,
       audio.length,
       {
@@ -631,9 +643,9 @@ class KnowledgeCapsule extends Component {
       audioBarActive: true
     })
 
-    this._updateCapsuleInfo(audio.id, audio.parentKey)
-    //await this.playOrPause()
     await this.createPlayer(audio.url)
+    await this._updateCapsuleInfo(audio.id, audio.parentKey)
+    // await this.playOrPause()
     this.toggleAudioBarUp()
   }
 
@@ -749,6 +761,7 @@ class KnowledgeCapsule extends Component {
         <Content
           onScroll={audioBarActive ? this.onScroll : null}
           onMomentumScrollEnd={this.onScrollEndReached}
+          directionalLockEnabled
         >
           {
             isCpAudioLoaded
@@ -794,8 +807,8 @@ class KnowledgeCapsule extends Component {
                 forward: this.forward,
                 backward: this.backward,
                 seek: this.seek,
-                forward15s: this.forward15s.bind(this),
-                backward15s: this.backward15s.bind(this)
+                forward15s: this.forward15s,
+                backward15s: this.backward15s
               }
             )}
           >

@@ -26,6 +26,7 @@
 		"react-native-modalbox": "latest",
 		"react-native-slider": "^0.9.1",
 		"react-native-sound": "git+https://github.com/zmxv/react-native-sound.git#ba1b244",
+		"react-native-storage": "^0.2.2",
 		"react-native-vector-icons": "^4.1.1",
 		"react-navigation": "git+https://github.com/react-community/react-navigation.git#a2fdb6d",
 		"react-redux": "^5.0.4",

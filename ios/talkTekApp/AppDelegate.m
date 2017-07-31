@@ -44,31 +44,6 @@
   return YES;
 }
 
-/*
-- (BOOL)application:(UIApplication application
-        openURL:(NSURL url
-        options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> options
-        sourceApplication:(NSString sourceApplication
-        annotation:(id)annotation
-        {
-    BOOL handled = [[FBSDKApplicationDelegate sharedInstance]
-                        application:application
-                        openURL:url
-                        sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
-                        annotation:options[UIApplicationOpenURLOptionsAnnotationKey]
-                    ]
-                      ||
-                    [RNGoogleSignin
-                        application:application
-                        openURL:url
-                        sourceApplication:sourceApplication
-                        annotation:annotation];
-
-    // Add any custom logic here.
-    return handled;
-  }
-*/
-
 - (BOOL)application:(UIApplication *)application
         openURL:(NSURL *)url
         options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options

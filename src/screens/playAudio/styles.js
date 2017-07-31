@@ -14,10 +14,9 @@ export default {
     borderBottomWidth: 0
   },
   banner: {
-    flex: 1,
+    resizeMode: 'contain',
     height: screenHeight * 0.34,
-    backgroundColor: 'white',
-    justifyContent: 'center'
+    width: screenWidth,
   },
   body: {
     height: 290,

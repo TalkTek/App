@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.2</string>
+	<string>1.0.3</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -32,10 +32,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.googleusercontent.apps.430072955636-0c50m0rcd61fcue597jrbir12oagc65t</string>
+			<string>com.googleusercontent.apps.483803817924-ting9fedaqcoecl7iricui9nu44m7d9o</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.430072955636-0c50m0rcd61fcue597jrbir12oagc65t</string>
+				<string>com.googleusercontent.apps.483803817924-ting9fedaqcoecl7iricui9nu44m7d9o</string>
 			</array>
 		</dict>
 		<dict>
@@ -50,7 +50,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1.0.2</string>
+	<string>1.0.3</string>
 	<key>CodePushDeploymentKey</key>
 	<string>hFjwiHph5qufoAm1JxHx8jbCP1nM4JbRhcGg7</string>
 	<key>FacebookAppID</key>
@@ -129,8 +129,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>

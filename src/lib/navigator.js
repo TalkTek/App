@@ -24,12 +24,12 @@ import { Platform, Image } from 'react-native'
 const LectureScreen = StackNavigator({
   TalkList: { screen: TalkListScreen },
   TalkContent: { screen: TalkContentScreen },
-  Login: { screen: Login },
-  Register: { screen: Register },
+  // Login: { screen: Login },
+  // Register: { screen: Register },
+  // Main: { screen: MainScreen }
   Forgetpw: { screen: Forgetpw },
-  Main: { screen: MainScreen }
 }, {
-  initialRouteName: 'Main',
+  // initialRouteName: 'Main',
   navigationOptions: {
     title: '小講',
     headerStyle: {
@@ -55,9 +55,12 @@ const LectureScreen = StackNavigator({
 const CapsuleScreen = StackNavigator({
   KnowledgeCapsuleScreen: { screen: KnowledgeCapsule },
   PlayAudioScreen: { screen: PlayAudio },
+  Main: { screen: MainScreen },
+  Login: { screen: Login },
+  Register: { screen: Register },
   PlayerDocScreen: { screen: PlayerDoc }
 }, {
-  // initialRouteName: 'PlayAudioScreen',
+  initialRouteName: 'Main',
   mode: 'modal',
   navigationOptions: {
     title: '知識膠囊',
@@ -116,21 +119,21 @@ const MemberCenterScreen = StackNavigator({
 
 const AppNavigator = TabNavigator(
   {
-    Lecture: {
-      screen: LectureScreen,
-      navigationOptions: {
-        tabBarLabel: '小講'
-        // tabBarIcon: ({tintColor, focused}) => (
-        //   <Image
-        //     source={
-        //       focused
-        //         ? require('../assets/img/tabIcon/lecture/lec_active.png')
-        //         : require('../assets/img/tabIcon/lecture/lec_inactive.png')
-        //     }
-        //   />
-        // )
-      }
-    },
+    // Lecture: {
+    //   screen: LectureScreen,
+    //   navigationOptions: {
+    //     tabBarLabel: '小講'
+    //     // tabBarIcon: ({tintColor, focused}) => (
+    //     //   <Image
+    //     //     source={
+    //     //       focused
+    //     //         ? require('../assets/img/tabIcon/lecture/lec_active.png')
+    //     //         : require('../assets/img/tabIcon/lecture/lec_inactive.png')
+    //     //     }
+    //     //   />
+    //     // )
+    //   }
+    // },
     KnowledgeCapsule: {
       screen: CapsuleScreen,
       navigationOptions: {

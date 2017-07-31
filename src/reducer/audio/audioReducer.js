@@ -95,8 +95,7 @@ export default handleActions({
       playingAudioInfo: {
         ...state.playingAudioInfo,
         audioIsGood: action.payload.isGood,
-        likeCounter:
-          state.playingAudioInfo.likeCounter + (action.payload.isGood ? 1: -1)
+        likeCounter: state.playingAudioInfo.likeCounter + (action.payload.isGood ? 1: -1)
       }
     }
   },
