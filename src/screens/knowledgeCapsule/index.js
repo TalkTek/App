@@ -141,7 +141,6 @@ class KnowledgeCapsule extends Component {
   }
 
   _updateCapsuleInfo = (capsuleId, parentKey) => {
-
     this.props.actions.cpAudioInfoGet(
       {
         parentKey,
@@ -555,7 +554,6 @@ class KnowledgeCapsule extends Component {
 
     await this.createPlayer(audio.url)
     await this._updateCapsuleInfo(audio.id, audio.parentKey)
-    // await this.playOrPause()
     this.toggleAudioBarUp()
   }
 

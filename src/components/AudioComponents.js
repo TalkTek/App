@@ -16,6 +16,8 @@ import {
   Image,
   Navigator
 } from 'react-native'
+import Modal from 'react-native-modalbox'
+import PlayAudioScreen from '../screens/playAudio'
 
 const {
   width: screenWidth,
@@ -23,11 +25,11 @@ const {
 } = Dimensions.get('window')
 
 import audioActions from '../reducer/audio/audioAction'
-import { Content, Container, Button } from 'native-base'
-import { NavigationActions } from 'react-navigation'
+import { Button } from 'native-base'
+import { Player } from 'react-native-audio-toolkit'
 
 let buttons = {
-  'playing': require('../assets/img/audioElement/play.png'),
+  'playingOnAudioBar': require('../assets/img/audioElement/play.png'),
   'pause': require('../assets/img/audioElement/pause.png'),
   'expand': require('../assets/img/knowledgeCapsule/expend.png')
 }
@@ -59,6 +61,7 @@ export default class AudioComponents extends Component {
     popoutAudioBarOpacity: new Animated.Value(0),
     offsetY: 0,
     audioBarActive: false,
+    isModalOpen: false,
   }
 
   createPlayer = (url) => {
@@ -76,8 +79,14 @@ export default class AudioComponents extends Component {
       })
   }
 
-  _onPress = () => {
-    console.log("hello world")
+  _updateCapsuleInfo = (capsuleId, parentKey) => {
+    this.props.actions.cpAudioInfoGet(
+      {
+        parentKey,
+        capsuleId,
+        memberUid: this.props.memberUid
+      }
+    )
   }
 
   forward = async () => {
@@ -425,43 +434,39 @@ export default class AudioComponents extends Component {
   }
 
   _onPress = async (audio, i, j) => {
-    console.log('audio is', audio)
-    console.log('i is', i)
-    console.log('j is', j)
-    // const { actions } = this.props
-    //
-    // if(this.interval) {
-    //   clearInterval(this.interval)
-    // }
-    //
-    // // need to place before the action of settingPlayingAudioInfo
-    // await this.toggleButtonColor(i, j)
-    //
-    // // initialize playing audio
-    // await actions.settingPlayingAudioInfo(
-    //   audio.name,
-    //   audio.length,
-    //   {
-    //     sec: null,
-    //     formatted: '00:00'
-    //   },
-    //   audio.url,
-    //   {
-    //     i,j
-    //   },
-    //   'onPressAudio',
-    //   audio.id,
-    //   audio.parentKey,
-    //   audio.likeCounter
-    // )
-    //
-    // this.setState({
-    //   audioBarActive: true
-    // })
-    //
-    // await this.createPlayer(audio.url)
-    // await this._updateCapsuleInfo(audio.id, audio.parentKey)
-    // // await this.playOrPause()
+    const { actions } = this.props
+
+    if(this.interval) {
+      clearInterval(this.interval)
+    }
+
+    // need to place before the action of settingPlayingAudioInfo
+    await this.toggleButtonColor(i, j)
+
+    // initialize playing audio
+    await actions.settingPlayingAudioInfo(
+      audio.name,
+      audio.length,
+      {
+        sec: null,
+        formatted: '00:00'
+      },
+      audio.url,
+      {
+        i,j
+      },
+      'onPressAudio',
+      audio.id,
+      audio.parentKey,
+      audio.likeCounter
+    )
+
+    this.setState({
+      audioBarActive: true,
+    })
+
+    await this.createPlayer(audio.url)
+    await this._updateCapsuleInfo(audio.id, audio.parentKey)
     this.toggleAudioBarUp()
   }
 
@@ -503,6 +508,19 @@ export default class AudioComponents extends Component {
     ]).start()
   }
 
+  toggleModal = () => {
+    this.setState({
+      isModalOpen: !this.state.isModalOpen
+    })
+  }
+
+  openModal = () => {
+    this.setState({
+      isModalOpen: true
+    })
+    this.refs.playAudio.open()
+  }
+
   render () {
     const {
       children,
@@ -511,26 +529,20 @@ export default class AudioComponents extends Component {
       audioName
     } = this.props
 
-    const routes = [
-      {title: 'First', index: 0},
-      {title: 'Second', index: 1}
-    ]
-
     return (
-      <View style={{borderWidth: 2,
-        borderColor: 'red',
+      <View style={{
         flex: 1,
       }}>
         {React.cloneElement(children, {
           _onPress: this._onPress,
-          _playOrPause: this.playOrPause,
-          _forward: this.forward,
-          _forward15s: this.forward15s,
-          _backward: this.backward,
-          _backward15s: this.backward15s,
-          _seek: this.seek,
-          _toggleAudioBarUp: this.toggleAudioBarUp,
-          _toggleAudioBarDown: this.toggleAudioBarDown,
+          // _playOrPause: this.playOrPause,
+          // _forward: this.forward,
+          // _forward15s: this.forward15s,
+          // _backward: this.backward,
+          // _backward15s: this.backward15s,
+          // _seek: this.seek,
+          // _toggleAudioBarUp: this.toggleAudioBarUp,
+          // _toggleAudioBarDown: this.toggleAudioBarDown,
         })}
         <Animated.View
           style={[styles.container, {
@@ -540,7 +552,7 @@ export default class AudioComponents extends Component {
         >
           <TouchableHighlight
             transparent
-            onPress={this.onPress}
+            onPress={this.playOrPause}
             underlayColor="#fff"
           >
             <Image
@@ -558,17 +570,7 @@ export default class AudioComponents extends Component {
           </View>
           <Button
             transparent
-            onPress={() => this.props.dispatch(NavigationActions.navigate(
-              'PlayAudioScreen',
-              {
-                playOrPauseFunc: this.playOrPause,
-                forward: this.forward,
-                backward: this.backward,
-                seek: this.seek,
-                forward15s: this.forward15s,
-                backward15s: this.backward15s,
-              }
-            ))}
+            onPress={this.openModal}
           >
             <Image
               source={buttons.expand}
@@ -576,6 +578,21 @@ export default class AudioComponents extends Component {
             />
           </Button>
         </Animated.View>
+        <Modal
+          ref={"playAudio"}
+          position={"center"}
+          isOpen={this.state.isModalOpen}
+        >
+          <PlayAudioScreen
+            playOrPause={this.playOrPause}
+            forward={this.forward}
+            forward15s={this.forward15s}
+            backward={this.backward}
+            backward15s={this.backward15s}
+            seek={this.seek}
+            toggleModal={this.toggleModal}
+          />
+        </Modal>
       </View>
     )
   }
@@ -599,5 +616,17 @@ const styles = StyleSheet.create({
   open: {
     width: 20,
     height: 20
+  },
+  popoutAudioBarDes: {
+    width: screenWidth * 0.68
+  },
+  popoutAudioBarText: {
+    fontWeight: '900',
+    fontSize: 13,
+    color: 'rgb(33, 33, 33)'
+  },
+  popoutAudioBarNumber: {
+    fontSize: 10,
+    color: 'rgb(33, 33, 33)'
   }
 })

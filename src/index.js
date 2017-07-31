@@ -22,15 +22,7 @@ class AppWithNavState extends Component {
           addNavigationHelpers({
             dispatch: this.props.dispatch,
             state: this.props.nav,
-            _onPress: this.props._onPress,
-            _playOrPause: this.props._playOrPause,
-            _forward: this.props._forward,
-            _forward15s: this.props._forward15s,
-            _backward: this.props._backward,
-            _backward15s: this.props._backward15s,
-            _seek: this.props._seek,
-            _toggleAudioBarUp: this.props._toggleAudioBarUp,
-            _toggleAudioBarDown: this.props._toggleAudioBarDown
+            _onPress: this.props._onPress
           })
         }
       />

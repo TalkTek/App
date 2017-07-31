@@ -49,12 +49,11 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class PlayAudio extends Component {
-  static navigationOptions = {
-    header: null,
-    tabBarVisible: false,
-  }
+  // static navigationOptions = {
+  //   header: null,
+  //   tabBarVisible: false,
+  // }
   
-
   state = {
     playState: null, // need to use redux to solve it
     value: 0,
@@ -68,7 +67,7 @@ class PlayAudio extends Component {
           active: require('../../assets/img/playAudio/goodActive.png'),
           checkActive: 'audioIsGood',
           name: 'likeCounter',
-          func: this._audioIsGoodToggle
+          // func: this._audioIsGoodToggle
         },
         timer: {
           notActive: require('../../assets/img/playAudio/timer.png'),
@@ -91,35 +90,34 @@ class PlayAudio extends Component {
       backward15: {
         twoState: false,
         link: require('../../assets/img/audioElement/backward15.png'),
-        func: this.props.navigation.state.params.backward15s
+        func: this.props.backward15s
       },
       backward: {
         twoState: false,
         link: require('../../assets/img/audioElement/backward.png'),
-        func: this.props.navigation.state.params.backward
+        func: this.props.backward
       },
       playOrPause: {
         twoState: true,
         playLink: require('../../assets/img/playAudio/play.png'),
         pauseLink: require('../../assets/img/audioElement/pause.png'),
-        func: this.props.navigation.state.params.playOrPauseFunc
+        func: this.props.playOrPause
       },
       forward: {
         twoState: false,
         link: require('../../assets/img/audioElement/forward.png'),
-        func: this.props.navigation.state.params.forward
+        func: this.props.forward
       },
       forward15: {
         twoState: false,
         link: require('../../assets/img/audioElement/forward15.png'),
-        func: this.props.navigation.state.params.forward15s
+        func: this.props.forward15s
       },
     }
   }
 
   _onSlidingComplete = (value) => {
-    const { seek } = this.props.navigation.state.params
-    seek(value)
+    this.props.seek(value)
   }
 
   _audioIsGoodToggle() {
@@ -134,14 +132,15 @@ class PlayAudio extends Component {
   }
 
   render () {
+    // const {
+    //   goBack,
+    // } = this.props.navigation
+    // const {
+    //   playOrPauseFunc,
+    //   seek,
+    // } = this.props.navigation.state.params
     const {
-      goBack,
-    } = this.props.navigation
-    const {
-      playOrPauseFunc,
-      seek,
-    } = this.props.navigation.state.params
-    const {
+      toggleModal,
       playState,
       audioName,
       audioLengthFormatted,
@@ -198,7 +197,7 @@ class PlayAudio extends Component {
           <Right>
             <Button
               transparent
-              onPress={() => goBack()}
+              onPress={() => toggleModal()}
             >
               <Image
                 source={this.buttons.close}
@@ -256,8 +255,8 @@ class PlayAudio extends Component {
   }
 }
 
-PlayAudio.propTypes = {
-  navigation: PropTypes.object.isRequired
-}
+// PlayAudio.propTypes = {
+//   navigation: PropTypes.object.isRequired
+// }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlayAudio)
