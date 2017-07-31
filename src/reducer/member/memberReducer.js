@@ -30,13 +30,14 @@ export default handleActions({
     return initMemberState
   },
   'SAVE_MEMBER_CHANGE': (memberState, action) => {
+    console.log(action.payload)
     return { 
       ...memberState, 
-      avatarUrl: action.payload.avatarUrl || memberState.avatarUrl,
-      email: action.payload.email || memberState.email,
-      name: action.payload.name || memberState.name,
-      birthday: action.payload.birthday || memberState.birthday,
-      gender: action.payload.gender || memberState.gender
+      avatarUrl: action.payload.post.avatarUrl || memberState.avatarUrl,
+      email: action.payload.post.email || memberState.email,
+      name: action.payload.post.name || memberState.name,
+      birthday: action.payload.post.birthday || memberState.birthday,
+      gender: action.payload.post.gender || memberState.gender
     }
   },
   'MEMBER_CAPSULE_GET_SUCCESS': (memberState, action) => {
