@@ -12,7 +12,8 @@ import {
   Dimensions,
   Image,
   ActivityIndicator,
-  Platform
+  Platform,
+  NetInfo
 } from 'react-native'
 import {
   Container,
@@ -164,7 +165,7 @@ class KnowledgeCapsule extends Component {
       console.log('Player Destroy')
     }
     console.log('Player create')
-    let t0 = performance.now()
+    // let t0 = performance.now()
     this.player = new Player(url)
       .prepare(error => {
         if (error) {
@@ -173,14 +174,13 @@ class KnowledgeCapsule extends Component {
           this.playOrPause()
         }
         this.player.play()
-        let t1 = performance.now()
-        console.log('time to load audio is ' + (t1 - t0) + 'ms')
+        // let t1 = performance.now()
+        // console.log('time to load audio is ' + (t1 - t0) + 'ms')
         this.props.ga.gaSetEvent({
           category: 'capsule',
-          action: 'Per Audio loading time',
+          action: 'Get Audio play time',
           value: {
-            label: 'loading time',
-            value: parseInt(t1 - t0)
+            3: `${new Date().getHours()}`
           }
         })
         this.props.actions.changePlayingState('playing')
@@ -443,8 +443,8 @@ class KnowledgeCapsule extends Component {
       category: 'capsule',
       action: playState === 'notPlaying' ? 'playing' : 'notPlaying',
       value: {
-        capsuleId: this.props.capsuleId,
-        audioName: this.props.audioName
+        1: this.props.capsuleId,
+        2: this.props.audioName
       }
     })
   }
@@ -512,8 +512,8 @@ class KnowledgeCapsule extends Component {
               category: 'capsule',
               action: 'audio end',
               value: {
-                audioName,
-                capsuleId: this.props.capsuleId
+                1: this.props.capsuleId,
+                2: audioName
               }
             })
             // when the audio end
@@ -605,12 +605,15 @@ class KnowledgeCapsule extends Component {
     const { actions } = this.props
 
     console.log('audio is', audio)
+    NetInfo.fetch().then((reach) => {
+      this.props.ga.gaSetScreen(`capsule/${audio.id}/${reach.toLowerCase()}/${new Date().getHours()}`)
+    })
     this.props.ga.gaSetEvent({
       category: 'capsule',
       action: 'play audio',
       value: {
-        capsuleId: audio.id,
-        name: audio.name
+        1: audio.id,
+        2: audio.name
       }
     })
 

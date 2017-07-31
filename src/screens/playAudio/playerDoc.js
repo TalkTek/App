@@ -37,7 +37,7 @@ class PlayerDoc extends Component {
   componentDidMount() {
     let { capsuleId, parentKey } = this.props
     this.props.action.cpAudioGetDoc({capsuleId, parentKey})
-    this.props.ga.gaSetScreen('PlayerDoc')
+    this.props.ga.gaSetScreen(`playerDoc/${capsuleId}/${new Date().getHours()}`)
   }
 
   render () {

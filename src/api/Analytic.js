@@ -13,6 +13,6 @@ export default class Analytic {
 
   track(category, value, otherData) {
     this.setScreen(this._screen)
-    this._Analytic.trackEvent(category, value, otherData)
+    this._Analytic.trackEventWithCustomDimensionValues(category, value, {}, otherData)
   }
 }

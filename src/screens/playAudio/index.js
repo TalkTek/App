@@ -17,7 +17,7 @@ import {
   Right,
   Button,
   Content,
-  Footer,
+  Footer
 } from 'native-base'
 import {
   TouchableHighlight,
@@ -120,13 +120,11 @@ class PlayAudio extends Component {
   }
 
   componentDidMount() {
-    this.props.ga.gaSetScreen('PlayAudio')
     this.props.ga.gaSetEvent({
-      category: 'capsule',
-      action: 'open player',
+      category: 'open player',
+      action: this.props.capsulesId,
       value: {
-        capsuleId: this.props.capsulesId,
-        audioName: this.props.audioName
+        3: this.props.capsulesId
       }
     })
   }
@@ -134,24 +132,23 @@ class PlayAudio extends Component {
   _onSlidingComplete = (value) => {
     const { seek } = this.props.navigation.state.params
     seek(value)
-    this.props.ga.gaSetEvent({
-      category: 'capsule',
-      action: 'seek',
-      value: {
-        capsulesId: this.props.capsulesId,
-        audioName: this.props.audioName,
-        seek
-      }
-    })
+    // this.props.ga.gaSetEvent({
+    //   category: 'capsule',
+    //   action: 'seek',
+    //   value: {
+    //     capsulesId: this.props.capsulesId,
+    //     audioName: this.props.audioName,
+    //     seek
+    //   }
+    // })
   }
 
   _audioIsGoodToggle() {
     this.props.ga.gaSetEvent({
-      category: 'capsule',
-      action: this.props.audioIsGood? 'audio not good' : 'audio good',
+      category: 'like',
+      action: this.props.audioIsGood? `${this.props.capsulesId} not like` : `${this.props.capsulesId} like`,
       value: {
-        capsulesId: this.props.capsulesId,
-        audioName: this.props.audioName
+        3: this.props.capsulesId
       }
     })
     this.props
@@ -167,22 +164,20 @@ class PlayAudio extends Component {
   _buttonGaEvent(type) {
     if (type !== 'playOrPause')
     this.props.ga.gaSetEvent({
-      category: 'capsule',
-      action: type,
+      category: type,
+      action: this.props.capsulesId,
       value: {
-        capsuleId: this.props.capsulesId,
-        name: this.props.audioName
+        3: this.props.capsulesId
       }
     })
   }
 
   _gaGoBack() {
     this.props.ga.gaSetEvnet({
-      category: 'capsule',
-      action: 'close player',
+      category: 'close player',
+      action: this.props.capsuleId,
       value: {
-        capsuleId: this.props.capsuleId,
-        name: this.props.audioName
+        3: this.props.capsuleId
       }
     })
   }
