@@ -16,8 +16,8 @@ const initMemberState = {
 
 export default handleActions({
   'CHANGE_MEMBER_STATE': (memberState, action) => {
-    return { 
-      ...memberState, 
+    return {
+      ...memberState,
       avatarUrl: action.payload.avatarUrl,
       email: action.payload.email,
       name: action.payload.name,
@@ -31,7 +31,7 @@ export default handleActions({
     return initMemberState
   },
   'SAVE_MEMBER_CHANGE': (memberState, action) => {
-    console.log(action.payload)
+    // console.log(action.payload)
     return {
       ...memberState,
       avatarUrl: action.payload.post.avatarUrl || memberState.avatarUrl,

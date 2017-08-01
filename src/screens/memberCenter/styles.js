@@ -293,6 +293,10 @@ const feedBackStyle = {
     paddingRight: 8,
     color: 'rgb(158, 158, 158)'
   },
+  indicator: {
+    flex: 1,
+    justifyContent: 'center'
+  },
   input: {
     backgroundColor: '#fff',
     borderColor: 'rgb(224, 224, 224)',
