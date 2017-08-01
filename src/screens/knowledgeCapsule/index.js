@@ -56,31 +56,36 @@ export default class KnowledgeCapsule extends Component {
     offsetY: 0,
   }
 
+  loadCount = 2
+
   resolveData(capsuleRef) {
     const { actions } = this.props
 
     capsuleRef
+      .orderByKey()
       .once('value')
       .then((snapshot) => {
         let capPush = snapshot.val()
         let audios = []
         let capsule = []
         let lastKey = true
-
+        let capsules = Object.keys(capPush)
         // parent loop
-        Object.keys(capPush).forEach((parentKey, index) => {
-          if (index === 0) {
+        capsules.reverse().forEach((parentKey, index) => {
+          if (index === capsules.length - 1) {
             if (this.state.lastKey === parentKey)
               lastKey = null
             else
               lastKey = parentKey
 
+            // console.log(lastKey,':test')
             this.setState({
               lastKey: lastKey
             })
           }
 
-          if (lastKey) {
+
+          if ((lastKey && index <= capsules.length - 2) || !lastKey) {
             //capsule loop
             Object.values(capPush[parentKey].audios).forEach((audio) => {
               audios = [...audios, {
@@ -115,7 +120,7 @@ export default class KnowledgeCapsule extends Component {
 
   componentDidMount () {
     const { actions } = this.props
-    let capsuleRef = firebase.database().ref('capsules').orderByKey().limitToLast(2)
+    let capsuleRef = firebase.database().ref('capsules').limitToLast(this.loadCount+1)
     this.resolveData(capsuleRef)
     actions.gaSetScreen('KnowledgeCapsule')
   }
@@ -161,8 +166,7 @@ export default class KnowledgeCapsule extends Component {
         firebase.database()
           .ref('capsules')
           .endAt(lastKey)
-          .orderByKey()
-          .limitToLast(3)
+          .limitToLast(this.loadCount+1)
 
       this.resolveData(capsuleRef)
     }
