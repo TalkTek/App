@@ -15,8 +15,8 @@ const initMemberState = {
 
 export default handleActions({
   'CHANGE_MEMBER_STATE': (memberState, action) => {
-    return { 
-      ...memberState, 
+    return {
+      ...memberState,
       avatarUrl: action.payload.avatarUrl,
       email: action.payload.email,
       name: action.payload.name,

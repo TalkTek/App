@@ -33,13 +33,13 @@ export default class MemberCenter extends Component {
       { key: 'iconmyTalk', icon: require(`../../assets/img/memberCenter/iconmyTalk.png`), target: 'MyTalk', text: '我的小講' },
       { key: 'iconmyCapsule', icon: require(`../../assets/img/memberCenter/iconmyTalk.png`), target: 'MyCapsule', text: '我的膠囊收藏' }
     ],
-    coin: [
-      { key: 'iconMypoint', icon: require(`../../assets/img/memberCenter/iconMypoint.png`), target: 'MyPoint', rightText: '500點', text: '我的點數' },
-      { key: 'iconFillup', icon: require(`../../assets/img/memberCenter/iconFillup.png`), target: 'Fillup', text: '儲值中心' }
-    ],
+    // coin: [
+    //   { key: 'iconMypoint', icon: require(`../../assets/img/memberCenter/iconMypoint.png`), target: 'MyPoint', rightText: '500點', text: '我的點數' },
+    //   { key: 'iconFillup', icon: require(`../../assets/img/memberCenter/iconFillup.png`), target: 'Fillup', text: '儲值中心' }
+    // ],
     other: [
       { key: 'iconFeedback', icon: require(`../../assets/img/memberCenter/iconFeedback.png`), target: 'Feedback', text: '意見回饋' },
-      { key: 'iconApply', icon: require(`../../assets/img/memberCenter/iconApply.png`), target: 'Apply', text: '成為講師' }
+      // { key: 'iconApply', icon: require(`../../assets/img/memberCenter/iconApply.png`), target: 'Apply', text: '成為講師' }
     ]
   }
 
@@ -122,9 +122,9 @@ export default class MemberCenter extends Component {
             <View style={styles.selectList}>
               { this.listsData.my.map(this._renderListItem) }
             </View>
-            <View style={styles.selectList}>
-              { this.listsData.coin.map(this._renderListItem) }
-            </View>
+            {/*<View style={styles.selectList}>*/}
+              {/*{ this.listsData.coin.map(this._renderListItem) }*/}
+            {/*</View>*/}
             <View style={styles.selectList}>
               { this.listsData.other.map(this._renderListItem) }
             </View>
