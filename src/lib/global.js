@@ -1,3 +1,4 @@
 import storage from './configureStorage'
 
-global.storage = storage
+global.storageGlobal = storage
+global.playerGlobal = null

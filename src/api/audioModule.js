@@ -7,7 +7,6 @@ export default class AudioModule extends FirebaseDB {
       `users/${userId}/favorite/${capsulesId}`,
       {parentKey}
     )
-
     audio = await this.readOnce(path)
 
     if (!audio.likeCounter) {
