@@ -12,38 +12,7 @@ export default {
   },
   loading: {
     height: screenHeight * 0.59,
-    justifyContent: 'center',
-  },
-  popoutAudioPlayBar: {
-    position: 'absolute',
-    width: screenWidth,
-    height: 48,
-    backgroundColor: 'rgb(245, 245, 245)',
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  playPauseButton: {
-    width: 32,
-    height: 32,
-    marginLeft: 16,
-    marginRight: 12
-  },
-  popoutAudioBarDes: {
-    width: screenWidth * 0.68
-  },
-  popoutAudioBarNumber: {
-    fontSize: 10,
-    color: 'rgb(33, 33, 33)'
-  },
-  popoutAudioBarText: {
-    fontWeight: '900',
-    fontSize: 13,
-    color: 'rgb(33, 33, 33)'
-  },
-  open: {
-    width: 20,
-    height: 20
+    justifyContent: 'center'
   },
   capContainer: {
     paddingHorizontal: 16,

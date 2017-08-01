@@ -14,19 +14,19 @@ import {
   TouchableHighlight,
   ScrollView,
   Image,
-  Navigator
 } from 'react-native'
 import Modal from 'react-native-modalbox'
 import PlayAudioScreen from '../screens/playAudio'
+
+
+import audioActions from '../reducer/audio/audioAction'
+import { Button } from 'native-base'
+import { Player } from 'react-native-audio-toolkit'
 
 const {
   width: screenWidth,
   height: screenHeight,
 } = Dimensions.get('window')
-
-import audioActions from '../reducer/audio/audioAction'
-import { Button } from 'native-base'
-import { Player } from 'react-native-audio-toolkit'
 
 let buttons = {
   'playingOnAudioBar': require('../assets/img/audioElement/play.png'),
@@ -60,7 +60,6 @@ export default class AudioComponents extends Component {
     popoutAudioBarHeight: new Animated.Value(screenHeight-100),
     popoutAudioBarOpacity: new Animated.Value(0),
     offsetY: 0,
-    audioBarActive: false,
     isModalOpen: false,
   }
 
@@ -461,10 +460,6 @@ export default class AudioComponents extends Component {
       audio.likeCounter
     )
 
-    this.setState({
-      audioBarActive: true,
-    })
-
     await this.createPlayer(audio.url)
     await this._updateCapsuleInfo(audio.id, audio.parentKey)
     this.toggleAudioBarUp()
@@ -479,7 +474,7 @@ export default class AudioComponents extends Component {
     Animated.spring(
       popoutAudioBarHeight,
       {
-        toValue: screenHeight - 100
+        toValue: screenHeight - 97
       }
     ).start()
 
@@ -535,14 +530,8 @@ export default class AudioComponents extends Component {
       }}>
         {React.cloneElement(children, {
           _onPress: this._onPress,
-          // _playOrPause: this.playOrPause,
-          // _forward: this.forward,
-          // _forward15s: this.forward15s,
-          // _backward: this.backward,
-          // _backward15s: this.backward15s,
-          // _seek: this.seek,
-          // _toggleAudioBarUp: this.toggleAudioBarUp,
-          // _toggleAudioBarDown: this.toggleAudioBarDown,
+          _toggleAudioBarDown: this.toggleAudioBarDown,
+          _toggleAudioBarUp: this.toggleAudioBarUp
         })}
         <Animated.View
           style={[styles.container, {

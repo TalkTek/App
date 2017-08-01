@@ -49,11 +49,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class PlayAudio extends Component {
-  // static navigationOptions = {
-  //   header: null,
-  //   tabBarVisible: false,
-  // }
-  
   state = {
     playState: null, // need to use redux to solve it
     value: 0,
@@ -67,7 +62,7 @@ class PlayAudio extends Component {
           active: require('../../assets/img/playAudio/goodActive.png'),
           checkActive: 'audioIsGood',
           name: 'likeCounter',
-          // func: this._audioIsGoodToggle
+          func: this._audioIsGoodToggle
         },
         timer: {
           notActive: require('../../assets/img/playAudio/timer.png'),
@@ -132,13 +127,6 @@ class PlayAudio extends Component {
   }
 
   render () {
-    // const {
-    //   goBack,
-    // } = this.props.navigation
-    // const {
-    //   playOrPauseFunc,
-    //   seek,
-    // } = this.props.navigation.state.params
     const {
       toggleModal,
       playState,
@@ -254,9 +242,5 @@ class PlayAudio extends Component {
     )
   }
 }
-
-// PlayAudio.propTypes = {
-//   navigation: PropTypes.object.isRequired
-// }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlayAudio)
