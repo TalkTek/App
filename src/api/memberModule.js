@@ -32,4 +32,13 @@ export default class memberModule extends FirebaseDB {
 
     this.update(path, Object.assign(profile, memberData))
   }
+
+  async sendFeedBack (type, content, userId) {
+    let path = `feedback/`
+    await this.push(path, {
+      type,
+      content,
+      userId
+    })
+  }
 }

@@ -10,7 +10,8 @@ const initMemberState = {
   from: null,
   birthday: null,
   gender: null,
-  favoriteCapsule: []
+  favoriteCapsule: [],
+  sendStatus: 0 // 0 finish, 1 pending
 }
 
 export default handleActions({
@@ -31,8 +32,8 @@ export default handleActions({
   },
   'SAVE_MEMBER_CHANGE': (memberState, action) => {
     console.log(action.payload)
-    return { 
-      ...memberState, 
+    return {
+      ...memberState,
       avatarUrl: action.payload.post.avatarUrl || memberState.avatarUrl,
       email: action.payload.post.email || memberState.email,
       name: action.payload.post.name || memberState.name,
@@ -46,5 +47,13 @@ export default handleActions({
       ...memberState,
       favoriteCapsule: action.payload.capsules
     }
-  }
+  },
+  'SEND_FEEDBACK': (memberState, action) => ({
+    ...memberState,
+    sendStatus: 1
+  }),
+  'SEND_FEEDBACK_SUCCESS': (memberState, action) => ({
+    ...memberState,
+    sendStatus: 0
+  })
 }, initMemberState)
