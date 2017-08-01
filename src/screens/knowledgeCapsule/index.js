@@ -68,24 +68,21 @@ export default class KnowledgeCapsule extends Component {
         let capPush = snapshot.val()
         let audios = []
         let capsule = []
-        let lastKey = true
         let capsules = Object.keys(capPush)
+        let lastKey = capsules[0]
+        let length = capsules.length
+        
+        if (capsules.length === this.loadCount+1) {
+          length = capsules.length - 1
+        } else {
+          lastKey = null
+        }
+        this.setState({
+          lastKey
+        })
         // parent loop
         capsules.reverse().forEach((parentKey, index) => {
-          if (index === capsules.length - 1) {
-            if (this.state.lastKey === parentKey)
-              lastKey = null
-            else
-              lastKey = parentKey
-
-            // console.log(lastKey,':test')
-            this.setState({
-              lastKey: lastKey
-            })
-          }
-
-
-          if ((lastKey && index <= capsules.length - 2) || !lastKey) {
+          if (index < length) {
             //capsule loop
             Object.values(capPush[parentKey].audios).forEach((audio) => {
               audios = [...audios, {
