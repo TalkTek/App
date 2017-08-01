@@ -48,6 +48,7 @@ let buttons = {
 }), dispatch => ({
   actions: bindActionCreators({...audioActions, ...analyticActions}, dispatch)
 }))
+
 export default class KnowledgeCapsule extends Component {
 
   state = {
@@ -58,6 +59,7 @@ export default class KnowledgeCapsule extends Component {
 
   loadCount = 2
 
+  touchY = -1
   resolveData(capsuleRef) {
     const { actions } = this.props
 
@@ -127,19 +129,23 @@ export default class KnowledgeCapsule extends Component {
       _toggleAudioBarUp,
       _toggleAudioBarDown
     } = this.props.navigation
-    let currentOffsetY = event.nativeEvent.contentOffset.y
-
-    const diff = currentOffsetY - this.state.offsetY
-
-    if(diff > 0) {
-      _toggleAudioBarDown()
+      // let currentOffsetY = event.nativeEvent.contentOffset.y
+    if (this.touchY === -1) {
+      this.touchY = event.nativeEvent.pageY
     } else {
-      _toggleAudioBarUp()
+      // console.log(eve.nativeEvent.pageY - this.touchY)
+      // const diff = currentOffsetY - this.state.offsetY
+      const diff = event.nativeEvent.pageY - this.state.offsetY
+      if(diff > 10) {
+        _toggleAudioBarDown()
+      } else if(diff < -10) {
+        _toggleAudioBarUp()
+      }
+      console.log(diff)
+      this.setState({
+        offsetY: event.nativeEvent.pageY
+      })
     }
-
-    this.setState({
-      offsetY: currentOffsetY
-    })
   }
 
   onPress = (audio, i, j) => {
@@ -210,7 +216,9 @@ export default class KnowledgeCapsule extends Component {
       })
     }
     return (
-      <Container style={styles.container}>
+      <Container style={styles.container}
+        onMoveShouldSetResponder={this.state.audioBarActive ? this.onScroll : null}
+      >
         <View>
           <Image
             style={styles.banner}
@@ -218,7 +226,6 @@ export default class KnowledgeCapsule extends Component {
           />
         </View>
         <Content
-          onScroll={this.state.audioBarActive ? this.onScroll : null}
           onMomentumScrollEnd={this.onScrollEndReached}
         >
           {
