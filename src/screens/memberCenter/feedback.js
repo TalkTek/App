@@ -28,14 +28,14 @@ import { feedBackStyle } from './styles'
 }))
 
 class Feedback extends Component {
-  content = [
-    '產品建議',
-    '使用問題',
-    '其他'
-  ]
+  content = {
+    feedback: '產品建議',
+    bugIssue: '使用問題',
+    other: '其他'
+  }
 
   state = {
-    type: 0,
+    type: 'feedback',
     content: ''
   }
 
@@ -98,9 +98,9 @@ class Feedback extends Component {
                 onValueChange={(value) => this.setState({type: value})}
               >
                 {
-                  this.content.map((val, i) => {
+                  Object.keys(this.content).map((val, i) => {
                     return (
-                      <Item label={val} value={i} key={i} />
+                      <Item label={this.content[val]} value={val} key={i} />
                     )
                   })
                 }
