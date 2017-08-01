@@ -90,6 +90,8 @@ export default handleActions({
     }
   },
   'CP_AUDIO_GOOD_CHANGE_SUCCESS': (state, action) => {
+    console.log('state.playingAudioInfo.likeCounter ', state.playingAudioInfo.likeCounter)
+    console.log('action.payload.isGood', action.payload.isGood)
     return {
       ...state,
       playingAudioInfo: {
