@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import {
   View,
   Text,
-  ActivityIndicator
+  ActivityIndicator,
+  ScrollView
 } from 'react-native'
 import {
   Container,
@@ -14,7 +15,6 @@ import {
 import { Image } from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { StyleSheet } from 'react-native'
 import audioAction from '../../reducer/audio/audioAction'
 import analyticAction from '../../reducer/analytic/analyticAction'
 import HtmlView from 'react-native-htmlview'
@@ -25,8 +25,7 @@ import styles from './styles'
   parentKey: state.audio.playingAudioInfo.parentKey,
   draft: state.audio.playingAudioInfo.draft
 }), (dispatch) => ({
-  action: bindActionCreators(audioAction, dispatch),
-  ga: bindActionCreators(analyticAction, dispatch)
+  actions: bindActionCreators({...audioAction, ...analyticAction}, dispatch),
 }))
 
 class PlayerDoc extends Component {
@@ -35,20 +34,16 @@ class PlayerDoc extends Component {
   }
 
   componentDidMount() {
-    let { capsuleId, parentKey } = this.props
-    this.props.action.cpAudioGetDoc({capsuleId, parentKey})
-    this.props.ga.gaSetScreen(`playerDoc/${capsuleId}/${new Date().getHours()}`)
+    let { capsuleId, parentKey, actions } = this.props
+    actions.cpAudioGetDoc({capsuleId, parentKey})
+    actions.gaSetScreen(`playerDoc/${capsuleId}/${new Date().getHours()}`)
   }
 
   render () {
-    const {
-      goBack,
-    } = this.props.navigation
-
     const buttons = {
       close: {
         img: require('../../assets/img/playAudio/close.png'),
-        func: () => goBack()
+        func: () => this.props.toggleModal()
       }
     }
 
@@ -82,7 +77,7 @@ class PlayerDoc extends Component {
             </Button>
           </Right>
         </Header>
-        <Content>
+        <ScrollView>
           {
             this.props.draft?
             <HtmlView
@@ -98,7 +93,7 @@ class PlayerDoc extends Component {
               />
             </View>
           }
-        </Content>
+        </ScrollView>
       </Container>
     )
   }

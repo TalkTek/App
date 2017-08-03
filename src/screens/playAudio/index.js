@@ -25,6 +25,8 @@ import {
 } from 'react-native'
 import styles from './styles'
 import Slider from 'react-native-slider'
+import DocScreen from '../../screens/playAudio/playerDoc'
+import Modal from 'react-native-modalbox'
 
 const mapStateToProps = (state) => {
   return {
@@ -54,6 +56,8 @@ class PlayAudio extends Component {
   state = {
     playState: null, // need to use redux to solve it
     value: 0,
+    isModalOpen: false,
+    swipeToClose: true,
   }
 
   buttons = {
@@ -68,7 +72,7 @@ class PlayAudio extends Component {
         },
         timer: {
           notActive: require('../../assets/img/playAudio/timer.png'),
-          name: '20:39'
+          name: '00:00'
         },
         addSpeed: {
           notActive: require('../../assets/img/playAudio/addSpeed.png'),
@@ -77,7 +81,7 @@ class PlayAudio extends Component {
         word: {
           notActive: require('../../assets/img/playAudio/word.png'),
           name: '文檔',
-          // func: () => this.props.navigation.navigate('PlayerDocScreen')
+          func: () => this.openModal()
         },
         more: {
           notActive: require('../../assets/img/playAudio/more.png'),
@@ -126,6 +130,21 @@ class PlayAudio extends Component {
 
   _onSlidingComplete = (value) => {
     this.props.seek(value)
+  }
+
+  toggleModal = () => {
+    this.setState({
+      isModalOpen: !this.state.isModalOpen
+    })
+  }
+
+  openModal = () => {
+    console.log("hello world")
+    this.setState({
+      isModalOpen: true,
+      swipeToClose: !this.state.swipeToClose
+    })
+    this.refs.docScreen.open()
   }
 
   _audioIsGoodToggle() {
@@ -285,6 +304,17 @@ class PlayAudio extends Component {
         <View style={styles.footer}>
           {footerButtons}
         </View>
+        <Modal
+          ref={'docScreen'}
+          position={'center'}
+          isOpen={this.state.isModalOpen}
+          swipeToClose={this.state.swipeToClose}
+          swipeArea={0}
+        >
+          <DocScreen
+            toggleModal={this.toggleModal}
+          />
+        </Modal>
       </Container>
     )
   }

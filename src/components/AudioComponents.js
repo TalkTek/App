@@ -571,6 +571,7 @@ export default class AudioComponents extends Component {
           ref={"playAudio"}
           position={"center"}
           isOpen={this.state.isModalOpen}
+          swipeToClose={false}
         >
           <PlayAudioScreen
             playOrPause={this.playOrPause}

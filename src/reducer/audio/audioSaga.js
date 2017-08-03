@@ -41,6 +41,8 @@ function * getAudioDoc (data) {
   let { capsuleId, parentKey } = data.payload
   let draft = yield call(() => new AudioModule().getAudioDoc(capsuleId, parentKey))
 
+  console.log('draft', draft)
+
   yield put({
     type: AudioTypes.CP_AUDIO_GET_DOC_SUCCESS,
     payload: {

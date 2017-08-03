@@ -92,7 +92,8 @@ const MemberCenterScreen = StackNavigator({
   MyPoint: { screen: MyPoint, navigationOptions: { title: '我的點數' } },
   Fillup: { screen: PointCenter, navigationOptions: { title: '儲值中心' } },
   Feedback: { screen: Feedback, navigationOptions: { title: '意見回饋' } },
-  Apply: { screen: Apply, navigationOptions: { title: '成為講師' } }
+  Apply: { screen: Apply, navigationOptions: { title: '成為講師' } },
+  // Login: { screen: Login }
 }, {
   navigationOptions: {
     title: '我的',
