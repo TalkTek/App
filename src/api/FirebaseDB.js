@@ -58,6 +58,18 @@ export default class FirebaseDB {
     return snapshot.exists()
   }
 
+  /**
+   * push a new post to the path
+   * @param {string} path
+   * @param {*} value
+   * @return {Promise}
+   */
+
+  push(path = '', value) {
+    let newKey = this.database.ref(path).push().key
+    return this.update(`${path}/${newKey}`, value)
+  }
+
   // /**
   //  * download audio file by downloadUrl
   //  * @param {string} path

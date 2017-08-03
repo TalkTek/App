@@ -11,5 +11,7 @@ export default createActions({
   },
   'SAVE_MEMBER_CHANGE': memberState => memberState,
   'MEMBER_CAPSULE_GET': state => state,
-  'MEMBER_CAPSULE_GET_SUCCESS': state => state
+  'MEMBER_CAPSULE_GET_SUCCESS': state => state,
+  'SEND_FEEDBACK': state => state,
+  'SEND_FEEDBACK_SUCCESS': state => state
 })

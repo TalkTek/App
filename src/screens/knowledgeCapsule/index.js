@@ -48,6 +48,7 @@ let buttons = {
 }), dispatch => ({
   actions: bindActionCreators({...audioActions, ...analyticActions}, dispatch)
 }))
+
 export default class KnowledgeCapsule extends Component {
 
   state = {
@@ -56,31 +57,34 @@ export default class KnowledgeCapsule extends Component {
     offsetY: 0,
   }
 
+  loadCount = 2
+
+  touchY = -1
   resolveData(capsuleRef) {
     const { actions } = this.props
 
     capsuleRef
+      .orderByKey()
       .once('value')
       .then((snapshot) => {
         let capPush = snapshot.val()
         let audios = []
         let capsule = []
-        let lastKey = true
-
+        let capsules = Object.keys(capPush)
+        let lastKey = capsules[0]
+        let length = capsules.length
+        
+        if (capsules.length === this.loadCount+1) {
+          length = capsules.length - 1
+        } else {
+          lastKey = null
+        }
+        this.setState({
+          lastKey
+        })
         // parent loop
-        Object.keys(capPush).forEach((parentKey, index) => {
-          if (index === 0) {
-            if (this.state.lastKey === parentKey)
-              lastKey = null
-            else
-              lastKey = parentKey
-
-            this.setState({
-              lastKey: lastKey
-            })
-          }
-
-          if (lastKey) {
+        capsules.reverse().forEach((parentKey, index) => {
+          if (index < length) {
             //capsule loop
             Object.values(capPush[parentKey].audios).forEach((audio) => {
               audios = [...audios, {
@@ -115,7 +119,7 @@ export default class KnowledgeCapsule extends Component {
 
   componentDidMount () {
     const { actions } = this.props
-    let capsuleRef = firebase.database().ref('capsules').orderByKey().limitToLast(2)
+    let capsuleRef = firebase.database().ref('capsules').limitToLast(this.loadCount+1)
     this.resolveData(capsuleRef)
     actions.gaSetScreen('KnowledgeCapsule')
   }
@@ -125,19 +129,23 @@ export default class KnowledgeCapsule extends Component {
       _toggleAudioBarUp,
       _toggleAudioBarDown
     } = this.props.navigation
-    let currentOffsetY = event.nativeEvent.contentOffset.y
-
-    const diff = currentOffsetY - this.state.offsetY
-
-    if(diff > 0) {
-      _toggleAudioBarDown()
+      // let currentOffsetY = event.nativeEvent.contentOffset.y
+    if (this.touchY === -1) {
+      this.touchY = event.nativeEvent.pageY
     } else {
-      _toggleAudioBarUp()
+      // console.log(eve.nativeEvent.pageY - this.touchY)
+      // const diff = currentOffsetY - this.state.offsetY
+      const diff = event.nativeEvent.pageY - this.state.offsetY
+      if(diff > 10) {
+        _toggleAudioBarDown()
+      } else if(diff < -10) {
+        _toggleAudioBarUp()
+      }
+      console.log(diff)
+      this.setState({
+        offsetY: event.nativeEvent.pageY
+      })
     }
-
-    this.setState({
-      offsetY: currentOffsetY
-    })
   }
 
   onPress = (audio, i, j) => {
@@ -161,8 +169,7 @@ export default class KnowledgeCapsule extends Component {
         firebase.database()
           .ref('capsules')
           .endAt(lastKey)
-          .orderByKey()
-          .limitToLast(3)
+          .limitToLast(this.loadCount+1)
 
       this.resolveData(capsuleRef)
     }
@@ -209,7 +216,9 @@ export default class KnowledgeCapsule extends Component {
       })
     }
     return (
-      <Container style={styles.container}>
+      <Container style={styles.container}
+        onMoveShouldSetResponder={this.state.audioBarActive ? this.onScroll : null}
+      >
         <View>
           <Image
             style={styles.banner}
@@ -217,7 +226,6 @@ export default class KnowledgeCapsule extends Component {
           />
         </View>
         <Content
-          onScroll={this.state.audioBarActive ? this.onScroll : null}
           onMomentumScrollEnd={this.onScrollEndReached}
         >
           {

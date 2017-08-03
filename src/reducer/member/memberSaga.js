@@ -25,6 +25,14 @@ function * changeMember ({ payload: {post, memberUid} }) {
   yield call(() => new MemberModule().changeMemberProfile(memberUid, post))
 }
 
+function * sendFeedBack ({ payload: { type, content, userId } }) {
+  yield call(() => new MemberModule().sendFeedBack(type, content, userId))
+  yield put({
+    type: 'SEND_FEEDBACK_SUCCESS',
+    payload: {}
+  })
+}
+
 /**
  * watcher
  */
@@ -32,6 +40,7 @@ function * changeMember ({ payload: {post, memberUid} }) {
 function * member () {
   yield takeLatest(MemberTypes.MEMBER_CAPSULE_GET, getMemberCapsule)
   yield takeLatest(MemberTypes.SAVE_MEMBER_CHANGE, changeMember)
+  yield takeLatest(MemberTypes.SEND_FEEDBACK, sendFeedBack)
 }
 
 export default [
