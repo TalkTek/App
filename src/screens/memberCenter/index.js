@@ -7,7 +7,8 @@ import {
   Text,
   Image,
   Button,
-  TouchableOpacity
+  TouchableOpacity,
+  TouchableHighlight
 } from 'react-native'
 import {
   Thumbnail,
@@ -41,7 +42,7 @@ export default class MemberCenter extends Component {
     ],
     other: [
       { key: 'iconFeedback', icon: require(`../../assets/img/memberCenter/iconFeedback.png`), target: 'Feedback', text: '意見回饋' },
-      { key: 'iconApply', icon: require(`../../assets/img/memberCenter/iconApply.png`), target: 'Apply', text: '成為講師' }
+      // { key: 'iconApply', icon: require(`../../assets/img/memberCenter/iconApply.png`), target: 'Apply', text: '成為講師' }
     ]
   }
 
@@ -125,24 +126,25 @@ export default class MemberCenter extends Component {
           </View>
           <View style={styles.container}>
             
-            <View style={styles.selectList}>
-              { this.listsData.my.map(this._renderListItem) }
-            </View>
-            <View style={styles.selectList}>
-              { this.listsData.coin.map(this._renderListItem) }
-            </View>
+            {/*<View style={styles.selectList}>*/}
+              {/*{ this.listsData.my.map(this._renderListItem) }*/}
+            {/*</View>*/}
+            {/*<View style={styles.selectList}>*/}
+              {/*{ this.listsData.coin.map(this._renderListItem) }*/}
+            {/*</View>*/}
             <View style={styles.selectList}>
               { this.listsData.other.map(this._renderListItem) }
             </View>
             {
               this.props.memberUid &&
-              <View style={styles.logout}>
-                <Button 
-                  color="#212121" 
-                  title="登出"
-                  onPress={this._logout}
-                />
-              </View>
+                <View style={styles.logout}>
+                  <TouchableHighlight
+                    color="#212121"
+                    onPress={this._logout}
+                  >
+                    <Text>登出</Text>
+                  </TouchableHighlight>
+                </View>
             }
           </View>
         </Content>

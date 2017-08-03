@@ -10,7 +10,7 @@ const style = {
     backgroundColor: 'rgb(245, 245, 245)'
   },
   mainBackground: {
-    backgroundColor: '#fff',
+    backgroundColor: '#fff'
   },
   avatar: {
     minHeight: 165,
@@ -32,7 +32,7 @@ const style = {
     marginTop: 16
   },
   selectList: {
-    marginTop: 16
+    marginTop: 16,
   },
   listItem: {
     paddingTop: 16,
@@ -67,11 +67,12 @@ const style = {
   logout: {
     borderColor: 'rgb(158, 158, 158)',
     borderWidth: 1,
-    marginLeft: 16,
-    marginRight: 16,
-    marginBottom: 16,
     marginTop: 24,
-    borderRadius: 8
+    height: 40,
+    marginHorizontal: 16,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 }
 
