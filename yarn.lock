@@ -3553,7 +3553,7 @@ native-base-shoutem-theme@0.1.7:
     lodash "^4.10.1"
     prop-types "^15.5.10"
 
-native-base@^2.1.5:
+native-base@2.1.5:
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/native-base/-/native-base-2.1.5.tgz#763b42b05c239fc3e62a226eb8328ab8f5b248d2"
   dependencies:
@@ -3695,13 +3695,6 @@ opn@^3.0.2:
   resolved "https://registry.yarnpkg.com/opn/-/opn-3.0.3.tgz#b6d99e7399f78d65c3baaffef1fb288e9b85243a"
   dependencies:
     object-assign "^4.0.1"
-
-opn@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/opn/-/opn-4.0.2.tgz#7abc22e644dff63b0a96d5ab7f2790c0f01abc95"
-  dependencies:
-    object-assign "^4.0.1"
-    pinkie-promise "^2.0.0"
 
 optimist@^0.6.1:
   version "0.6.1"
@@ -4090,14 +4083,13 @@ react-native-code-push@latest:
     plist "1.2.0"
     xcode "0.9.2"
 
-react-native-debugger-open@^0.3.9:
-  version "0.3.9"
-  resolved "https://registry.yarnpkg.com/react-native-debugger-open/-/react-native-debugger-open-0.3.9.tgz#590797b475af545e8e15d8e067ef86de82f34d1c"
+react-native-debugger-open@^0.3.12:
+  version "0.3.12"
+  resolved "https://registry.yarnpkg.com/react-native-debugger-open/-/react-native-debugger-open-0.3.12.tgz#0a95aa410c4be24a8788fceb5b049b0d56e2d3bf"
   dependencies:
     chalk "^1.1.3"
     es6-template "^1.0.4"
     minimist "^1.2.0"
-    opn "^4.0.2"
 
 react-native-dismiss-keyboard@1.0.0:
   version "1.0.0"

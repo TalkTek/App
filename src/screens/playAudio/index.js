@@ -116,10 +116,11 @@ class PlayAudio extends Component {
 
   componentDidMount() {
     this.props.ga.gaSetEvent({
-      category: 'open player',
-      action: this.props.capsulesId,
+      category: 'capsule',
+      action: 'open player',
       value: {
-        3: this.props.capsulesId
+        label: this.props.audioName,
+        value: 1
       }
     })
   }
@@ -130,10 +131,11 @@ class PlayAudio extends Component {
 
   _audioIsGoodToggle() {
     this.props.ga.gaSetEvent({
-      category: 'like',
-      action: this.props.audioIsGood? `${this.props.capsulesId} not like` : `${this.props.capsulesId} like`,
+      category: 'capsule',
+      action: this.props.audioIsGood? 'unlike capsule' : 'like capsule',
       value: {
-        3: this.props.capsulesId
+        label: this.props.audioName,
+        value: 1
       }
     })
     this.props
@@ -149,20 +151,22 @@ class PlayAudio extends Component {
   _buttonGaEvent(type) {
     if (type !== 'playOrPause')
     this.props.ga.gaSetEvent({
-      category: type,
-      action: this.props.capsulesId,
+      category: 'capsule',
+      action: type,
       value: {
-        3: this.props.capsulesId
+        label: this.props.audioName,
+        value: 1
       }
     })
   }
 
   _gaGoBack() {
-    this.props.ga.gaSetEvnet({
-      category: 'close player',
-      action: this.props.capsuleId,
+    this.props.ga.gaSetEvent({
+      category: 'capsule',
+      action: 'close player',
       value: {
-        3: this.props.capsuleId
+        label: this.props.audioName,
+        value: 1
       }
     })
   }
