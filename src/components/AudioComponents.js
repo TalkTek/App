@@ -18,8 +18,9 @@ import {
 import Modal from 'react-native-modalbox'
 import PlayAudioScreen from '../screens/playAudio'
 
-
 import audioActions from '../reducer/audio/audioAction'
+import analyticAction from '../reducer/analytic/analyticAction'
+
 import { Button } from 'native-base'
 import { Player } from 'react-native-audio-toolkit'
 
@@ -49,31 +50,50 @@ let buttons = {
     i: state.audio.playingAudioInfo.pos.i,
     j: state.audio.playingAudioInfo.pos.j
   }
-}), dispatch => ({
-  actions: bindActionCreators(audioActions, dispatch)
-}))
+}), dispatch => {
+  return {
+    actions: bindActionCreators(audioActions, dispatch),
+    ga: bindActionCreators(analyticAction, dispatch)
+  }
+})
 export default class AudioComponents extends Component {
 
   interval = null
 
+  timer = null
+
   state = {
-    popoutAudioBarHeight: new Animated.Value(screenHeight-100),
+    popoutAudioBarHeight: new Animated.Value(screenHeight - 100),
     popoutAudioBarOpacity: new Animated.Value(0),
     offsetY: 0,
     isModalOpen: false,
   }
 
   createPlayer = (url) => {
-    if(playerGlobal) {
+    if (playerGlobal) {
       playerGlobal.destroy()
       this.props.actions.changePlayingState('notPlaying')
+      // let listening_time_end = Date.now()
+      // let totalsec = parseInt(this.props.audioLength.sec)
+      // console.log(totalsec)
+      // console.log((listening_time_end - this.timer) / 1000 / totalsec + '%')
     }
     playerGlobal = new Player(url)
       .prepare(error => {
-        if(error) {
+        if (error) {
           console.log('error at createPlayer, error is => ', error);
         } else {
+          //playerGlobal.play()
           this.playOrPause()
+          this.timer = Date.now()
+          this.props.ga.gaSetEvent({
+            category: 'capsule',
+            action: 'play audio',
+            value: {
+              label: this.props.audioName,
+              value: 1
+            }
+          })
         }
       })
   }
@@ -93,7 +113,7 @@ export default class AudioComponents extends Component {
     const { capsules, playingAudioPos, actions } = this.props
     let pos = capsules[playingAudioPos.i].audios.length
 
-    if(this.interval){
+    if (this.interval) {
       clearInterval(this.interval)
     }
 
@@ -119,7 +139,7 @@ export default class AudioComponents extends Component {
         next.likeCounter
       )
     } else {
-      if ( playingAudioPos.i === capsules.length - 1) {
+      if (playingAudioPos.i === capsules.length - 1) {
         // if audio reach end of audio's list, then recycle it
         next = capsules[0].audios[0]
         await this.toggleButtonColor(0, 0)
@@ -174,13 +194,13 @@ export default class AudioComponents extends Component {
     let next
     const { capsules, playingAudioPos, actions } = this.props
 
-    if(this.interval){
+    if (this.interval) {
       clearInterval(this.interval)
     }
 
-    if(playingAudioPos.j - 1 >= 0) {
+    if (playingAudioPos.j - 1 >= 0) {
       next = capsules[playingAudioPos.i].audios[playingAudioPos.j - 1]
-      await this.toggleButtonColor(playingAudioPos.i, playingAudioPos.j -1)
+      await this.toggleButtonColor(playingAudioPos.i, playingAudioPos.j - 1)
       await actions.settingPlayingAudioInfo(
         next.name,
         next.length,
@@ -200,7 +220,7 @@ export default class AudioComponents extends Component {
         next.likeCounter
       )
     } else {
-      if ( playingAudioPos.i === 0) {
+      if (playingAudioPos.i === 0) {
         // if audio reach Top of audio's list, then recycle it
         next = capsules[0].audios[0]
         await this.toggleButtonColor(0, 0)
@@ -223,7 +243,7 @@ export default class AudioComponents extends Component {
           next.likeCounter
         )
       } else {
-        let maxLength = capsules[playingAudioPos.i -1].audios.length - 1
+        let maxLength = capsules[playingAudioPos.i - 1].audios.length - 1
         next = capsules[playingAudioPos.i - 1].audios[maxLength]
         await this.toggleButtonColor(playingAudioPos.i - 1, maxLength)
         await actions.settingPlayingAudioInfo(
@@ -254,8 +274,8 @@ export default class AudioComponents extends Component {
   forward15s = () => {
     let forwardTime = this.props.currentTimeSec + 15
     this.seek(
-      forwardTime > Number(this.props.audioLength.sec)?
-        Number(this.props.audioLength.sec):
+      forwardTime > Number(this.props.audioLength.sec) ?
+        Number(this.props.audioLength.sec) :
         forwardTime
     )
   }
@@ -263,25 +283,25 @@ export default class AudioComponents extends Component {
   backward15s = () => {
     let backwardTime = this.props.currentTimeSec - 15
     this.seek(
-      backwardTime < 0?
-        0:
+      backwardTime < 0 ?
+        0 :
         backwardTime
     )
   }
 
   playOrPause = () => {
     const { playState, actions } = this.props
-    if(playState ==='notPlaying' && playerGlobal) {
+    if (playState === 'notPlaying' && playerGlobal) {
       actions.changePlayingState('playing')
       // react-native-audio-toolkit bug
       // only get current time after calling pause
-      playerGlobal.pause(() => {
-        playerGlobal.play(() => {
-          this.audioPlayingTimerStart()
-        })
+
+      playerGlobal.play(() => {
+        this.audioPlayingTimerStart()
       })
+
     } else if (!playerGlobal) {
-      console.log('player is not found',);
+      console.log('player is not found', );
     } else {
       actions.changePlayingState('notPlaying')
       playerGlobal.pause(() => {
@@ -311,7 +331,7 @@ export default class AudioComponents extends Component {
     let outdatedValue = currentTimeSec * 1000
     let nowValue
 
-    if(playerGlobal) {
+    if (playerGlobal) {
       this.interval = setInterval(() => {
         if (playState === 'playing') {
           if (playerGlobal.currentTime && (playerGlobal.currentTime > 0)) {
@@ -329,8 +349,8 @@ export default class AudioComponents extends Component {
             let min = Math.floor(nowValue / 60000)
             let sec = Math.floor(nowValue / 1000) - min * 60
 
-            if (sec < 10) { sec = "0" + sec}
-            if (min < 10) { min = "0" + min}
+            if (sec < 10) { sec = "0" + sec }
+            if (min < 10) { min = "0" + min }
 
             currentTimeformatted = min + ":" + sec
             currentTimeSecNow = Math.floor(nowValue / 1000)
@@ -351,6 +371,22 @@ export default class AudioComponents extends Component {
           } else {
             // when the audio end
             clearInterval(this.interval)
+            let listening_time_end = Date.now()
+            let totalsec = parseInt(this.props.audioLength.sec)
+            console.log(totalsec)
+            let ratio = parseInt((listening_time_end - this.timer) / 1000) / totalsec
+            console.log(ratio)
+            if (ratio > 0.7) {
+              this.props.ga.gaSetEvent({
+                category: 'capsule',
+                action: 'audio complete',
+                value: {
+                  label: this.props.audioName,
+                  value: 1
+                }
+              })
+            }
+
             currentTimeformatted = "00:00"
 
             actions.settingPlayingAudioInfo(
@@ -383,13 +419,13 @@ export default class AudioComponents extends Component {
       audioUrl,
       playingAudioPos
     } = this.props
-    if(playerGlobal) {
-      if(playerGlobal.duration) {
+    if (playerGlobal) {
+      if (playerGlobal.duration) {
 
 
         console.log('valueSeek from seek', value)
 
-        let percent = Number((value / audioLength.sec ).toFixed(2))
+        let percent = Number((value / audioLength.sec).toFixed(2))
 
         console.log('audioLength.sec from seek', audioLength.sec)
         console.log('percent from seek', percent)
@@ -399,13 +435,13 @@ export default class AudioComponents extends Component {
 
           clearInterval(this.interval)
 
-          let sec = Math.floor(value%60)
-          let min = Math.floor(value/60)
+          let sec = Math.floor(value % 60)
+          let min = Math.floor(value / 60)
 
-          if(sec<10) { sec = "0"+sec }
-          if(min<10) { min = "0"+min }
+          if (sec < 10) { sec = "0" + sec }
+          if (min < 10) { min = "0" + min }
 
-          let formatted = min+':'+sec
+          let formatted = min + ':' + sec
 
           await actions.settingPlayingAudioInfo(
             audioName,
@@ -435,7 +471,7 @@ export default class AudioComponents extends Component {
   _onPress = async (audio, i, j) => {
     const { actions } = this.props
 
-    if(this.interval) {
+    if (this.interval) {
       clearInterval(this.interval)
     }
 
@@ -452,7 +488,7 @@ export default class AudioComponents extends Component {
       },
       audio.url,
       {
-        i,j
+        i, j
       },
       'onPressAudio',
       audio.id,
@@ -498,7 +534,7 @@ export default class AudioComponents extends Component {
         duration: 100
       }),
       Animated.spring(popoutAudioBarHeight, {
-        toValue: screenHeight-49
+        toValue: screenHeight - 49
       })
     ]).start()
   }
@@ -516,7 +552,7 @@ export default class AudioComponents extends Component {
     this.refs.playAudio.open()
   }
 
-  render () {
+  render() {
     const {
       children,
       currentTimeFormatted,
@@ -545,7 +581,7 @@ export default class AudioComponents extends Component {
             underlayColor="#fff"
           >
             <Image
-              source={ playState === 'playing' ? buttons.pause : buttons.playingOnAudioBar}
+              source={playState === 'playing' ? buttons.pause : buttons.playingOnAudioBar}
               style={styles.playPauseButton}
             />
           </TouchableHighlight>
