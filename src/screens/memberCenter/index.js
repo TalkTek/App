@@ -74,12 +74,13 @@ export default class MemberCenter extends Component {
       .signOut()
       .then(() => {
 
+        navigation._toggleAudioBarDown()
         navigation.navigate('Login')
         // navigation.dispatch(
         // NavigationActions.reset({
         //   index: 0,
         //   actions: [
-        //     NavigationActions.navigate({ routeName: 'KnowledgeCapsule' })
+        //     navigation.navigate({ routeName: 'Login' })
         //   ]
         // }))
       })

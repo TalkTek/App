@@ -52,8 +52,7 @@ let buttons = {
   }
 }), dispatch => {
   return {
-    actions: bindActionCreators(audioActions, dispatch),
-    ga: bindActionCreators(analyticAction, dispatch)
+    actions: bindActionCreators({...audioActions, ...analyticAction}, dispatch),
   }
 })
 export default class AudioComponents extends Component {
@@ -70,6 +69,9 @@ export default class AudioComponents extends Component {
   }
 
   createPlayer = (url) => {
+
+    const { actions } = this.props
+
     if (playerGlobal) {
       playerGlobal.destroy()
       this.props.actions.changePlayingState('notPlaying')
@@ -86,7 +88,7 @@ export default class AudioComponents extends Component {
           //playerGlobal.play()
           this.playOrPause()
           this.timer = Date.now()
-          this.props.ga.gaSetEvent({
+          actions.gaSetEvent({
             category: 'capsule',
             action: 'play audio',
             value: {
@@ -377,7 +379,7 @@ export default class AudioComponents extends Component {
             let ratio = parseInt((listening_time_end - this.timer) / 1000) / totalsec
             console.log(ratio)
             if (ratio > 0.7) {
-              this.props.ga.gaSetEvent({
+              actions.gaSetEvent({
                 category: 'capsule',
                 action: 'audio complete',
                 value: {
