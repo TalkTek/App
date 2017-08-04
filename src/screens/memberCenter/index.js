@@ -67,24 +67,25 @@ export default class MemberCenter extends Component {
 
     console.log('this.props', this.props)
 
-    navigation.navigate('Login')
 
     // actions.logout()
-    // await firebase
-    //   .auth()
-    //   .signOut()
-      // .then(() => {
-      //   navigation.dispatch(
-      //   NavigationActions.reset({
-      //     index: 0,
-      //     actions: [
-      //       NavigationActions.navigate({ routeName: 'KnowledgeCapsule' })
-      //     ]
-      //   }))
-      // })
-      // .catch((error) => {
-      //   console.warn('[SignOut Error] Messages is', error.message)
-      // })
+    await firebase
+      .auth()
+      .signOut()
+      .then(() => {
+
+        navigation.navigate('Login')
+        // navigation.dispatch(
+        // NavigationActions.reset({
+        //   index: 0,
+        //   actions: [
+        //     NavigationActions.navigate({ routeName: 'KnowledgeCapsule' })
+        //   ]
+        // }))
+      })
+      .catch((error) => {
+        console.warn('[SignOut Error] Messages is', error.message)
+      })
   }
 
   _renderListItem = (rowData) => {
