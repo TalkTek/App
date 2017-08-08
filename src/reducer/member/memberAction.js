@@ -3,6 +3,7 @@ import {
 } from 'redux-actions'
 
 export default createActions({
+  'GET_MEMBER_STATE': state => state,
   'CHANGE_MEMBER_STATE': memberState => memberState,
   'LOGOUT_MEMBER': state => state,
   'LOGIN_MEMBER': state => state,

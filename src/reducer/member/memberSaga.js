@@ -54,11 +54,17 @@ function * createMember ({ payload: {email, password} }) {
   }
 }
 
+function * getMemberState ({ payload: { uid } }) {
+  let member = yield call(() => new MemberModule().getMemberState(uid))
+  yield put({type: 'CHANGE_MEMBER_STATE', payload: {...member, uid}})
+}
+
 /**
  * watcher
  */
 
 function * member () {
+  yield takeLatest(MemberTypes.GET_MEMBER_STATE, getMemberState)
   yield takeLatest(MemberTypes.CREATE_MEMBER, createMember)
   yield takeLatest(MemberTypes.LOGIN_MEMBER, loginMember)
   yield takeLatest(MemberTypes.LOGOUT_MEMBER, logoutMember)

@@ -23,11 +23,6 @@ export default class Main extends Component {
     header: null,
   }
 
-  async _readUserData(user) {
-    let snapshot = await firebase.database().ref(`/users/${user.uid}/profile`).once('value')
-    this.props.member.changeMemberState({ ...snapshot.val(), uid: user.uid })
-  }
-
   componentDidMount () {
     const { dispatch } = this.props.navigation
     firebase.auth().onAuthStateChanged( user => {
@@ -39,7 +34,9 @@ export default class Main extends Component {
               NavigationActions.navigate({routeName: 'KnowledgeCapsuleScreen'})
             ]
           }))
-        this._readUserData(user)
+        this.props.member.getMemberState({
+          uid: user.uid
+        })
       } else {
           dispatch(
             NavigationActions.reset({

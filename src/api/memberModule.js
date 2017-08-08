@@ -65,4 +65,8 @@ export default class memberModule extends FirebaseDB {
       return e
     }
   }
+
+  getMemberState (uid) {
+    return this.readOnce(`/users/${uid}/profile`)
+  }
 }
