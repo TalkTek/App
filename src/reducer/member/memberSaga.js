@@ -39,11 +39,17 @@ function * logoutMember () {
   })
 }
 
+function * loginMember ({payload: { uid, post }}) {
+  yield call(() => new MemberModule().writeProfile(uid, post))
+  yield put({ type: 'CHANGE_MEMBER_STATE', payload: Object.assign(post, {uid}) })
+}
+
 /**
  * watcher
  */
 
 function * member () {
+  yield takeLatest(MemberTypes.LOGIN_MEMBER, loginMember)
   yield takeLatest(MemberTypes.LOGOUT_MEMBER, logoutMember)
   yield takeLatest(MemberTypes.MEMBER_CAPSULE_GET, getMemberCapsule)
   yield takeLatest(MemberTypes.SAVE_MEMBER_CHANGE, changeMember)

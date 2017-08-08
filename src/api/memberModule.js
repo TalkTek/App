@@ -1,11 +1,16 @@
 import FirebaseDB from './lib/FirebaseDB'
 
 export default class memberModule extends FirebaseDB {
-  async changeProfile (memberState) {
-    let path = `users/${memberState.memberUid}/profile`
-    let profile = await this.readOnce(path)
+  async writeProfile (uid, memberState) {
+    let path = `users/${uid}/profile`
+    let profile
+    if (await this.exists(path)) {
+      profile = await this.readOnce(path)
+    } else {
+      profile = {}
+    }
 
-    this.update(path, Object.assign(profile, memberState.post))
+    this.write(path, Object.assign(profile, memberState))
   }
 
   async getLikeCapsule (uid) {

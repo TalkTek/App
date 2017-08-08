@@ -20,6 +20,8 @@ import {
   Input,
   Item,
 } from 'native-base'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import FBSDK, { LoginManager, AccessToken } from 'react-native-fbsdk'
 import { GoogleSignin } from 'react-native-google-signin'
 import firebase from 'firebase'
@@ -27,12 +29,19 @@ import Modal from 'react-native-modalbox'
 import { NavigationActions } from 'react-navigation'
 import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge'
 import { loginStyles as styles } from './styles'
+import memberAction from '../../reducer/member/memberAction'
 
 let tracker = new GoogleAnalyticsTracker('UA-100475279-1',{ test: 3})
 
 tracker.trackScreenView('Login')
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
+
+@connect( state => ({
+
+}), dispatch => ({
+  member: bindActionCreators(memberAction, dispatch)
+}))
 
 export default class Login extends Component {
   static navigationOptions = {
@@ -66,6 +75,7 @@ export default class Login extends Component {
 
   async _onFacebookLogin () {
     const { dispatch } = this.props.navigation
+    const { member } = this.props
     try {
       tracker.trackEvent('FacebookLogin', 'Click')
       setTimeout(() => this.refs.spinning.open(), 1200)
@@ -79,12 +89,14 @@ export default class Login extends Component {
         // firebase setting
         const credential_facebook = firebase.auth.FacebookAuthProvider.credential(token)
         const user = await firebase.auth().signInWithCredential(credential_facebook)
-        // write firebase
-        firebase.database().ref(`/users/${user.uid}/profile`).set({
-          name: user.displayName,
-          email: user.email,
-          avatarUrl: user.photoURL,
-          from: 'Facebook'
+        member.loginMember({
+          uid:user.uid, 
+          post: {
+            name: user.displayName,
+            email: user.email,
+            avatarUrl: user.photoURL,
+            from: 'Facebook'
+          }
         })
         dispatch(NavigationActions.reset({
           index: 0,
@@ -113,6 +125,8 @@ export default class Login extends Component {
 
   async _onGoogleSignIn() {
     const { dispatch } = this.props.navigation
+    const { member } = this.props
+    
     try {
       tracker.trackEvent('GoogleLogin', 'Click')
       // google setting
@@ -124,19 +138,22 @@ export default class Login extends Component {
       const credential_google = await firebase.auth.GoogleAuthProvider.credential(idToken, accessToken)
       const user = await firebase.auth().signInWithCredential(credential_google)
 
-      firebase.database().ref(`/users/${user.uid}/profile`).set({
-        name: user.displayName,
-        email: user.email,
-        avatarUrl: user.photoURL,
-        from: 'Google'
+      member.loginMember({
+        uid:user.uid, 
+        post: {
+          name: user.displayName,
+          email: user.email,
+          avatarUrl: user.photoURL,
+          from: 'Google'
+        }
       })
 
-      dispatch(NavigationActions.reset({
-        index: 0,
-        actions: [
-          NavigationActions.navigate({routeName: 'KnowledgeCapsuleScreen'})
-        ]
-      }))
+      // dispatch(NavigationActions.reset({
+      //   index: 0,
+      //   actions: [
+      //     NavigationActions.navigate({routeName: 'KnowledgeCapsuleScreen'})
+      //   ]
+      // }))
     } catch(error) {
       console.log('error message is', error.message);
       console.log('error code is', error.code);
