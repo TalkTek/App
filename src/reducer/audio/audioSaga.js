@@ -2,7 +2,8 @@ import {
   fork,
   takeLatest,
   call,
-  put
+  put,
+  all
 } from 'redux-saga/effects'
 import AudioTypes from './audioTypes'
 import AudioModule from '../../api/audioModule'
@@ -60,6 +61,6 @@ function * audioSaga () {
   yield takeLatest(AudioTypes.CP_AUDIO_GET_DOC, getAudioDoc)
 }
 
-export default [
+export default all([
   fork(audioSaga)
-]
+])

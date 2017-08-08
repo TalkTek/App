@@ -3,7 +3,7 @@ import {
   takeEvery
 } from 'redux-saga/effects'
 import analyticTypes from './analyticTypes'
-import Analytic from '../../api/Analytic'
+import Analytic from '../../api/lib/Analytic'
 
 /**
  * subroutines

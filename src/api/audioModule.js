@@ -1,4 +1,4 @@
-import FirebaseDB from './FirebaseDB'
+import FirebaseDB from './lib/FirebaseDB'
 
 export default class AudioModule extends FirebaseDB {
   async cpAudioGood (capsulesId, parentKey, userId) {

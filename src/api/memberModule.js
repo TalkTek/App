@@ -1,4 +1,4 @@
-import FirebaseDB from './FirebaseDB'
+import FirebaseDB from './lib/FirebaseDB'
 
 export default class memberModule extends FirebaseDB {
   async changeProfile (memberState) {
