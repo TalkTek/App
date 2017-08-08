@@ -3,7 +3,7 @@ import Firebase from 'firebase'
 export default class FirebaseDB {
   database = Firebase.database()
   storage = Firebase.storage()
-
+  auth = Firebase.auth()
 
   /**
    * write data from path

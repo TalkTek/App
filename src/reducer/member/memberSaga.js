@@ -33,11 +33,18 @@ function * sendFeedBack ({ payload: { type, content, userId } }) {
   })
 }
 
+function * logoutMember () {
+  new MemberModule().logoutMember().catch(err => {
+    console.warn('[SignOut Error] Messages is', err.message)
+  })
+}
+
 /**
  * watcher
  */
 
 function * member () {
+  yield takeLatest(MemberTypes.LOGOUT_MEMBER, logoutMember)
   yield takeLatest(MemberTypes.MEMBER_CAPSULE_GET, getMemberCapsule)
   yield takeLatest(MemberTypes.SAVE_MEMBER_CHANGE, changeMember)
   yield takeLatest(MemberTypes.SEND_FEEDBACK, sendFeedBack)

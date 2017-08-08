@@ -36,6 +36,7 @@ console.log('width isis', screenWidth)
   memberAvatar: state.member.avatarUrl
 }), dispatch => ({
   actions: bindActionCreators(navigatorAction, dispatch),
+  logout: bindActionCreators(memberAction.logoutMember, dispatch),
   ga: bindActionCreators(analyticAction, dispatch)
 }))
 
@@ -60,32 +61,25 @@ export default class MemberCenter extends Component {
   }
 
   _logout = async () => {
-    const {
-      navigation,
-      actions
-    } = this.props
+    let { navigation } = this.props
+    navigation.navigate('Login')
+    this.props.logout()
+    // navigation.dispatch(
+    // NavigationActions.reset({
+    //   index: 0,
+    //   actions: [
+    //     NavigationActions.navigate({ routeName: 'KnowledgeCapsule' })
+    //   ]
+    // }))
+    // await firebase
+    //   .auth()
+    //   .signOut()
+    //   .then(() => {
 
-    console.log('this.props', this.props)
-
-
-    // actions.logout()
-    await firebase
-      .auth()
-      .signOut()
-      .then(() => {
-
-        navigation.navigate('Login')
-        // navigation.dispatch(
-        // NavigationActions.reset({
-        //   index: 0,
-        //   actions: [
-        //     NavigationActions.navigate({ routeName: 'KnowledgeCapsule' })
-        //   ]
-        // }))
-      })
-      .catch((error) => {
-        console.warn('[SignOut Error] Messages is', error.message)
-      })
+    //   })
+    //   .catch((error) => {
+          // console.warn('[SignOut Error] Messages is', error.message)
+    //   })
   }
 
   _renderListItem = (rowData) => {

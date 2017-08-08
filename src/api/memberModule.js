@@ -40,4 +40,8 @@ export default class memberModule extends FirebaseDB {
       userId
     })
   }
+
+  logoutMember () {
+    return this.auth.signOut()
+  }
 }
