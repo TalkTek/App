@@ -57,7 +57,7 @@ export default handleActions({
     ...memberState,
     sendStatus: 0
   }),
-  'CREATE_MEMBER_FAIL': (state, action) => ({
+  'MEMBER_FAIL': (state, action) => ({
     ...state,
     sendStatus: 2,
     sendMsg: {
@@ -65,7 +65,7 @@ export default handleActions({
       message: action.payload.message
     }
   }),
-  'CREATE_MEMBER_SUCCESS': (state) => ({
+  'MEMBER_SUCCESS': (state) => ({
     ...state,
     sendStatus: 0,
     sendMsg: {

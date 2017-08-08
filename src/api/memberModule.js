@@ -5,7 +5,7 @@ export default class memberModule extends FirebaseDB {
     let path = `users/${uid}/profile`
     let profile
     if (await this.exists(path)) {
-      profile = await this.readOnce(path)
+      profile = await this.getMemberState(uid)
     } else {
       profile = {}
     }
@@ -60,6 +60,15 @@ export default class memberModule extends FirebaseDB {
         email: user.email,
         avatarUrl: user.photoURL
       })
+      return user
+    } catch (e) {
+      return e
+    }
+  }
+
+  async loginMemberEmail (email, password) {
+    try {
+      let user = await this.auth.signInWithEmailAndPassword(email, password)
       return user
     } catch (e) {
       return e

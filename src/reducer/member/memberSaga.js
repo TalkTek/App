@@ -47,16 +47,26 @@ function * loginMember ({payload: { uid, post }}) {
 function * createMember ({ payload: {email, password} }) {
   // cteate member
   let res = yield call(() => new MemberModule().registerMember(email, password))
-  if (res.code) {
-    yield put({type: 'CREATE_MEMBER_FAIL', payload: res})
-  } else {
-    yield put({type: 'CREATE_MEMBER_SUCCESS'})
-  }
+  yield call(() => resStatus(res))
 }
 
 function * getMemberState ({ payload: { uid } }) {
   let member = yield call(() => new MemberModule().getMemberState(uid))
   yield put({type: 'CHANGE_MEMBER_STATE', payload: {...member, uid}})
+}
+
+function * loginMemberEmail ({ payload: {email, password} }) {
+  let res = yield call(() => new MemberModule().loginMemberEmail(email, password))
+  yield call(() => resStatus(res))
+}
+
+// control response status
+function * resStatus (res) {
+  if (res.code) {
+    yield put({type: 'MEMBER_FAIL', payload: res})
+  } else {
+    yield put({type: 'MEMBER_SUCCESS'})
+  }
 }
 
 /**
@@ -67,6 +77,7 @@ function * member () {
   yield takeLatest(MemberTypes.GET_MEMBER_STATE, getMemberState)
   yield takeLatest(MemberTypes.CREATE_MEMBER, createMember)
   yield takeLatest(MemberTypes.LOGIN_MEMBER, loginMember)
+  yield takeLatest(MemberTypes.LOGIN_MEMBER_EMAIL, loginMemberEmail)
   yield takeLatest(MemberTypes.LOGOUT_MEMBER, logoutMember)
   yield takeLatest(MemberTypes.MEMBER_CAPSULE_GET, getMemberCapsule)
   yield takeLatest(MemberTypes.SAVE_MEMBER_CHANGE, changeMember)

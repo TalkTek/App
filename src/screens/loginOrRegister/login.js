@@ -38,7 +38,8 @@ tracker.trackScreenView('Login')
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
 
 @connect( state => ({
-
+  sendMsg: state.member.sendMsg,
+  sendStatus: state.member.sendStatus
 }), dispatch => ({
   member: bindActionCreators(memberAction, dispatch)
 }))
@@ -163,36 +164,43 @@ export default class Login extends Component {
   
   async _onEmailPasswordLogin () {
     const { navigate, dispatch } = this.props.navigation
-    try {
-      await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+    const { member } = this.props
+     member.loginMemberEmail({
+      email: this.state.email,
+      password: this.state.password
+    })
+    // dispatch(NavigationActions.reset({
+    //   index: 0,
+    //   actions: [
+    //     NavigationActions.navigate({routeName: 'KnowledgeCapsuleScreen'})
+    //   ]
+    // }))
+    tracker.trackEvent('EmailPasswordLogin', 'Fill In')
+  }
 
-      dispatch(NavigationActions.reset({
-        index: 0,
-        actions: [
-          NavigationActions.navigate({routeName: 'KnowledgeCapsuleScreen'})
-        ]
-      }))
-      tracker.trackEvent('EmailPasswordLogin', 'Fill In')
-    }
-    catch(error) {
-      if (error.message === 'The email address is badly formatted.') {
-        this.setState({
-          errMsg: 'Email格式不正確',
-          isOpen: true
-        })
-      } else if ( error.code === 'auth/user-not-found' ) {
-        this.setState({
-          errMsg: '無此帳號',
-          isOpen: true
-        })
-      } else {
-        this.setState({
-          errMsg: error.message,
-          isOpen: true
-        })
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.sendStatus === 2) {
+      let { code, message } = nextProps.sendMsg
+      let errMsg
+      switch (code) {
+        case 'auth/invalid-email':
+          errMsg = 'Email 格式錯誤'
+          break
+        case 'auth/weak-password':
+          errMsg = '密碼至少要六位數'
+          break
+        case 'auth/email-already-in-use':
+          errMsg = '此信箱已經註冊過了'
+          break
+        default:
+          errMsg = message
       }
+
+      this.setState({
+        errMsg,
+        isOpen: true
+      })
     }
-    this.refs.modal.open()
   }
 
   render() {
