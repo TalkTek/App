@@ -2,8 +2,7 @@ import {
   fork,
   takeLatest,
   call,
-  put,
-  all
+  put
 } from 'redux-saga/effects'
 import AudioTypes from './audioTypes'
 import AudioModule from '../../api/audioModule'
@@ -27,7 +26,8 @@ function * getAudioInfo (data) {
 
 function * setAudioGoodState (data) {
   const { isGood, capsulesId, parentKey, userId } = data.payload
-  let likeCounter = yield call(() => new AudioModule()[isGood ? 'cpAudioGood' : 'cpAudioNotGood'](capsulesId, parentKey, userId))
+  let audioInfo = yield call(() => new AudioModule().getAudioInfo(capsulesId, parentKey))
+  let likeCounter = yield call(() => new AudioModule()[isGood ? 'cpAudioGood' : 'cpAudioNotGood'](capsulesId, parentKey, userId, audioInfo.likeCounter + (isGood ? +1 : -1)))
 
   yield put({
     type: AudioTypes.CP_AUDIO_GOOD_CHANGE_SUCCESS,
@@ -61,6 +61,6 @@ function * audioSaga () {
   yield takeLatest(AudioTypes.CP_AUDIO_GET_DOC, getAudioDoc)
 }
 
-export default all([
+export default [
   fork(audioSaga)
-])
+]
