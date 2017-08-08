@@ -49,4 +49,20 @@ export default class memberModule extends FirebaseDB {
   logoutMember () {
     return this.auth.signOut()
   }
+
+  async registerMember (email, password) {
+    try {
+      let user = await this.auth
+        .createUserWithEmailAndPassword(email, password)
+
+      await this.write(`/users/${user.uid}/profile`, {
+        name: user.displayName,
+        email: user.email,
+        avatarUrl: user.photoURL
+      })
+      return user
+    } catch (e) {
+      return e
+    }
+  }
 }

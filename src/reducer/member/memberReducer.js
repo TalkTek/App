@@ -11,7 +11,8 @@ const initMemberState = {
   birthday: null,
   gender: null,
   favoriteCapsule: [],
-  sendStatus: 0 // 0 finish, 1 pending
+  sendStatus: 0, // 0 finish, 1 pending, 2 fail
+  sendMsg: {code: null, message: null}
 }
 
 export default handleActions({
@@ -55,5 +56,21 @@ export default handleActions({
   'SEND_FEEDBACK_SUCCESS': (memberState, action) => ({
     ...memberState,
     sendStatus: 0
+  }),
+  'CREATE_MEMBER_FAIL': (state, action) => ({
+    ...state,
+    sendStatus: 2,
+    sendMsg: {
+      code: action.payload.code,
+      message: action.payload.message
+    }
+  }),
+  'CREATE_MEMBER_SUCCESS': (state) => ({
+    ...state,
+    sendStatus: 0,
+    sendMsg: {
+      code: null,
+      message: null
+    }
   })
 }, initMemberState)

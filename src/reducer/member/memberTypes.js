@@ -6,5 +6,6 @@ export default KeyMirror({
   SAVE_MEMBER_CHANGE: null,
   SEND_FEEDBACK: null,
   LOGOUT_MEMBER: null,
-  LOGIN_MEMBER: null
+  LOGIN_MEMBER: null,
+  CREATE_MEMBER: null
 })

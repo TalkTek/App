@@ -44,11 +44,22 @@ function * loginMember ({payload: { uid, post }}) {
   yield put({ type: 'CHANGE_MEMBER_STATE', payload: Object.assign(post, {uid}) })
 }
 
+function * createMember ({ payload: {email, password} }) {
+  // cteate member
+  let res = yield call(() => new MemberModule().registerMember(email, password))
+  if (res.code) {
+    yield put({type: 'CREATE_MEMBER_FAIL', payload: res})
+  } else {
+    yield put({type: 'CREATE_MEMBER_SUCCESS'})
+  }
+}
+
 /**
  * watcher
  */
 
 function * member () {
+  yield takeLatest(MemberTypes.CREATE_MEMBER, createMember)
   yield takeLatest(MemberTypes.LOGIN_MEMBER, loginMember)
   yield takeLatest(MemberTypes.LOGOUT_MEMBER, logoutMember)
   yield takeLatest(MemberTypes.MEMBER_CAPSULE_GET, getMemberCapsule)

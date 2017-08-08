@@ -20,8 +20,18 @@ import {
 import firebase from 'firebase'
 import Modal from 'react-native-modalbox'
 import { NavigationActions } from 'react-navigation'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import memberActoion from '../../reducer/member/memberAction'
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
+
+@connect((state) => ({
+  sendMsg: state.member.sendMsg,
+  sendStatus: state.member.sendStatus
+}), dispatch => ({
+  register: bindActionCreators(memberActoion.createMember, dispatch)
+}))
 
 export default class Register extends Component {
   static navigationOptions = {
@@ -37,49 +47,49 @@ export default class Register extends Component {
     isOpen: false,
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.sendStatus === 2) {
+      let { code, message } = nextProps.sendMsg
+      let errMsg
+      switch (code) {
+        case 'auth/invalid-email':
+          errMsg = 'Email 格式錯誤'
+          break
+        case 'auth/weak-password':
+          errMsg = '密碼至少要六位數'
+          break
+        case 'auth/email-already-in-use':
+          errMsg = '此信箱已經註冊過了'
+          break
+        default:
+          errMsg = message
+      }
+
+      this.setState({
+        errMsg,
+        isOpen: true
+      })
+    }
+  }
+
   async _onRegister () {
     const { email, password, rePassword } = this.state
     const { dispatch } = this.props.navigation
       if(password === rePassword) {
-        let user = await firebase
-          .auth()
-          .createUserWithEmailAndPassword(email, password)
-          .then(() => {
-            firebase.database().ref(`/users/${user.uid}/profile`).set({
-              name: user.displayName,
-              email: user.email,
-              avatarUrl: user.photoURL
-            })
-            dispatch(
-              NavigationActions.reset({
-                index: 0,
-                actions: [
-                  NavigationActions.navigate({
-                    routeName: 'KnowledgeCapsuleScreen'
-                  })
-                ]
-              })
-            )
-          })
-          .catch(error => {
-            if (error.message === 'The email address is badly formatted.') {
-              this.setState({
-                errMsg: 'Email或密碼不正確',
-                isOpen: true
-              })
-            } else if (error.message === 'The email address is already in use by another account.') {
-              this.setState({
-                errMsg: '此信箱已經註冊過了',
-                isOpen: true
-              })
-            } else if (error.message === 'Password should at least 6 characters') {
-              this.setState({
-                errMsg: '密碼至少要六位數',
-                isOpen: true
-              })
-            }
-            this.refs.modal.open()
-          })
+        this.props.register({
+          email,
+          password
+        })
+        //     dispatch(
+        //       NavigationActions.reset({
+        //         index: 0,
+        //         actions: [
+        //           NavigationActions.navigate({
+        //             routeName: 'KnowledgeCapsuleScreen'
+        //           })
+        //         ]
+        //       })
+        //     )
       } else {
         this.setState({
           errMsg: '密碼不一致',
