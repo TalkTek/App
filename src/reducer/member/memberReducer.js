@@ -10,7 +10,8 @@ const initMemberState = {
   from: null,
   birthday: null,
   gender: null,
-  favoriteCapsule: []
+  favoriteCapsule: [],
+  sendStatus: 0 // 0 finish, 1 pending
 }
 
 export default handleActions({
@@ -30,13 +31,14 @@ export default handleActions({
     return initMemberState
   },
   'SAVE_MEMBER_CHANGE': (memberState, action) => {
-    return { 
-      ...memberState, 
-      avatarUrl: action.payload.avatarUrl || memberState.avatarUrl,
-      email: action.payload.email || memberState.email,
-      name: action.payload.name || memberState.name,
-      birthday: action.payload.birthday || memberState.birthday,
-      gender: action.payload.gender || memberState.gender
+    // console.log(action.payload)
+    return {
+      ...memberState,
+      avatarUrl: action.payload.post.avatarUrl || memberState.avatarUrl,
+      email: action.payload.post.email || memberState.email,
+      name: action.payload.post.name || memberState.name,
+      birthday: action.payload.post.birthday || memberState.birthday,
+      gender: action.payload.post.gender || memberState.gender
     }
   },
   'MEMBER_CAPSULE_GET_SUCCESS': (memberState, action) => {
@@ -45,5 +47,13 @@ export default handleActions({
       ...memberState,
       favoriteCapsule: action.payload.capsules
     }
-  }
+  },
+  'SEND_FEEDBACK': (memberState, action) => ({
+    ...memberState,
+    sendStatus: 1
+  }),
+  'SEND_FEEDBACK_SUCCESS': (memberState, action) => ({
+    ...memberState,
+    sendStatus: 0
+  })
 }, initMemberState)

@@ -6,16 +6,19 @@ import TalkListScreen from '../screens/talkList/index'
 import TalkContentScreen from '../screens/talkContent/index'
 import Login from '../screens/loginOrRegister/login'
 import Register from '../screens/loginOrRegister/register'
+import Forgetpw from '../screens/loginOrRegister/forgetpw'
 import MainScreen from '../screens/Main'
 import KnowledgeCapsule from '../screens/knowledgeCapsule/index'
 import MemberCenter from '../screens/memberCenter/index'
 import MemberInfo from '../screens/memberCenter/memberInfo'
 import MyTalk from '../screens/memberCenter/myTalk'
 import MyPoint from '../screens/memberCenter/myPoint'
+import MyCapsule from '../screens/memberCenter/myCapsule'
 import PointCenter from '../screens/memberCenter/pointCenter'
 import Feedback from '../screens/memberCenter/feedback'
 import Apply from '../screens/memberCenter/apply'
 import PlayAudio from '../screens/playAudio'
+import PlayerDoc from '../screens/playAudio/playerDoc'
 import { Platform, Image } from 'react-native'
 
 const LectureScreen = StackNavigator({
@@ -24,8 +27,9 @@ const LectureScreen = StackNavigator({
   // Login: { screen: Login },
   // Register: { screen: Register },
   // Main: { screen: MainScreen }
+  Forgetpw: { screen: Forgetpw },
 }, {
-  initialRouteName: 'Main',
+  // initialRouteName: 'Main',
   navigationOptions: {
     title: '小講',
     headerStyle: {
@@ -53,7 +57,8 @@ const CapsuleScreen = StackNavigator({
   PlayAudioScreen: { screen: PlayAudio },
   Main: { screen: MainScreen },
   Login: { screen: Login },
-  Register: { screen: Register }
+  Register: { screen: Register },
+  PlayerDocScreen: { screen: PlayerDoc }
 }, {
   initialRouteName: 'Main',
   mode: 'modal',
@@ -76,17 +81,19 @@ const CapsuleScreen = StackNavigator({
       color: 'rgb(255, 255, 255)'
     },
     headerTintColor: 'white'
-  },
+  }
 })
 
 const MemberCenterScreen = StackNavigator({
   MemberCenterScreen: { screen: MemberCenter },
   MemberInfo : { screen: MemberInfo, navigationOptions: { title: '個人資料' }},
   MyTalk: { screen: MyTalk, navigationOptions: { title: '我的小講' } },
+  MyCapsule: { screen: MyCapsule, navigationOptions: { title: '我的膠囊' } },
   MyPoint: { screen: MyPoint, navigationOptions: { title: '我的點數' } },
   Fillup: { screen: PointCenter, navigationOptions: { title: '儲值中心' } },
   Feedback: { screen: Feedback, navigationOptions: { title: '意見回饋' } },
-  Apply: { screen: Apply, navigationOptions: { title: '成為講師' } }
+  Apply: { screen: Apply, navigationOptions: { title: '成為講師' } },
+  // Login: { screen: Login }
 }, {
   navigationOptions: {
     title: '我的',
@@ -116,7 +123,7 @@ const AppNavigator = TabNavigator(
     // Lecture: {
     //   screen: LectureScreen,
     //   navigationOptions: {
-    //     tabBarLabel: '小講',
+    //     tabBarLabel: '小講'
     //     // tabBarIcon: ({tintColor, focused}) => (
     //     //   <Image
     //     //     source={
@@ -160,8 +167,10 @@ const AppNavigator = TabNavigator(
     }
   },
   {
+    tabBarPosition: 'bottom',
     tabBarOptions: {
-      activeTintColor: Platform.OS === 'ios' ? 'rgb(31, 191, 179)' : '#fff',
+      activeTintColor: Platform.OS === 'ios' ? 'rgb(31, 191, 179)' : 'rgb(31, 191, 179)',
+      inactiveTintColor: Platform.OS === 'android' ? 'rgb(224, 224, 224)' : 'rgb(224, 224, 224)',
       style: {
         height: 49,
         backgroundColor: 'white',

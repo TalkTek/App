@@ -5,6 +5,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { bindActionCreators } from 'redux'
 import audioActions from '../../reducer/audio/audioAction'
+import analyticAction from '../../reducer/analytic/analyticAction'
 import { connect } from 'react-redux'
 import {
   Container,
@@ -16,7 +17,7 @@ import {
   Right,
   Button,
   Content,
-  Footer,
+  Footer
 } from 'native-base'
 import {
   TouchableHighlight,
@@ -24,6 +25,8 @@ import {
 } from 'react-native'
 import styles from './styles'
 import Slider from 'react-native-slider'
+import DocScreen from '../../screens/playAudio/playerDoc'
+import Modal from 'react-native-modalbox'
 
 const mapStateToProps = (state) => {
   return {
@@ -44,19 +47,17 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    actions: bindActionCreators(audioActions, dispatch)
+    actions: bindActionCreators(audioActions, dispatch),
+    ga: bindActionCreators(analyticAction, dispatch)
   }
 }
 
 class PlayAudio extends Component {
-  static navigationOptions = {
-    header: null,
-    tabBarVisible: false,
-  }
-
   state = {
     playState: null, // need to use redux to solve it
     value: 0,
+    isModalOpen: false,
+    swipeToClose: true,
   }
 
   buttons = {
@@ -71,7 +72,7 @@ class PlayAudio extends Component {
         },
         timer: {
           notActive: require('../../assets/img/playAudio/timer.png'),
-          name: '20:39'
+          name: '00:00'
         },
         addSpeed: {
           notActive: require('../../assets/img/playAudio/addSpeed.png'),
@@ -79,7 +80,8 @@ class PlayAudio extends Component {
         },
         word: {
           notActive: require('../../assets/img/playAudio/word.png'),
-          name: '文檔'
+          name: '文檔',
+          func: () => this.openModal()
         },
         more: {
           notActive: require('../../assets/img/playAudio/more.png'),
@@ -90,38 +92,71 @@ class PlayAudio extends Component {
       backward15: {
         twoState: false,
         link: require('../../assets/img/audioElement/backward15.png'),
-        func: this.props.navigation.state.params.backward15s
+        func: this.props.backward15s
       },
       backward: {
         twoState: false,
         link: require('../../assets/img/audioElement/backward.png'),
-        func: this.props.navigation.state.params.backward
+        func: this.props.backward
       },
       playOrPause: {
         twoState: true,
         playLink: require('../../assets/img/playAudio/play.png'),
         pauseLink: require('../../assets/img/audioElement/pause.png'),
-        func: this.props.navigation.state.params.playOrPauseFunc
+        func: this.props.playOrPause
       },
       forward: {
         twoState: false,
         link: require('../../assets/img/audioElement/forward.png'),
-        func: this.props.navigation.state.params.forward
+        func: this.props.forward
       },
       forward15: {
         twoState: false,
         link: require('../../assets/img/audioElement/forward15.png'),
-        func: this.props.navigation.state.params.forward15s
+        func: this.props.forward15s
       },
     }
   }
 
+  componentDidMount() {
+    this.props.ga.gaSetEvent({
+      category: 'capsule',
+      action: 'open player',
+      value: {
+        label: this.props.audioName,
+        value: 1
+      }
+    })
+  }
+
   _onSlidingComplete = (value) => {
-    const { seek } = this.props.navigation.state.params
-    seek(value)
+    this.props.seek(value)
+  }
+
+  toggleModal = () => {
+    this.setState({
+      isModalOpen: !this.state.isModalOpen
+    })
+  }
+
+  openModal = () => {
+    console.log("hello world")
+    this.setState({
+      isModalOpen: true,
+      swipeToClose: !this.state.swipeToClose
+    })
+    this.refs.docScreen.open()
   }
 
   _audioIsGoodToggle() {
+    this.props.ga.gaSetEvent({
+      category: 'capsule',
+      action: this.props.audioIsGood? 'unlike capsule' : 'like capsule',
+      value: {
+        label: this.props.audioName,
+        value: 1
+      }
+    })
     this.props
       .actions
       .cpAudioGoodChange(
@@ -132,16 +167,32 @@ class PlayAudio extends Component {
       )
   }
 
+  _buttonGaEvent(type) {
+    if (type !== 'playOrPause')
+    this.props.ga.gaSetEvent({
+      category: 'capsule',
+      action: type,
+      value: {
+        label: this.props.audioName,
+        value: 1
+      }
+    })
+  }
+
+  _gaGoBack() {
+    this.props.ga.gaSetEvent({
+      category: 'capsule',
+      action: 'close player',
+      value: {
+        label: this.props.audioName,
+        value: 1
+      }
+    })
+  }
+
   render () {
     const {
-      goBack,
-    } = this.props.navigation
-    const {
-      player,
-      playOrPauseFunc,
-      seek,
-    } = this.props.navigation.state.params
-    const {
+      toggleModal,
       playState,
       audioName,
       audioLengthFormatted,
@@ -172,23 +223,29 @@ class PlayAudio extends Component {
       )
     })
 
-    const bodyButtons = Object.values(this.buttons.body).map((button, i) => (
-      <TouchableHighlight
-        key={i}
-        onPress={() => button.func()}
-        underlayColor="#fff"
-      >
-        <Image
-          source={button.twoState
-            ? (playState === 'playing'
-              ? button.pauseLink : button.playLink
-            )
-            : button.link
-          }
-          style={styles.bodyImages}
-        />
-      </TouchableHighlight>
-    ))
+    const bodyButtons = Object.keys(this.buttons.body).map((buttonKey, i) => {
+      let button = this.buttons.body[buttonKey]
+      return (
+        <TouchableHighlight
+          key={i}
+          onPress={() => { 
+            this._buttonGaEvent(buttonKey)
+            button.func() 
+          }}
+          underlayColor="#fff"
+        >
+          <Image
+            source={button.twoState
+              ? (playState === 'playing'
+                ? button.pauseLink : button.playLink
+              )
+              : button.link
+            }
+            style={styles.bodyImages}
+          />
+        </TouchableHighlight>
+      )
+    })
 
     return (
       <Container style={styles.container}>
@@ -198,7 +255,7 @@ class PlayAudio extends Component {
           <Right>
             <Button
               transparent
-              onPress={() => goBack()}
+              onPress={() => toggleModal()}
             >
               <Image
                 source={this.buttons.close}
@@ -251,13 +308,20 @@ class PlayAudio extends Component {
         <View style={styles.footer}>
           {footerButtons}
         </View>
+        <Modal
+          ref={'docScreen'}
+          position={'center'}
+          isOpen={this.state.isModalOpen}
+          swipeToClose={this.state.swipeToClose}
+          swipeArea={0}
+        >
+          <DocScreen
+            toggleModal={this.toggleModal}
+          />
+        </Modal>
       </Container>
     )
   }
-}
-
-PlayAudio.propTypes = {
-  navigation: PropTypes.object.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PlayAudio)

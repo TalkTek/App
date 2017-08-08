@@ -10,7 +10,7 @@ const style = {
     backgroundColor: 'rgb(245, 245, 245)'
   },
   mainBackground: {
-    backgroundColor: '#fff',
+    backgroundColor: '#fff'
   },
   avatar: {
     minHeight: 165,
@@ -32,7 +32,7 @@ const style = {
     marginTop: 16
   },
   selectList: {
-    marginTop: 16
+    marginTop: 16,
   },
   listItem: {
     paddingTop: 16,
@@ -67,11 +67,12 @@ const style = {
   logout: {
     borderColor: 'rgb(158, 158, 158)',
     borderWidth: 1,
-    marginLeft: 16,
-    marginRight: 16,
-    marginBottom: 16,
     marginTop: 24,
-    borderRadius: 8
+    height: 40,
+    marginHorizontal: 16,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 }
 
@@ -126,6 +127,12 @@ const memberInfoStyle = {
   },
   textInput: {
     color: 'rgb(31, 191, 179)'
+  },
+  dateSelect: {
+    paddingTop: 15,
+    paddingLeft: 5,
+    paddingBottom: 15,
+    paddingRight: 5
   },
   saveButton: {
     fontSize: 10
@@ -286,6 +293,10 @@ const feedBackStyle = {
     paddingLeft: 8,
     paddingRight: 8,
     color: 'rgb(158, 158, 158)'
+  },
+  indicator: {
+    flex: 1,
+    justifyContent: 'center'
   },
   input: {
     backgroundColor: '#fff',

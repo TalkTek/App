@@ -7,24 +7,36 @@ import {
   Text,
   Image,
   Button,
-  TouchableOpacity
+  TouchableOpacity,
+  TouchableHighlight,
+  Dimensions
 } from 'react-native'
 import {
   Thumbnail,
   Container,
-  Content
+  Content,
 } from 'native-base'
 import styles from './styles'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import memberAction from '../../reducer/member/memberAction'
+import analyticAction from '../../reducer/analytic/analyticAction'
+import firebase from 'firebase'
+import navigatorAction from '../../reducer/navigator/navigatorAction'
+import { NavigationActions } from 'react-navigation'
+
+const { width: screenWidth } = Dimensions.get('window')
+
+console.log('width isis', screenWidth)
+
 
 @connect(state => ({
   memberUid: state.member.uid,
   memberEmail: state.member.email,
   memberAvatar: state.member.avatarUrl
 }), dispatch => ({
-  logout: bindActionCreators(memberAction.logoutMember, dispatch)
+  actions: bindActionCreators(navigatorAction, dispatch),
+  ga: bindActionCreators(analyticAction, dispatch)
 }))
 
 export default class MemberCenter extends Component {
@@ -43,8 +55,38 @@ export default class MemberCenter extends Component {
     ]
   }
 
-  _logout = () => {
-    this.props.logout()
+  componentDidMount() {
+    this.props.ga.gaSetScreen('MemberCenter')
+  }
+
+  _logout = async () => {
+    const {
+      navigation,
+      actions
+    } = this.props
+
+    console.log('this.props', this.props)
+
+
+    // actions.logout()
+    await firebase
+      .auth()
+      .signOut()
+      .then(() => {
+
+        navigation._toggleAudioBarDown()
+        navigation.navigate('Login')
+        // navigation.dispatch(
+        // NavigationActions.reset({
+        //   index: 0,
+        //   actions: [
+        //     navigation.navigate({ routeName: 'Login' })
+        //   ]
+        // }))
+      })
+      .catch((error) => {
+        console.warn('[SignOut Error] Messages is', error.message)
+      })
   }
 
   _renderListItem = (rowData) => {
@@ -119,9 +161,9 @@ export default class MemberCenter extends Component {
           </View>
           <View style={styles.container}>
             
-            <View style={styles.selectList}>
-              { this.listsData.my.map(this._renderListItem) }
-            </View>
+            {/*<View style={styles.selectList}>*/}
+              {/*{ this.listsData.my.map(this._renderListItem) }*/}
+            {/*</View>*/}
             {/*<View style={styles.selectList}>*/}
               {/*{ this.listsData.coin.map(this._renderListItem) }*/}
             {/*</View>*/}
@@ -129,14 +171,16 @@ export default class MemberCenter extends Component {
               { this.listsData.other.map(this._renderListItem) }
             </View>
             {
-              this.props.memberUid &&
-              <View style={styles.logout}>
-                <Button 
-                  color="#212121" 
-                  title="登出"
-                  onPress={this._logout}
-                />
-              </View>
+              this.props.memberUid
+              &&
+              <TouchableHighlight
+                color="#212121"
+                onPress={this._logout}
+                style={styles.logout}
+                underlayColor="#fff"
+              >
+                <Text>登出</Text>
+              </TouchableHighlight>
             }
           </View>
         </Content>

@@ -7,7 +7,9 @@ import {
   Text,
   TouchableOpacity,
   Button,
-  DatePickerIOS
+  DatePickerIOS,
+  DatePickerAndroid,
+  Platform
 } from 'react-native'
 import {
   Thumbnail,
@@ -20,6 +22,7 @@ import { memberInfoStyle } from './styles'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import memberAction from '../../reducer/member/memberAction'
+import analyticAction from '../../reducer/analytic/analyticAction'
 
 let state = {
   email: '',
@@ -36,6 +39,8 @@ let state = {
   memberFrom: state.member.from,
   memberGender: state.member.gender,
   memberBirthday: state.member.birthday
+}), (dispatch) => ({
+  ga: bindActionCreators(analyticAction, dispatch)
 }))
 
 class MemberInfo extends Component {
@@ -49,7 +54,7 @@ class MemberInfo extends Component {
 
   state = {
     genderValue: 'unknow',
-    birthday: new Date()
+    birthday: undefined
   }
 
   static navigationOptions = (navigation) => ({
@@ -60,11 +65,27 @@ class MemberInfo extends Component {
     state['email'] = this.props.memberEmail
     state['name'] = this.props.memberName
     state['gender'] = this.props.memberGender || 'unknow'
-    state['birthday'] = this.props.memberBirthday
+    state['birthday'] = this.props.memberBirthday || undefined
     this.setState({
-      birthday: this.props.memberBirthday || new Date(),
+      birthday: this.props.memberBirthday || undefined,
       genderValue: this.props.memberGender || 'unknow'
     })
+    this.props.ga.gaSetScreen('MemberInfo')
+  }
+
+  _openAndroidDatePicker = async () => {
+    try {
+      const {action, year, month, day} = await DatePickerAndroid.open({
+        date: new Date(this.state.birthday)
+      })
+      let birthday = (action === 'dismissedAction')? undefined: new Date(year, month, day).toDateString()
+      state['birthday'] = birthday
+      this.setState({
+        birthday
+      })
+    } catch ({code, message}) {
+      console.log('無法開啟選擇器', message)
+    }
   }
 
   _renderFormElement(key, data) {
@@ -73,9 +94,11 @@ class MemberInfo extends Component {
     switch(key) {
       case 'gender': 
           return (
-            <Picker mode="dropdown" iosHeader="請選擇" 
+            <Picker mode="dropdown" iosHeader="請選擇"
+              placeHolder="請選擇"
               selectedValue={this.state.genderValue}
               color={memberInfoStyle.textInput.color}
+              style={{width: Platform.OS === "ios" ? undefined : 250}}
               onValueChange={(data) => {
                 this.setState({ genderValue: data })
                 state['gender'] = data
@@ -89,13 +112,20 @@ class MemberInfo extends Component {
         break
       case 'birthday': 
         return (
-          <DatePickerIOS mode="date" date={new Date(this.state.birthday)} 
-            onDateChange={(data) => {
-              state['birthday'] = data.toDateString()
-              this.setState({ birthday: data })
-            }}
-            style={memberInfoStyle.inputArea}
-          />
+          (Platform.OS === 'ios')?
+            <DatePickerIOS mode="date" date={new Date(this.state.birthday)} 
+              onDateChange={(data) => {
+                state['birthday'] = data.toDateString()
+                this.setState({ birthday: data })
+              }}
+              style={memberInfoStyle.inputArea}
+            />:
+            <TouchableOpacity 
+              style={[memberInfoStyle.inputArea, memberInfoStyle.dateSelect]}
+              onPress={this._openAndroidDatePicker}
+            >
+              <Text style={memberInfoStyle.textInput}>{this.state['birthday']||'選擇生日'}</Text>
+            </TouchableOpacity>
         )
         break
       default:
@@ -176,11 +206,18 @@ class HeaderRight extends Component {
         title="儲存"
         color="#fff"
         onPress={() => {
+          let result = {}
+          for (let i in state) {
+            if (state.hasOwnProperty(i) && state[i]) {
+              result[i] = state[i]
+            }
+          }
+
           this.props.action({
             memberUid: this.props.memberUid,
-            post: state
+            post: result
           })
-           this.props.navigation.goBack() 
+          this.props.navigation.goBack()
         }}
         />
     )
