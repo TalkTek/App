@@ -78,4 +78,12 @@ export default class memberModule extends FirebaseDB {
   getMemberState (uid) {
     return this.readOnce(`/users/${uid}/profile`)
   }
+
+  async sendResetPasswordEmail (email) {
+    try {
+      return await this.auth.sendPasswordResetEmail(email)
+    } catch (e) {
+      return e
+    }
+  }
 }

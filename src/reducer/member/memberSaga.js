@@ -61,7 +61,7 @@ function * loginMemberEmail ({ payload: {email, password} }) {
 }
 
 // control response status
-function * resStatus (res) {
+function * resStatus (res = {}) {
   if (res.code) {
     yield put({type: 'MEMBER_FAIL', payload: res})
   } else {
@@ -69,11 +69,17 @@ function * resStatus (res) {
   }
 }
 
+function * resetMemberEmail ({ payload }) {
+  let res = yield call(() => new MemberModule().sendResetPasswordEmail(payload))
+  yield call(() => resStatus(res))
+}
+
 /**
  * watcher
  */
 
 function * member () {
+  yield takeLatest(MemberTypes.SEND_RESET_PASSWORD_EMAIL, resetMemberEmail)
   yield takeLatest(MemberTypes.GET_MEMBER_STATE, getMemberState)
   yield takeLatest(MemberTypes.CREATE_MEMBER, createMember)
   yield takeLatest(MemberTypes.LOGIN_MEMBER, loginMember)

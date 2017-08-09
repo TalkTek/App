@@ -9,5 +9,6 @@ export default KeyMirror({
   LOGOUT_MEMBER: null,
   LOGIN_MEMBER: null,
   LOGIN_MEMBER_EMAIL: null,
-  CREATE_MEMBER: null
+  CREATE_MEMBER: null,
+  SEND_RESET_PASSWORD_EMAIL: null
 })

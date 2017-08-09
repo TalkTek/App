@@ -15,5 +15,6 @@ export default createActions({
   'MEMBER_CAPSULE_GET': state => state,
   'MEMBER_CAPSULE_GET_SUCCESS': state => state,
   'SEND_FEEDBACK': state => state,
-  'SEND_FEEDBACK_SUCCESS': state => state
+  'SEND_FEEDBACK_SUCCESS': state => state,
+  'SEND_RESET_PASSWORD_EMAIL': email => email
 })
