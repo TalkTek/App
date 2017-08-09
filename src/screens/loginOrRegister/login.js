@@ -189,9 +189,6 @@ export default class Login extends Component {
         case 'auth/weak-password':
           errMsg = '密碼至少要六位數'
           break
-        case 'auth/email-already-in-use':
-          errMsg = '此信箱已經註冊過了'
-          break
         default:
           errMsg = message
       }
