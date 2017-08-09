@@ -1,5 +1,6 @@
 import keyMirror from 'key-mirror'
 
-export default keyMirror({
-  LOADING_CP: null
+module.exports = keyMirror({
+  LOADING_CP: null,
+  CP_LASTKEY: null
 })

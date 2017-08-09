@@ -2,7 +2,10 @@ import {
   fork,
   takeEvery
 } from 'redux-saga/effects'
-import analyticTypes from './analyticTypes'
+import {
+  GA_SET_SCREEN,
+  GA_SET_EVENT
+} from './analyticTypes'
 import Analytic from '../../api/lib/Analytic'
 
 /**
@@ -24,8 +27,8 @@ function * setEvent ({ payload: { category, action, value } }) {
  */
 
 function * analyticSaga () {
-  yield takeEvery(analyticTypes.GA_SET_SCREEN, setScreen)
-  yield takeEvery(analyticTypes.GA_SET_EVENT, setEvent)
+  yield takeEvery(GA_SET_SCREEN, setScreen)
+  yield takeEvery(GA_SET_EVENT, setEvent)
 }
 
 export default [

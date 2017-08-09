@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions'
 
 /* eslint-disable*/
-const {
+import {
   CP_AUDIO_INFO_GET,
   CP_AUDIO_INFO_GET_SUCCESS,
   CP_AUDIO_GOOD_CHANGE,
@@ -13,7 +13,7 @@ const {
   SETTING_PLAYING_AUDIO_INFO,
   LOAD_CP_AUDIO_SUCCESS,
   TOGGLE_AUDIO_POPOUT_BAR
-} = require('./audioTypes').default
+} from './audioTypes'
 /* eslint-disable*/
 
 const initialState = {

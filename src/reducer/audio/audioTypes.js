@@ -1,6 +1,6 @@
 import KeyMirror from 'key-mirror'
 
-export default KeyMirror({
+module.exports = KeyMirror({
   CP_AUDIO_INFO_GET: null,
   CP_AUDIO_INFO_GET_SUCCESS: null,
   CP_AUDIO_GOOD_CHANGE: null,

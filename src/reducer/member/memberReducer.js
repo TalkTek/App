@@ -1,6 +1,16 @@
 import {
   handleActions
 } from 'redux-actions'
+import {
+  CHANGE_MEMBER_STATE,
+  LOGOUT_MEMBER,
+  SAVE_MEMBER_CHANGE,
+  MEMBER_CAPSULE_GET_SUCCESS,
+  SEND_FEEDBACK,
+  SEND_FEEDBACK_SUCCESS,
+  MEMBER_FAIL,
+  MEMBER_SUCCESS
+} from './memberTypes.js'
 
 const initMemberState = {
   avatarUrl: null,
@@ -16,7 +26,7 @@ const initMemberState = {
 }
 
 export default handleActions({
-  'CHANGE_MEMBER_STATE': (memberState, action) => {
+  [CHANGE_MEMBER_STATE]: (memberState, action) => {
     return {
       ...memberState,
       avatarUrl: action.payload.avatarUrl,
@@ -28,10 +38,10 @@ export default handleActions({
       gender: action.payload.gender
     }
   },
-  'LOGOUT_MEMBER': (memberState) => {
+  [LOGOUT_MEMBER]: (memberState) => {
     return initMemberState
   },
-  'SAVE_MEMBER_CHANGE': (memberState, action) => {
+  [SAVE_MEMBER_CHANGE]: (memberState, action) => {
     // console.log(action.payload)
     return {
       ...memberState,
@@ -42,22 +52,22 @@ export default handleActions({
       gender: action.payload.post.gender || memberState.gender
     }
   },
-  'MEMBER_CAPSULE_GET_SUCCESS': (memberState, action) => {
+  [MEMBER_CAPSULE_GET_SUCCESS]: (memberState, action) => {
     // console.log(action)
     return {
       ...memberState,
       favoriteCapsule: action.payload.capsules
     }
   },
-  'SEND_FEEDBACK': (memberState, action) => ({
+  [SEND_FEEDBACK]: (memberState, action) => ({
     ...memberState,
     sendStatus: 1
   }),
-  'SEND_FEEDBACK_SUCCESS': (memberState, action) => ({
+  [SEND_FEEDBACK_SUCCESS]: (memberState, action) => ({
     ...memberState,
     sendStatus: 0
   }),
-  'MEMBER_FAIL': (state, action) => ({
+  [MEMBER_FAIL]: (state, action) => ({
     ...state,
     sendStatus: 2,
     sendMsg: {
@@ -65,7 +75,7 @@ export default handleActions({
       message: action.payload.message
     }
   }),
-  'MEMBER_SUCCESS': (state) => ({
+  [MEMBER_SUCCESS]: (state) => ({
     ...state,
     sendStatus: 0,
     sendMsg: {

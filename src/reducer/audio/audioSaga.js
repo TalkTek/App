@@ -4,7 +4,14 @@ import {
   call,
   put
 } from 'redux-saga/effects'
-import AudioTypes from './audioTypes'
+import {
+  CP_AUDIO_INFO_GET_SUCCESS,
+  CP_AUDIO_GOOD_CHANGE_SUCCESS,
+  CP_AUDIO_GET_DOC_SUCCESS,
+  CP_AUDIO_GOOD_CHANGE,
+  CP_AUDIO_GET_DOC,
+  CP_AUDIO_INFO_GET
+} from './audioTypes'
 import AudioModule from '../../api/audioModule'
 
 /**
@@ -16,7 +23,7 @@ function * getAudioInfo (data) {
   let value = yield call(() => new AudioModule().readOnce(`capsules/${parentKey}/audios/${capsuleId}`))
   let audioIsGood = yield call(() => new AudioModule().checkAudioIsLiked(capsuleId, memberUid))
 
-  yield put({ type: AudioTypes.CP_AUDIO_INFO_GET_SUCCESS,
+  yield put({ type: CP_AUDIO_INFO_GET_SUCCESS,
     payload: {
       ...value,
       audioIsGood
@@ -30,7 +37,7 @@ function * setAudioGoodState (data) {
   let likeCounter = yield call(() => new AudioModule()[isGood ? 'cpAudioGood' : 'cpAudioNotGood'](capsulesId, parentKey, userId, audioInfo.likeCounter + (isGood ? +1 : -1)))
 
   yield put({
-    type: AudioTypes.CP_AUDIO_GOOD_CHANGE_SUCCESS,
+    type: CP_AUDIO_GOOD_CHANGE_SUCCESS,
     payload: {
       isGood,
       likeCounter
@@ -45,7 +52,7 @@ function * getAudioDoc (data) {
   console.log('draft', draft)
 
   yield put({
-    type: AudioTypes.CP_AUDIO_GET_DOC_SUCCESS,
+    type: CP_AUDIO_GET_DOC_SUCCESS,
     payload: {
       draft
     }
@@ -56,9 +63,9 @@ function * getAudioDoc (data) {
  * watcher
  */
 function * audioSaga () {
-  yield takeLatest(AudioTypes.CP_AUDIO_INFO_GET, getAudioInfo)
-  yield takeLatest(AudioTypes.CP_AUDIO_GOOD_CHANGE, setAudioGoodState)
-  yield takeLatest(AudioTypes.CP_AUDIO_GET_DOC, getAudioDoc)
+  yield takeLatest(CP_AUDIO_INFO_GET, getAudioInfo)
+  yield takeLatest(CP_AUDIO_GOOD_CHANGE, setAudioGoodState)
+  yield takeLatest(CP_AUDIO_GET_DOC, getAudioDoc)
 }
 
 export default [

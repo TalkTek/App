@@ -5,9 +5,15 @@ import {
   all,
   takeLatest
 } from 'redux-saga/effects'
-import capsuleTypes from './capsuleTypes'
 import CapsuleModule from '../../api/capsuleModule'
-
+import {
+  LOAD_CP_AUDIO_SUCCESS,
+  STORE_CAPSULE_AUDIOS
+} from '../audio/audioTypes.js'
+import {
+  CP_LASTKEY,
+  LOADING_CP
+} from './capsuleTypes.js'
 /**
  * subroutines
  */
@@ -62,19 +68,19 @@ function * loadCapsules ({payload}) {
         }
       ]
 
-      return put({type: 'STORE_CAPSULE_AUDIOS', payload: capsule})
+      return put({type: STORE_CAPSULE_AUDIOS, payload: capsule})
     }
   })
   yield all(callers)
-  yield put({type: 'LOAD_CP_AUDIO_SUCCESS'})
-  yield put({type: 'CP_LASTKEY', payload: { lastKey }})
+  yield put({type: LOAD_CP_AUDIO_SUCCESS})
+  yield put({type: CP_LASTKEY, payload: { lastKey }})
 }
 
 /**
  * watchers
  */
 function * capsuleSaga () {
-  yield takeLatest(capsuleTypes.LOADING_CP, loadCapsules)
+  yield takeLatest(LOADING_CP, loadCapsules)
 }
 
 export default [

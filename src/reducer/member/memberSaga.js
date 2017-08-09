@@ -4,7 +4,22 @@ import {
   call,
   put
 } from 'redux-saga/effects'
-import MemberTypes from './memberTypes'
+import {
+  SEND_FEEDBACK_SUCCESS,
+  SEND_RESET_PASSWORD_EMAIL,
+  CHANGE_MEMBER_STATE,
+  MEMBER_FAIL,
+  MEMBER_SUCCESS,
+  GET_MEMBER_STATE,
+  CREATE_MEMBER,
+  LOGIN_MEMBER,
+  LOGIN_MEMBER_EMAIL,
+  LOGOUT_MEMBER,
+  MEMBER_CAPSULE_GET,
+  MEMBER_CAPSULE_GET_SUCCESS,
+  SAVE_MEMBER_CHANGE,
+  SEND_FEEDBACK
+} from './memberTypes'
 import MemberModule from '../../api/memberModule'
 
 /**
@@ -14,7 +29,7 @@ import MemberModule from '../../api/memberModule'
 function * getMemberCapsule (data) {
   let capsules = yield call(() => new MemberModule().getLikeCapsule(data.payload))
   yield put({
-    type: 'MEMBER_CAPSULE_GET_SUCCESS',
+    type: MEMBER_CAPSULE_GET_SUCCESS,
     payload: {
       capsules
     }
@@ -28,7 +43,7 @@ function * changeMember ({ payload: {post, memberUid} }) {
 function * sendFeedBack ({ payload: { type, content, userId } }) {
   yield call(() => new MemberModule().sendFeedBack(type, content, userId))
   yield put({
-    type: 'SEND_FEEDBACK_SUCCESS',
+    type: SEND_FEEDBACK_SUCCESS,
     payload: {}
   })
 }
@@ -41,7 +56,7 @@ function * logoutMember () {
 
 function * loginMember ({payload: { uid, post }}) {
   yield call(() => new MemberModule().writeProfile(uid, post))
-  yield put({ type: 'CHANGE_MEMBER_STATE', payload: Object.assign(post, {uid}) })
+  yield put({ type: CHANGE_MEMBER_STATE, payload: Object.assign(post, {uid}) })
 }
 
 function * createMember ({ payload: {email, password} }) {
@@ -52,7 +67,7 @@ function * createMember ({ payload: {email, password} }) {
 
 function * getMemberState ({ payload: { uid } }) {
   let member = yield call(() => new MemberModule().getMemberState(uid))
-  yield put({type: 'CHANGE_MEMBER_STATE', payload: {...member, uid}})
+  yield put({type: CHANGE_MEMBER_STATE, payload: {...member, uid}})
 }
 
 function * loginMemberEmail ({ payload: {email, password} }) {
@@ -63,9 +78,9 @@ function * loginMemberEmail ({ payload: {email, password} }) {
 // control response status
 function * resStatus (res = {}) {
   if (res.code) {
-    yield put({type: 'MEMBER_FAIL', payload: res})
+    yield put({type: MEMBER_FAIL, payload: res})
   } else {
-    yield put({type: 'MEMBER_SUCCESS'})
+    yield put({type: MEMBER_SUCCESS})
   }
 }
 
@@ -79,15 +94,15 @@ function * resetMemberEmail ({ payload }) {
  */
 
 function * member () {
-  yield takeLatest(MemberTypes.SEND_RESET_PASSWORD_EMAIL, resetMemberEmail)
-  yield takeLatest(MemberTypes.GET_MEMBER_STATE, getMemberState)
-  yield takeLatest(MemberTypes.CREATE_MEMBER, createMember)
-  yield takeLatest(MemberTypes.LOGIN_MEMBER, loginMember)
-  yield takeLatest(MemberTypes.LOGIN_MEMBER_EMAIL, loginMemberEmail)
-  yield takeLatest(MemberTypes.LOGOUT_MEMBER, logoutMember)
-  yield takeLatest(MemberTypes.MEMBER_CAPSULE_GET, getMemberCapsule)
-  yield takeLatest(MemberTypes.SAVE_MEMBER_CHANGE, changeMember)
-  yield takeLatest(MemberTypes.SEND_FEEDBACK, sendFeedBack)
+  yield takeLatest(SEND_RESET_PASSWORD_EMAIL, resetMemberEmail)
+  yield takeLatest(GET_MEMBER_STATE, getMemberState)
+  yield takeLatest(CREATE_MEMBER, createMember)
+  yield takeLatest(LOGIN_MEMBER, loginMember)
+  yield takeLatest(LOGIN_MEMBER_EMAIL, loginMemberEmail)
+  yield takeLatest(LOGOUT_MEMBER, logoutMember)
+  yield takeLatest(MEMBER_CAPSULE_GET, getMemberCapsule)
+  yield takeLatest(SAVE_MEMBER_CHANGE, changeMember)
+  yield takeLatest(SEND_FEEDBACK, sendFeedBack)
 }
 
 export default [
