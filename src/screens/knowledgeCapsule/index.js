@@ -64,7 +64,7 @@ export default class KnowledgeCapsule extends Component {
   touchY = -1
   resolveData(lastKey) {
     const { actions } = this.props
-    this.props.capsule.loadingCp({
+    this.props.capsule.capsuleLoading({
       lastKey,
       limitToLast: this.loadCount
     })

@@ -8,11 +8,11 @@ import {
 import CapsuleModule from '../../api/capsuleModule'
 import {
   LOAD_CP_AUDIO_SUCCESS,
-  STORE_CAPSULE_AUDIOS
+  CP_AUDIO_STORE
 } from '../audio/audioTypes.js'
 import {
   CP_LASTKEY,
-  LOADING_CP
+  CAPSULE_LOADING
 } from './capsuleTypes.js'
 /**
  * subroutines
@@ -68,7 +68,7 @@ function * loadCapsules ({payload}) {
         }
       ]
 
-      return put({type: STORE_CAPSULE_AUDIOS, payload: capsule})
+      return put({type: CP_AUDIO_STORE, payload: capsule})
     }
   })
   yield all(callers)
@@ -80,7 +80,7 @@ function * loadCapsules ({payload}) {
  * watchers
  */
 function * capsuleSaga () {
-  yield takeLatest(LOADING_CP, loadCapsules)
+  yield takeLatest(CAPSULE_LOADING, loadCapsules)
 }
 
 export default [

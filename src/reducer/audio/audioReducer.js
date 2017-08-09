@@ -9,7 +9,7 @@ import {
   CP_AUDIO_GET_DOC,
   CP_AUDIO_GET_DOC_SUCCESS,
   CHANGE_PLAYING_STATE,
-  STORE_CAPSULE_AUDIOS,
+  CP_AUDIO_STORE,
   SETTING_PLAYING_AUDIO_INFO,
   LOAD_CP_AUDIO_SUCCESS,
   TOGGLE_AUDIO_POPOUT_BAR
@@ -46,19 +46,19 @@ const initialState = {
 }
 
 export default handleActions({
-  CHANGE_PLAYING_STATE: (state, action) => {
+  [CHANGE_PLAYING_STATE]: (state, action) => {
     return {
       ...state,
       playState: action.payload
     }
   },
-  STORE_CAPSULE_AUDIOS: (state, action) => {
+  [CP_AUDIO_STORE]: (state, action) => {
     return {
       ...state,
       capsules: state.capsules.concat(action.payload)
     }
   },
-  SETTING_PLAYING_AUDIO_INFO: (state, action) => {
+  [SETTING_PLAYING_AUDIO_INFO]: (state, action) => {
     return {
       ...state,
       playingAudioInfo: {
@@ -84,7 +84,7 @@ export default handleActions({
       }
     }
   },
-  CP_AUDIO_INFO_GET_SUCCESS: (state, action) => {
+  [CP_AUDIO_INFO_GET_SUCCESS]: (state, action) => {
     if (action.payload)
       return {
         ...state,
@@ -100,13 +100,13 @@ export default handleActions({
       }
     return state
   },
-  LOAD_CP_AUDIO_SUCCESS: (state, action) => {
+  [LOAD_CP_AUDIO_SUCCESS]: (state, action) => {
     return {
       ...state,
       isCpAudioLoaded: true
     }
   },
-  CP_AUDIO_GOOD_CHANGE_SUCCESS: (state, action) => {
+  [CP_AUDIO_GOOD_CHANGE_SUCCESS]: (state, action) => {
     return {
       ...state,
       playingAudioInfo: {
@@ -116,14 +116,14 @@ export default handleActions({
       }
     }
   },
-  CP_AUDIO_GET_DOC_SUCCESS: (state, { payload: draft }) => ({
+  [CP_AUDIO_GET_DOC_SUCCESS]: (state, { payload: draft }) => ({
     ...state,
     playingAudioInfo: {
       ...state.playingAudioInfo,
       draft: draft.draft
     }
   }),
-  TOGGLE_AUDIO_POPOUT_BAR: (state, action) => {
+  [TOGGLE_AUDIO_POPOUT_BAR]: (state, action) => {
     return {
       ...state,
       isAudioPopOutBarActive: !state.isAudioPopOutBarActive,

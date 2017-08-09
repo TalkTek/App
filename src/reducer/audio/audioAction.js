@@ -10,7 +10,7 @@ import {
   CP_AUDIO_GET_DOC,
   CP_AUDIO_GET_DOC_SUCCESS,
   CHANGE_PLAYING_STATE,
-  STORE_CAPSULE_AUDIOS,
+  CP_AUDIO_STORE,
   SETTING_PLAYING_AUDIO_INFO,
   LOAD_CP_AUDIO_SUCCESS,
   TOGGLE_AUDIO_POPOUT_BAR
@@ -18,7 +18,7 @@ import {
 
 export default createActions({
   [CHANGE_PLAYING_STATE]: playState => playState,
-  [STORE_CAPSULE_AUDIOS]: audios => audios,
+  [CP_AUDIO_STORE]: audios => audios,
   [SETTING_PLAYING_AUDIO_INFO]: (
     name,
     length,
