@@ -1,7 +1,7 @@
 import keyMirror from 'key-mirror'
 
 module.exports = keyMirror({
-  CAPSULE_LOADING: null,
+  LOAD_CP_AUDIO: null,
   CAPSULE_STORE: null,
-  CP_LASTKEY: null
+  CAPSULE_SET_LASTKEY: null
 })

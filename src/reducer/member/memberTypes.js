@@ -1,7 +1,9 @@
 import KeyMirror from 'key-mirror'
 
 module.exports = KeyMirror({
-  GET_MEMBER_STATE: null,
+  MEMBER_STATE_GET: null,
+  MEMBER_STATE_GET_SUCCESS: null,
+  MEMBER_STATE_GET_FAILURE: null,
   MEMBER_CAPSULE_GET: null,
   MEMBER_CAPSULE_GET_SUCCESS: null,
   SAVE_MEMBER_CHANGE: null,
@@ -13,6 +15,7 @@ module.exports = KeyMirror({
   CHANGE_MEMBER_STATE: null,
   SEND_FEEDBACK: null,
   SEND_FEEDBACK_SUCCESS: null,
+  SEND_FEEDBACK_FAILURE: null,
   MEMBER_FAIL: null,
   MEMBER_SUCCESS: null
 })

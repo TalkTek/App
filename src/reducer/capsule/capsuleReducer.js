@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions'
 import {
-  CP_LASTKEY,
+  CAPSULE_SET_LASTKEY,
   CAPSULE_STORE
 } from './capsuleTypes'
 
@@ -15,7 +15,7 @@ export default handleActions({
       capsules: state.capsules.concat(action.payload)
     }
   },
-  [CP_LASTKEY]: (state, action) => ({
+  [CAPSULE_SET_LASTKEY]: (state, action) => ({
     ...state,
     lastKey: action.payload.lastKey
   })

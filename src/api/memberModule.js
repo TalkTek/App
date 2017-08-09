@@ -40,10 +40,14 @@ export default class memberModule extends FirebaseDB {
 
   async sendFeedBack (type, content, userId) {
     let path = `feedback/${type}`
-    await this.push(path, {
-      content,
-      userId
-    })
+    try {
+      return await this.push(path, {
+        content,
+        userId
+      })
+    } catch (e) {
+      return e
+    }
   }
 
   logoutMember () {
@@ -75,8 +79,12 @@ export default class memberModule extends FirebaseDB {
     }
   }
 
-  getMemberState (uid) {
-    return this.readOnce(`/users/${uid}/profile`)
+  async getMemberState (uid) {
+    try {
+      return await this.readOnce(`/users/${uid}/profile`)
+    } catch (e) {
+      return e
+    }
   }
 
   async sendResetPasswordEmail (email) {

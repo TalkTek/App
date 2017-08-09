@@ -189,6 +189,9 @@ export default class Login extends Component {
         case 'auth/weak-password':
           errMsg = '密碼至少要六位數'
           break
+        case 'auth/wrong-password':
+          errMsg = '密碼錯誤或者此信箱已綁定第三方登入'
+          break
         default:
           errMsg = message
       }

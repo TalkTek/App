@@ -11,8 +11,8 @@ import {
   CP_AUDIO_STORE
 } from '../audio/audioTypes.js'
 import {
-  CP_LASTKEY,
-  CAPSULE_LOADING
+  CAPSULE_SET_LASTKEY,
+  LOAD_CP_AUDIO
 } from './capsuleTypes.js'
 /**
  * subroutines
@@ -73,14 +73,14 @@ function * loadCapsules ({payload}) {
   })
   yield all(callers)
   yield put({type: LOAD_CP_AUDIO_SUCCESS})
-  yield put({type: CP_LASTKEY, payload: { lastKey }})
+  yield put({type: CAPSULE_SET_LASTKEY, payload: { lastKey }})
 }
 
 /**
  * watchers
  */
 function * capsuleSaga () {
-  yield takeLatest(CAPSULE_LOADING, loadCapsules)
+  yield takeLatest(LOAD_CP_AUDIO, loadCapsules)
 }
 
 export default [

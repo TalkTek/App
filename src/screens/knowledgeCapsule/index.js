@@ -64,7 +64,7 @@ export default class KnowledgeCapsule extends Component {
   touchY = -1
   resolveData(lastKey) {
     const { actions } = this.props
-    this.props.capsule.capsuleLoading({
+    this.props.capsule.loadCpAudio({
       lastKey,
       limitToLast: this.loadCount
     })

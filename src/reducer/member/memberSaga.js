@@ -6,11 +6,14 @@ import {
 } from 'redux-saga/effects'
 import {
   SEND_FEEDBACK_SUCCESS,
+  SEND_FEEDBACK_FAILURE,
   SEND_RESET_PASSWORD_EMAIL,
   CHANGE_MEMBER_STATE,
   MEMBER_FAIL,
   MEMBER_SUCCESS,
-  GET_MEMBER_STATE,
+  MEMBER_STATE_GET,
+  MEMBER_STATE_GET_SUCCESS,
+  MEMBER_STATE_GET_FAILURE,
   CREATE_MEMBER,
   LOGIN_MEMBER,
   LOGIN_MEMBER_EMAIL,
@@ -41,9 +44,15 @@ function * changeMember ({ payload: {post, memberUid} }) {
 }
 
 function * sendFeedBack ({ payload: { type, content, userId } }) {
-  yield call(() => new MemberModule().sendFeedBack(type, content, userId))
+  let res = yield call(() => new MemberModule().sendFeedBack(type, content, userId))
+  let key
+  if (res) {
+    key = SEND_FEEDBACK_FAILURE
+  } else {
+    key = SEND_FEEDBACK_SUCCESS
+  }
   yield put({
-    type: SEND_FEEDBACK_SUCCESS,
+    type: key,
     payload: {}
   })
 }
@@ -67,7 +76,12 @@ function * createMember ({ payload: {email, password} }) {
 
 function * getMemberState ({ payload: { uid } }) {
   let member = yield call(() => new MemberModule().getMemberState(uid))
-  yield put({type: CHANGE_MEMBER_STATE, payload: {...member, uid}})
+  if (member) {
+    yield put({type: MEMBER_STATE_GET_SUCCESS})
+    yield put({type: CHANGE_MEMBER_STATE, payload: {...member, uid}})
+  } else {
+    yield put({type: MEMBER_STATE_GET_FAILURE})
+  }
 }
 
 function * loginMemberEmail ({ payload: {email, password} }) {
@@ -95,7 +109,7 @@ function * resetMemberEmail ({ payload }) {
 
 function * member () {
   yield takeLatest(SEND_RESET_PASSWORD_EMAIL, resetMemberEmail)
-  yield takeLatest(GET_MEMBER_STATE, getMemberState)
+  yield takeLatest(MEMBER_STATE_GET, getMemberState)
   yield takeLatest(CREATE_MEMBER, createMember)
   yield takeLatest(LOGIN_MEMBER, loginMember)
   yield takeLatest(LOGIN_MEMBER_EMAIL, loginMemberEmail)
