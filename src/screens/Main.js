@@ -34,7 +34,7 @@ export default class Main extends Component {
               NavigationActions.navigate({routeName: 'KnowledgeCapsuleScreen'})
             ]
           }))
-        this.props.member.getMemberState({
+        this.props.member.memberStateGet({
           uid: user.uid
         })
       } else {

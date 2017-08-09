@@ -8,6 +8,7 @@ import {
   CP_AUDIO_INFO_GET_SUCCESS,
   CP_AUDIO_INFO_GET_FAILURE,
   CP_AUDIO_GOOD_CHANGE_SUCCESS,
+  CP_AUDIO_GOOD_CHANGE_FAILURE,
   CP_AUDIO_GET_DOC_SUCCESS,
   CP_AUDIO_GET_DOC_FAILURE,
   CP_AUDIO_GOOD_CHANGE,
@@ -42,15 +43,21 @@ function * getAudioInfo (data) {
 function * setAudioGoodState (data) {
   const { isGood, capsulesId, parentKey, userId } = data.payload
   let audioInfo = yield call(() => new AudioModule().getAudioInfo(capsulesId, parentKey))
-  let likeCounter = yield call(() => new AudioModule()[isGood ? 'cpAudioGood' : 'cpAudioNotGood'](capsulesId, parentKey, userId, audioInfo.likeCounter + (isGood ? +1 : -1)))
-
-  yield put({
-    type: CP_AUDIO_GOOD_CHANGE_SUCCESS,
-    payload: {
-      isGood,
-      likeCounter
-    }
-  })
+  try {
+    let likeCounter = yield call(() => new AudioModule()[isGood ? 'cpAudioGood' : 'cpAudioNotGood'](capsulesId, parentKey, userId, audioInfo.likeCounter + (isGood ? +1 : -1)))
+    yield put({
+      type: CP_AUDIO_GOOD_CHANGE_SUCCESS,
+      payload: {
+        isGood,
+        likeCounter
+      }
+    })
+  } catch (e) {
+    yield put({
+      type: CP_AUDIO_GOOD_CHANGE_FAILURE,
+      payload: e
+    })
+  }
 }
 
 function * getAudioDoc (data) {
