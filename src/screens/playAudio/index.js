@@ -70,23 +70,23 @@ class PlayAudio extends Component {
           name: 'likeCounter',
           func: this._audioIsGoodToggle
         },
-        timer: {
-          notActive: require('../../assets/img/playAudio/timer.png'),
-          name: '00:00'
-        },
-        addSpeed: {
-          notActive: require('../../assets/img/playAudio/addSpeed.png'),
-          name: '速率'
-        },
+        // timer: {
+        //   notActive: require('../../assets/img/playAudio/timer.png'),
+        //   name: '00:00'
+        // },
+        // addSpeed: {
+        //   notActive: require('../../assets/img/playAudio/addSpeed.png'),
+        //   name: '速率'
+        // },
         word: {
           notActive: require('../../assets/img/playAudio/word.png'),
           name: '文檔',
           func: () => this.openModal()
         },
-        more: {
-          notActive: require('../../assets/img/playAudio/more.png'),
-          name: '更多'
-        }
+        // more: {
+        //   notActive: require('../../assets/img/playAudio/more.png'),
+        //   name: '更多'
+        // }
     },
     body: {
       backward15: {
@@ -216,7 +216,7 @@ class PlayAudio extends Component {
             <Text
               style={styles.footerText}
             >
-              {!isNaN(this.props[button.name])? this.props[button.name]: button.name}
+              {!isNaN(this.props[button.name])? this.props[button.name]: '讚'}
             </Text>
           </View>
         </TouchableHighlight>

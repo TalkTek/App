@@ -1,5 +1,21 @@
 import { handleActions } from 'redux-actions'
 
+/* eslint-disable*/
+const {
+  CP_AUDIO_INFO_GET,
+  CP_AUDIO_INFO_GET_SUCCESS,
+  CP_AUDIO_GOOD_CHANGE,
+  CP_AUDIO_GOOD_CHANGE_SUCCESS,
+  CP_AUDIO_GET_DOC,
+  CP_AUDIO_GET_DOC_SUCCESS,
+  CHANGE_PLAYING_STATE,
+  STORE_CAPSULE_AUDIOS,
+  SETTING_PLAYING_AUDIO_INFO,
+  LOAD_CP_AUDIO_SUCCESS,
+  TOGGLE_AUDIO_POPOUT_BAR
+} = require('./audioTypes').default
+/* eslint-disable*/
+
 const initialState = {
   playState: 'notPlaying',
   capsules: [],
@@ -25,23 +41,24 @@ const initialState = {
       j: ''
     },
     from: ''
-  }
+  },
+  isAudioPopOutBarActive: false
 }
 
 export default handleActions({
-  'CHANGE_PLAYING_STATE': (state, action) => {
+  CHANGE_PLAYING_STATE: (state, action) => {
     return {
       ...state,
       playState: action.payload
     }
   },
-  'STORE_CAPSULE_AUDIOS': (state, action) => {
+  STORE_CAPSULE_AUDIOS: (state, action) => {
     return {
       ...state,
       capsules: state.capsules.concat(action.payload)
     }
   },
-  'SETTING_PLAYING_AUDIO_INFO': (state, action) => {
+  SETTING_PLAYING_AUDIO_INFO: (state, action) => {
     return {
       ...state,
       playingAudioInfo: {
@@ -67,7 +84,7 @@ export default handleActions({
       }
     }
   },
-  'CP_AUDIO_INFO_GET_SUCCESS': (state, action) => {
+  CP_AUDIO_INFO_GET_SUCCESS: (state, action) => {
     if (action.payload)
       return {
         ...state,
@@ -83,15 +100,13 @@ export default handleActions({
       }
     return state
   },
-  'LOAD_CP_AUDIO_SUCCESS': (state, action) => {
+  LOAD_CP_AUDIO_SUCCESS: (state, action) => {
     return {
       ...state,
       isCpAudioLoaded: true
     }
   },
-  'CP_AUDIO_GOOD_CHANGE_SUCCESS': (state, action) => {
-    console.log('state.playingAudioInfo.likeCounter ', state.playingAudioInfo.likeCounter)
-    console.log('action.payload.isGood', action.payload.isGood)
+  CP_AUDIO_GOOD_CHANGE_SUCCESS: (state, action) => {
     return {
       ...state,
       playingAudioInfo: {
@@ -101,11 +116,17 @@ export default handleActions({
       }
     }
   },
-  'CP_AUDIO_GET_DOC_SUCCESS': (state, { payload: draft }) => ({
+  CP_AUDIO_GET_DOC_SUCCESS: (state, { payload: draft }) => ({
     ...state,
     playingAudioInfo: {
       ...state.playingAudioInfo,
       draft: draft.draft
     }
-  })
+  }),
+  TOGGLE_AUDIO_POPOUT_BAR: (state, action) => {
+    return {
+      ...state,
+      isAudioPopOutBarActive: !state.isAudioPopOutBarActive,
+    }
+  }
 }, initialState)
