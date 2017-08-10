@@ -24,7 +24,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import memberActoion from '../../reducer/member/memberAction'
 
-const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
+const { height: screenHeight, width: screenWidth }: Object = Dimensions.get('window')
 
 @connect((state) => ({
   sendMsg: state.member.sendMsg,
@@ -47,7 +47,7 @@ export default class Register extends Component {
     isOpen: false,
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Object) {
     if (nextProps.sendStatus === 2) {
       let { code, message } = nextProps.sendMsg
       let errMsg

@@ -4,10 +4,12 @@ import {
   GA_SET_EVENT
 } from './analyticTypes.js'
 
-const initialState = {
-  screen: '',
+type analyticTypes = {
+  screen: string,
   event: {}
 }
+
+const initialState : analyticTypes
 
 export default createReducder({
   [GA_SET_SCREEN]: (state, action) => ({

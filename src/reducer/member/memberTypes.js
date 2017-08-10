@@ -1,6 +1,7 @@
+// @flow
 import KeyMirror from 'key-mirror'
 
-module.exports = KeyMirror({
+type memberKey = {
   MEMBER_STATE_GET: null,
   MEMBER_STATE_GET_SUCCESS: null,
   MEMBER_STATE_GET_FAILURE: null,
@@ -18,4 +19,26 @@ module.exports = KeyMirror({
   SEND_FEEDBACK_FAILURE: null,
   MEMBER_FAIL: null,
   MEMBER_SUCCESS: null
-})
+}
+
+const memberTypes: memberKey = {
+  MEMBER_STATE_GET: null,
+  MEMBER_STATE_GET_SUCCESS: null,
+  MEMBER_STATE_GET_FAILURE: null,
+  MEMBER_CAPSULE_GET: null,
+  MEMBER_CAPSULE_GET_SUCCESS: null,
+  SAVE_MEMBER_CHANGE: null,
+  LOGOUT_MEMBER: null,
+  LOGIN_MEMBER: null,
+  LOGIN_MEMBER_EMAIL: null,
+  CREATE_MEMBER: null,
+  SEND_RESET_PASSWORD_EMAIL: null,
+  CHANGE_MEMBER_STATE: null,
+  SEND_FEEDBACK: null,
+  SEND_FEEDBACK_SUCCESS: null,
+  SEND_FEEDBACK_FAILURE: null,
+  MEMBER_FAIL: null,
+  MEMBER_SUCCESS: null
+}
+
+module.exports = KeyMirror(memberTypes)

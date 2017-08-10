@@ -1,3 +1,4 @@
+// @flow
 import {
   takeLatest,
   fork,
@@ -29,8 +30,8 @@ import MemberModule from '../../api/memberModule'
  * subroutines
  */
 
-function * getMemberCapsule (data) {
-  let capsules = yield call(() => new MemberModule().getLikeCapsule(data.payload))
+function * getMemberCapsule (data: {payload: {}}) {
+  let capsules:Object = yield call(() => new MemberModule().getLikeCapsule(data.payload))
   yield put({
     type: MEMBER_CAPSULE_GET_SUCCESS,
     payload: {
@@ -44,8 +45,8 @@ function * changeMember ({ payload: {post, memberUid} }) {
 }
 
 function * sendFeedBack ({ payload: { type, content, userId } }) {
-  let res = yield call(() => new MemberModule().sendFeedBack(type, content, userId))
-  let key
+  let res:Object|null = yield call(() => new MemberModule().sendFeedBack(type, content, userId))
+  let key:string
   if (res) {
     key = SEND_FEEDBACK_FAILURE
   } else {
@@ -58,7 +59,7 @@ function * sendFeedBack ({ payload: { type, content, userId } }) {
 }
 
 function * logoutMember () {
-  new MemberModule().logoutMember().catch(err => {
+  new MemberModule().logoutMember().catch((err: Object):void => {
     console.warn('[SignOut Error] Messages is', err.message)
   })
 }

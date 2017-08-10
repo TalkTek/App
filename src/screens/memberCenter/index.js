@@ -82,7 +82,7 @@ export default class MemberCenter extends Component {
     //   })
   }
 
-  _renderListItem = (rowData) => {
+  _renderListItem = (rowData: Object) => {
     return (
       <TouchableOpacity
         key={rowData.key}

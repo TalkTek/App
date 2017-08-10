@@ -52,12 +52,15 @@ class MemberInfo extends Component {
     birthday: { text: '生日' }
   }
 
-  state = {
+  state: {
+    genderValue: string,
+    birthday: string|null
+  } = {
     genderValue: 'unknow',
     birthday: undefined
   }
 
-  static navigationOptions = (navigation) => ({
+  static navigationOptions = (navigation: Object) => ({
     headerRight: <HeaderRight navigation={navigation.navigation} />
   })
 

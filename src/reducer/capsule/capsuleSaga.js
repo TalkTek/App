@@ -42,7 +42,7 @@ function * loadCapsules ({payload}) {
     lastKey = null
   }
   // parent loop
-  const callers = capsules.reverse().map((parentKey, index) => {
+  const callers:[] = capsules.reverse().map((parentKey, index) => {
     audios = []
     capsule = []
     if (index < length) {
