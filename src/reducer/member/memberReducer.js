@@ -1,7 +1,4 @@
 import {
-  handleActions
-} from 'redux-actions'
-import {
   CHANGE_MEMBER_STATE,
   LOGOUT_MEMBER,
   SAVE_MEMBER_CHANGE,
@@ -11,6 +8,7 @@ import {
   MEMBER_FAIL,
   MEMBER_SUCCESS
 } from './memberTypes.js'
+import createReducder from '../../lib/configureReducer'
 
 const initMemberState = {
   avatarUrl: null,
@@ -25,7 +23,7 @@ const initMemberState = {
   sendMsg: {code: null, message: null}
 }
 
-export default handleActions({
+export default createReducder({
   [CHANGE_MEMBER_STATE]: (memberState, action) => {
     return {
       ...memberState,

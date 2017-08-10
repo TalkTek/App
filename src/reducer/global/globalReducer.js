@@ -1,6 +1,4 @@
-import {
-  handleActions
-} from 'redux-actions'
+import createReducder from '../../lib/configureReducer'
 
 const initState = {
   viewInfo: {
@@ -11,7 +9,7 @@ const initState = {
   }
 }
 
-export default handleActions({
+export default createReducder({
   'SETTING_VIEW_OFFSET': (state, action) => {
     return {
       ...state,

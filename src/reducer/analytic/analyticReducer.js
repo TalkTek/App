@@ -1,4 +1,4 @@
-import { handleActions } from 'redux-actions'
+import createReducder from '../../lib/configureReducer'
 import {
   GA_SET_SCREEN,
   GA_SET_EVENT
@@ -9,7 +9,7 @@ const initialState = {
   event: {}
 }
 
-export default handleActions({
+export default createReducder({
   [GA_SET_SCREEN]: (state, action) => ({
     ...state,
     screen: action.payload

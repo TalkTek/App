@@ -1,14 +1,14 @@
-import { handleActions } from 'redux-actions'
 import {
   CAPSULE_SET_LASTKEY,
   CAPSULE_STORE
 } from './capsuleTypes'
+import createReducder from '../../lib/configureReducer'
 
 const initState = {
   lastKey: null
 }
 
-export default handleActions({
+export default createReducder({
   [CAPSULE_STORE]: (state, action) => {
     return {
       ...state,

@@ -1,4 +1,4 @@
-import { handleActions } from 'redux-actions'
+import createReducder from '../../lib/configureReducer'
 
 /* eslint-disable*/
 import {
@@ -45,7 +45,7 @@ const initialState = {
   isAudioPopOutBarActive: false
 }
 
-export default handleActions({
+export default createReducder({
   [CHANGE_PLAYING_STATE]: (state, action) => {
     return {
       ...state,
