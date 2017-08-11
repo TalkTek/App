@@ -17,12 +17,12 @@ import { myPointStyle } from './styles'
 
 class MyPoint extends Component {
   data = {
-    0: { cost: 30, author: '馬那熊 | PTT CATCH 版 版主', content: '愛情是場捉迷藏：關係經營的有效方法之..', date: '2017-06-01 15:02' },
-    1: { cost: 30, author: '馬那熊 | PTT CATCH 版 版主', content: '愛情是場捉迷藏：關係經營的有效方法之..', date: '2017-06-01 15:02' },
+    '0': { cost: 30, author: '馬那熊 | PTT CATCH 版 版主', content: '愛情是場捉迷藏：關係經營的有效方法之..', date: '2017-06-01 15:02' },
+    '1': { cost: 30, author: '馬那熊 | PTT CATCH 版 版主', content: '愛情是場捉迷藏：關係經營的有效方法之..', date: '2017-06-01 15:02' },
   }
 
   coin = {
-    0: { coin: 500, term: '2017-6-10' }
+    '0': { coin: 500, term: '2017-6-10' }
   }
 
   _renderCoinComponent(key) {

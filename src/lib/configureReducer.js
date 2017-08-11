@@ -1,22 +1,15 @@
 // @flow
-import AppNavigator from './navigator'
-import { NavigationActions } from 'react-navigation'
 
-export default (state, action) =>  {
+const configureReducer = (handlers, initialState) => (state = initialState, action = {}) => {
+  let finalState
+  const handler = handlers[action.type]
 
-  let nextState
-
-  switch(action.type) {
-    case 'TalkContent':
-      nextState = AppNavigator.router.getStateForAction(NavigationActions.navigate({ routeName: 'TalkContent' }), state)
-      break
-    default:
-      nextState = AppNavigator.router.getStateForAction(action, state)
-      break;
+  if (!handler) {
+    return state
   }
 
-  return nextState || state
-};
+  finalState = handler(state, action)
+  return finalState
+}
 
-
-
+export default configureReducer

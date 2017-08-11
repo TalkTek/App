@@ -5,6 +5,7 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import audioActions from '../../reducer/audio/audioAction'
 import analyticActions from '../../reducer/analytic/analyticAction'
+import capsuleAction from '../../reducer/capsule/capsuleAction'
 import { connect } from 'react-redux'
 import {
   TouchableHighlight,
@@ -45,82 +46,33 @@ let buttons = {
 @connect(state => ({
   capsules: state.audio.capsules,
   isCpAudioLoaded: state.audio.isCpAudioLoaded,
+  lastKey: state.capsule.lastKey
 }), dispatch => ({
-  actions: bindActionCreators({...audioActions, ...analyticActions}, dispatch)
+  actions: bindActionCreators({...audioActions, ...analyticActions}, dispatch),
+  capsule: bindActionCreators(capsuleAction, dispatch)
 }))
 
 export default class KnowledgeCapsule extends Component {
 
   state = {
-    lastKey: null, // firebase last key
     audioBarActive: false,
-    offsetY: 0,
+    offsetY: 0
   }
 
   loadCount = 2
 
   touchY = -1
-  resolveData(capsuleRef) {
+  resolveData(lastKey) {
     const { actions } = this.props
-
-    capsuleRef
-      .orderByKey()
-      .once('value')
-      .then((snapshot) => {
-        let capPush = snapshot.val()
-        let audios = []
-        let capsule = []
-        let capsules = Object.keys(capPush)
-        let lastKey = capsules[0]
-        let length = capsules.length
-        
-        if (capsules.length === this.loadCount+1) {
-          length = capsules.length - 1
-        } else {
-          lastKey = null
-        }
-        this.setState({
-          lastKey
-        })
-        // parent loop
-        capsules.reverse().forEach((parentKey, index) => {
-          if (index < length) {
-            //capsule loop
-            Object.values(capPush[parentKey].audios).forEach((audio) => {
-              audios = [...audios, {
-                active: false,
-                parentKey,
-                id: audio.id,
-                name: audio.audioName,
-                length: audio.length,
-                url: audio.url,
-                likeCounter: audio.likeCounter || 0,
-                audioIsGood: audio.audioIsGood,
-              }]
-            })
-
-            capsule = [
-              ...capsule,
-              {
-                title: capPush[parentKey].title,
-                audios
-              }
-            ]
-
-            actions.storeCapsuleAudios(capsule)
-            actions.loadCpAudioSuccess()
-          }
-
-          audios = []
-          capsule = []
-        })
-      })
+    this.props.capsule.loadCpAudio({
+      lastKey,
+      limitToLast: this.loadCount
+    })
   }
 
   componentDidMount () {
-    const { actions } = this.props
-    let capsuleRef = firebase.database().ref('capsules').limitToLast(this.loadCount+1)
-    this.resolveData(capsuleRef)
+    const { actions, lastKey } = this.props
+    this.resolveData(lastKey)
     actions.gaSetScreen('KnowledgeCapsule')
   }
 
@@ -160,18 +112,12 @@ export default class KnowledgeCapsule extends Component {
   }
 
   onScrollEndReached = () => {
-    const { lastKey } = this.state
+    const { lastKey } = this.props
 
     if (lastKey === null) {
       return
     } else {
-      let capsuleRef =
-        firebase.database()
-          .ref('capsules')
-          .endAt(lastKey)
-          .limitToLast(this.loadCount+1)
-
-      this.resolveData(capsuleRef)
+      this.resolveData(lastKey)
     }
   }
 

@@ -3,7 +3,7 @@ import Firebase from 'firebase'
 export default class FirebaseDB {
   database = Firebase.database()
   storage = Firebase.storage()
-
+  auth = Firebase.auth()
 
   /**
    * write data from path
@@ -31,11 +31,17 @@ export default class FirebaseDB {
 
   /**
    * read data from path 
-   * @param {string} path 
+   * @param {string/firebase db} path 
    * @return {Promise}
    */
   async readOnce(path = '') {
-    let data = await this._read(path)
+    let data
+
+    if (typeof path == 'object') {
+      data = await path.once('value')
+    } else {
+      data = await this._read(path)
+    }
     return data.val()
   }
 

@@ -17,12 +17,22 @@ import {
   Input,
   Item,
 } from 'native-base'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import firebase from 'firebase'
 import Modal from 'react-native-modalbox'
+import MemberAction from '../../reducer/member/memberAction'
 // import { FIREBASE_CONFIG } from '../../lib/config'
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
 // firebase.initializeApp(FIREBASE_CONFIG)
+
+@connect(state => ({
+  sendStatus: state.member.sendStatus,
+  sendMsg: state.member.sendMsg
+}), dispatch => ({
+  sendResetPasswordEmail: bindActionCreators(MemberAction.sendResetPasswordEmail, dispatch)
+}))
 
 export default class Forgetpw extends Component {
   static navigationOptions = {
@@ -42,27 +52,31 @@ export default class Forgetpw extends Component {
   async _Resetpw () {
     const { email } = this.state
     const { navigate } = this.props.navigation
-    try {
-      if( email ) {
-        let ref = await firebase.auth().sendPasswordResetEmail(email)
-        console.log('reset email sent!')
-        navigate('Login')
-      } 
-    }
-    catch (error) {
-      console.log(error.code)
-      if (error.code === 'auth/invalid-email') {
-        this.setState({
-          errMsg: '不當的email格式',
-          isOpen: true
-        })
-      } else if (error.code === 'auth/user-not-found') {
-        this.setState({
-          errMsg: '沒有此使用者',
-          isOpen: true
-        })
+    this.props.sendResetPasswordEmail(email)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { navigate } = this.props.navigation
+    if (nextProps.sendStatus === 2) {
+      let { code, message } = nextProps.sendMsg
+      let errMsg
+      switch (code) {
+        case 'auth/invalid-email':
+          errMsg = '不當的email格式'
+          break
+        case 'auth/user-not-found':
+          errMsg = '沒有此使用者'
+          break
+        default:
+          errMsg = message
       }
-      this.refs.modal.open()
+
+      this.setState({
+        errMsg,
+        isOpen: true
+      })
+    } else if (nextProps.sendStatus === 0) {
+      navigate('Login')
     }
   }
 

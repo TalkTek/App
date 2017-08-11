@@ -1,16 +1,22 @@
-import { handleActions } from 'redux-actions'
+import createReducder from '../../lib/configureReducer'
+import {
+  GA_SET_SCREEN,
+  GA_SET_EVENT
+} from './analyticTypes.js'
 
-const initialState = {
-  screen: '',
+type analyticTypes = {
+  screen: string,
   event: {}
 }
 
-export default handleActions({
-  'GA_SET_SCREEN': (state, action) => ({
+const initialState : analyticTypes
+
+export default createReducder({
+  [GA_SET_SCREEN]: (state, action) => ({
     ...state,
     screen: action.payload
   }),
-  'GA_SET_EVENT': (state, action) => ({
+  [GA_SET_EVENT]: (state, action) => ({
     ...state,
     event: action.payload
   })

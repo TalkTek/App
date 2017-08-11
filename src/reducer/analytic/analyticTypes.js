@@ -1,6 +1,6 @@
 import KeyMirror from 'key-mirror'
 
-export default KeyMirror({
+module.exports = KeyMirror({
   GA_SET_SCREEN: null,
   GA_SET_EVENT: null
 })

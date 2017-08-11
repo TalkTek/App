@@ -20,6 +20,8 @@ import {
   Input,
   Item,
 } from 'native-base'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import FBSDK, { LoginManager, AccessToken } from 'react-native-fbsdk'
 import { GoogleSignin } from 'react-native-google-signin'
 import firebase from 'firebase'
@@ -27,12 +29,20 @@ import Modal from 'react-native-modalbox'
 import { NavigationActions } from 'react-navigation'
 import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge'
 import { loginStyles as styles } from './styles'
+import memberAction from '../../reducer/member/memberAction'
 
 let tracker = new GoogleAnalyticsTracker('UA-100475279-1',{ test: 3})
 
 tracker.trackScreenView('Login')
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
+
+@connect( state => ({
+  sendMsg: state.member.sendMsg,
+  sendStatus: state.member.sendStatus
+}), dispatch => ({
+  member: bindActionCreators(memberAction, dispatch)
+}))
 
 export default class Login extends Component {
   static navigationOptions = {
@@ -66,6 +76,7 @@ export default class Login extends Component {
 
   async _onFacebookLogin () {
     const { dispatch } = this.props.navigation
+    const { member } = this.props
     try {
       tracker.trackEvent('FacebookLogin', 'Click')
       setTimeout(() => this.refs.spinning.open(), 1200)
@@ -79,12 +90,14 @@ export default class Login extends Component {
         // firebase setting
         const credential_facebook = firebase.auth.FacebookAuthProvider.credential(token)
         const user = await firebase.auth().signInWithCredential(credential_facebook)
-        // write firebase
-        firebase.database().ref(`/users/${user.uid}/profile`).set({
-          name: user.displayName,
-          email: user.email,
-          avatarUrl: user.photoURL,
-          from: 'Facebook'
+        member.loginMember({
+          uid:user.uid, 
+          post: {
+            name: user.displayName,
+            email: user.email,
+            avatarUrl: user.photoURL,
+            from: 'Facebook'
+          }
         })
         dispatch(NavigationActions.reset({
           index: 0,
@@ -113,6 +126,8 @@ export default class Login extends Component {
 
   async _onGoogleSignIn() {
     const { dispatch } = this.props.navigation
+    const { member } = this.props
+    
     try {
       tracker.trackEvent('GoogleLogin', 'Click')
       // google setting
@@ -124,19 +139,22 @@ export default class Login extends Component {
       const credential_google = await firebase.auth.GoogleAuthProvider.credential(idToken, accessToken)
       const user = await firebase.auth().signInWithCredential(credential_google)
 
-      firebase.database().ref(`/users/${user.uid}/profile`).set({
-        name: user.displayName,
-        email: user.email,
-        avatarUrl: user.photoURL,
-        from: 'Google'
+      member.loginMember({
+        uid:user.uid, 
+        post: {
+          name: user.displayName,
+          email: user.email,
+          avatarUrl: user.photoURL,
+          from: 'Google'
+        }
       })
 
-      dispatch(NavigationActions.reset({
-        index: 0,
-        actions: [
-          NavigationActions.navigate({routeName: 'KnowledgeCapsuleScreen'})
-        ]
-      }))
+      // dispatch(NavigationActions.reset({
+      //   index: 0,
+      //   actions: [
+      //     NavigationActions.navigate({routeName: 'KnowledgeCapsuleScreen'})
+      //   ]
+      // }))
     } catch(error) {
       console.log('error message is', error.message);
       console.log('error code is', error.code);
@@ -146,36 +164,43 @@ export default class Login extends Component {
   
   async _onEmailPasswordLogin () {
     const { navigate, dispatch } = this.props.navigation
-    try {
-      await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+    const { member } = this.props
+     member.loginMemberEmail({
+      email: this.state.email,
+      password: this.state.password
+    })
+    // dispatch(NavigationActions.reset({
+    //   index: 0,
+    //   actions: [
+    //     NavigationActions.navigate({routeName: 'KnowledgeCapsuleScreen'})
+    //   ]
+    // }))
+    tracker.trackEvent('EmailPasswordLogin', 'Fill In')
+  }
 
-      dispatch(NavigationActions.reset({
-        index: 0,
-        actions: [
-          NavigationActions.navigate({routeName: 'KnowledgeCapsuleScreen'})
-        ]
-      }))
-      tracker.trackEvent('EmailPasswordLogin', 'Fill In')
-    }
-    catch(error) {
-      if (error.message === 'The email address is badly formatted.') {
-        this.setState({
-          errMsg: 'Email格式不正確',
-          isOpen: true
-        })
-      } else if ( error.code === 'auth/user-not-found' ) {
-        this.setState({
-          errMsg: '無此帳號',
-          isOpen: true
-        })
-      } else {
-        this.setState({
-          errMsg: error.message,
-          isOpen: true
-        })
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.sendStatus === 2) {
+      let { code, message } = nextProps.sendMsg
+      let errMsg
+      switch (code) {
+        case 'auth/invalid-email':
+          errMsg = 'Email 格式錯誤'
+          break
+        case 'auth/weak-password':
+          errMsg = '密碼至少要六位數'
+          break
+        case 'auth/wrong-password':
+          errMsg = '密碼錯誤或者此信箱已綁定第三方登入'
+          break
+        default:
+          errMsg = message
       }
+
+      this.setState({
+        errMsg,
+        isOpen: true
+      })
     }
-    this.refs.modal.open()
   }
 
   render() {

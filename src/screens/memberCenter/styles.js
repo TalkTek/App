@@ -3,9 +3,8 @@ import {
   Dimensions
 } from 'react-native'
 
-const { width } = Dimensions.get('window')
-console.log(width)
-const style = {
+const { width: number } = Dimensions.get('window')
+const style: Object = {
   container: {
     backgroundColor: 'rgb(245, 245, 245)'
   },
@@ -78,7 +77,7 @@ const style = {
 
 export default style
 
-const memberInfoStyle = {
+const memberInfoStyle: Object = {
   container: style.container,
   avatar: { 
     ...style.avatar, 
@@ -139,7 +138,7 @@ const memberInfoStyle = {
   }
 }
 
-const myTalkStyle = {
+const myTalkStyle: Object = {
   container: {
     backgroundColor: 'rgb(250, 250, 250)',
   },
@@ -180,7 +179,7 @@ const myTalkStyle = {
   }
 }
 
-const myPointStyle = {
+const myPointStyle: Object = {
   container: {
     ...myTalkStyle.container,
     paddingTop: 16,
@@ -217,7 +216,7 @@ const myPointStyle = {
   }
 }
 
-const pointCenterStyle = {
+const pointCenterStyle: Object = {
   container: style.container,
   nowPoint: {
     paddingTop: 32,
@@ -282,7 +281,7 @@ const pointCenterStyle = {
   }
 }
 
-const feedBackStyle = {
+const feedBackStyle: Object = {
   content: {
     ...myTalkStyle.container,
     paddingLeft: 16,

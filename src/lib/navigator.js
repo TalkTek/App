@@ -27,7 +27,7 @@ const LectureScreen = StackNavigator({
   // Login: { screen: Login },
   // Register: { screen: Register },
   // Main: { screen: MainScreen }
-  Forgetpw: { screen: Forgetpw },
+  // Forgetpw: { screen: Forgetpw },
 }, {
   // initialRouteName: 'Main',
   navigationOptions: {
@@ -58,6 +58,7 @@ const CapsuleScreen = StackNavigator({
   Main: { screen: MainScreen },
   Login: { screen: Login },
   Register: { screen: Register },
+  Forgetpw: { screen: Forgetpw },
   PlayerDocScreen: { screen: PlayerDoc }
 }, {
   initialRouteName: 'Main',

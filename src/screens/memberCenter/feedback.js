@@ -20,6 +20,13 @@ import {
 } from 'native-base'
 import { feedBackStyle } from './styles'
 
+type toastInfo = {
+  text: string,
+  position: string,
+  buttonText: string,
+  duration: number
+}
+
 @connect((state) => ({
   userId: state.member.uid,
   status: state.member.sendStatus
@@ -34,6 +41,23 @@ class Feedback extends Component {
     other: '其他'
   }
 
+  props: {
+    status: number,
+    action: Function,
+    userId: string|null
+  }
+
+  static defaultProps = {
+    status: 0,
+    action: () => {},
+    userId: null
+  }
+
+  state: {
+    type: string,
+    content: string
+  }
+
   state = {
     type: 'feedback',
     content: ''
@@ -41,12 +65,13 @@ class Feedback extends Component {
 
   send = () => {
     if (this.state.content.replace(' ', '').length === 0) {
-      Toast.show({
+      let info: toastInfo = {
         text: '請輸入內容！',
         position: 'bottom',
         buttonText: '好的',
         duration: 2000
-      })
+      }
+      Toast.show(info)
     } else {
       this.props.action({
         type: this.state.type,
@@ -56,14 +81,15 @@ class Feedback extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Object) {
     if (nextProps.status === 0) {
-      Toast.show({
+      const info: toastInfo = {
         text: '傳送成功！',
         position: 'bottom',
         buttonText: '好的',
         duration: 2000
-      })
+      }
+      Toast.show(info)
     }
   }
 
@@ -110,7 +136,7 @@ class Feedback extends Component {
               內容（必填）
             </Text>
             <View style={[feedBackStyle.input, feedBackStyle.mutiInput]}>
-              <Input onChangeText={(value) => this.setState({content: value})} multiline />
+              <Input onChangeText={(value: string) => this.setState({content: value})} multiline />
             </View>
             <TouchableOpacity onPress={this.send} style={feedBackStyle.sendBtn}>
               <Text style={feedBackStyle.sendText}>

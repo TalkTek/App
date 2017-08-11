@@ -9,7 +9,7 @@ const { width, height } = Dimensions.get('window')
 let margin = Number(((width) * 0.06).toFixed())
 
 export default class Info extends Component {
-  constructor (props) {
+  constructor (props: any) {
     super(props)
   }
 

@@ -36,6 +36,7 @@ console.log('width isis', screenWidth)
   memberAvatar: state.member.avatarUrl
 }), dispatch => ({
   actions: bindActionCreators(navigatorAction, dispatch),
+  logout: bindActionCreators(memberAction.logoutMember, dispatch),
   ga: bindActionCreators(analyticAction, dispatch)
 }))
 
@@ -45,10 +46,10 @@ export default class MemberCenter extends Component {
       { key: 'iconmyTalk', icon: require(`../../assets/img/memberCenter/iconmyTalk.png`), target: 'MyTalk', text: '我的小講' },
       { key: 'iconmyCapsule', icon: require(`../../assets/img/memberCenter/iconmyTalk.png`), target: 'MyCapsule', text: '我的膠囊收藏' }
     ],
-    coin: [
-      { key: 'iconMypoint', icon: require(`../../assets/img/memberCenter/iconMypoint.png`), target: 'MyPoint', rightText: '500點', text: '我的點數' },
-      { key: 'iconFillup', icon: require(`../../assets/img/memberCenter/iconFillup.png`), target: 'Fillup', text: '儲值中心' }
-    ],
+    // coin: [
+    //   { key: 'iconMypoint', icon: require(`../../assets/img/memberCenter/iconMypoint.png`), target: 'MyPoint', rightText: '500點', text: '我的點數' },
+    //   { key: 'iconFillup', icon: require(`../../assets/img/memberCenter/iconFillup.png`), target: 'Fillup', text: '儲值中心' }
+    // ],
     other: [
       { key: 'iconFeedback', icon: require(`../../assets/img/memberCenter/iconFeedback.png`), target: 'Feedback', text: '意見回饋' },
       // { key: 'iconApply', icon: require(`../../assets/img/memberCenter/iconApply.png`), target: 'Apply', text: '成為講師' }
@@ -60,36 +61,28 @@ export default class MemberCenter extends Component {
   }
 
   _logout = async () => {
-    const {
-      navigation,
-      actions
-    } = this.props
+    let { navigation } = this.props
+    navigation.navigate('Login')
+    this.props.logout()
+    // navigation.dispatch(
+    // NavigationActions.reset({
+    //   index: 0,
+    //   actions: [
+    //     NavigationActions.navigate({ routeName: 'KnowledgeCapsule' })
+    //   ]
+    // }))
+    // await firebase
+    //   .auth()
+    //   .signOut()
+    //   .then(() => {
 
-    console.log('this.props', this.props)
-
-
-    // actions.logout()
-    await firebase
-      .auth()
-      .signOut()
-      .then(() => {
-
-        navigation._toggleAudioBarDown()
-        navigation.navigate('Login')
-        // navigation.dispatch(
-        // NavigationActions.reset({
-        //   index: 0,
-        //   actions: [
-        //     navigation.navigate({ routeName: 'Login' })
-        //   ]
-        // }))
-      })
-      .catch((error) => {
-        console.warn('[SignOut Error] Messages is', error.message)
-      })
+    //   })
+    //   .catch((error) => {
+          // console.warn('[SignOut Error] Messages is', error.message)
+    //   })
   }
 
-  _renderListItem = (rowData) => {
+  _renderListItem = (rowData: Object) => {
     return (
       <TouchableOpacity
         key={rowData.key}

@@ -79,7 +79,7 @@ class PlayerDoc extends Component {
         </Header>
         <ScrollView>
           {
-            this.props.draft?
+            typeof this.props.draft === 'string'?
             <HtmlView
               value={this.props.draft}
               style={style.htmlView}

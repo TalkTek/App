@@ -1,7 +1,7 @@
-import FirebaseDB from './FirebaseDB'
+import FirebaseDB from './lib/FirebaseDB'
 
 export default class AudioModule extends FirebaseDB {
-  async cpAudioGood (capsulesId, parentKey, userId) {
+  async cpAudioGood (capsulesId, parentKey, userId, counter) {
     let audio, path = `capsules/${parentKey}/audios/${capsulesId}`
     this.write(
       `users/${userId}/favorite/${capsulesId}`,
@@ -9,30 +9,27 @@ export default class AudioModule extends FirebaseDB {
     )
     audio = await this.readOnce(path)
 
-    if (!audio.likeCounter) {
-      audio.likeCounter = 1
-    } else {
-      audio.likeCounter ++
-    }
+    audio.likeCounter = counter
 
     this.update(path, audio)
     return audio.likeCounter
   }
 
-  async cpAudioNotGood (capsulesId, parentKey, userId) {
+  async cpAudioNotGood (capsulesId, parentKey, userId, counter) {
     let audio, path = `capsules/${parentKey}/audios/${capsulesId}`
     this.remove(`users/${userId}/favorite/${capsulesId}`)
 
     audio = await this.readOnce(path)
 
-    if (!audio.likeCounter) {
-      audio.likeCounter = 0
-    } else {
-      audio.likeCounter --
-    }
+    audio.likeCounter = counter
 
     this.update(path, audio)
     return audio.likeCounter
+  }
+
+  getAudioInfo (capsulesId, parentKey) {
+    let path = `capsules/${parentKey}/audios/${capsulesId}`
+    return this.readOnce(path)
   }
 
   async checkAudioIsLiked (capsuleId, memberUid) {
