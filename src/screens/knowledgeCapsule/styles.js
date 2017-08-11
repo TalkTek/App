@@ -4,6 +4,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 export default {
   container: {
     backgroundColor: 'white',
+    zIndex: 0,
   },
   banner: {
     resizeMode: 'cover',

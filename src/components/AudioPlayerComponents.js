@@ -16,12 +16,9 @@ import {
 } from 'react-native'
 import Modal from 'react-native-modalbox'
 import PlayAudioScreen from '../screens/playAudio'
-
 import audioActions from '../reducer/audio/audioAction'
 import analyticAction from '../reducer/analytic/analyticAction'
-
 import { Button } from 'native-base'
-import { Player } from 'react-native-audio-toolkit'
 
 const {
   width: screenWidth,
@@ -34,22 +31,25 @@ let buttons = {
   'expand': require('../assets/img/knowledgeCapsule/expend.png')
 }
 
-@connect(state => ({
-  memberUid: state.member.uid,
-  playState: state.audio.playState,
-  capsules: state.audio.capsules,
-  capsuleId: state.audio.id,
-  audioName: state.audio.playingAudioInfo.name,
-  currentTimeFormatted: state.audio.playingAudioInfo.currentTime.formatted,
-  currentTimeSec: state.audio.playingAudioInfo.currentTime.sec,
-  audioLength: state.audio.playingAudioInfo.length,
-  audioUrl: state.audio.playingAudioInfo.url,
-  isCpAudioLoaded: state.audio.isCpAudioLoaded,
-  playingAudioPos: {
-    i: state.audio.playingAudioInfo.pos.i,
-    j: state.audio.playingAudioInfo.pos.j
+@connect(state => {
+  const {
+    member,
+    audio,
+    audio: { playingAudioInfo }
+  } = state
+  return {
+    memberUid: member.uid,
+    capsules: state.audio.capsules,
+    isPlaying: state.audio.isPlaying,
+    audioName: playingAudioInfo.name,
+    currentTimeFormatted: playingAudioInfo.currentTime.formatted,
+    currentTimeSec: playingAudioInfo.currentTime.sec,
+    playingAudioPos: {
+      i: audio.playingAudioInfo.pos.i,
+      j: audio.playingAudioInfo.pos.j
+    }
   }
-}), dispatch => {
+}, dispatch => {
   return {
     actions: bindActionCreators({...audioActions, ...analyticAction}, dispatch),
   }
@@ -58,7 +58,11 @@ export default class AudioComponents extends Component {
 
   interval = null
 
-  timer = null
+  timer = setInterval(() => {
+    if (this.props.isPlaying) {
+      this.props.actions.audioUpdateCurrentTime()
+    }
+  }, 450)
 
   state = {
     popoutAudioBarHeight: new Animated.Value(screenHeight - 100),
@@ -118,15 +122,75 @@ export default class AudioComponents extends Component {
     this.refs.playAudio.open()
   }
 
-  _onPress = async (audio) => {
+  _onPress = async (audio: object, i: number, j: string, pos:number) => {
+    const { audioLoad } = this.props.actions
+    const data: {
+      audio: object,
+      i: number,
+      j: number,
+      pos: number
+    } = {
+      audio,
+      i,
+      j,
+      pos
+    }
+    this.props.actions.cpAudioInfoGet(
+      {
+        parentKey: audio.parentKey,
+        capsuleId: audio.id,
+        memberUid: this.props.memberUid
+      }
+    )
+    audioLoad(data)
     this.toggleAudioBarUp()
+    this.toggleButtonColor(i, j)
+  }
+
+  _playOrPause = () => {
+    const {isPlaying, actions} = this.props
+    if (!isPlaying) {
+      actions.audioPlay()
+    } else {
+      actions.audioPause()
+    }
+  }
+
+  _forward = () => {
+    const { audioToNextTrack } = this.props.actions
+    audioToNextTrack()
+  }
+
+  _forward15s = () => {
+    
+  }
+
+  _backward = () => {
+    const { audioToPreviousTrack } = this.props.actions
+    audioToPreviousTrack()
+  }
+
+  _backward15s = () => {
+
+  }
+
+  _seek = () => {
+
+  }
+
+  toggleButtonColor = (i, j) => {
+    const { capsules, playingAudioPos } = this.props
+    if (playingAudioPos.i !== '' && playingAudioPos.j !== '') {
+      capsules[playingAudioPos.i].audios[playingAudioPos.j].active = false
+    }
+    capsules[i].audios[j].active = true
   }
 
   render() {
     const {
       children,
       currentTimeFormatted,
-      playState,
+      isPlaying,
       audioName
     } = this.props
 
@@ -147,11 +211,11 @@ export default class AudioComponents extends Component {
         >
           <TouchableHighlight
             transparent
-            onPress={this.playOrPause}
+            onPress={this._playOrPause}
             underlayColor="#fff"
           >
             <Image
-              source={playState === 'playing' ? buttons.pause : buttons.playingOnAudioBar}
+              source={isPlaying? buttons.pause : buttons.playingOnAudioBar}
               style={styles.playPauseButton}
             />
           </TouchableHighlight>
@@ -180,12 +244,12 @@ export default class AudioComponents extends Component {
           swipeToClose={false}
         >
           <PlayAudioScreen
-            playOrPause={() => {}}
-            forward={() => {}}
-            forward15s={() => {}}
-            backward={() => {}}
-            backward15s={() => {}}
-            seek={() => {}}
+            playOrPause={this._playOrPause}
+            forward={this._forward}
+            forward15s={this._forward15s}
+            backward={this._backward}
+            backward15s={this._backward15s}
+            seek={this._seek}
             toggleModal={() => this.toggleModal()}
           />
         </Modal>

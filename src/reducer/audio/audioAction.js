@@ -9,11 +9,12 @@ import {
   CP_AUDIO_GOOD_CHANGE_SUCCESS,
   CP_AUDIO_GET_DOC,
   CP_AUDIO_GET_DOC_SUCCESS,
-  CHANGE_PLAYING_STATE,
   CP_AUDIO_STORE,
   SETTING_PLAYING_AUDIO_INFO,
   LOAD_CP_AUDIO_SUCCESS,
   TOGGLE_AUDIO_POPOUT_BAR,
+  AUDIO_LOAD,
+  AUDIO_LOADED,
   AUDIO_PLAY,
   AUDIO_PAUSE,
   AUDIO_TO_NEXT_TRACK,
@@ -24,7 +25,6 @@ import {
 } from './audioTypes.js'
 
 export default createActions({
-  [CHANGE_PLAYING_STATE]: playState => playState,
   [CP_AUDIO_STORE]: audios => audios,
   [SETTING_PLAYING_AUDIO_INFO]: (
     name,
@@ -60,6 +60,8 @@ export default createActions({
   [CP_AUDIO_GET_DOC]: state => state,
   [CP_AUDIO_GET_DOC_SUCCESS]: state => state,
   [TOGGLE_AUDIO_POPOUT_BAR]: state => state,
+  [AUDIO_LOAD]: state => state,
+  [AUDIO_LOADED]: state => state,
   [AUDIO_PLAY]: state => state,
   [AUDIO_PAUSE]: state => state,
   [AUDIO_TO_NEXT_TRACK]: state => state,

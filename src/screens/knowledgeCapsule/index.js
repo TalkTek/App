@@ -30,6 +30,13 @@ import {
 } from 'native-base'
 import firebase from 'firebase'
 import styles from './styles'
+import {
+  MessageBarAlert,
+  MessageBarManager
+} from 'react-native-message-bar'
+import {
+  Actions
+} from 'react-native-router-flux'
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 console.log('screenHeight', screenHeight);
@@ -80,7 +87,7 @@ export default class KnowledgeCapsule extends Component {
     const {
       _toggleAudioBarUp,
       _toggleAudioBarDown
-    } = this.props.navigation
+    } = this.props
       // let currentOffsetY = event.nativeEvent.contentOffset.y
     if (this.touchY === -1) {
       this.touchY = event.nativeEvent.pageY
@@ -102,13 +109,17 @@ export default class KnowledgeCapsule extends Component {
 
   onPress = (audio, i, j) => {
     const {
-      _onPress
-    } = this.props.navigation
+      actions
+    } = this.props
+    //
+    // this.setState({
+    //   audioBarActive: true,
+    // })
 
-    this.setState({
-      audioBarActive: true,
-    })
-    _onPress.bind(this, audio, i, j)()
+
+    actions.toggleAudioPopoutBar()
+
+    // _onPress.bind(this, audio, i, j)()
   }
 
   onScrollEndReached = () => {
@@ -143,6 +154,12 @@ export default class KnowledgeCapsule extends Component {
                   <TouchableHighlight
                     style={styles.capPlayPauseButton}
                     onPress={() => this.onPress(audio, i, j)}
+                    // onPress={() => MessageBarManager.showAlert({
+                    //   title: 'sdfafa',
+                    //   message: 'DFSDFDF',
+                    //   alertType: 'sccuess'
+                    // })}
+                    // onPress={() => Actions.popOutBar()}
                     underlayColor="#fff"
                   >
                     <View style={styles.capAudio}>

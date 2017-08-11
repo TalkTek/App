@@ -23,6 +23,7 @@ import analyticAction from '../reducer/analytic/analyticAction'
 
 import { Button } from 'native-base'
 import { Player } from 'react-native-audio-toolkit'
+import { MessageBarAlert, MessageBarManager } from 'react-native-message-bar';
 
 const {
   width: screenWidth,
@@ -41,6 +42,7 @@ let buttons = {
   capsules: state.audio.capsules,
   capsuleId: state.audio.id,
   audioName: state.audio.playingAudioInfo.name,
+  isAudioPopOutBarActive: state.audio.isAudioPopOutBarActive,
   currentTimeFormatted: state.audio.playingAudioInfo.currentTime.formatted,
   currentTimeSec: state.audio.playingAudioInfo.currentTime.sec,
   audioLength: state.audio.playingAudioInfo.length,
@@ -471,36 +473,44 @@ export default class AudioComponents extends Component {
   }
 
   _onPress = async (audio, i, j) => {
-    const { actions } = this.props
+    // const { actions } = this.props
+    //
+    // if (this.interval) {
+    //   clearInterval(this.interval)
+    // }
+    //
+    // // need to place before the action of settingPlayingAudioInfo
+    // await this.toggleButtonColor(i, j)
+    //
+    // // initialize playing audio
+    // await actions.settingPlayingAudioInfo(
+    //   audio.name,
+    //   audio.length,
+    //   {
+    //     sec: null,
+    //     formatted: '00:00'
+    //   },
+    //   audio.url,
+    //   {
+    //     i, j
+    //   },
+    //   'onPressAudio',
+    //   audio.id,
+    //   audio.parentKey,
+    //   audio.likeCounter
+    // )
+    //
+    // await this.createPlayer(audio.url)
+    // await this._updateCapsuleInfo(audio.id, audio.parentKey)
+    console.log("CCCCCCCCCCCC")
+      this.toggleAudioBarUp()
+  }
 
-    if (this.interval) {
-      clearInterval(this.interval)
+  componentWillReceiveProps (nextProps) {
+    if(nextProps.isAudioPopOutBarActive) {
+      console.log('QQQ')
+      this.toggleAudioBarUp()
     }
-
-    // need to place before the action of settingPlayingAudioInfo
-    await this.toggleButtonColor(i, j)
-
-    // initialize playing audio
-    await actions.settingPlayingAudioInfo(
-      audio.name,
-      audio.length,
-      {
-        sec: null,
-        formatted: '00:00'
-      },
-      audio.url,
-      {
-        i, j
-      },
-      'onPressAudio',
-      audio.id,
-      audio.parentKey,
-      audio.likeCounter
-    )
-
-    await this.createPlayer(audio.url)
-    await this._updateCapsuleInfo(audio.id, audio.parentKey)
-    this.toggleAudioBarUp()
   }
 
   toggleAudioBarUp = () => {
@@ -556,21 +566,20 @@ export default class AudioComponents extends Component {
 
   render() {
     const {
-      children,
       currentTimeFormatted,
       playState,
-      audioName
+      audioName,
+      isAudioPopOutBarActive,
     } = this.props
-
+    
     return (
       <View style={{
-        flex: 1,
       }}>
-        {React.cloneElement(children, {
-          _onPress: this._onPress,
-          _toggleAudioBarDown: this.toggleAudioBarDown,
-          _toggleAudioBarUp: this.toggleAudioBarUp
-        })}
+        {/*{React.cloneElement(children, {*/}
+          {/*_onPress: this._onPress,*/}
+          {/*_toggleAudioBarDown: this.toggleAudioBarDown,*/}
+          {/*_toggleAudioBarUp: this.toggleAudioBarUp*/}
+        {/*})}*/}
         <Animated.View
           style={[styles.container, {
             top: this.state.popoutAudioBarHeight,

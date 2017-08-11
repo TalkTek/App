@@ -5,50 +5,33 @@ import React, { Component } from 'react'
 import { Container, View } from 'native-base'
 import  CONFIG  from '../lib/config'
 import firebase from 'firebase'
-import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import memberAction from '../reducer/member/memberAction'
+import {
+  Actions
+} from 'react-native-router-flux'
 
 firebase.initializeApp(CONFIG.FIREBASE.PRODUCTION)
 
-@connect(state => ({
-
-}), dispatch => ({
+@connect( undefined, dispatch => ({
   member: bindActionCreators(memberAction, dispatch)
 }))
 
 export default class Main extends Component {
-  static navigationOptions = {
-    header: null,
-  }
-
   componentDidMount () {
     const { dispatch } = this.props.navigation
     firebase.auth().onAuthStateChanged( user => {
       if (user) {
-          dispatch(
-            NavigationActions.reset({
-            index: 0,
-            actions: [
-              NavigationActions.navigate({routeName: 'KnowledgeCapsuleScreen'})
-            ]
-          }))
         this.props.member.memberStateGet({
           uid: user.uid
         })
+        Actions.tab()
       } else {
-          dispatch(
-            NavigationActions.reset({
-            index: 0,
-            actions: [
-              NavigationActions.navigate({routeName: 'Login'})
-            ]
-          }))
+        Actions.login()
       }
     })
   }
-
   render() {
     return null
   }

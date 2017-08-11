@@ -8,11 +8,14 @@ import {
   CP_AUDIO_GOOD_CHANGE_SUCCESS,
   CP_AUDIO_GET_DOC,
   CP_AUDIO_GET_DOC_SUCCESS,
-  CHANGE_PLAYING_STATE,
   CP_AUDIO_STORE,
   SETTING_PLAYING_AUDIO_INFO,
   LOAD_CP_AUDIO_SUCCESS,
-  TOGGLE_AUDIO_POPOUT_BAR
+  TOGGLE_AUDIO_POPOUT_BAR,
+  AUDIO_LOAD,
+  AUDIO_PLAY,
+  AUDIO_PAUSE,
+  AUDIO_UPDATE_INFO
 } from './audioTypes'
 /* eslint-disable*/
 
@@ -36,16 +39,13 @@ type AudioStateType = {
       formatted: string
     },
     url: string,
-    pos: {
-      i: string,
-      j: string
-    },
+    pos: Map<string, string, string>,
     from: string
   }
 }
 
 const initialState = {
-  playState: 'notPlaying',
+  isPlaying: false,
   capsules: [],
   isCpAudioLoaded: false,
   playingAudioInfo: {
@@ -66,7 +66,8 @@ const initialState = {
     url: '',
     pos: {
       i: '',
-      j: ''
+      j: '',
+      counter: ''
     },
     from: ''
   },
@@ -74,12 +75,6 @@ const initialState = {
 }
 
 export default createReducder({
-  [CHANGE_PLAYING_STATE]: (state, action) => {
-    return {
-      ...state,
-      playState: action.payload
-    }
-  },
   [CP_AUDIO_STORE]: (state, action) => {
     return {
       ...state,
@@ -112,6 +107,28 @@ export default createReducder({
       }
     }
   },
+  [AUDIO_UPDATE_INFO]: (state, action) => {
+    return {
+      ...state,
+      playingAudioInfo: {
+        ...state.playingAudioInfo,
+        currentTime: {
+          sec: action.payload.currentTime.sec,
+          formatted: action.payload.currentTime.formatted
+        }
+      }
+    }
+  },
+  [CP_AUDIO_INFO_GET]: (state, { payload }) => {
+    return {
+      ...state,
+      playingAudioInfo: {
+        ...state.playingAudioInfo,
+        parentKey: payload.parentKey,
+        id: payload.capsuleId
+      }
+    }
+  },
   [CP_AUDIO_INFO_GET_SUCCESS]: (state, action) => {
     if (action.payload)
       return {
@@ -120,10 +137,10 @@ export default createReducder({
           ...state.playingAudioInfo,
           audioIsGood: action.payload.audioIsGood,
           likeCounter: action.payload.likeCounter,
-          parentKey: action.payload.parentKey || state.playingAudioInfo.parentKey,
           capsulesId: action.payload.id || state.playingAudioInfo.capsulesId,
           name: action.payload.audioName,
-          url: action.payload.url
+          url: action.payload.url,
+          length: action.payload.length
         }
       }
     return state
@@ -155,6 +172,31 @@ export default createReducder({
     return {
       ...state,
       isAudioPopOutBarActive: !state.isAudioPopOutBarActive,
+    }
+  },
+  [AUDIO_LOAD]: (state, action) => {
+    return {
+      ...state,
+      playingAudioInfo: {
+        ...state.playingAudioInfo,
+        pos: {
+          i: action.payload.i,
+          j: action.payload.j,
+          pos: action.payload.pos
+        }
+      }
+    }
+  },
+  [AUDIO_PLAY]: (state, action) => {
+    return {
+      ...state,
+      isPlaying: true
+    }
+  },
+  [AUDIO_PAUSE]: (state, action) => {
+    return {
+      ...state,
+      isPlaying: false
     }
   }
 }, initialState)
