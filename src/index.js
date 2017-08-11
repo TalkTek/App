@@ -29,6 +29,7 @@ import Login from './screens/loginOrRegister/login'
 import Register from './screens/loginOrRegister/register'
 import ForgotPassword from './screens/loginOrRegister/forgetpw'
 import PopOutBar from './components/PopOutBar'
+import MessageBar from './components/MessageBar'
 
 // @connect(state => ({
 //   nav: state.nav
@@ -93,96 +94,111 @@ class App extends React.Component {
     }
 
     return (
-      <View style={{flex: 1}}>
-        <Provider store={store}>
+      <Provider store={store}>
+        <View style={{flex: 1}}>
           <Router createReducer={reducerCreate}>
-            <Scene
-              key='root'
-              hideNavBar
-              hideTabBar
-            >
-              {/*<Scene*/}
-                {/*hideNavBar*/}
-                {/*hideTabBar*/}
-                {/*key='popOutBar'*/}
-                {/*component={PopOutBar}*/}
-              {/*/>*/}
+            <Scene overlay>
               <Scene
-                key='launch'
-                component={Launch}
-                initial
+                key='popOutBar'
+                component={PopOutBar}
+              />
+              <Scene key='modal' modal hideNavBar initial>
+              <Scene
+                key='root'
                 hideNavBar
                 hideTabBar
-              />
-              <Scene
-                key='login'
-                component={Login}
-                hideNavBar
-              />
-              <Scene
-                key='register'
-                component={Register}
-                hideNavBar
-                back
-              />
-              <Scene
-                key='tab'
-                tabs
-                navigationBarStyle={{
-                  height: 49,
-                  backgroundColor: 'white',
-                  borderTopColor: 'rgb(224, 224, 224)',
-                  borderTopWidth: 1
-                }}
               >
+                {/*<Scene*/}
+                  {/*hideNavBar*/}
+                  {/*hideTabBar*/}
+                  {/*key='popOutBar'*/}
+                  {/*component={PopOutBar}*/}
+                {/*/>*/}
                 <Scene
-                  key='knowledgeCapsule'
-                  component={KnowledgeCapsule}
-                  icon={(props) => {
-                    return (
-                      <Image
-                        source={
-                          props.selected
-                            ? TabIconLink.active.knowledgeCapsule
-                            : TabIconLink.inActive.knowledgeCapsule
-                        }
-                      />
-                    )
-                  }}
+                  key='launch'
+                  component={Launch}
+                  initial
+                  hideNavBar
+                  hideTabBar
                 />
                 <Scene
-                  key='memberCenter'
-                  component={MemberCenter}
-                  icon={(props) => {
-                    return (
-                      <Image
-                        source={
-                          props.selected
-                            ? TabIconLink.active.memberCenter
-                            : TabIconLink.inActive.memberCenter
-                        }
-                      />
-                    )
+                  key='login'
+                  component={Login}
+                  hideNavBar
+                />
+                <Scene
+                  key='register'
+                  component={Register}
+                  hideNavBar
+                  back
+                />
+                <Scene
+                  key='tab'
+                  tabs
+                  navigationBarStyle={{
+                    height: 49,
+                    backgroundColor: 'white',
+                    borderTopColor: 'rgb(224, 224, 224)',
+                    borderTopWidth: 1
                   }}
                 >
                   <Scene
-                    key='memberInfo'
-                    component={MemberInfo}
-                    back
-                  />
+                    key='knowledgeCapsule'
+                    icon={(props) => {
+                      return (
+                        <Image
+                          source={
+                            props.selected
+                              ? TabIconLink.active.knowledgeCapsule
+                              : TabIconLink.inActive.knowledgeCapsule
+                          }
+                        />
+                      )
+                    }}
+                  >
+                    <Scene
+                      initial
+                      key='knowledgeCapsuleList'
+                      component={KnowledgeCapsule}
+                    />
+                  </Scene>
                   <Scene
-                    key='feedback'
-                    component={FeedBack}
-                    back
-                  />
+                    key='memberCenter'
+                    icon={(props) => {
+                      return (
+                        <Image
+                          source={
+                            props.selected
+                              ? TabIconLink.active.memberCenter
+                              : TabIconLink.inActive.memberCenter
+                          }
+                        />
+                      )
+                    }}
+                  >
+                    <Scene
+                      initial
+                      key='memberCenterList'
+                      component={MemberCenter}
+                    />
+                    <Scene
+                      key='memberInfo'
+                      component={MemberInfo}
+                      back
+                    />
+                    <Scene
+                      key='feedback'
+                      component={FeedBack}
+                      back
+                    />
+                  </Scene>
                 </Scene>
+              </Scene>
               </Scene>
             </Scene>
           </Router>
-        </Provider>
-        <PopOutBar />
-        <StatusBar />
-      </View>
+        </View>
+      </Provider>
     )
   }
 }

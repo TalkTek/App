@@ -26,16 +26,19 @@ import FBSDK, { LoginManager, AccessToken } from 'react-native-fbsdk'
 import { GoogleSignin } from 'react-native-google-signin'
 import firebase from 'firebase'
 import Modal from 'react-native-modalbox'
-import { NavigationActions } from 'react-navigation'
 import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge'
 import { loginStyles as styles } from './styles'
 import memberAction from '../../reducer/member/memberAction'
+import { Actions } from 'react-native-router-flux'
 
 let tracker = new GoogleAnalyticsTracker('UA-100475279-1',{ test: 3})
 
 tracker.trackScreenView('Login')
 
-const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
+const {
+  height: screenHeight,
+  width: screenWidth
+} = Dimensions.get('window')
 
 @connect( state => ({
   sendMsg: state.member.sendMsg,
@@ -99,12 +102,7 @@ export default class Login extends Component {
             from: 'Facebook'
           }
         })
-        dispatch(NavigationActions.reset({
-          index: 0,
-          actions: [
-            NavigationActions.navigate({routeName: 'KnowledgeCapsuleScreen'})
-          ]
-        }))
+        Actions.tab()
       }
     } catch(error) {
       if ( error.code === "auth/account-exists-with-different-credential" ) {
@@ -148,17 +146,10 @@ export default class Login extends Component {
           from: 'Google'
         }
       })
-
-      // dispatch(NavigationActions.reset({
-      //   index: 0,
-      //   actions: [
-      //     NavigationActions.navigate({routeName: 'KnowledgeCapsuleScreen'})
-      //   ]
-      // }))
+      Actions.tab()
     } catch(error) {
       console.log('error message is', error.message);
       console.log('error code is', error.code);
-
     }
   }
   
@@ -169,13 +160,8 @@ export default class Login extends Component {
       email: this.state.email,
       password: this.state.password
     })
-    // dispatch(NavigationActions.reset({
-    //   index: 0,
-    //   actions: [
-    //     NavigationActions.navigate({routeName: 'KnowledgeCapsuleScreen'})
-    //   ]
-    // }))
     tracker.trackEvent('EmailPasswordLogin', 'Fill In')
+    Actions.tab()
   }
 
   componentWillReceiveProps(nextProps) {
