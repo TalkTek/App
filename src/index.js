@@ -7,7 +7,8 @@ import createStore from './lib/configureStore'
 import { addNavigationHelpers } from 'react-navigation';
 import AppNav from './lib/navigator'
 import CodePush from 'react-native-code-push'
-import AudioComponents from './components/AudioComponents'
+// import AudioComponents from './components/AudioComponents'
+import AudioPlayerComponents from './components/AudioPlayerComponents'
 import './lib/global'
 import { StatusBar } from 'react-native'
 
@@ -42,9 +43,9 @@ class App extends React.Component {
     const store = createStore()
     return (
       <Provider store={store}>
-        <AudioComponents>
+        <AudioPlayerComponents>
           <AppWithNavState/>
-        </AudioComponents>
+        </AudioPlayerComponents>
       </Provider>
     )
   }

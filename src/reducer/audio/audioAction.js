@@ -13,7 +13,14 @@ import {
   CP_AUDIO_STORE,
   SETTING_PLAYING_AUDIO_INFO,
   LOAD_CP_AUDIO_SUCCESS,
-  TOGGLE_AUDIO_POPOUT_BAR
+  TOGGLE_AUDIO_POPOUT_BAR,
+  AUDIO_PLAY,
+  AUDIO_PAUSE,
+  AUDIO_TO_NEXT_TRACK,
+  AUDIO_TO_PREVIOUS_TRACK,
+  AUDIO_UPDATE_INFO,
+  AUDIO_UPDATE_CURRENT_TIME,
+  AUDIO_GET_NEXT_TRACK
 } from './audioTypes.js'
 
 export default createActions({
@@ -52,5 +59,12 @@ export default createActions({
   [CP_AUDIO_INFO_GET_SUCCESS]: state => state,
   [CP_AUDIO_GET_DOC]: state => state,
   [CP_AUDIO_GET_DOC_SUCCESS]: state => state,
-  [TOGGLE_AUDIO_POPOUT_BAR]: state => state
+  [TOGGLE_AUDIO_POPOUT_BAR]: state => state,
+  [AUDIO_PLAY]: state => state,
+  [AUDIO_PAUSE]: state => state,
+  [AUDIO_TO_NEXT_TRACK]: state => state,
+  [AUDIO_TO_PREVIOUS_TRACK]: state => state,
+  [AUDIO_UPDATE_INFO]: state => state,
+  [AUDIO_UPDATE_CURRENT_TIME]: state => state,
+  [AUDIO_GET_NEXT_TRACK]: state => state,
 })

@@ -15,5 +15,15 @@ module.exports = KeyMirror({
   CHANGE_PLAYING_STATE: null,
   SETTING_PLAYING_AUDIO_INFO: null,
   LOAD_CP_AUDIO_SUCCESS: null,
-  LOAD_CP_AUDIO_FAILURE: null
+  LOAD_CP_AUDIO_FAILURE: null,
+  // audio player types
+  AUDIO_PLAY: null,
+  AUDIO_PAUSE: null,
+  AUDIO_TO_NEXT_TRACK: null,
+  AUDIO_TO_PREVIOUS_TRACK: null,
+  AUDIO_UPDATE_INFO: null,
+  AUDIO_UPDATE_CURRENT_TIME: null,
+  AUDIO_GET_NEXT_TRACK: null,
+  AUDIO_GET_PREVIOUS_TRACK: null,
+  AUDIO_LOADED: null
 })

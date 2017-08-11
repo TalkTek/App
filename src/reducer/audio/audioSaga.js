@@ -13,7 +13,14 @@ import {
   CP_AUDIO_GET_DOC_FAILURE,
   CP_AUDIO_GOOD_CHANGE,
   CP_AUDIO_GET_DOC,
-  CP_AUDIO_INFO_GET
+  CP_AUDIO_INFO_GET,
+  AUDIO_PLAY,
+  AUDIO_TO_NEXT_TRACK,
+  AUDIO_TO_PREVIOUS_TRACK,
+  AUDIO_UPDATE_INFO,
+  AUDIO_UPDATE_CURRENT_TIME,
+  AUDIO_GET_NEXT_TRACK,
+  AUDIO_GET_PREVIOUS_TRACK
 } from './audioTypes'
 import AudioModule from '../../api/audioModule'
 
@@ -78,10 +85,49 @@ function * getAudioDoc (data) {
   })
 }
 
+/**
+ * player subroutines
+ */
+
+ function * audioPlay () {
+
+ }
+
+ function * audioPause () {
+
+ }
+
+ function * audioToNextTrack () {
+
+ }
+
+ function * audioToPreviousTrack () {
+
+ }
+
+ function * audioUpdateInfo () {
+
+ }
+
+ function * audioGetNextTrack () {
+
+ }
+
+ function * audioGetPreviousTrack () {
+
+ }
+
 /***
  * watcher
  */
 function * audioSaga () {
+  yield takeLatest(AUDIO_PLAY, audioPlay)
+  yield takeLatest(AUDIO_TO_NEXT_TRACK, audioPause)
+  yield takeLatest(AUDIO_TO_PREVIOUS_TRACK, audioToNextTrack)
+  yield takeLatest(AUDIO_UPDATE_INFO, audioToPreviousTrack)
+  yield takeLatest(AUDIO_UPDATE_CURRENT_TIME, audioUpdateInfo)
+  yield takeLatest(AUDIO_GET_NEXT_TRACK, audioGetNextTrack)
+  yield takeLatest(AUDIO_GET_PREVIOUS_TRACK, audioGetPreviousTrack)
   yield takeLatest(CP_AUDIO_INFO_GET, getAudioInfo)
   yield takeLatest(CP_AUDIO_GOOD_CHANGE, setAudioGoodState)
   yield takeLatest(CP_AUDIO_GET_DOC, getAudioDoc)

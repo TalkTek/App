@@ -16,6 +16,34 @@ import {
 } from './audioTypes'
 /* eslint-disable*/
 
+type AudioStateType = {
+  isPlaying: boolean,
+  capsules: [],
+  isCpAudioLoaded: boolean,
+  playingAudioInfo: {
+    draft: '',
+    likeCounter: number,
+    audioIsGood: boolean,
+    parentKey: string,
+    capsulesId: string,
+    name: string,
+    length: {
+      sec?: number,
+      formatted: string 
+    },
+    currentTime: {
+      sec?: number,
+      formatted: string
+    },
+    url: string,
+    pos: {
+      i: string,
+      j: string
+    },
+    from: string
+  }
+}
+
 const initialState = {
   playState: 'notPlaying',
   capsules: [],
