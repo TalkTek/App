@@ -80,7 +80,7 @@ export default class KnowledgeCapsule extends Component {
     const {
       _toggleAudioBarUp,
       _toggleAudioBarDown
-    } = this.props.navigation
+    } = this.props
       // let currentOffsetY = event.nativeEvent.contentOffset.y
     if (this.touchY === -1) {
       this.touchY = event.nativeEvent.pageY
@@ -103,7 +103,7 @@ export default class KnowledgeCapsule extends Component {
   onPress = (audio, i, j) => {
     const {
       _onPress
-    } = this.props.navigation
+    } = this.props
 
     this.setState({
       audioBarActive: true,
