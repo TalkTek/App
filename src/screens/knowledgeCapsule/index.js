@@ -107,7 +107,7 @@ export default class KnowledgeCapsule extends Component {
     }
   }
 
-  onPress = (audio, i, j) => {
+  onPress = (audio, i, j, pos) => {
     const {
       actions
     } = this.props
@@ -138,9 +138,12 @@ export default class KnowledgeCapsule extends Component {
       capsules,
       isCpAudioLoaded,
     } = this.props
-
     if(capsules) {
+      let counter = 0
+      let index
       CapUnit = capsules.map((cap, i) => {
+        let length = cap.audios.length
+        counter += length
         return (
           <View key={i} style={styles.capContainer}>
             <View style={styles.capTitle}>
