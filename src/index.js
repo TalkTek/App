@@ -4,15 +4,14 @@
 import React, { Component } from 'react'
 import { Provider, connect } from 'react-redux'
 import createStore from './lib/configureStore'
-import { addNavigationHelpers } from 'react-navigation'
-import AppNav from './lib/navigator'
 import CodePush from 'react-native-code-push'
 import AudioComponents from './components/AudioComponents'
 import './lib/global'
 import {
   StatusBar,
   Image,
-  View
+  View,
+  StyleSheet
 } from 'react-native'
 import {
   Router,
@@ -31,27 +30,6 @@ import ForgotPassword from './screens/loginOrRegister/forgetpw'
 import PopOutBar from './components/PopOutBar'
 import MessageBar from './components/MessageBar'
 
-// @connect(state => ({
-//   nav: state.nav
-// }))
-// class AppWithNavState extends Component {
-//   render() {
-//     return (
-//       <AppNav
-//         navigation={
-//           addNavigationHelpers({
-//             dispatch: this.props.dispatch,
-//             state: this.props.nav,
-//             _onPress: this.props._onPress,
-//             _toggleAudioBarDown: this.props._toggleAudioBarDown,
-//             _toggleAudioBarUp: this.props._toggleAudioBarUp
-//           })
-//         }
-//       />
-//     )
-//   }
-// }
-
 const TabIconLink = {
   active: {
     knowledgeCapsule: require('./assets/img/tabIcon/knowledgeCapsule/cap_active.png'),
@@ -63,21 +41,7 @@ const TabIconLink = {
   }
 }
 
-// const TabIcon = (props) => {
-//   console.log('TabIcon props is', props)
-//   return (
-//     <Image
-//       source={
-//         props.selected
-//           ? TabIconLink.active.knowledgeCapsule
-//           : TabIconLink.inActive.knowledgeCapsule
-//       }
-//     />
-//   )
-// }
-
-class App extends React.Component {
-
+class App extends Component {
   componentDidMount () {
     CodePush.sync({installMode: CodePush.InstallMode.ON_NEXT_RESTART})
   }
@@ -96,104 +60,113 @@ class App extends React.Component {
     return (
       <Provider store={store}>
         <View style={{flex: 1}}>
-          <Router createReducer={reducerCreate}>
+          <StatusBar
+            barStyle='light-content'
+          />
+          <Router createReducer={reducerCreate} tintColor='white'>
             <Scene overlay>
               <Scene
                 key='popOutBar'
                 component={PopOutBar}
               />
               <Scene key='modal' modal hideNavBar initial>
-              <Scene
-                key='root'
-                hideNavBar
-                hideTabBar
-              >
-                {/*<Scene*/}
-                  {/*hideNavBar*/}
-                  {/*hideTabBar*/}
-                  {/*key='popOutBar'*/}
-                  {/*component={PopOutBar}*/}
-                {/*/>*/}
                 <Scene
-                  key='launch'
-                  component={Launch}
-                  initial
+                  key='root'
                   hideNavBar
                   hideTabBar
-                />
-                <Scene
-                  key='login'
-                  component={Login}
-                  hideNavBar
-                />
-                <Scene
-                  key='register'
-                  component={Register}
-                  hideNavBar
-                  back
-                />
-                <Scene
-                  key='tab'
-                  tabs
-                  navigationBarStyle={{
-                    height: 49,
-                    backgroundColor: 'white',
-                    borderTopColor: 'rgb(224, 224, 224)',
-                    borderTopWidth: 1
-                  }}
                 >
                   <Scene
-                    key='knowledgeCapsule'
-                    icon={(props) => {
-                      return (
-                        <Image
-                          source={
-                            props.selected
-                              ? TabIconLink.active.knowledgeCapsule
-                              : TabIconLink.inActive.knowledgeCapsule
-                          }
-                        />
-                      )
-                    }}
-                  >
-                    <Scene
-                      initial
-                      key='knowledgeCapsuleList'
-                      component={KnowledgeCapsule}
-                    />
-                  </Scene>
+                    key='launch'
+                    component={Launch}
+                    initial
+                    hideNavBar
+                    hideTabBar
+                  />
                   <Scene
-                    key='memberCenter'
-                    icon={(props) => {
-                      return (
-                        <Image
-                          source={
-                            props.selected
-                              ? TabIconLink.active.memberCenter
-                              : TabIconLink.inActive.memberCenter
-                          }
-                        />
-                      )
+                    key='login'
+                    component={Login}
+                    hideNavBar
+                  />
+                  <Scene
+                    key='register'
+                    component={Register}
+                    hideNavBar
+                    back
+                  />
+                  <Scene
+                    key='tab'
+                    tabs
+                    tabBarStyle={{
+                      height: 49,
+                      backgroundColor: 'white',
+                      borderTopColor: 'rgb(224, 224, 224)',
+                      borderTopWidth: 1
                     }}
+                    activeTintColor='rgb(31, 191, 179)'
                   >
                     <Scene
-                      initial
-                      key='memberCenterList'
-                      component={MemberCenter}
-                    />
+                      key='knowledgeCapsule'
+                      tabBarLabel='知識膠囊'
+                      icon={(props) => {
+                        return (
+                          <Image
+                            source={
+                              props.focused
+                                ? TabIconLink.active.knowledgeCapsule
+                                : TabIconLink.inActive.knowledgeCapsule
+                            }
+                          />
+                        )
+                      }}
+                    >
+                      <Scene
+                        initial
+                        key='knowledgeCapsuleList'
+                        component={KnowledgeCapsule}
+                        title='知識膠囊'
+                        titleStyle={styles.titleStyle}
+                        navigationBarStyle={styles.headerStyle}
+                      />
+                    </Scene>
                     <Scene
-                      key='memberInfo'
-                      component={MemberInfo}
-                      back
-                    />
-                    <Scene
-                      key='feedback'
-                      component={FeedBack}
-                      back
-                    />
+                      key='memberCenter'
+                      tabBarLabel='我的'
+                      icon={(props) => {
+                        return (
+                          <Image
+                            source={
+                              props.focused
+                                ? TabIconLink.active.memberCenter
+                                : TabIconLink.inActive.memberCenter
+                            }
+                          />
+                        )
+                      }}
+                      titleStyle={styles.titleStyle}
+                      navigationBarStyle={styles.headerStyle}
+                    >
+                      <Scene
+                        initial
+                        key='memberCenterList'
+                        component={MemberCenter}
+                        title='我的'
+                      />
+                      <Scene
+                        key='memberInfo'
+                        component={MemberInfo}
+                        back
+                        title='個人資料'
+                      />
+                      <Scene
+                        key='feedback'
+                        component={FeedBack}
+                        back
+                        backTitle=''
+                        title='意見反饋'
+                      />
+                    </Scene>
                   </Scene>
                 </Scene>
-              </Scene>
               </Scene>
             </Scene>
           </Router>
@@ -202,6 +175,18 @@ class App extends React.Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  headerStyle: {
+    backgroundColor: 'rgb(31, 191, 179)',
+    height: 64
+  },
+  titleStyle: {
+    color: 'white',
+    fontSize: 17,
+    lineHeight: 22
+  }
+})
 
 let codePushOptions = {
   checkFrequency: CodePush.CheckFrequency.ON_APP_START
