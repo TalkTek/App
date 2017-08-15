@@ -89,9 +89,10 @@ export default class KnowledgeCapsule extends Component {
     actions.gaSetScreen('KnowledgeCapsule')
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: object) {
     let {playingAudioPos} = nextProps
-    if (playingAudioPos.i && playingAudioPos.j) {
+    let { i, j } = this.props.playingAudioPos
+    if ( playingAudioPos.i!=i || playingAudioPos.j!=j ) {
       this.toggleButtonColor(playingAudioPos.i, playingAudioPos.j)
     }
   }
@@ -148,9 +149,6 @@ export default class KnowledgeCapsule extends Component {
     const { capsules, playingAudioPos } = this.props
     capsules[playingAudioPos.i].audios[playingAudioPos.j].active = false
     capsules[i].audios[j].active = true
-
-    console.log(playingAudioPos)
-    console.log(i, j)
   }
 
   onScrollEndReached = () => {
