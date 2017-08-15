@@ -53,6 +53,8 @@ export default class PopOutBar extends Component {
   componentWillReceiveProps (nextProps) {
     if(nextProps.isAudioPopOutBarActive) {
       this.toggleAudioBarUp()
+    } else {
+      this.toggleAudioBarDown()
     }
   }
 
@@ -69,6 +71,19 @@ export default class PopOutBar extends Component {
     ).start()
   }
 
+  toggleAudioBarDown = () => {
+    const {
+      popoutAudioBarHeight,
+    } = this.state
+
+    Animated.spring(
+      popoutAudioBarHeight,
+      {
+        toValue: screenHeight
+      }
+    ).start()
+  }
+
   playOrPause = () => {
     const {isPlaying, actions} = this.props
     if (!isPlaying) {
@@ -80,6 +95,7 @@ export default class PopOutBar extends Component {
 
   openModal = () => {
     Actions.player()
+    this.props.actions.toggleAudioPopoutBar()
   }
 
   render () {

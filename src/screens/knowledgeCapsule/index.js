@@ -6,7 +6,6 @@ import { bindActionCreators } from 'redux'
 import audioActions from '../../reducer/audio/audioAction'
 import analyticActions from '../../reducer/analytic/analyticAction'
 import capsuleAction from '../../reducer/capsule/capsuleAction'
-import audioAction from '../../reducer/audio/audioAction'
 import { connect } from 'react-redux'
 import {
   TouchableHighlight,
@@ -52,6 +51,7 @@ let buttons = {
 }
 
 @connect(state => ({
+  isPlaying: state.audio.isPlaying,
   capsules: state.audio.capsules,
   isCpAudioLoaded: state.audio.isCpAudioLoaded,
   lastKey: state.capsule.lastKey,
@@ -61,7 +61,7 @@ let buttons = {
     j: state.audio.playingAudioInfo.pos.j
   }
 }), dispatch => ({
-  actions: bindActionCreators({...audioActions, ...analyticActions, ...audioAction}, dispatch),
+  actions: bindActionCreators({...audioActions, ...analyticActions}, dispatch),
   capsule: bindActionCreators(capsuleAction, dispatch)
 }))
 
@@ -99,9 +99,9 @@ export default class KnowledgeCapsule extends Component {
 
   onScroll = (event) => {
     const {
-      _toggleAudioBarUp,
-      _toggleAudioBarDown
-    } = this.props
+      showAudioPopoutBar,
+      hideAudioPopoutBar
+    } = this.props.actions
       // let currentOffsetY = event.nativeEvent.contentOffset.y
     if (this.touchY === -1) {
       this.touchY = event.nativeEvent.pageY
@@ -110,9 +110,11 @@ export default class KnowledgeCapsule extends Component {
       // const diff = currentOffsetY - this.state.offsetY
       const diff = event.nativeEvent.pageY - this.state.offsetY
       if(diff > 10) {
-        _toggleAudioBarDown()
+        // _toggleAudioBarDown()
+        showAudioPopoutBar()
       } else if(diff < -10) {
-        _toggleAudioBarUp()
+        // _toggleAudioBarUp()
+        hideAudioPopoutBar()
       }
       console.log(diff)
       this.setState({
@@ -212,7 +214,7 @@ export default class KnowledgeCapsule extends Component {
     }
     return (
       <Container style={styles.container}
-        onMoveShouldSetResponder={this.state.audioBarActive ? this.onScroll : null}
+        onMoveShouldSetResponder={this.props.isPlaying? this.onScroll: null}
       >
         <View>
           <Image

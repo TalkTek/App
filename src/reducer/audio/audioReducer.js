@@ -12,6 +12,8 @@ import {
   SETTING_PLAYING_AUDIO_INFO,
   LOAD_CP_AUDIO_SUCCESS,
   TOGGLE_AUDIO_POPOUT_BAR,
+  SHOW_AUDIO_POPOUT_BAR,
+  HIDE_AUDIO_POPOUT_BAR,
   AUDIO_LOAD,
   AUDIO_PLAY,
   AUDIO_PAUSE,
@@ -172,6 +174,18 @@ export default createReducder({
     return {
       ...state,
       isAudioPopOutBarActive: !state.isAudioPopOutBarActive,
+    }
+  },
+  [SHOW_AUDIO_POPOUT_BAR]: (state) => {
+    return {
+      ...state,
+      isAudioPopOutBarActive: true,
+    }
+  },
+  [HIDE_AUDIO_POPOUT_BAR]: (state) => {
+    return {
+      ...state,
+      isAudioPopOutBarActive: false,
     }
   },
   [AUDIO_LOAD]: (state, action) => {

@@ -109,6 +109,8 @@ export default class AudioComponents extends Component {
     })
     
     Actions.pop()
+    if (this.props.isPlaying)
+      this.props.actions.toggleAudioPopoutBar()
     // Animated.parallel([
     //   Animated.timing(popoutAudioBarOpacity, {
     //     toValue: 0,
