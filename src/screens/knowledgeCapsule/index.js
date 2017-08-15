@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux'
 import audioActions from '../../reducer/audio/audioAction'
 import analyticActions from '../../reducer/analytic/analyticAction'
 import capsuleAction from '../../reducer/capsule/capsuleAction'
+import audioAction from '../../reducer/audio/audioAction'
 import { connect } from 'react-redux'
 import {
   TouchableHighlight,
@@ -53,9 +54,14 @@ let buttons = {
 @connect(state => ({
   capsules: state.audio.capsules,
   isCpAudioLoaded: state.audio.isCpAudioLoaded,
-  lastKey: state.capsule.lastKey
+  lastKey: state.capsule.lastKey,
+  memberUid: state.member.memberUid,
+  playingAudioPos: {
+    i: state.audio.playingAudioInfo.pos.i,
+    j: state.audio.playingAudioInfo.pos.j
+  }
 }), dispatch => ({
-  actions: bindActionCreators({...audioActions, ...analyticActions}, dispatch),
+  actions: bindActionCreators({...audioActions, ...analyticActions, ...audioAction}, dispatch),
   capsule: bindActionCreators(capsuleAction, dispatch)
 }))
 
@@ -107,9 +113,10 @@ export default class KnowledgeCapsule extends Component {
     }
   }
 
-  onPress = (audio, i, j, pos) => {
+  onPress = (audio: object, i: number, j: number, pos: number) => {
     const {
-      actions
+      actions,
+      memberUid
     } = this.props
     //
     // this.setState({
@@ -118,8 +125,28 @@ export default class KnowledgeCapsule extends Component {
 
 
     actions.toggleAudioPopoutBar()
-
+    actions.cpAudioInfoGet(
+      {
+        parentKey: audio.parentKey,
+        capsuleId: audio.id,
+        memberUid
+      }
+    )
+    actions.audioLoad({
+      audio,
+      i,
+      j
+    })
+    this.toggleButtonColor(i, j)
     // _onPress.bind(this, audio, i, j)()
+  }
+
+  toggleButtonColor = (i, j) => {
+    const { capsules, playingAudioPos } = this.props
+    if (playingAudioPos.i !== '' && playingAudioPos.j !== '') {
+      capsules[playingAudioPos.i].audios[playingAudioPos.j].active = false
+    }
+    capsules[i].audios[j].active = true
   }
 
   onScrollEndReached = () => {

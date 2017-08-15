@@ -19,6 +19,7 @@ import PlayAudioScreen from '../screens/playAudio'
 import audioActions from '../reducer/audio/audioAction'
 import analyticAction from '../reducer/analytic/analyticAction'
 import { Button } from 'native-base'
+import { Actions } from 'react-native-router-flux'
 
 const {
   width: screenWidth,
@@ -43,11 +44,7 @@ let buttons = {
     isPlaying: state.audio.isPlaying,
     audioName: playingAudioInfo.name,
     currentTimeFormatted: playingAudioInfo.currentTime.formatted,
-    currentTimeSec: playingAudioInfo.currentTime.sec,
-    playingAudioPos: {
-      i: audio.playingAudioInfo.pos.i,
-      j: audio.playingAudioInfo.pos.j
-    }
+    currentTimeSec: playingAudioInfo.currentTime.sec
   }
 }, dispatch => {
   return {
@@ -58,17 +55,21 @@ export default class AudioComponents extends Component {
 
   interval = null
 
-  timer = setInterval(() => {
-    if (this.props.isPlaying) {
-      this.props.actions.audioUpdateCurrentTime()
-    }
-  }, 450)
+  // timer = setInterval(() => {
+  //   if (this.props.isPlaying) {
+  //     this.props.actions.audioUpdateCurrentTime()
+  //   }
+  // }, 450)
 
   state = {
     popoutAudioBarHeight: new Animated.Value(screenHeight - 100),
     popoutAudioBarOpacity: new Animated.Value(0),
     offsetY: 0,
     isModalOpen: false,
+  }
+
+  componentDidMount() {
+    this.toggleAudioBarUp()
   }
 
   toggleAudioBarUp = () => {
@@ -90,6 +91,10 @@ export default class AudioComponents extends Component {
         toValue: 100
       }
     ).start()
+
+    this.setState({
+      isModalOpen: true
+    })
   }
 
   toggleAudioBarDown = () => {
@@ -98,21 +103,28 @@ export default class AudioComponents extends Component {
       popoutAudioBarOpacity
     } = this.state
 
-    Animated.parallel([
-      Animated.timing(popoutAudioBarOpacity, {
-        toValue: 0,
-        duration: 100
-      }),
-      Animated.spring(popoutAudioBarHeight, {
-        toValue: screenHeight - 49
-      })
-    ]).start()
+    this.setState({
+      isModalOpen: false
+    })
+    
+    Actions.pop()
+    // Animated.parallel([
+    //   Animated.timing(popoutAudioBarOpacity, {
+    //     toValue: 0,
+    //     duration: 100
+    //   }),
+    //   Animated.spring(popoutAudioBarHeight, {
+    //     toValue: screenHeight - 49
+    //   })
+    // ]).start()
   }
 
   toggleModal = () => {
-    this.setState({
-      isModalOpen: !this.state.isModalOpen
-    })
+    if (this.state.isModalOpen) {
+      this.toggleAudioBarDown()
+    } else {
+      this.toggleAudioBarUp()
+    }
   }
 
   openModal = () => {
@@ -178,14 +190,6 @@ export default class AudioComponents extends Component {
 
   }
 
-  toggleButtonColor = (i, j) => {
-    const { capsules, playingAudioPos } = this.props
-    if (playingAudioPos.i !== '' && playingAudioPos.j !== '') {
-      capsules[playingAudioPos.i].audios[playingAudioPos.j].active = false
-    }
-    capsules[i].audios[j].active = true
-  }
-
   render() {
     const {
       children,
@@ -198,12 +202,12 @@ export default class AudioComponents extends Component {
       <View style={{
         flex: 1,
       }}>
-        {React.cloneElement(children, {
-          _onPress: this._onPress,
-          _toggleAudioBarDown: this.toggleAudioBarDown,
-          _toggleAudioBarUp: this.toggleAudioBarUp
-        })}
-        <Animated.View
+        {/* {React.cloneElement(children, {
+          //_onPress: this._onPress,
+          //_toggleAudioBarDown: this.toggleAudioBarDown,
+          //_toggleAudioBarUp: this.toggleAudioBarUp
+        })} */}
+        {/* <Animated.View
           style={[styles.container, {
             top: this.state.popoutAudioBarHeight,
             opacity: this.state.popoutAudioBarOpacity,
@@ -236,7 +240,7 @@ export default class AudioComponents extends Component {
               style={styles.open}
             />
           </Button>
-        </Animated.View>
+        </Animated.View> */}
         <Modal
           ref={"playAudio"}
           position={"center"}

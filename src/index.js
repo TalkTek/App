@@ -69,12 +69,20 @@ class App extends Component {
               <Scene
                 key='popOutBar'
                 component={PopOutBar}
+                modal
               />
               <Scene key='modal' modal hideNavBar initial>
+                <Scene
+                  key='player'
+                  modal
+                  hideNavBar
+                  component={AudioPlayerComponents}
+                />
                 <Scene
                   key='root'
                   hideNavBar
                   hideTabBar
+                  initial
                 >
                   <Scene
                     key='launch'
