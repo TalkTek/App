@@ -58,7 +58,7 @@ function * setAudioGoodState (data) {
   const { isGood, capsulesId, parentKey, userId } = data.payload
   let audioInfo = yield call(() => new AudioModule().getAudioInfo(capsulesId, parentKey))
   try {
-    let likeCounter = yield call(() => new AudioModule()[isGood ? 'cpAudioGood' : 'cpAudioNotGood'](capsulesId, parentKey, userId, audioInfo.likeCounter + (isGood ? +1 : -1)))
+    let likeCounter = yield call(() => new AudioModule()[isGood ? 'cpAudioGood' : 'cpAudioNotGood'](capsulesId, parentKey, userId, (audioInfo.likeCounter||0) + (isGood ? +1 : -1)))
     yield put({
       type: CP_AUDIO_GOOD_CHANGE_SUCCESS,
       payload: {
@@ -138,7 +138,6 @@ function * selectTrack (offset: number) {
   }
   
   const iJ = countIJ(audios, returnIndex)
-  console.log(audios)
   return { audio: datas[returnIndex], ...iJ, pos: returnIndex }
 }
 

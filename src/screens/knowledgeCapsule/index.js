@@ -125,7 +125,7 @@ export default class KnowledgeCapsule extends Component {
       actions,
       memberUid
     } = this.props
-    console.log(pos)
+    
     actions.toggleAudioPopoutBar()
     actions.cpAudioInfoGet(
       {

@@ -136,7 +136,7 @@ export default createReducder({
         playingAudioInfo: {
           ...state.playingAudioInfo,
           audioIsGood: action.payload.audioIsGood,
-          likeCounter: action.payload.likeCounter,
+          likeCounter: action.payload.likeCounter || 0,
           capsulesId: action.payload.id || state.playingAudioInfo.capsulesId,
           name: action.payload.audioName,
           url: action.payload.url,

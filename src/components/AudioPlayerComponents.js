@@ -44,7 +44,8 @@ let buttons = {
     isPlaying: state.audio.isPlaying,
     audioName: playingAudioInfo.name,
     currentTimeFormatted: playingAudioInfo.currentTime.formatted,
-    currentTimeSec: playingAudioInfo.currentTime.sec
+    currentTimeSec: playingAudioInfo.currentTime.sec,
+    audioTimeSec: playingAudioInfo.length.sec
   }
 }, dispatch => {
   return {
@@ -174,8 +175,8 @@ export default class AudioComponents extends Component {
   }
 
   _forward15s = () => {
-    let {currentTimeSec} = this.props
-    this._seek(currentTimeSec + 15)
+    let { currentTimeSec } = this.props
+    this._seek(currentTimeSec+15)
   }
 
   _backward = () => {
@@ -184,12 +185,14 @@ export default class AudioComponents extends Component {
   }
 
   _backward15s = () => {
-    let {currentTimeSec} = this.props
-    this._seek(currentTimeSec - 15)
+    let { currentTimeSec, audioTimeSec } = this.props
+    let changeedTime = currentTimeSec - 15 < 0? 0: currentTimeSec - 15
+    this._seek(changeedTime)
   }
 
   _seek = (value) => {
-    this.props.actions.audioSeek(value)
+    let { audioTimeSec, isPlaying, actions } = this.props
+    actions.audioSeek(value >= audioTimeSec? audioTimeSec - 1: value)
     if (!this.props.isPlaying)
       setTimeout(() => this.props.actions.audioUpdateCurrentTime(), 50)
   }
