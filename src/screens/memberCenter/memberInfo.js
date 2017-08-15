@@ -60,10 +60,6 @@ class MemberInfo extends Component {
     birthday: undefined
   }
 
-  static navigationOptions = (navigation: Object) => ({
-    headerRight: <HeaderRight navigation={navigation.navigation} />
-  })
-
   componentWillMount() {
     state['email'] = this.props.memberEmail
     state['name'] = this.props.memberName
