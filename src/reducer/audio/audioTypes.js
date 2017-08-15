@@ -20,10 +20,9 @@ module.exports = KeyMirror({
   AUDIO_LOADED: null,
   AUDIO_PLAY: null,
   AUDIO_PAUSE: null,
+  AUDIO_SEEK: null,
   AUDIO_TO_NEXT_TRACK: null,
   AUDIO_TO_PREVIOUS_TRACK: null,
   AUDIO_UPDATE_INFO: null,
-  AUDIO_UPDATE_CURRENT_TIME: null,
-  AUDIO_GET_NEXT_TRACK: null,
-  AUDIO_GET_PREVIOUS_TRACK: null
+  AUDIO_UPDATE_CURRENT_TIME: null
 })

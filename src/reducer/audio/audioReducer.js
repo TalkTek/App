@@ -39,7 +39,7 @@ type AudioStateType = {
       formatted: string
     },
     url: string,
-    pos: Map<string, string, string>,
+    pos: Map<number, number, number>,
     from: string
   }
 }
@@ -65,9 +65,9 @@ const initialState = {
     },
     url: '',
     pos: {
-      i: '',
-      j: '',
-      counter: ''
+      i: 0,
+      j: 0,
+      pos: 0
     },
     from: ''
   },

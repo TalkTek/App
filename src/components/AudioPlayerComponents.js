@@ -174,7 +174,8 @@ export default class AudioComponents extends Component {
   }
 
   _forward15s = () => {
-    
+    let {currentTimeSec} = this.props
+    this._seek(currentTimeSec + 15)
   }
 
   _backward = () => {
@@ -183,11 +184,14 @@ export default class AudioComponents extends Component {
   }
 
   _backward15s = () => {
-
+    let {currentTimeSec} = this.props
+    this._seek(currentTimeSec - 15)
   }
 
-  _seek = () => {
-
+  _seek = (value) => {
+    this.props.actions.audioSeek(value)
+    if (!this.props.isPlaying)
+      setTimeout(() => this.props.actions.audioUpdateCurrentTime(), 50)
   }
 
   render() {

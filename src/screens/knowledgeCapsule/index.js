@@ -55,7 +55,7 @@ let buttons = {
   capsules: state.audio.capsules,
   isCpAudioLoaded: state.audio.isCpAudioLoaded,
   lastKey: state.capsule.lastKey,
-  memberUid: state.member.memberUid,
+  memberUid: state.member.uid,
   playingAudioPos: {
     i: state.audio.playingAudioInfo.pos.i,
     j: state.audio.playingAudioInfo.pos.j
@@ -89,6 +89,13 @@ export default class KnowledgeCapsule extends Component {
     actions.gaSetScreen('KnowledgeCapsule')
   }
 
+  componentWillReceiveProps(nextProps) {
+    let {playingAudioPos} = nextProps
+    if (playingAudioPos.i && playingAudioPos.j) {
+      this.toggleButtonColor(playingAudioPos.i, playingAudioPos.j)
+    }
+  }
+
   onScroll = (event) => {
     const {
       _toggleAudioBarUp,
@@ -118,12 +125,7 @@ export default class KnowledgeCapsule extends Component {
       actions,
       memberUid
     } = this.props
-    //
-    // this.setState({
-    //   audioBarActive: true,
-    // })
-
-
+    console.log(pos)
     actions.toggleAudioPopoutBar()
     actions.cpAudioInfoGet(
       {
@@ -135,18 +137,20 @@ export default class KnowledgeCapsule extends Component {
     actions.audioLoad({
       audio,
       i,
-      j
+      j,
+      pos
     })
     this.toggleButtonColor(i, j)
     // _onPress.bind(this, audio, i, j)()
   }
 
-  toggleButtonColor = (i, j) => {
+  toggleButtonColor = (i: number, j: number) => {
     const { capsules, playingAudioPos } = this.props
-    if (playingAudioPos.i !== '' && playingAudioPos.j !== '') {
-      capsules[playingAudioPos.i].audios[playingAudioPos.j].active = false
-    }
+    capsules[playingAudioPos.i].audios[playingAudioPos.j].active = false
     capsules[i].audios[j].active = true
+
+    console.log(playingAudioPos)
+    console.log(i, j)
   }
 
   onScrollEndReached = () => {
@@ -183,7 +187,7 @@ export default class KnowledgeCapsule extends Component {
                 <View key={j} style={styles.capUnit}>
                   <TouchableHighlight
                     style={styles.capPlayPauseButton}
-                    onPress={() => this.onPress(audio, i, j)}
+                    onPress={this.onPress.bind(this, audio, i, j, counter-(length-j))}
                     // onPress={() => MessageBarManager.showAlert({
                     //   title: 'sdfafa',
                     //   message: 'DFSDFDF',

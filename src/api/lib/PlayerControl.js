@@ -12,7 +12,8 @@ export default class PlayerControl {
         player = new Player(url, {
           autoDestory: false,
           continuesToPlayInBackground: true
-        }).prepare(resolve)
+        })
+        player.prepare(resolve)
       })
   }
 
@@ -44,6 +45,10 @@ export default class PlayerControl {
 
   static wakeLock(isWake: boolean) {
     player.wakeLock = isWake
+  }
+
+  static get stoped():boolean {
+    return player.isStopped
   }
 
   static get currentTime():?number {
