@@ -1,29 +1,27 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import { Dimensions } from 'react-native'
+import SmallIcon from '../SmallIcon'
 
-import FullWidthBanner from './fullWidthBanner'
-
-const {
-  width: screenWidth
-} = Dimensions.get('window')
-
-const source = require('../../../assets/img/bubu.png')
+// fake property
+const source = require('../../../../assets/img/bubu.png')
 const marginLeft = 30
 const style = [{
-  resizeMode: 'cover',
-  width: screenWidth,
-  height: 160
+  width: 24,
+  height: 24,
+  marginLeft: 30,
+  marginRight: 0,
+  marginBottom: 0,
+  marginTop: 0
 }, undefined]
 
 const renderComponent = () => shallow(
-  <FullWidthBanner
+  <SmallIcon
     source={source}
     marginLeft={marginLeft}
   />
 ).dive()
 
-describe('<fullWidthBanner />', () => {
+describe('<SmallIcon />', () => {
   it('should render an <Image> tag', () => {
     const wrapper = renderComponent()
     expect(wrapper.type()).toEqual('Image')
@@ -32,7 +30,7 @@ describe('<fullWidthBanner />', () => {
     const wrapper = renderComponent()
     expect(wrapper.prop('source')).toEqual(source)
   })
-  it('should have an marginLeft props if we pass marginLeft props', () => {
+  it('should have an change on marginLeft prop if we pass marginLeft value', () => {
     const wrapper = renderComponent()
     expect(wrapper.prop('marginLeft')).toEqual(marginLeft)
   })

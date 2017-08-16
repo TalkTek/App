@@ -1,30 +1,26 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import { Dimensions } from 'react-native'
 
-import FullWidthBanner from './fullWidthBanner'
+import SmallThumb from '../SmallThumb'
 
-const {
-  width: screenWidth
-} = Dimensions.get('window')
-
-const source = require('../../../assets/img/bubu.png')
-const marginLeft = 30
+// fake data
+const source = require('../../../../assets/img/bubu.png')
 const style = [{
-  resizeMode: 'cover',
-  width: screenWidth,
-  height: 160
+  width: 32,
+  height: 32,
+  borderRadius: 20
 }, undefined]
+const borderRadius = 20
 
 const renderComponent = () => shallow(
-  <FullWidthBanner
+  <SmallThumb
     source={source}
-    marginLeft={marginLeft}
+    borderRadius={borderRadius}
   />
 ).dive()
 
-describe('<fullWidthBanner />', () => {
-  it('should render an <Image> tag', () => {
+describe('<SmallThumb />', () => {
+  it('should render an <Image> tag ', () => {
     const wrapper = renderComponent()
     expect(wrapper.type()).toEqual('Image')
   })
@@ -32,9 +28,9 @@ describe('<fullWidthBanner />', () => {
     const wrapper = renderComponent()
     expect(wrapper.prop('source')).toEqual(source)
   })
-  it('should have an marginLeft props if we pass marginLeft props', () => {
+  it('should have an change on borderRadius prop if we pass borderRadius value', () => {
     const wrapper = renderComponent()
-    expect(wrapper.prop('marginLeft')).toEqual(marginLeft)
+    expect(wrapper.prop('borderRadius')).toEqual(borderRadius)
   })
   it('should have an correct original styles', () => {
     const wrapper = renderComponent()
