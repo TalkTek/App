@@ -51,9 +51,15 @@ let buttons = {
 }
 
 @connect(state => ({
+  isPlaying: state.audio.isPlaying,
   capsules: state.audio.capsules,
   isCpAudioLoaded: state.audio.isCpAudioLoaded,
-  lastKey: state.capsule.lastKey
+  lastKey: state.capsule.lastKey,
+  memberUid: state.member.uid,
+  playingAudioPos: {
+    i: state.audio.playingAudioInfo.pos.i,
+    j: state.audio.playingAudioInfo.pos.j
+  }
 }), dispatch => ({
   actions: bindActionCreators({...audioActions, ...analyticActions}, dispatch),
   capsule: bindActionCreators(capsuleAction, dispatch)
@@ -83,11 +89,19 @@ export default class KnowledgeCapsule extends Component {
     actions.gaSetScreen('KnowledgeCapsule')
   }
 
+  componentWillReceiveProps(nextProps: object) {
+    let {playingAudioPos} = nextProps
+    let { i, j } = this.props.playingAudioPos
+    if ( playingAudioPos.i!=i || playingAudioPos.j!=j ) {
+      this.toggleButtonColor(playingAudioPos.i, playingAudioPos.j)
+    }
+  }
+
   onScroll = (event) => {
     const {
-      _toggleAudioBarUp,
-      _toggleAudioBarDown
-    } = this.props
+      showAudioPopoutBar,
+      hideAudioPopoutBar
+    } = this.props.actions
       // let currentOffsetY = event.nativeEvent.contentOffset.y
     if (this.touchY === -1) {
       this.touchY = event.nativeEvent.pageY
@@ -96,9 +110,11 @@ export default class KnowledgeCapsule extends Component {
       // const diff = currentOffsetY - this.state.offsetY
       const diff = event.nativeEvent.pageY - this.state.offsetY
       if(diff > 10) {
-        _toggleAudioBarDown()
+        // _toggleAudioBarDown()
+        showAudioPopoutBar()
       } else if(diff < -10) {
-        _toggleAudioBarUp()
+        // _toggleAudioBarUp()
+        hideAudioPopoutBar()
       }
       console.log(diff)
       this.setState({
@@ -107,19 +123,34 @@ export default class KnowledgeCapsule extends Component {
     }
   }
 
-  onPress = (audio, i, j) => {
+  onPress = (audio: object, i: number, j: number, pos: number) => {
     const {
-      actions
+      actions,
+      memberUid
     } = this.props
-    //
-    // this.setState({
-    //   audioBarActive: true,
-    // })
-
-
+    
     actions.toggleAudioPopoutBar()
-
+    actions.cpAudioInfoGet(
+      {
+        parentKey: audio.parentKey,
+        capsuleId: audio.id,
+        memberUid
+      }
+    )
+    actions.audioLoad({
+      audio,
+      i,
+      j,
+      pos
+    })
+    this.toggleButtonColor(i, j)
     // _onPress.bind(this, audio, i, j)()
+  }
+
+  toggleButtonColor = (i: number, j: number) => {
+    const { capsules, playingAudioPos } = this.props
+    capsules[playingAudioPos.i].audios[playingAudioPos.j].active = false
+    capsules[i].audios[j].active = true
   }
 
   onScrollEndReached = () => {
@@ -138,9 +169,12 @@ export default class KnowledgeCapsule extends Component {
       capsules,
       isCpAudioLoaded,
     } = this.props
-
     if(capsules) {
+      let counter = 0
+      let index
       CapUnit = capsules.map((cap, i) => {
+        let length = cap.audios.length
+        counter += length
         return (
           <View key={i} style={styles.capContainer}>
             <View style={styles.capTitle}>
@@ -153,7 +187,7 @@ export default class KnowledgeCapsule extends Component {
                 <View key={j} style={styles.capUnit}>
                   <TouchableHighlight
                     style={styles.capPlayPauseButton}
-                    onPress={() => this.onPress(audio, i, j)}
+                    onPress={this.onPress.bind(this, audio, i, j, counter-(length-j))}
                     // onPress={() => MessageBarManager.showAlert({
                     //   title: 'sdfafa',
                     //   message: 'DFSDFDF',
@@ -180,7 +214,7 @@ export default class KnowledgeCapsule extends Component {
     }
     return (
       <Container style={styles.container}
-        onMoveShouldSetResponder={this.state.audioBarActive ? this.onScroll : null}
+        onMoveShouldSetResponder={this.props.isPlaying? this.onScroll: null}
       >
         <View>
           <Image
