@@ -5,7 +5,8 @@ import React, { Component } from 'react'
 import { Provider, connect } from 'react-redux'
 import createStore from './lib/configureStore'
 import CodePush from 'react-native-code-push'
-import AudioComponents from './components/AudioComponents'
+// import AudioComponents from './components/AudioComponents'
+import AudioPlayerComponents from './components/AudioPlayerComponents'
 import './lib/global'
 import {
   StatusBar,
@@ -68,13 +69,22 @@ class App extends Component {
               <Scene
                 key='popOutBar'
                 component={PopOutBar}
+                initial
               />
               <Scene key='modal' modal hideNavBar initial>
                 <Scene
                   key='root'
                   hideNavBar
                   hideTabBar
+                  initial
                 >
+                  <Scene
+                    animationEnabled={false}
+                    key='player'
+                    replace
+                    hideNavBar
+                    component={AudioPlayerComponents}
+                  />
                   <Scene
                     key='launch'
                     component={Launch}

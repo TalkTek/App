@@ -35,7 +35,7 @@ const mapStateToProps = (state) => {
     audioIsGood: state.audio.playingAudioInfo.audioIsGood,
     capsulesId: state.audio.playingAudioInfo.capsulesId,
     parentKey: state.audio.playingAudioInfo.parentKey,
-    playState: state.audio.playState,
+    playState: state.audio.isPlaying,
     audioName: state.audio.playingAudioInfo.name,
     audioUrl: state.audio.playingAudioInfo.url,
     audioLengthFormatted: state.audio.playingAudioInfo.length.formatted,
@@ -236,7 +236,7 @@ class PlayAudio extends Component {
         >
           <Image
             source={button.twoState
-              ? (playState === 'playing'
+              ? (playState
                 ? button.pauseLink : button.playLink
               )
               : button.link

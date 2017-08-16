@@ -12,8 +12,19 @@ module.exports = KeyMirror({
   CP_AUDIO_GET_DOC_FAILURE: null,
   CP_AUDIO_STORE: null,
   TOGGLE_AUDIO_POPOUT_BAR: null,
-  CHANGE_PLAYING_STATE: null,
+  SHOW_AUDIO_POPOUT_BAR: null,
+  HIDE_AUDIO_POPOUT_BAR: null,
   SETTING_PLAYING_AUDIO_INFO: null,
   LOAD_CP_AUDIO_SUCCESS: null,
-  LOAD_CP_AUDIO_FAILURE: null
+  LOAD_CP_AUDIO_FAILURE: null,
+  // audio player types
+  AUDIO_LOAD: null,
+  AUDIO_LOADED: null,
+  AUDIO_PLAY: null,
+  AUDIO_PAUSE: null,
+  AUDIO_SEEK: null,
+  AUDIO_TO_NEXT_TRACK: null,
+  AUDIO_TO_PREVIOUS_TRACK: null,
+  AUDIO_UPDATE_INFO: null,
+  AUDIO_UPDATE_CURRENT_TIME: null
 })
