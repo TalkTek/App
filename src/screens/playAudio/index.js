@@ -235,14 +235,16 @@ class PlayAudio extends Component {
           }}
           underlayColor="#fff"
         >
-          <FunctionIcon
-            source={button.twoState
-              ? (playState
-                ? button.pauseLink : button.playLink
-              )
-              : button.link
-            }
-          />
+          <View>
+            <FunctionIcon
+              source={button.twoState
+                ? (playState
+                  ? button.pauseLink : button.playLink
+                )
+                : button.link
+              }
+            />
+          </View>
         </TouchableHighlight>
       )
     })
