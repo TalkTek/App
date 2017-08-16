@@ -4,7 +4,6 @@
 import React, { Component } from 'react'
 import {
   View,
-  Text,
   Image,
   Button,
   TouchableOpacity,
@@ -26,6 +25,7 @@ import { Actions } from 'react-native-router-flux'
 import ListIcon from '../../components/img/icon/SmallIcon'
 import OpenIcon from '../../components/img/icon/LargeIcon'
 import Avatar from '../../components/img/Thumbnail/LargeThumb'
+import { Text } from '../../components/text'
 
 const { width: screenWidth } = Dimensions.get('window')
 
@@ -173,7 +173,9 @@ export default class MemberCenter extends Component {
                 style={styles.logout}
                 underlayColor="#fff"
               >
-                <Text>登出</Text>
+                <View>
+                  <Text>登出</Text>
+                </View>
               </TouchableHighlight>
             }
           </View>

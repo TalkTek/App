@@ -7,7 +7,6 @@ import { bindActionCreators } from 'redux'
 import memberAction from '../../reducer/member/memberAction'
 import { 
   View,
-  Text,
   TouchableOpacity,
   ActivityIndicator
 } from 'react-native'
@@ -18,6 +17,7 @@ import {
   Picker,
   Toast
 } from 'native-base'
+import { Text } from '../../components/text'
 import { feedBackStyle } from './styles'
 
 type toastInfo = {

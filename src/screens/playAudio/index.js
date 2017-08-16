@@ -10,7 +10,6 @@ import { connect } from 'react-redux'
 import {
   Container,
   View,
-  Text,
   Header,
   Left,
   Body,
@@ -29,6 +28,7 @@ import Modal from 'react-native-modalbox'
 import FunctionIcon from '../../components/img/icon/XLIcon'
 import CloseIcon from '../../components/img/icon/XSmallIcon'
 import Banner from '../../components/img/banner/fullWidthBanner'
+import { Text } from '../../components/text'
 
 const mapStateToProps = (state) => {
   return {
@@ -142,7 +142,6 @@ class PlayAudio extends Component {
   }
 
   openModal = () => {
-    console.log("hello world")
     this.setState({
       isModalOpen: true,
       swipeToClose: !this.state.swipeToClose

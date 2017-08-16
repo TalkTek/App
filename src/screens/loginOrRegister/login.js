@@ -16,7 +16,6 @@ import {
   Button,
   Form,
   View,
-  Text,
   Input,
   Item,
 } from 'native-base'
@@ -30,6 +29,7 @@ import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge'
 import { loginStyles as styles } from './styles'
 import memberAction from '../../reducer/member/memberAction'
 import { Actions } from 'react-native-router-flux'
+import { Text, Title, SubTitle, ThirdTitle } from '../../components/text'
 
 let tracker = new GoogleAnalyticsTracker('UA-100475279-1',{ test: 3})
 
@@ -219,9 +219,9 @@ export default class Login extends Component {
               style={{...styles.baseButton, ...styles.loginButton}}
               onPress={this._onEmailPasswordLogin.bind(this)}
             >
-              <Text style={styles.loginText}>
+              <Title style={styles.loginText}>
                 登入
-              </Text>
+              </Title>
             </Button>
             <Text style={styles.or}>
               或透過第三方服務
@@ -232,13 +232,13 @@ export default class Login extends Component {
             </Button>
             <Button style={{...styles.baseButton, ...styles.googleButton}} onPress={this._onGoogleSignIn.bind(this)}>
               <Icon name="google-plus" size={28} color="white" />
-              <Text style={styles.facebookNGoogleText}>Google</Text>
+              <SubTitle style={styles.facebookNGoogleText}>Google</SubTitle>
             </Button>
             <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={() => navigate('Register')}>
-              <Text style={styles.registerText}>註冊新帳號</Text>
+              <SubTitle style={styles.registerText}>註冊新帳號</SubTitle>
             </Button>
             <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={() => navigate('Forgetpw')}>
-              <Text style={styles.registerText}>忘記密碼</Text>
+              <SubTitle style={styles.registerText}>忘記密碼</SubTitle>
             </Button>
           </View>
           <Modal
@@ -249,12 +249,12 @@ export default class Login extends Component {
             backdropOpacity={0.3}
             isOpen={this.state.isOpen}
           >
-              <Text style={styles.modalHeadlineText}>登入失敗</Text>
-              <Text style={styles.modalErrorMsgText}>
+              <SubTitle>登入失敗</SubTitle>
+              <ThirdTitle style={styles.modalErrorMsgText}>
                 {this.state.errMsg}
-              </Text>
+              </ThirdTitle>
               <Button style={styles.modalButton} onPress={() => this.setState({ isOpen: !this.state.isOpen})}>
-                <Text style={styles.modalButtonText}>確認</Text>
+                <SubTitle style={styles.modalButtonText}>確認</SubTitle>
               </Button>
           </Modal>
           <Modal

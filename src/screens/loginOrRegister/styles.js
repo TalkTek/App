@@ -11,12 +11,7 @@ export const loginStyles = {
     alignItems: 'center',
     justifyContent: 'center'
   },
-  modalHeadlineText: {
-    fontSize: 16,
-    fontWeight: 'bold'
-  },
   modalErrorMsgText: {
-    fontSize: 16,
     marginHorizontal: 13
   },
   modalButton: {
@@ -24,9 +19,7 @@ export const loginStyles = {
     backgroundColor: '#fff'
   },
   modalButtonText: {
-    color: 'rgb(31, 191, 179)',
-    fontWeight: 'bold',
-    fontSize: 15
+    color: 'rgb(31, 191, 179)'
   },
   modal: {
     alignItems: 'center',
@@ -92,16 +85,11 @@ export const loginStyles = {
   },
   loginText: {
     marginLeft: screenWidth*0.75*0.4,
-    fontSize: 15,
-    fontWeight: '900',
-    height: 21,
-    width: 40
+    color: 'rgb(255,255, 255)'
   },
   facebookNGoogleText: {
-    fontSize: 15,
-    marginLeft: 16,
-    letterSpacing: 0,
-    fontWeight: '600'
+    color: 'rgb(255, 255, 255)',
+    marginLeft: 15
   },
   or: {
     fontSize: 14,
@@ -111,9 +99,7 @@ export const loginStyles = {
     lineHeight: 17
   },
   registerText: {
-    fontSize: 15,
     color: 'rgb(31, 191, 179)',
-    fontWeight: 'bold',
     lineHeight: 21
   },
   registerButton: {

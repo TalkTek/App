@@ -23,6 +23,7 @@ import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import memberActoion from '../../reducer/member/memberAction'
+import { Title } from '../../components/text'
 
 const { height: screenHeight, width: screenWidth }: Object = Dimensions.get('window')
 
@@ -133,14 +134,14 @@ export default class Register extends Component {
               </Item>
             </Form>
             <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={this._onRegister.bind(this)}>
-              <Text style={styles.registerText}>
+              <Title style={styles.registerText}>
                 註冊
-              </Text>
+              </Title>
             </Button>
             <Button style={{...styles.baseButton, ...styles.cancelButton}} onPress={() => goBack()}>
-              <Text style={styles.cancelText}>
+              <Title style={styles.cancelText}>
                 取消
-              </Text>
+              </Title>
             </Button>
           </View>
 
@@ -242,17 +243,11 @@ const styles = {
   },
   registerText: {
     marginLeft: screenWidth*0.75*0.4,
-    fontSize: 15,
-    fontWeight: '900',
-    height: 21,
+    color: 'rgb(255, 255, 255)',
     width: 40
   },
   cancelText: {
     marginLeft: screenWidth*0.75*0.4,
-    color: 'rgb(33, 33 ,33)',
-    fontSize: 15,
-    fontWeight: '900',
-    height: 21,
     width: 40
   },
 }

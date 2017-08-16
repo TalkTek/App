@@ -22,6 +22,7 @@ import { bindActionCreators } from 'redux'
 import firebase from 'firebase'
 import Modal from 'react-native-modalbox'
 import MemberAction from '../../reducer/member/memberAction'
+import { SubTitle, ThirdTitle } from '../../components/text'
 // import { FIREBASE_CONFIG } from '../../lib/config'
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
@@ -99,9 +100,9 @@ export default class Forgetpw extends Component {
               </Item>
             </Form>
             <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={this._Resetpw.bind(this)}>
-              <Text style={styles.registerText}>
+              <SubTitle style={styles.registerText}>
                 重設
-              </Text>
+              </SubTitle>
             </Button>
             <Button style={{...styles.baseButton, ...styles.cancelButton}} onPress={() => goBack()}>
               <Text style={styles.cancelText}>
@@ -118,12 +119,12 @@ export default class Forgetpw extends Component {
             backdropOpacity={0.3}
             isOpen={this.state.isOpen}
           >
-              <Text style={styles.modalHeadlineText}>重設失敗</Text>
-              <Text style={styles.modalErrorMsgText}>
+              <SubTitle style={styles.modalHeadlineText}>重設失敗</SubTitle>
+              <ThirdTitle style={styles.modalErrorMsgText}>
                 {this.state.errMsg}
-              </Text>
+              </ThirdTitle>
               <Button style={styles.modalButton} onPress={() => this.setState({ isOpen: !this.state.isOpen})}>
-                <Text style={styles.modalButtonText}>確認</Text>
+                <SubTitle style={styles.modalButtonText}>確認</SubTitle>
               </Button>
           </Modal>
 
@@ -136,22 +137,17 @@ export default class Forgetpw extends Component {
 const styles = {
   modalHeadlineText: {
     marginTop: 14,
-    marginBottom: 29,
-    fontSize: 15,
-    fontWeight: 'bold'
+    marginBottom: 29
   },
   modalErrorMsgText: {
-    marginBottom: 30,
-    fontSize: 15,
+    marginBottom: 30
   },
   modalButton: {
     alignSelf: 'auto',
     backgroundColor: '#fff'
   },
   modalButtonText: {
-    color: 'rgb(31, 191, 179)',
-    fontWeight: 'bold',
-    fontSize: 15,
+    color: 'rgb(31, 191, 179)'
   },
   modal: {
     justifyContent: 'center',
@@ -208,8 +204,6 @@ const styles = {
   },
   registerText: {
     marginLeft: screenWidth*0.75*0.4,
-    fontSize: 15,
-    fontWeight: '900',
     height: 21,
     width: 40
   },
