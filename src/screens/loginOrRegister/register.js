@@ -13,7 +13,6 @@ import {
   Button,
   Form,
   View,
-  Text,
   Input,
   Item,
 } from 'native-base'
@@ -23,7 +22,7 @@ import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import memberActoion from '../../reducer/member/memberAction'
-import { Title } from '../../components/text'
+import { H3, H4 } from '../../components/text'
 
 const { height: screenHeight, width: screenWidth }: Object = Dimensions.get('window')
 
@@ -134,14 +133,14 @@ export default class Register extends Component {
               </Item>
             </Form>
             <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={this._onRegister.bind(this)}>
-              <Title style={styles.registerText}>
+              <H3 style={styles.registerText}>
                 註冊
-              </Title>
+              </H3>
             </Button>
             <Button style={{...styles.baseButton, ...styles.cancelButton}} onPress={() => goBack()}>
-              <Title style={styles.cancelText}>
+              <H3 style={styles.cancelText}>
                 取消
-              </Title>
+              </H3>
             </Button>
           </View>
 
@@ -153,15 +152,14 @@ export default class Register extends Component {
             backdropOpacity={0.3}
             isOpen={this.state.isOpen}
           >
-              <Text style={styles.modalHeadlineText}>登入失敗</Text>
-              <Text style={styles.modalErrorMsgText}>
+              <H4 style={styles.modalHeadlineText}>登入失敗</H4>
+              <H4 style={styles.modalErrorMsgText}>
                 {this.state.errMsg}
-              </Text>
+              </H4>
               <Button style={styles.modalButton} onPress={() => this.setState({ isOpen: !this.state.isOpen})}>
-                <Text style={styles.modalButtonText}>確認</Text>
+                <H4 style={styles.modalButtonText}>確認</H4>
               </Button>
           </Modal>
-
         </Content>
       </Container>
     )

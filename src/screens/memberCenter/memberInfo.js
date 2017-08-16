@@ -4,7 +4,6 @@
 import React, { Component } from 'react'
 import { 
   View,
-  Text,
   TouchableOpacity,
   Button,
   DatePickerIOS,
@@ -23,6 +22,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import memberAction from '../../reducer/member/memberAction'
 import analyticAction from '../../reducer/analytic/analyticAction'
+import { H3 } from '../../components/text'
 
 let state = {
   email: '',
@@ -123,7 +123,7 @@ class MemberInfo extends Component {
               style={[memberInfoStyle.inputArea, memberInfoStyle.dateSelect]}
               onPress={this._openAndroidDatePicker}
             >
-              <Text style={memberInfoStyle.textInput}>{this.state['birthday']||'選擇生日'}</Text>
+              <H3 style={memberInfoStyle.textInput}>{this.state['birthday']||'選擇生日'}</H3>
             </TouchableOpacity>
         )
         break
@@ -150,7 +150,7 @@ class MemberInfo extends Component {
     return (
       <View key={key} style={memberInfoStyle.formInput}>
         <View style={memberInfoStyle.input}>
-          <Text style={memberInfoStyle.inputLabel}>{data.text}</Text>
+          <H3 style={memberInfoStyle.inputLabel}>{data.text}</H3>
         </View>
        { this._renderFormElement(key, data) }
       </View>
@@ -171,9 +171,9 @@ class MemberInfo extends Component {
             <TouchableOpacity
               style={memberInfoStyle.uploadBtn}
             >
-              <Text style={memberInfoStyle.uploadBtnText}>
+              <H3 style={memberInfoStyle.uploadBtnText}>
                 上傳照片
-              </Text>
+              </H3>
             </TouchableOpacity>
           </View>
           <View style={memberInfoStyle.form}>
@@ -201,7 +201,7 @@ class MemberInfo extends Component {
 class HeaderRight extends Component {
   render() {
     return (
-      <Button 
+      <Button
         title="儲存"
         color="#fff"
         onPress={() => {

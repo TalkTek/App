@@ -22,7 +22,7 @@ import { bindActionCreators } from 'redux'
 import firebase from 'firebase'
 import Modal from 'react-native-modalbox'
 import MemberAction from '../../reducer/member/memberAction'
-import { SubTitle, ThirdTitle } from '../../components/text'
+import { SubTitle, ThirdTitle, H3, H4 } from '../../components/text'
 // import { FIREBASE_CONFIG } from '../../lib/config'
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
@@ -100,14 +100,14 @@ export default class Forgetpw extends Component {
               </Item>
             </Form>
             <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={this._Resetpw.bind(this)}>
-              <SubTitle style={styles.registerText}>
+              <H3 bold style={styles.registerText}>
                 重設
-              </SubTitle>
+              </H3>
             </Button>
             <Button style={{...styles.baseButton, ...styles.cancelButton}} onPress={() => goBack()}>
-              <Text style={styles.cancelText}>
+              <H4 style={styles.cancelText}>
                 取消
-              </Text>
+              </H4>
             </Button>
           </View>
 
@@ -119,15 +119,14 @@ export default class Forgetpw extends Component {
             backdropOpacity={0.3}
             isOpen={this.state.isOpen}
           >
-              <SubTitle style={styles.modalHeadlineText}>重設失敗</SubTitle>
-              <ThirdTitle style={styles.modalErrorMsgText}>
+              <H3 bold style={styles.modalHeadlineText}>重設失敗</H3>
+              <H3 style={styles.modalErrorMsgText}>
                 {this.state.errMsg}
-              </ThirdTitle>
+              </H3>
               <Button style={styles.modalButton} onPress={() => this.setState({ isOpen: !this.state.isOpen})}>
-                <SubTitle style={styles.modalButtonText}>確認</SubTitle>
+                <H3 bold style={styles.modalButtonText}>確認</H3>
               </Button>
           </Modal>
-
         </Content>
       </Container>
     )

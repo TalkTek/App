@@ -17,7 +17,7 @@ import {
   Picker,
   Toast
 } from 'native-base'
-import { Text } from '../../components/text'
+import { H4 } from '../../components/text'
 import { feedBackStyle } from './styles'
 
 type toastInfo = {
@@ -110,9 +110,9 @@ class Feedback extends Component {
         {
           this.props.status !== 1 &&
           <Content style={feedBackStyle.content}>
-            <Text style={feedBackStyle.textLabel}> 
+            <H4 style={feedBackStyle.textLabel}> 
               選擇回饋類型
-            </Text> 
+            </H4> 
             <View>
               <Picker
                 mode="dropdown"
@@ -132,16 +132,16 @@ class Feedback extends Component {
                 }
               </Picker>
             </View>
-            <Text style={feedBackStyle.textLabel}>
+            <H4 style={feedBackStyle.textLabel}>
               內容（必填）
-            </Text>
+            </H4>
             <View style={[feedBackStyle.input, feedBackStyle.mutiInput]}>
               <Input onChangeText={(value: string) => this.setState({content: value})} multiline />
             </View>
             <TouchableOpacity onPress={this.send} style={feedBackStyle.sendBtn}>
-              <Text style={feedBackStyle.sendText}>
+              <H4 style={feedBackStyle.sendText}>
                 送出
-              </Text>
+              </H4>
             </TouchableOpacity>
           </Content>
         }

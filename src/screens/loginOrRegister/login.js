@@ -29,7 +29,7 @@ import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge'
 import { loginStyles as styles } from './styles'
 import memberAction from '../../reducer/member/memberAction'
 import { Actions } from 'react-native-router-flux'
-import { Text, Title, SubTitle, ThirdTitle } from '../../components/text'
+import { H2, H3, H4 } from '../../components/text'
 
 let tracker = new GoogleAnalyticsTracker('UA-100475279-1',{ test: 3})
 
@@ -219,26 +219,26 @@ export default class Login extends Component {
               style={{...styles.baseButton, ...styles.loginButton}}
               onPress={this._onEmailPasswordLogin.bind(this)}
             >
-              <Title style={styles.loginText}>
+              <H3 style={styles.loginText}>
                 登入
-              </Title>
+              </H3>
             </Button>
-            <Text style={styles.or}>
+            <H4 style={styles.or}>
               或透過第三方服務
-            </Text>
+            </H4>
             <Button style={{...styles.baseButton, ...styles.facebookButton}} onPress={this._onFacebookLogin.bind(this)}>
               <Icon name="facebook-square" size={28} color="white" />
-              <Text style={styles.facebookNGoogleText}>Facebook</Text>
+              <H3 style={styles.facebookNGoogleText}>Facebook</H3>
             </Button>
             <Button style={{...styles.baseButton, ...styles.googleButton}} onPress={this._onGoogleSignIn.bind(this)}>
               <Icon name="google-plus" size={28} color="white" />
-              <SubTitle style={styles.facebookNGoogleText}>Google</SubTitle>
+              <H3 style={styles.facebookNGoogleText}>Google</H3>
             </Button>
             <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={() => navigate('Register')}>
-              <SubTitle style={styles.registerText}>註冊新帳號</SubTitle>
+              <H3 style={styles.registerText}>註冊新帳號</H3>
             </Button>
             <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={() => navigate('Forgetpw')}>
-              <SubTitle style={styles.registerText}>忘記密碼</SubTitle>
+              <H3 style={styles.registerText}>忘記密碼</H3>
             </Button>
           </View>
           <Modal
@@ -249,12 +249,12 @@ export default class Login extends Component {
             backdropOpacity={0.3}
             isOpen={this.state.isOpen}
           >
-              <SubTitle>登入失敗</SubTitle>
-              <ThirdTitle style={styles.modalErrorMsgText}>
+              <H3 bold>登入失敗</H3>
+              <H3 style={styles.modalErrorMsgText}>
                 {this.state.errMsg}
-              </ThirdTitle>
+              </H3>
               <Button style={styles.modalButton} onPress={() => this.setState({ isOpen: !this.state.isOpen})}>
-                <SubTitle style={styles.modalButtonText}>確認</SubTitle>
+                <H3 bold style={styles.modalButtonText}>確認</H3>
               </Button>
           </Modal>
           <Modal

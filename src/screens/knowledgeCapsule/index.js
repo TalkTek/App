@@ -37,7 +37,7 @@ import {
 } from 'react-native-router-flux'
 import Icon from '../../components/img/icon/SmallIcon'
 import Banner from '../../components/img/banner/fullWidthBanner'
-import { ThirdTitle } from '../../components/text'
+import { H3 } from '../../components/text'
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 console.log('screenHeight', screenHeight);
@@ -179,9 +179,9 @@ export default class KnowledgeCapsule extends Component {
         return (
           <View key={i} style={styles.capContainer}>
             <View style={styles.capTitle}>
-              <ThirdTitle>
+              <H3>
                 {cap.title}
-              </ThirdTitle>
+              </H3>
             </View>
             {
               cap.audios.map((audio, j) =>
@@ -196,8 +196,8 @@ export default class KnowledgeCapsule extends Component {
                         source={audio.active ? buttons.playing : buttons.playable}
                         marginRight={12}
                       />
-                      <ThirdTitle style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>{audio.name}</ThirdTitle>
-                      <ThirdTitle style={styles.audioLengthText}>{audio.length ? audio.length.formatted : ''}</ThirdTitle>
+                      <H3 style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>{audio.name}</H3>
+                      <H3 style={styles.audioLengthText}>{audio.length ? audio.length.formatted : ''}</H3>
                     </View>
                   </TouchableHighlight>
                 </View>

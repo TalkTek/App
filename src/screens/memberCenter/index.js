@@ -25,7 +25,7 @@ import { Actions } from 'react-native-router-flux'
 import ListIcon from '../../components/img/icon/SmallIcon'
 import OpenIcon from '../../components/img/icon/LargeIcon'
 import Avatar from '../../components/img/Thumbnail/LargeThumb'
-import { Text } from '../../components/text'
+import { H4 } from '../../components/text'
 
 const { width: screenWidth } = Dimensions.get('window')
 
@@ -94,14 +94,14 @@ export default class MemberCenter extends Component {
             source={rowData.icon}
             marginLeft={24}
           />
-          <Text style={styles.listText}>
+          <H4 style={styles.listText}>
             {rowData.text}
-          </Text>
+          </H4>
           {
             rowData.rightText &&
-            <Text style={styles.listRightText}>
+            <H4 style={styles.listRightText}>
               {rowData.rightText}
-            </Text>
+            </H4>
           }
         </View>
         <View style={styles.listItemMore}>
@@ -124,7 +124,7 @@ export default class MemberCenter extends Component {
           }
           borderRadius={40}
         />
-        <Text 
+        <H4 
           style={styles.email} 
           onPress={() => {
             if (!this.props.memberUid) {
@@ -133,7 +133,7 @@ export default class MemberCenter extends Component {
           }}
         >
           { this.props.memberUid? this.props.memberEmail: '登入' }
-        </Text>
+        </H4>
         {
           this.props.memberUid &&
           <TouchableOpacity onPress={() => Actions.memberInfo()} style={styles.moreInfo}>
@@ -174,7 +174,7 @@ export default class MemberCenter extends Component {
                 underlayColor="#fff"
               >
                 <View>
-                  <Text>登出</Text>
+                  <H4>登出</H4>
                 </View>
               </TouchableHighlight>
             }
