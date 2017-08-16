@@ -17,11 +17,6 @@ const style: Object = {
     alignItems: 'center',
     justifyContent: 'center'
   },
-  avatarImg: {
-    width: 80,
-    height: 80,
-    borderRadius: 40
-  },
   moreInfo: {
     alignSelf: 'flex-end',
     position: 'absolute',
@@ -38,11 +33,6 @@ const style: Object = {
     paddingBottom: 17,
     flexDirection: 'row',
     alignItems: 'center'
-  },
-  listIcon: {
-    width: 24,
-    height: 24,
-    marginLeft: 24
   },
   listText: {
     marginLeft: 13

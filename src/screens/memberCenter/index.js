@@ -23,12 +23,11 @@ import memberAction from '../../reducer/member/memberAction'
 import analyticAction from '../../reducer/analytic/analyticAction'
 import firebase from 'firebase'
 import { Actions } from 'react-native-router-flux'
-
+import ListIcon from '../../components/img/icon/SmallIcon'
+import OpenIcon from '../../components/img/icon/LargeIcon'
+import Avatar from '../../components/img/Thumbnail/LargeThumb'
 
 const { width: screenWidth } = Dimensions.get('window')
-
-console.log('width isis', screenWidth)
-
 
 @connect(state => ({
   memberUid: state.member.uid,
@@ -84,7 +83,6 @@ export default class MemberCenter extends Component {
   }
 
   _renderListItem = (rowData: Object) => {
-    console.log('rowData is', rowData)
     return (
       <TouchableOpacity
         key={rowData.key}
@@ -92,9 +90,9 @@ export default class MemberCenter extends Component {
         style={[styles.mainBackground, styles.listItem]}
         >
         <View style={styles.listItemLeft}>
-          <Image 
+          <ListIcon
             source={rowData.icon}
-            style={styles.listIcon}
+            marginLeft={24}
           />
           <Text style={styles.listText}>
             {rowData.text}
@@ -107,7 +105,7 @@ export default class MemberCenter extends Component {
           }
         </View>
         <View style={styles.listItemMore}>
-          <Image 
+          <OpenIcon
             source={require('../../assets/img/memberCenter/enter.png')}
           />
         </View>
@@ -118,14 +116,13 @@ export default class MemberCenter extends Component {
   _renderUserAvater = () => {
     return (
       <View style={[styles.mainBackground, styles.avatar]}>
-        <Image 
+        <Avatar
           source={
             this.props.memberUid?
             { uri: this.props.memberAvatar }:
             require('../../assets/img/memberCenter/profileIcon.png')
           }
-          style={styles.avatarImg}
-          large
+          borderRadius={40}
         />
         <Text 
           style={styles.email} 
@@ -140,7 +137,9 @@ export default class MemberCenter extends Component {
         {
           this.props.memberUid &&
           <TouchableOpacity onPress={() => Actions.memberInfo()} style={styles.moreInfo}>
-            <Image source={require('../../assets/img/memberCenter/enter.png')} />
+            <OpenIcon
+              source={require('../../assets/img/memberCenter/enter.png')}
+            />
           </TouchableOpacity>
         }
       </View>
