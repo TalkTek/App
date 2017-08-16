@@ -9,7 +9,6 @@ import AudioComponents from './components/AudioComponents'
 import './lib/global'
 import {
   StatusBar,
-  Image,
   View,
   StyleSheet
 } from 'react-native'
@@ -28,7 +27,8 @@ import Login from './screens/loginOrRegister/login'
 import Register from './screens/loginOrRegister/register'
 import ForgotPassword from './screens/loginOrRegister/forgetpw'
 import PopOutBar from './components/PopOutBar'
-import MessageBar from './components/MessageBar'
+
+import Icon from './components/img/icon/MediumIcon'
 
 const TabIconLink = {
   active: {
@@ -109,7 +109,7 @@ class App extends Component {
                       tabBarLabel='知識膠囊'
                       icon={(props) => {
                         return (
-                          <Image
+                          <Icon
                             source={
                               props.focused
                                 ? TabIconLink.active.knowledgeCapsule
@@ -133,7 +133,7 @@ class App extends Component {
                       tabBarLabel='我的'
                       icon={(props) => {
                         return (
-                          <Image
+                          <Icon
                             source={
                               props.focused
                                 ? TabIconLink.active.memberCenter

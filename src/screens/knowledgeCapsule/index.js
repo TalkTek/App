@@ -11,7 +11,6 @@ import {
   TouchableHighlight,
   Animated,
   Dimensions,
-  Image,
   ActivityIndicator,
   Platform,
   NetInfo
@@ -37,6 +36,8 @@ import {
 import {
   Actions
 } from 'react-native-router-flux'
+import Icon from '../../components/img/icon/SmallIcon'
+import Banner from '../../components/img/banner/fullWidthBanner'
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 console.log('screenHeight', screenHeight);
@@ -154,18 +155,12 @@ export default class KnowledgeCapsule extends Component {
                   <TouchableHighlight
                     style={styles.capPlayPauseButton}
                     onPress={() => this.onPress(audio, i, j)}
-                    // onPress={() => MessageBarManager.showAlert({
-                    //   title: 'sdfafa',
-                    //   message: 'DFSDFDF',
-                    //   alertType: 'sccuess'
-                    // })}
-                    // onPress={() => Actions.popOutBar()}
                     underlayColor="#fff"
                   >
                     <View style={styles.capAudio}>
-                      <Image
+                      <Icon
                         source={audio.active ? buttons.playing : buttons.playable}
-                        style={styles.capPlayPauseButtonImage}
+                        marginRight={12}
                       />
                       <Text style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>{audio.name}</Text>
                       <Text style={styles.audioLengthText}>{audio.length ? audio.length.formatted : ''}</Text>
@@ -183,8 +178,7 @@ export default class KnowledgeCapsule extends Component {
         onMoveShouldSetResponder={this.state.audioBarActive ? this.onScroll : null}
       >
         <View>
-          <Image
-            style={styles.banner}
+          <Banner
             source={require('../../assets/img/knowledgeCapsule/banner.png')}
           />
         </View>

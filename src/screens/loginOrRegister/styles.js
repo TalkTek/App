@@ -17,16 +17,16 @@ export const loginStyles = {
   },
   modalErrorMsgText: {
     fontSize: 16,
-    marginHorizontal: 13,
+    marginHorizontal: 13
   },
   modalButton: {
     alignSelf: 'auto',
-    backgroundColor: '#fff',
+    backgroundColor: '#fff'
   },
   modalButtonText: {
     color: 'rgb(31, 191, 179)',
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: 15
   },
   modal: {
     alignItems: 'center',
