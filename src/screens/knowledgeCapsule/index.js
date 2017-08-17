@@ -7,6 +7,7 @@ import audioActions from '../../reducer/audio/audioAction'
 import analyticActions from '../../reducer/analytic/analyticAction'
 import capsuleAction from '../../reducer/capsule/capsuleAction'
 import { connect } from 'react-redux'
+import { createSelector } from 'reselect'
 import {
   TouchableHighlight,
   Animated,
@@ -57,10 +58,8 @@ let buttons = {
   isCpAudioLoaded: state.audio.isCpAudioLoaded,
   lastKey: state.capsule.lastKey,
   memberUid: state.member.uid,
-  playingAudioPos: {
-    i: state.audio.playingAudioInfo.pos.i,
-    j: state.audio.playingAudioInfo.pos.j
-  }
+  playingAudioPosI: state.audio.playingAudioInfo.pos.i,
+  playingAudioPosJ:state.audio.playingAudioInfo.pos.j
 }), dispatch => ({
   actions: bindActionCreators({...audioActions, ...analyticActions}, dispatch),
   capsule: bindActionCreators(capsuleAction, dispatch)
@@ -91,10 +90,11 @@ export default class KnowledgeCapsule extends Component {
   }
 
   componentWillReceiveProps(nextProps: object) {
-    let {playingAudioPos} = nextProps
-    let { i, j } = this.props.playingAudioPos
-    if ( playingAudioPos.i!=i || playingAudioPos.j!=j ) {
-      this.toggleButtonColor(playingAudioPos.i, playingAudioPos.j)
+    let {playingAudioPosI, playingAudioPosJ} = nextProps
+    let i = this.props.playingAudioPosI
+    let j = this.props.playingAudioPosJ
+    if ( playingAudioPosI!=i || playingAudioPosJ!=j ) {
+      this.toggleButtonColor(playingAudioPosI, playingAudioPosJ)
     }
   }
 
@@ -149,8 +149,8 @@ export default class KnowledgeCapsule extends Component {
   }
 
   toggleButtonColor = (i: number, j: number) => {
-    const { capsules, playingAudioPos } = this.props
-    capsules[playingAudioPos.i].audios[playingAudioPos.j].active = false
+    const { capsules, playingAudioPosI, playingAudioPosJ } = this.props
+    capsules[playingAudioPosI].audios[playingAudioPosJ].active = false
     capsules[i].audios[j].active = true
   }
 
