@@ -223,12 +223,18 @@ export default class Login extends Component {
               <Icon name="google-plus" size={28} color="white" />
               <Text style={styles.facebookNGoogleText}>Google</Text>
             </Button>
-            <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={() => navigate('Register')}>
-              <Text style={styles.registerText}>註冊新帳號</Text>
-            </Button>
-            <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={() => navigate('Forgetpw')}>
-              <Text style={styles.registerText}>忘記密碼</Text>
-            </Button>
+            <View style={{
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              width: screenWidth * 0.75,
+            }}>
+              <TouchableOpacity onPress={() => navigate('Register')}>
+                <Text style={styles.registerText}>註冊新帳號</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigate('Forgetpw')}>
+                <Text style={styles.registerText}>忘記密碼</Text>
+              </TouchableOpacity>
+            </View>
           </View>
           <Modal
             style={styles.modal}

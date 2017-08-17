@@ -137,9 +137,9 @@ export default class KnowledgeCapsule extends Component {
       // const diff = currentOffsetY - this.state.offsetY
       const diff = event.nativeEvent.pageY - this.state.offsetY
       if(diff > 10) {
-        _toggleAudioBarDown()
-      } else if(diff < -10) {
         _toggleAudioBarUp()
+      } else if(diff < -10) {
+        _toggleAudioBarDown()
       }
       console.log(diff)
       this.setState({

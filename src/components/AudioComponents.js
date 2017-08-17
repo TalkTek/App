@@ -164,8 +164,8 @@ export default class AudioComponents extends Component {
           next.likeCounter
         )
       } else {
+        console.log('HEEEEEEEEEEEEEEEEEEEEEEEEEE',)
         next = capsules[playingAudioPos.i + 1].audios[0]
-        actions.settingPlayingAudioInfo(next.name, next.length, next.url)
         await this.toggleButtonColor(playingAudioPos.i + 1, 0)
         await actions.settingPlayingAudioInfo(
           next.name,
@@ -189,7 +189,6 @@ export default class AudioComponents extends Component {
     }
     this._updateCapsuleInfo(next.id, next.parentKey)
     await this.createPlayer(next.url)
-    await this.playOrPause()
   }
 
   backward = async () => {
@@ -270,7 +269,6 @@ export default class AudioComponents extends Component {
     }
     this._updateCapsuleInfo(next.id, next.parentKey)
     await this.createPlayer(next.url)
-    await this.playOrPause()
   }
 
   forward15s = () => {

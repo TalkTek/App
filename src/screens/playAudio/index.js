@@ -216,7 +216,7 @@ class PlayAudio extends Component {
             <Text
               style={styles.footerText}
             >
-              {!isNaN(this.props[button.name])? this.props[button.name]: '讚'}
+              {!isNaN(this.props[button.name])? this.props[button.name]: '文稿'}
             </Text>
           </View>
         </TouchableHighlight>

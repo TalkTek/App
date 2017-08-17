@@ -58,6 +58,7 @@ const CapsuleScreen = StackNavigator({
   Main: { screen: MainScreen },
   Login: { screen: Login },
   Register: { screen: Register },
+  Forgetpw: { screen: Forgetpw},
   PlayerDocScreen: { screen: PlayerDoc }
 }, {
   initialRouteName: 'Main',
