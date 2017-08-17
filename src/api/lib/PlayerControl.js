@@ -2,18 +2,23 @@
 import { Player } from 'react-native-audio-toolkit'
 
 let player = null
+let isPlayerEnded = true
 export default class PlayerControl {
 
   static async _init (url) {
     if (player) {
       await this._destroy(player)
     }
+    isPlayerEnded = false
     return new Promise((resolve, reject) => {
         player = new Player(url, {
           autoDestory: false,
           continuesToPlayInBackground: true
         })
         player.prepare(resolve)
+        player.on('ended', () => {
+          isPlayerEnded = true
+        })
       })
   }
 
@@ -49,6 +54,10 @@ export default class PlayerControl {
 
   static get stoped():boolean {
     return player.isStopped
+  }
+
+  static get isEnded():boolean {
+    return isPlayerEnded
   }
 
   static get currentTime():?number {

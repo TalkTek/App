@@ -224,12 +224,13 @@ function * audioUpdateCurrentTime () {
 
   let formatted = `${min}:${sec}`
   // console.log(value === endTime)
-  if (value >= endTime - 1) {
+  if (playerModule.isEnded) {
     console.log('next')
     yield put({
       type: AUDIO_TO_NEXT_TRACK
     })
   }
+
   yield put({ type: AUDIO_UPDATE_INFO, payload: {
     currentTime: {
       sec: value,
