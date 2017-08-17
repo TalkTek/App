@@ -25,3 +25,14 @@
 > fontSize
 
 覆寫字體大小 （ 不建議 ）
+
+常用字體顏色參數 (免值)
+------
+
+> <span style="color:rgb(158, 158, 158)">gray</span>
+
+> <span style="color:rgb(250, 250, 250)">white</span>
+
+> <span style="color:rgb(33, 33, 33)">black</span>
+
+> <span style="color:rgb(31, 191, 179)">green</span>

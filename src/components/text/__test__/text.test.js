@@ -21,7 +21,11 @@ describe('<Text />', () => {
 
   it('should have correct style', () => {
     const wrapper = shallow(<Text {...textProps} />).dive()
-    console.log(wrapper.prop('style'))
     expect(wrapper.prop('style')).toEqual(textStyle)
+  })
+  
+  it('should have correct text color', () => {
+    const wrapper = shallow(<Text gray />).dive()
+    expect(wrapper.prop('style')[0].color).toEqual('rgb(158, 158, 158)')
   })
 })

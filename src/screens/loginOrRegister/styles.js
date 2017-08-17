@@ -18,9 +18,6 @@ export const loginStyles = {
     alignSelf: 'auto',
     backgroundColor: '#fff'
   },
-  modalButtonText: {
-    color: 'rgb(31, 191, 179)'
-  },
   modal: {
     alignItems: 'center',
     justifyContent: 'space-between',

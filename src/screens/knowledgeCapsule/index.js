@@ -37,7 +37,7 @@ import {
 } from 'react-native-router-flux'
 import Icon from '../../components/img/icon/SmallIcon'
 import Banner from '../../components/img/banner/fullWidthBanner'
-import { H3 } from '../../components/text'
+import { H3, H4 } from '../../components/text'
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 console.log('screenHeight', screenHeight);
@@ -197,7 +197,7 @@ export default class KnowledgeCapsule extends Component {
                         marginRight={12}
                       />
                       <H3 style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>{audio.name}</H3>
-                      <H3 style={styles.audioLengthText}>{audio.length ? audio.length.formatted : ''}</H3>
+                      <H4 gray>{audio.length ? audio.length.formatted : ''}</H4>
                     </View>
                   </TouchableHighlight>
                 </View>

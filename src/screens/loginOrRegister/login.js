@@ -161,7 +161,6 @@ export default class Login extends Component {
       password: this.state.password
     })
     tracker.trackEvent('EmailPasswordLogin', 'Fill In')
-    Actions.tab()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -186,6 +185,8 @@ export default class Login extends Component {
         errMsg,
         isOpen: true
       })
+    } else if (nextProps.sendStatus === 0 ) {
+      Actions.tab()
     }
   }
 
@@ -254,7 +255,7 @@ export default class Login extends Component {
                 {this.state.errMsg}
               </H3>
               <Button style={styles.modalButton} onPress={() => this.setState({ isOpen: !this.state.isOpen})}>
-                <H3 bold style={styles.modalButtonText}>確認</H3>
+                <H3 bold green>確認</H3>
               </Button>
           </Modal>
           <Modal
