@@ -111,7 +111,8 @@ function * audioLoaded () {
 }
 
 function * audioPlay () {
-  yield call(() => playerModule.play())
+  let a = yield call(() => playerModule.play())
+  console.log(playerModule.stoped)
 }
 
 function * audioPause () {
@@ -119,26 +120,36 @@ function * audioPause () {
 }
 
 const getInfo: {} = (state) => state.audio.playingAudioInfo
-const getAudios: {} = (state) => state.audio
+const getAudios: {} = (state) => {
+  const isRemote = state.global.audiosource === 'remote'
+  return {
+    data: isRemote? state.audio: state.download,
+    pos: state.audio.playingAudioInfo.pos.pos,
+    isRemote
+  }
+}
 
 function * selectTrack (offset: number) {
-  let audios = yield select(getAudios)
-  let {pos} = audios.playingAudioInfo.pos
-  let datas = makePlain(audios.capsules)
+  let { data, isRemote, pos } = yield select(getAudios)
   let index = pos + offset
   let returnIndex = 0
-  let data
-  if (index < 0) {
-    returnIndex = datas.length - 1
+  let iJ = {i: -1, j: -1}
+  if (isRemote) {
+    data = makePlain(data.capsules)
+    countIJ(data, returnIndex)
   }
-  else if (index >= datas.length) {
+  else data = data.capsules
+
+  if (index < 0) {
+    returnIndex = data.length - 1
+  }
+  else if (index >= data.length) {
     returnIndex = 0
   } else {
     returnIndex = index
   }
   
-  const iJ = countIJ(audios, returnIndex)
-  return { audio: datas[returnIndex], ...iJ, pos: returnIndex }
+  return { audio: data[returnIndex], ...iJ, pos: returnIndex }
 }
 
 function countIJ (audios, index: number) {
@@ -225,10 +236,10 @@ function * audioUpdateCurrentTime () {
   let formatted = `${min}:${sec}`
   // console.log(value === endTime)
   if (value >= endTime - 1) {
-    console.log('next')
-    yield put({
-      type: AUDIO_TO_NEXT_TRACK
-    })
+    // console.log('next')
+    // yield put({
+    //   type: AUDIO_TO_NEXT_TRACK
+    // })
   }
   yield put({ type: AUDIO_UPDATE_INFO, payload: {
     currentTime: {

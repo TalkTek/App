@@ -62,7 +62,12 @@ export default class MemberCenter extends Component {
       target: 'Feedback',
       text: '意見回饋',
       func: () => Actions.feedback()
-    },
+    }, {
+      key: 'download',
+      icon: require(`../../assets/img/memberCenter/iconFeedback.png`),
+      text: '下載',
+      func: () => Actions.download()
+    }
       // { key: 'iconApply', icon: require(`../../assets/img/memberCenter/iconApply.png`), target: 'Apply', text: '成為講師' }
     ]
   }
@@ -79,7 +84,7 @@ export default class MemberCenter extends Component {
         Actions.login()
       })
       .catch((error) => {
-          console.warn('[SignOut Error] Messages is', error.message)
+        console.warn('[SignOut Error] Messages is', error.message)
       })
   }
 
@@ -88,11 +93,11 @@ export default class MemberCenter extends Component {
     return (
       <TouchableOpacity
         key={rowData.key}
-        onPress={() => Actions.feedback()}
+        onPress={() => rowData.func()}
         style={[styles.mainBackground, styles.listItem]}
-        >
+      >
         <View style={styles.listItemLeft}>
-          <Image 
+          <Image
             source={rowData.icon}
             style={styles.listIcon}
           />
@@ -107,7 +112,7 @@ export default class MemberCenter extends Component {
           }
         </View>
         <View style={styles.listItemMore}>
-          <Image 
+          <Image
             source={require('../../assets/img/memberCenter/enter.png')}
           />
         </View>
@@ -118,24 +123,24 @@ export default class MemberCenter extends Component {
   _renderUserAvater = () => {
     return (
       <View style={[styles.mainBackground, styles.avatar]}>
-        <Image 
+        <Image
           source={
-            this.props.memberUid?
-            { uri: this.props.memberAvatar }:
-            require('../../assets/img/memberCenter/profileIcon.png')
+            this.props.memberUid ?
+              { uri: this.props.memberAvatar } :
+              require('../../assets/img/memberCenter/profileIcon.png')
           }
           style={styles.avatarImg}
           large
         />
-        <Text 
-          style={styles.email} 
+        <Text
+          style={styles.email}
           onPress={() => {
             if (!this.props.memberUid) {
               Actions.login()
             }
           }}
         >
-          { this.props.memberUid? this.props.memberEmail: '登入' }
+          {this.props.memberUid ? this.props.memberEmail : '登入'}
         </Text>
         {
           this.props.memberUid &&
@@ -152,18 +157,18 @@ export default class MemberCenter extends Component {
       <Container style={styles.container}>
         <Content>
           <View>
-            { this._renderUserAvater() }
+            {this._renderUserAvater()}
           </View>
           <View style={styles.container}>
-            
-            {/*<View style={styles.selectList}>*/}
-              {/*{ this.listsData.my.map(this._renderListItem) }*/}
+
+            {/* <View style={styles.selectList}>*/}
+            {/*{ this.listsData.my.map(this._renderListItem) }*/}
             {/*</View>*/}
             {/*<View style={styles.selectList}>*/}
-              {/*{ this.listsData.coin.map(this._renderListItem) }*/}
-            {/*</View>*/}
+            {/*{ this.listsData.coin.map(this._renderListItem) }*/}
+            {/*</View>  */}
             <View style={styles.selectList}>
-              { this.listsData.other.map(this._renderListItem) }
+              {this.listsData.other.map(this._renderListItem)}
             </View>
             {
               this.props.memberUid

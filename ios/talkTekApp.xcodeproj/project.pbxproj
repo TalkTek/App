@@ -17,6 +17,7 @@
 		07E428600AD140B28E123C67 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D892BE44D56B42A0A5BFF911 /* FontAwesome.ttf */; };
 		085C268B430540F38DAA0963 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D39B46BB8E9B4B72B32B72FD /* MaterialCommunityIcons.ttf */; };
 		09189E82A9444245BBD1BE17 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 04947E088F104918A8FB6F9D /* Ionicons.ttf */; };
+		11D525A11F3B19DD00852AB8 /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 11D5259C1F3B19A600852AB8 /* libRNFetchBlob.a */; };
 		13111592AA374663A6BD3EA1 /* libRNGoogleSignin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F11469CDC034804BD2BBF8A /* libRNGoogleSignin.a */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
@@ -130,6 +131,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
 			remoteInfo = talkTekApp;
+		};
+		11D5259B1F3B19A600852AB8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 11D5257A1F3B19A600852AB8 /* RNFetchBlob.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A15C300E1CD25C330074CB35;
+			remoteInfo = RNFetchBlob;
 		};
 		139105C01AF99BAD00B5F7CC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -358,6 +366,7 @@
 		04947E088F104918A8FB6F9D /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/native-base/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		0B377DB722414C81A46C8BD1 /* RNGoogleSignin.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNGoogleSignin.xcodeproj; path = "../node_modules/react-native-google-signin/ios/RNGoogleSignin.xcodeproj"; sourceTree = "<group>"; };
 		0E7E4ABB5597494F97AFF25C /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/native-base/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
+		11D5257A1F3B19A600852AB8 /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFetchBlob.xcodeproj; path = "../node_modules/react-native-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* talkTekApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = talkTekApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -444,6 +453,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11D525A11F3B19DD00852AB8 /* libRNFetchBlob.a in Frameworks */,
 				6DF479001EE114F5006263A2 /* libsqlite3.0.tbd in Frameworks */,
 				C93A093C3FF84B938D1D0EA2 /* libz.tbd in Frameworks */,
 				236059C53CA840C78677D142 /* SystemConfiguration.framework in Frameworks */,
@@ -563,6 +573,14 @@
 				00E356F11AD99517003FC87E /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		11D5257B1F3B19A600852AB8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				11D5259C1F3B19A600852AB8 /* libRNFetchBlob.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		139105B71AF99BAD00B5F7CC /* Products */ = {
@@ -730,6 +748,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				11D5257A1F3B19A600852AB8 /* RNFetchBlob.xcodeproj */,
 				6DF478F71EE1147A006263A2 /* RCTGoogleAnalyticsBridge.xcodeproj */,
 				6DF3E92A1ED430FB00D7A8AB /* RNGoogleSignin.xcodeproj */,
 				6D6B3CD31ECC1C90005B149E /* ReactNativeAudioToolkit.xcodeproj */,
@@ -911,6 +930,11 @@
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 6KEU8BEAD8;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -1000,6 +1024,10 @@
 					ProjectRef = 6D6B3CD31ECC1C90005B149E /* ReactNativeAudioToolkit.xcodeproj */;
 				},
 				{
+					ProductGroup = 11D5257B1F3B19A600852AB8 /* Products */;
+					ProjectRef = 11D5257A1F3B19A600852AB8 /* RNFetchBlob.xcodeproj */;
+				},
+				{
 					ProductGroup = 6DF3E92B1ED430FB00D7A8AB /* Products */;
 					ProjectRef = 6DF3E92A1ED430FB00D7A8AB /* RNGoogleSignin.xcodeproj */;
 				},
@@ -1060,6 +1088,13 @@
 			fileType = archive.ar;
 			path = libRCTVibration.a;
 			remoteRef = 00C302E31ABCB9EE00DB3ED1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		11D5259C1F3B19A600852AB8 /* libRNFetchBlob.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNFetchBlob.a;
+			remoteRef = 11D5259B1F3B19A600852AB8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		139105C11AF99BAD00B5F7CC /* libRCTSettings.a */ = {

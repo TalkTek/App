@@ -28,7 +28,7 @@ import Login from './screens/loginOrRegister/login'
 import Register from './screens/loginOrRegister/register'
 import ForgotPassword from './screens/loginOrRegister/forgetpw'
 import PopOutBar from './components/PopOutBar'
-
+import DownLoad from './screens/memberCenter/download'
 import Icon from './components/img/icon/MediumIcon'
 
 const TabIconLink = {
@@ -43,11 +43,11 @@ const TabIconLink = {
 }
 
 class App extends Component {
-  componentDidMount () {
-    CodePush.sync({installMode: CodePush.InstallMode.ON_NEXT_RESTART})
+  componentDidMount() {
+    CodePush.sync({ installMode: CodePush.InstallMode.ON_NEXT_RESTART })
   }
 
-  render () {
+  render() {
     const store = createStore()
 
     const reducerCreate = params => {
@@ -60,7 +60,7 @@ class App extends Component {
 
     return (
       <Provider store={store}>
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <StatusBar
             barStyle='light-content'
           />
@@ -173,6 +173,13 @@ class App extends Component {
                         back
                         backTitle=''
                         title='意見反饋'
+                      />
+                      <Scene
+                        key='download'
+                        component={DownLoad}
+                        back
+                        backTitle=''
+                        title='下載'
                       />
                     </Scene>
                   </Scene>

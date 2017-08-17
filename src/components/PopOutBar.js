@@ -48,7 +48,7 @@ export default class PopOutBar extends Component {
     if (this.props.isPlaying) {
       this.props.actions.audioUpdateCurrentTime()
     }
-  }, 400)
+  }, 600)
 
   componentWillReceiveProps (nextProps) {
     if(nextProps.isAudioPopOutBarActive) {

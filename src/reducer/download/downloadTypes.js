@@ -1,0 +1,10 @@
+import KeyMirror from 'key-mirror'
+
+module.exports = KeyMirror({
+  CP_AUDIO_DOWNLOAD: null,
+  CP_AUDIO_DOWNLOAD_SUCCESS: null,
+  CP_AUDIO_DOWNLOAD_FAILURE: null,
+  CP_AUDIO_DOWNLOADED_INFO_GET: null,
+  CP_AUDIO_DOWNLOADED_INFO_GET_SUCCESS: null,
+  CP_AUDIO_DOWNLOADED_INFO_GET_FAILURE: null
+})

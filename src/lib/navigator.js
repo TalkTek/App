@@ -16,6 +16,7 @@ import MyPoint from '../screens/memberCenter/myPoint'
 import MyCapsule from '../screens/memberCenter/myCapsule'
 import PointCenter from '../screens/memberCenter/pointCenter'
 import Feedback from '../screens/memberCenter/feedback'
+import Download from '../screens/memberCenter/download'
 import Apply from '../screens/memberCenter/apply'
 import PlayAudio from '../screens/playAudio'
 import PlayerDoc from '../screens/playAudio/playerDoc'
@@ -94,6 +95,7 @@ const MemberCenterScreen = StackNavigator({
   Fillup: { screen: PointCenter, navigationOptions: { title: '儲值中心' } },
   Feedback: { screen: Feedback, navigationOptions: { title: '意見回饋' } },
   Apply: { screen: Apply, navigationOptions: { title: '成為講師' } },
+  Download: { screen: Download, navigationOptions: { title: '下載' } }
   // Login: { screen: Login }
 }, {
   navigationOptions: {

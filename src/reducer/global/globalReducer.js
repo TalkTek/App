@@ -6,7 +6,8 @@ const initState = {
       x: 0,
       y: 0
     }
-  }
+  },
+  audiosource: 'remote'
 }
 
 export default createReducder({
@@ -20,6 +21,12 @@ export default createReducder({
           y: action.payload.y
         }
       }
+    }
+  },
+  'SET_AUDIOSOURCE': (state, {payload}) => {
+    return {
+      ...state,
+      audiosource: payload.source
     }
   }
 }, initState)
