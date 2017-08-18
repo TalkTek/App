@@ -28,7 +28,7 @@ import Modal from 'react-native-modalbox'
 import FunctionIcon from '../../components/img/icon/XLIcon'
 import CloseIcon from '../../components/img/icon/XSmallIcon'
 import Banner from '../../components/img/banner/fullWidthBanner'
-import { H4, H5 } from '../../components/text'
+import { H2, H4, H5 } from '../../components/text'
 
 const mapStateToProps = (state) => {
   return {
@@ -213,11 +213,9 @@ class PlayAudio extends Component {
             <FunctionIcon
               source={this.props[button.checkActive]? button.active: button.notActive}
             />
-            <H4
-              style={styles.footerText}
-            >
+            <H5 gray>
               {!isNaN(this.props[button.name])? this.props[button.name]: button.name}
-            </H4>
+            </H5>
           </View>
         </TouchableHighlight>
       )
@@ -274,20 +272,20 @@ class PlayAudio extends Component {
           </View>
           <View style={styles.body}>
             <View style={styles.title}>
-              <H4 style={styles.titleText}>
+              <H2 black>
                 {audioName}
-              </H4>
+              </H2>
             </View>
             <View style={styles.audioType}>
-              <H4 style={styles.audioTypeText}>
+              <H4 gray>
                 #方法技能
               </H4>
             </View>
             <View style={styles.slider}>
               <View style={styles.sliderTime}>
-                <H5 style={styles.sliderTimeText}>{currentTimeFormatted ? currentTimeFormatted : '00:00'}</H5>
+                <H5 gray>{currentTimeFormatted ? currentTimeFormatted : '00:00'}</H5>
                 <H4/>
-                <H5 style={styles.sliderTimeText}>{audioLengthFormatted}</H5>
+                <H5 gray>{audioLengthFormatted}</H5>
               </View>
               <Slider
                 value={this.props.currentTimeSec}

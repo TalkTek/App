@@ -27,11 +27,6 @@ export default {
   title: {
     marginBottom: 16
   },
-  titleText: {
-    fontSize: 18,
-    lineHeight: 24,
-    color: 'rgb(33 ,33 ,33)'
-  },
   audioType: {
     marginBottom: 20
   },
@@ -57,15 +52,6 @@ export default {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  sliderTimeText: {
-    fontSize: 9,
-    color: 'rgb(158, 158, 158)'
-  },
-  audioTypeText: {
-    fontSize: 13,
-    lineHeight: 13,
-    color: 'rgb(158 ,158, 158)'
-  },
   audioFunc: {
     flex: 1,
     flexDirection: 'row',
@@ -86,9 +72,5 @@ export default {
   },
   footerFunUnit: {
     alignItems: 'center'
-  },
-  footerText: {
-    fontSize: 10,
-    color: 'rgb(189, 189, 189)'
   }
 }

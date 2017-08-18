@@ -99,7 +99,7 @@ export default class MemberCenter extends Component {
           </H4>
           {
             rowData.rightText &&
-            <H4 style={styles.listRightText}>
+            <H4 green style={styles.listRightText}>
               {rowData.rightText}
             </H4>
           }

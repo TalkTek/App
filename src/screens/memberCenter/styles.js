@@ -39,7 +39,6 @@ const style: Object = {
   },
   listRightText: {
     flex: 1,
-    color: '#1fbfb3',
     textAlign: 'right'
   },
   listItemLeft: {
@@ -83,7 +82,6 @@ const memberInfoStyle: Object = {
   },
   uploadBtnText: {
     backgroundColor: 'transparent',
-    fontSize: 15,
     marginTop: 5,
     marginBottom: 5,
     marginLeft: 10,
@@ -280,8 +278,7 @@ const feedBackStyle: Object = {
   textLabel: {
     marginTop: 16,
     paddingLeft: 8,
-    paddingRight: 8,
-    color: 'rgb(158, 158, 158)'
+    paddingRight: 8
   },
   indicator: {
     flex: 1,

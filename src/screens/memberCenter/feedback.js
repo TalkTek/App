@@ -110,7 +110,7 @@ class Feedback extends Component {
         {
           this.props.status !== 1 &&
           <Content style={feedBackStyle.content}>
-            <H4 style={feedBackStyle.textLabel}> 
+            <H4 gray style={feedBackStyle.textLabel}> 
               選擇回饋類型
             </H4> 
             <View>
@@ -132,7 +132,7 @@ class Feedback extends Component {
                 }
               </Picker>
             </View>
-            <H4 style={feedBackStyle.textLabel}>
+            <H4 gray style={feedBackStyle.textLabel}>
               內容（必填）
             </H4>
             <View style={[feedBackStyle.input, feedBackStyle.mutiInput]}>
