@@ -12,7 +12,11 @@ import {
   Actions
 } from 'react-native-router-flux'
 
-firebase.initializeApp(CONFIG.FIREBASE.DEV)
+if ( __DEV__ ) {
+  firebase.initializeApp(CONFIG.FIREBASE.DEV)
+} else {
+  firebase.initializeApp(CONFIG.FIREBASE.PRODUCTION)
+}
 
 @connect( undefined, dispatch => ({
   member: bindActionCreators(memberAction, dispatch)
