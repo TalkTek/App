@@ -3,8 +3,8 @@ import {
   fork,
   takeLatest,
   call,
+  select,
   put,
-  select
 } from 'redux-saga/effects'
 import {
   CP_AUDIO_INFO_GET,
@@ -30,6 +30,9 @@ import {
 } from './audioTypes'
 import AudioModule from '../../api/audioModule'
 import playerModule from '../../api/playerModule'
+import {playingAudioState} from './audioSelector'
+import audioActions from './audioAction'
+
 
 /**
  * subroutines
@@ -95,6 +98,41 @@ function * getAudioDoc (data) {
 /**
  * player subroutines
  */
+
+function * press () {
+  // let t = yield select(playingAudioState())
+  // console.log('t is', t)
+  yield put(audioActions.toggleAudioPopoutBar())
+}
+
+function * next () {
+
+}
+
+function * previous () {
+
+}
+
+function * play () {
+
+}
+
+function * stop () {
+
+}
+
+function * forward15 () {
+
+}
+
+function * backward15 () {
+
+}
+
+function * seek () {
+
+}
+
 type arg = {[key: string]: number}
 function * audioLoad (value:{payload: { [audio: string]: {}, pos: number }}) {
   const {
@@ -242,7 +280,7 @@ function * audioUpdateCurrentTime () {
  * watcher
  */
 function * audioSaga () {
-  yield takeLatest(AUDIO_LOAD, audioLoad)
+  yield takeLatest(AUDIO_LOAD, press)
   yield takeLatest(AUDIO_LOADED, audioLoaded)
   yield takeLatest(AUDIO_PLAY, audioPlay)
   yield takeLatest(AUDIO_PAUSE, audioPause)

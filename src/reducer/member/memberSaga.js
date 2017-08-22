@@ -12,7 +12,7 @@ import {
   CHANGE_MEMBER_STATE,
   MEMBER_FAIL,
   MEMBER_SUCCESS,
-  MEMBER_STATE_GET,
+  GET_MEMBER_INFO,
   MEMBER_STATE_GET_SUCCESS,
   MEMBER_STATE_GET_FAILURE,
   CREATE_MEMBER,
@@ -29,16 +29,6 @@ import MemberModule from '../../api/memberModule'
 /**
  * subroutines
  */
-
-function * getMemberCapsule (data: {payload: {}}) {
-  let capsules:Object = yield call(() => new MemberModule().getLikeCapsule(data.payload))
-  yield put({
-    type: MEMBER_CAPSULE_GET_SUCCESS,
-    payload: {
-      capsules
-    }
-  })
-}
 
 function * changeMember ({ payload: {post, memberUid} }) {
   yield call(() => new MemberModule().changeMemberProfile(memberUid, post))
@@ -75,8 +65,8 @@ function * createMember ({ payload: {email, password} }) {
   yield call(() => resStatus(res))
 }
 
-function * getMemberState ({ payload: { uid } }) {
-  let member = yield call(() => new MemberModule().getMemberState(uid))
+function * getMemberInfo ({ payload: { uid } }) {
+  let member = yield call(() => new MemberModule().getMemberInfo(uid))
   if (member) {
     yield put({type: MEMBER_STATE_GET_SUCCESS})
     yield put({type: CHANGE_MEMBER_STATE, payload: {...member, uid}})
@@ -110,12 +100,11 @@ function * resetMemberEmail ({ payload }) {
 
 function * member () {
   yield takeLatest(SEND_RESET_PASSWORD_EMAIL, resetMemberEmail)
-  yield takeLatest(MEMBER_STATE_GET, getMemberState)
+  yield takeLatest(GET_MEMBER_INFO, getMemberInfo)
   yield takeLatest(CREATE_MEMBER, createMember)
   yield takeLatest(LOGIN_MEMBER, loginMember)
   yield takeLatest(LOGIN_MEMBER_EMAIL, loginMemberEmail)
   yield takeLatest(LOGOUT_MEMBER, logoutMember)
-  yield takeLatest(MEMBER_CAPSULE_GET, getMemberCapsule)
   yield takeLatest(SAVE_MEMBER_CHANGE, changeMember)
   yield takeLatest(SEND_FEEDBACK, sendFeedBack)
 }

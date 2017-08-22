@@ -76,6 +76,7 @@ export default class KnowledgeCapsule extends Component {
   loadCount = 2
 
   touchY = -1
+
   resolveData(lastKey) {
     const { actions } = this.props
     this.props.capsule.loadCpAudio({
@@ -130,7 +131,7 @@ export default class KnowledgeCapsule extends Component {
       memberUid
     } = this.props
     
-    actions.toggleAudioPopoutBar()
+    // actions.toggleAudioPopoutBar()
     actions.cpAudioInfoGet(
       {
         parentKey: audio.parentKey,
@@ -145,7 +146,6 @@ export default class KnowledgeCapsule extends Component {
       pos
     })
     this.toggleButtonColor(i, j)
-    // _onPress.bind(this, audio, i, j)()
   }
 
   toggleButtonColor = (i: number, j: number) => {
@@ -173,36 +173,42 @@ export default class KnowledgeCapsule extends Component {
     if(capsules) {
       let counter = 0
       let index
-      CapUnit = capsules.map((cap, i) => {
-        let length = cap.audios.length
-        counter += length
+
+      CapUnit = Object.keys(capsules).map((parentKey, i) => {
         return (
           <View key={i} style={styles.capContainer}>
             <View style={styles.capTitle}>
               <Text style={styles.capTitleText}>
-                {cap.title}
+                {capsules[parentKey].title}
               </Text>
             </View>
-            {
-              cap.audios.map((audio, j) =>
-                <View key={j} style={styles.capUnit}>
-                  <TouchableHighlight
-                    style={styles.capPlayPauseButton}
-                    onPress={this.onPress.bind(this, audio, i, j, counter-(length-j))}
-                    underlayColor="#fff"
-                  >
-                    <View style={styles.capAudio}>
-                      <Icon
-                        source={audio.active ? buttons.playing : buttons.playable}
-                        marginRight={12}
-                      />
-                      <Text style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>{audio.name}</Text>
-                      <Text style={styles.audioLengthText}>{audio.length ? audio.length.formatted : ''}</Text>
+              {
+                Object.keys(capsules[parentKey].audios).map((childKey, j) => {
+                  let audio = capsules[parentKey].audios[childKey]
+                  return (
+                    <View style={styles.capUnit} key={j}>
+                      <TouchableHighlight
+                        style={styles.capPlayPauseButton}
+                        onPress={this.onPress.bind(parentKey, childKey)}
+                        underlayColor="#fff"
+                      >
+                        <View style={styles.capAudio}>
+                          <Icon
+                            source={audio.active ? buttons.playing : buttons.playable}
+                            marginRight={12}
+                          />
+                          <Text style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>
+                            {audio.audioName}
+                            </Text>
+                          <Text style={styles.audioLengthText}>
+                            {audio.length ? audio.length.formatted : ''}
+                            </Text>
+                        </View>
+                      </TouchableHighlight>
                     </View>
-                  </TouchableHighlight>
-                </View>
-              )
-            }
+                  )
+                })
+              }
           </View>
         )
       })

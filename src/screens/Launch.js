@@ -2,8 +2,7 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Container, View } from 'native-base'
-import  CONFIG  from '../lib/config'
+import CONFIG from '../lib/config'
 import firebase from 'firebase'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -19,15 +18,15 @@ if ( __DEV__ ) {
 }
 
 @connect( undefined, dispatch => ({
-  member: bindActionCreators(memberAction, dispatch)
+  actions: bindActionCreators(memberAction, dispatch)
 }))
 
 export default class Main extends Component {
   componentDidMount () {
-    const { dispatch } = this.props.navigation
     firebase.auth().onAuthStateChanged( user => {
       if (user) {
-        this.props.member.memberStateGet({
+        const { actions } = this.props
+        actions.getMemberInfo({
           uid: user.uid
         })
         Actions.tab()

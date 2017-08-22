@@ -34,7 +34,7 @@ const initMemberState : MemberStateType = {
   from: null,
   birthday: null,
   gender: null,
-  favoriteCapsule: [],
+  favoriteCapsule: null,
   sendStatus: 0, // 0 finish, 1 pending, 2 fail
   sendMsg: {code: '', message: ''}
 }
@@ -43,13 +43,11 @@ export default createReducder({
   [CHANGE_MEMBER_STATE]: (memberState :MemberStateType, action: {payload: MemberStateType}) => {
     return {
       ...memberState,
-      avatarUrl: action.payload.avatarUrl,
-      email: action.payload.email,
-      name: action.payload.name,
+      avatarUrl: action.payload.profile.avatarUrl,
+      email: action.payload.profile.email,
+      name: action.payload.profile.name,
       uid: action.payload.uid,
-      from: action.payload.from,
-      birthday: action.payload.birthday,
-      gender: action.payload.gender
+      favoriteCapsule: action.payload.favorite
     }
   },
   [LOGOUT_MEMBER]: (memberState: MemberStateType) => {

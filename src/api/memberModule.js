@@ -79,9 +79,9 @@ export default class memberModule extends FirebaseDB {
     }
   }
 
-  async getMemberState (uid) {
+  async getMemberInfo (uid) {
     try {
-      return await this.readOnce(`/users/${uid}/profile`)
+      return await this.readOnce(`/users/${uid}/`)
     } catch (e) {
       return e
     }

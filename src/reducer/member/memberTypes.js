@@ -2,7 +2,7 @@
 import KeyMirror from 'key-mirror'
 
 type memberKey = {
-  MEMBER_STATE_GET: null,
+  GET_MEMBER_INFO: null,
   MEMBER_STATE_GET_SUCCESS: null,
   MEMBER_STATE_GET_FAILURE: null,
   MEMBER_CAPSULE_GET: null,
@@ -22,7 +22,7 @@ type memberKey = {
 }
 
 const memberTypes: memberKey = {
-  MEMBER_STATE_GET: null,
+  GET_MEMBER_INFO: null,
   MEMBER_STATE_GET_SUCCESS: null,
   MEMBER_STATE_GET_FAILURE: null,
   MEMBER_CAPSULE_GET: null,

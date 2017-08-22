@@ -23,7 +23,7 @@ import {
 
 type AudioStateType = {
   isPlaying: boolean,
-  capsules: [],
+  capsules: {},
   isCpAudioLoaded: boolean,
   playingAudioInfo: {
     draft: '',
@@ -48,7 +48,7 @@ type AudioStateType = {
 
 const initialState = {
   isPlaying: false,
-  capsules: [],
+  capsules: {},
   isCpAudioLoaded: false,
   playingAudioInfo: {
     draft: '',
@@ -80,7 +80,10 @@ export default createReducder({
   [CP_AUDIO_STORE]: (state, action) => {
     return {
       ...state,
-      capsules: state.capsules.concat(action.payload)
+      capsules: {
+        ...state.capsules,
+        ...action.payload
+      }
     }
   },
   [SETTING_PLAYING_AUDIO_INFO]: (state, action) => {

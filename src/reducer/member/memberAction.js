@@ -2,7 +2,7 @@ import {
   createActions
 } from 'redux-actions'
 import {
-  MEMBER_STATE_GET,
+  GET_MEMBER_INFO,
   CHANGE_MEMBER_STATE,
   LOGOUT_MEMBER,
   LOGIN_MEMBER,
@@ -19,7 +19,7 @@ import {
 } from './memberTypes.js'
 
 export default createActions({
-  [MEMBER_STATE_GET]: state => state,
+  [GET_MEMBER_INFO]: state => state,
   [CHANGE_MEMBER_STATE]: memberState => memberState,
   [LOGOUT_MEMBER]: state => state,
   [LOGIN_MEMBER]: state => state,
