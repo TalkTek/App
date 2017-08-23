@@ -2,6 +2,7 @@ import React from 'react'
 import { shallow } from 'enzyme'
 import Text from '../text'
 import renderer from 'react-test-renderer'
+import { H1, H2, H3, H4, H5 } from '../index'
 
 const textProps = {
   fontSize: 12,
@@ -15,6 +16,14 @@ const textStyle = [
 ]
 
 describe('<Text />', () => {
+  test('render test', () => {
+    shallow(<H1 />)
+    shallow(<H2 />)
+    shallow(<H3 />)
+    shallow(<H4 />)
+    shallow(<H5 />)
+  })
+
   it('should render Text Tag', () => {
     const wrapper = shallow(<Text />).dive()
     expect(wrapper.type()).toEqual('Text')

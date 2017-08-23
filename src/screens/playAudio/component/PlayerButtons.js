@@ -41,6 +41,11 @@ class PlayerButtons extends Component {
       })
   }
 
+  pressEvent(buttonKey, func) {
+    this._buttonGaEvent(buttonKey)
+    func()
+  }
+
   render() {
     let { playState, data } = this.props
     let buttons = Object.keys(data||{}).map((buttonKey, i) => {
@@ -48,10 +53,7 @@ class PlayerButtons extends Component {
       return (
         <TouchableHighlight
           key={buttonKey}
-          onPress={() => { 
-            this._buttonGaEvent(buttonKey)
-            button.func() 
-          }}
+          onPress={this.pressEvent.bind(this, buttonKey, button.func)}
           underlayColor="#fff"
         >
           <View>

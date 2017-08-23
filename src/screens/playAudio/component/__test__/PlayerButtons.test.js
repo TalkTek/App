@@ -13,11 +13,17 @@ describe('playerButton test', () => {
     const data = {
       backward15: {
         twoState: false,
-        link: 'this is a image link',
+        link: require('../../assets/img/audioElement/forward.png'),
         func: () => {}
-      }
+      },
+      playOrPause: {
+        twoState: true,
+        playLink: require('../../assets/img/playAudio/play.png'),
+        pauseLink: require('../../assets/img/audioElement/pause.png'),
+        func: () => {}
+      },
     }
-    const element = <PlayerButtons data={data} />
+    const element = <PlayerButtons data={data} ga={{gaSetEvent: () => {}}} />
     const tree = renderer.create(element)
     const wrapper = shallow(element)
     expect(wrapper.length).toEqual(1)
