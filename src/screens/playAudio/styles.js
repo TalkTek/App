@@ -52,23 +52,8 @@ export default {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  audioFunc: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: screenWidth * 0.915
-  },
   footer: {
-    flex: 1,
-    flexDirection: 'row',
-    position: 'absolute',
-    bottom: 10,
-    borderTopWidth: 1,
-    borderTopColor: 'rgb(224, 224, 224)',
-    height: 75,
-    width: screenWidth,
-    alignItems: 'center',
-    justifyContent: 'space-around'
+    height: 75
   },
   footerFunUnit: {
     alignItems: 'center'

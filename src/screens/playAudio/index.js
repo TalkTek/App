@@ -28,6 +28,8 @@ import Modal from 'react-native-modalbox'
 import FunctionIcon from '../../components/img/icon/XLIcon'
 import CloseIcon from '../../components/img/icon/XSmallIcon'
 import Banner from '../../components/img/banner/fullWidthBanner'
+import PlayerButtons from './component/PlayerButtons'
+import FooterButtons from './component/FooterButtons'
 import { H2, H4, H5 } from '../../components/text'
 
 const mapStateToProps = (state) => {
@@ -39,7 +41,6 @@ const mapStateToProps = (state) => {
     parentKey: state.audio.playingAudioInfo.parentKey,
     playState: state.audio.isPlaying,
     audioName: state.audio.playingAudioInfo.name,
-    audioUrl: state.audio.playingAudioInfo.url,
     audioLengthFormatted: state.audio.playingAudioInfo.length.formatted,
     audioLengthSec: Number(state.audio.playingAudioInfo.length.sec),
     currentTimeFormatted: state.audio.playingAudioInfo.currentTime.formatted,
@@ -62,64 +63,7 @@ class PlayAudio extends Component {
     swipeToClose: true,
   }
 
-  buttons = {
-    close: require('../../assets/img/playAudio/close.png'),
-    footer: {
-       good: {
-          notActive: require('../../assets/img/playAudio/good.png'),
-          active: require('../../assets/img/playAudio/goodActive.png'),
-          checkActive: 'audioIsGood',
-          name: 'likeCounter',
-          func: this._audioIsGoodToggle
-        },
-        // timer: {
-        //   notActive: require('../../assets/img/playAudio/timer.png'),
-        //   name: '00:00'
-        // },
-        // addSpeed: {
-        //   notActive: require('../../assets/img/playAudio/addSpeed.png'),
-        //   name: '速率'
-        // },
-        word: {
-          notActive: require('../../assets/img/playAudio/word.png'),
-          name: '文檔',
-          func: () => this.openModal()
-        },
-        // more: {
-        //   notActive: require('../../assets/img/playAudio/more.png'),
-        //   name: '更多'
-        // }
-    },
-    body: {
-      backward15: {
-        twoState: false,
-        link: require('../../assets/img/audioElement/backward15.png'),
-        func: this.props.backward15s
-      },
-      backward: {
-        twoState: false,
-        link: require('../../assets/img/audioElement/backward.png'),
-        func: this.props.backward
-      },
-      playOrPause: {
-        twoState: true,
-        playLink: require('../../assets/img/playAudio/play.png'),
-        pauseLink: require('../../assets/img/audioElement/pause.png'),
-        func: this.props.playOrPause
-      },
-      forward: {
-        twoState: false,
-        link: require('../../assets/img/audioElement/forward.png'),
-        func: this.props.forward
-      },
-      forward15: {
-        twoState: false,
-        link: require('../../assets/img/audioElement/forward15.png'),
-        func: this.props.forward15s
-      },
-    }
-  }
-
+  
   componentDidMount() {
     this.props.ga.gaSetEvent({
       category: 'capsule',
@@ -130,17 +74,17 @@ class PlayAudio extends Component {
       }
     })
   }
-
+  
   _onSlidingComplete = (value) => {
     this.props.seek(value)
   }
-
+  
   toggleModal = () => {
     this.setState({
       isModalOpen: !this.state.isModalOpen
     })
   }
-
+  
   openModal = () => {
     this.setState({
       isModalOpen: true,
@@ -148,7 +92,7 @@ class PlayAudio extends Component {
     })
     this.refs.docScreen.open()
   }
-
+  
   _audioIsGoodToggle() {
     this.props.ga.gaSetEvent({
       category: 'capsule',
@@ -159,92 +103,105 @@ class PlayAudio extends Component {
       }
     })
     this.props
-      .actions
-      .cpAudioGoodChange(
-        !this.props.audioIsGood,
-        this.props.capsulesId,
-        this.props.parentKey,
-        this.props.memberUid
-      )
+    .actions
+    .cpAudioGoodChange(
+      !this.props.audioIsGood,
+      this.props.capsulesId,
+      this.props.parentKey,
+      this.props.memberUid
+    )
   }
-
+  
   _buttonGaEvent(type) {
     if (type !== 'playOrPause')
-    this.props.ga.gaSetEvent({
-      category: 'capsule',
-      action: type,
-      value: {
-        label: this.props.audioName,
-        value: 1
+      this.props.ga.gaSetEvent({
+        category: 'capsule',
+        action: type,
+        value: {
+          label: this.props.audioName,
+          value: 1
+        }
+      })
+    }
+    
+    _gaGoBack() {
+      this.props.ga.gaSetEvent({
+        category: 'capsule',
+        action: 'close player',
+        value: {
+          label: this.props.audioName,
+          value: 1
+        }
+      })
+    }
+    
+    render () {
+      const {
+        toggleModal,
+        playState,
+        audioName,
+        audioLengthFormatted,
+        audioLengthSec,
+        currentTimeFormatted,
+      } = this.props
+      
+    const buttons = {
+      close: require('../../assets/img/playAudio/close.png'),
+      footer: {
+          good: {
+            notActive: require('../../assets/img/playAudio/good.png'),
+            active: require('../../assets/img/playAudio/goodActive.png'),
+            checkActive: this.props.audioIsGood,
+            name: this.props.likeCounter==null?'likeCounter':this.props.likeCounter,
+            func: () => this._audioIsGoodToggle()
+          },
+          // timer: {
+          //   notActive: require('../../assets/img/playAudio/timer.png'),
+          //   name: '00:00'
+          // },
+          // addSpeed: {
+          //   notActive: require('../../assets/img/playAudio/addSpeed.png'),
+          //   name: '速率'
+          // },
+          word: {
+            notActive: require('../../assets/img/playAudio/word.png'),
+            name: '文檔',
+            func: () => this.openModal()
+          },
+          // more: {
+          //   notActive: require('../../assets/img/playAudio/more.png'),
+          //   name: '更多'
+          // }
+      },
+      body: {
+        backward15: {
+          twoState: false,
+          link: require('../../assets/img/audioElement/backward15.png'),
+          func: this.props.backward15s
+        },
+        backward: {
+          twoState: false,
+          link: require('../../assets/img/audioElement/backward.png'),
+          func: this.props.backward
+        },
+        playOrPause: {
+          twoState: true,
+          playLink: require('../../assets/img/playAudio/play.png'),
+          pauseLink: require('../../assets/img/audioElement/pause.png'),
+          func: this.props.playOrPause
+        },
+        forward: {
+          twoState: false,
+          link: require('../../assets/img/audioElement/forward.png'),
+          func: this.props.forward
+        },
+        forward15: {
+          twoState: false,
+          link: require('../../assets/img/audioElement/forward15.png'),
+          func: this.props.forward15s
+        },
       }
-    })
-  }
-
-  _gaGoBack() {
-    this.props.ga.gaSetEvent({
-      category: 'capsule',
-      action: 'close player',
-      value: {
-        label: this.props.audioName,
-        value: 1
-      }
-    })
-  }
-
-  render () {
-    const {
-      toggleModal,
-      playState,
-      audioName,
-      audioLengthFormatted,
-      audioLengthSec,
-      currentTimeFormatted,
-    } = this.props
-
-    const footerButtons = Object.values(this.buttons.footer).map((button, i) => {
-      return (
-        <TouchableHighlight
-          transparent
-          key={i}
-          onPress={typeof button.func === 'function'? button.func.bind(this): null}
-          underlayColor="#fff"
-        >
-          <View style={styles.footerFunUnit}>
-            <FunctionIcon
-              source={this.props[button.checkActive]? button.active: button.notActive}
-            />
-            <H5 gray>
-              {!isNaN(this.props[button.name])? this.props[button.name]: button.name}
-            </H5>
-          </View>
-        </TouchableHighlight>
-      )
-    })
-
-    const bodyButtons = Object.keys(this.buttons.body).map((buttonKey, i) => {
-      let button = this.buttons.body[buttonKey]
-      return (
-        <TouchableHighlight
-          key={i}
-          onPress={() => { 
-            this._buttonGaEvent(buttonKey)
-            button.func() 
-          }}
-          underlayColor="#fff"
-        >
-          <View>
-            <FunctionIcon
-              source={button.twoState
-                ? (playState
-                  ? button.pauseLink : button.playLink
-                )
-                : button.link
-              }
-            />
-          </View>
-        </TouchableHighlight>
-      )
-    })
+    }
 
     return (
       <Container style={styles.container}>
@@ -257,7 +214,7 @@ class PlayAudio extends Component {
               onPress={() => toggleModal()}
             >
               <CloseIcon
-                source={this.buttons.close}
+                source={buttons.close}
               />
             </Button>
           </Right>
@@ -298,13 +255,11 @@ class PlayAudio extends Component {
                 thumbStyle={styles.trackThumb}
               />
             </View>
-            <View style={styles.audioFunc}>
-              {bodyButtons}
-            </View>
+            <PlayerButtons data={buttons.body}/>
           </View>
         </Content>
         <View style={styles.footer}>
-          {footerButtons}
+          <FooterButtons data={buttons.footer} />
         </View>
         <Modal
           ref={'docScreen'}
