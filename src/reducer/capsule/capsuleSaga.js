@@ -68,7 +68,7 @@ function * loadCapsules ({payload}) {
   //   }
   // })
   // yield all(callers)
-  // yield put({type: LOAD_CP_AUDIO_SUCCESS})
+  yield put({type: LOAD_CP_AUDIO_SUCCESS})
   // yield put({type: CAPSULE_SET_LASTKEY, payload: { lastKey }})
 }
 

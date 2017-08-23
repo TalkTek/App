@@ -57,13 +57,12 @@ let buttons = {
   isCpAudioLoaded: state.audio.isCpAudioLoaded,
   lastKey: state.capsule.lastKey,
   memberUid: state.member.uid,
-  playingAudioPos: {
-    i: state.audio.playingAudioInfo.pos.i,
-    j: state.audio.playingAudioInfo.pos.j
-  }
+  // playingAudioPos: {
+  //   i: state.audio.playingAudioInfo.pos.i,
+  //   j: state.audio.playingAudioInfo.pos.j
+  // }
 }), dispatch => ({
-  actions: bindActionCreators({...audioActions, ...analyticActions}, dispatch),
-  capsule: bindActionCreators(capsuleAction, dispatch)
+  actions: bindActionCreators({...audioActions, ...analyticActions, ...capsuleAction}, dispatch),
 }))
 
 export default class KnowledgeCapsule extends Component {
@@ -79,7 +78,7 @@ export default class KnowledgeCapsule extends Component {
 
   resolveData(lastKey) {
     const { actions } = this.props
-    this.props.capsule.loadCpAudio({
+    actions.loadCpAudio({
       lastKey,
       limitToLast: this.loadCount
     })
@@ -91,68 +90,63 @@ export default class KnowledgeCapsule extends Component {
     actions.gaSetScreen('KnowledgeCapsule')
   }
 
-  componentWillReceiveProps(nextProps: object) {
-    let {playingAudioPos} = nextProps
-    let { i, j } = this.props.playingAudioPos
-    if ( playingAudioPos.i!=i || playingAudioPos.j!=j ) {
-      this.toggleButtonColor(playingAudioPos.i, playingAudioPos.j)
-    }
-  }
+  // componentWillReceiveProps(nextProps: object) {
+  //   let {playingAudioPos} = nextProps
+  //   let { i, j } = this.props.playingAudioPos
+  //   if ( playingAudioPos.i!=i || playingAudioPos.j!=j ) {
+  //     this.toggleButtonColor(playingAudioPos.i, playingAudioPos.j)
+  //   }
+  // }
 
   onScroll = (event) => {
     const {
-      showAudioPopoutBar,
-      hideAudioPopoutBar
-    } = this.props.actions
-      // let currentOffsetY = event.nativeEvent.contentOffset.y
+      actions
+    } = this.props
     if (this.touchY === -1) {
       this.touchY = event.nativeEvent.pageY
     } else {
-      // console.log(eve.nativeEvent.pageY - this.touchY)
-      // const diff = currentOffsetY - this.state.offsetY
       const diff = event.nativeEvent.pageY - this.state.offsetY
       if(diff > 10) {
-        // _toggleAudioBarDown()
-        showAudioPopoutBar()
+        actions.showAudioPopoutBar()
       } else if(diff < -10) {
-        // _toggleAudioBarUp()
-        hideAudioPopoutBar()
+        actions.hideAudioPopoutBar()
       }
-      console.log(diff)
       this.setState({
         offsetY: event.nativeEvent.pageY
       })
     }
   }
 
-  onPress = (audio: object, i: number, j: number, pos: number) => {
-    const {
-      actions,
-      memberUid
-    } = this.props
-    
-    // actions.toggleAudioPopoutBar()
-    actions.cpAudioInfoGet(
-      {
-        parentKey: audio.parentKey,
-        capsuleId: audio.id,
-        memberUid
-      }
-    )
-    actions.audioLoad({
-      audio,
-      i,
-      j,
-      pos
-    })
-    this.toggleButtonColor(i, j)
+  onPress = (parentKey, childKey) => {
+    const { actions } = this.props
+    actions.onPress(parentKey, childKey)
+    // const {
+    //   actions,
+    //   memberUid
+    // } = this.props
+    //
+    // // actions.toggleAudioPopoutBar()
+    // actions.cpAudioInfoGet(
+    //   {
+    //     parentKey: audio.parentKey,
+    //     capsuleId: audio.id,
+    //     memberUid
+    //   }
+    // )
+    // actions.audioLoad({
+    //   audio,
+    //   i,
+    //   j,
+    //   pos
+    // })
+    // this.toggleButtonColor(i, j)
   }
 
-  toggleButtonColor = (i: number, j: number) => {
-    const { capsules, playingAudioPos } = this.props
-    capsules[playingAudioPos.i].audios[playingAudioPos.j].active = false
-    capsules[i].audios[j].active = true
-  }
+  // toggleButtonColor = (i: number, j: number) => {
+  //   const { capsules, playingAudioPos } = this.props
+  //   capsules[playingAudioPos.i].audios[playingAudioPos.j].active = false
+  //   capsules[i].audios[j].active = true
+  // }
 
   onScrollEndReached = () => {
     const { lastKey } = this.props
@@ -189,7 +183,7 @@ export default class KnowledgeCapsule extends Component {
                     <View style={styles.capUnit} key={j}>
                       <TouchableHighlight
                         style={styles.capPlayPauseButton}
-                        onPress={this.onPress.bind(parentKey, childKey)}
+                        onPress={this.onPress.bind(this, parentKey, childKey)}
                         underlayColor="#fff"
                       >
                         <View style={styles.capAudio}>

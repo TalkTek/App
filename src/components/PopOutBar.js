@@ -30,9 +30,9 @@ let buttons = {
 
 @connect(state => ({
   isAudioPopOutBarActive: state.audio.isAudioPopOutBarActive,
-  currentTimeFormatted: state.audio.playingAudioInfo.currentTime.formatted,
+  currentTimeFormatted: state.audio.playingAudioDynamicInfo.currentTime.formatted,
   isPlaying: state.audio.isPlaying,
-  audioName: state.audio.playingAudioInfo.name
+  audioName: state.audio.playingAudioStaticInfo.audioName
 }), (dispatch) => {
   return {
     actions: bindActionCreators({ ...audioAction }, dispatch)

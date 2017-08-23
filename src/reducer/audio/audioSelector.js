@@ -2,15 +2,15 @@ import {
   createSelector
 } from 'reselect'
 
-// export const getAudio = state
-
-export const selectAudioStateFromReduxStore = state => state.audio
+const selectAudioStateFromReduxStore = state => state.audio
 //
-const playingAudioState = () => createSelector(
+const getCapsules = (parentKey, childKey) => createSelector(
   selectAudioStateFromReduxStore,
-  audioState => audioState.playingAudioInfo
+  audioState => {
+    return audioState.capsules[parentKey].audios[childKey]
+  }
 )
 
 export {
-  playingAudioState
+  getCapsules
 }
