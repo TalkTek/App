@@ -5,10 +5,19 @@ import {
 } from 'react-native'
 import FunctionIcon from '../../../components/img/icon/XLIcon'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import analyticAction from '../../../reducer/analytic/analyticAction'
 
-let mapStateToProps = (state) => {
+const mapStateToProps = (state) => {
   return {
-    playState: state.audio.isPlaying
+    playState: state.audio.isPlaying,
+    audioName: state.audio.playingAudioInfo.name
+  }
+}
+
+const mapActionToProps = (dispatch) => {
+  return {
+    ga: bindActionCreators(analyticAction, dispatch)
   }
 }
 
@@ -19,6 +28,19 @@ class PlayerButtons extends Component {
     flexDirection: 'row',
     justifyContent: 'space-around'
   }
+  
+  _buttonGaEvent(type) {
+    if (type !== 'playOrPause')
+      this.props.ga.gaSetEvent({
+        category: 'capsule',
+        action: type,
+        value: {
+          label: this.props.audioName,
+          value: 1
+        }
+      })
+  }
+
   render() {
     let { playState, data } = this.props
     let buttons = Object.keys(data||{}).map((buttonKey, i) => {
@@ -27,7 +49,7 @@ class PlayerButtons extends Component {
         <TouchableHighlight
           key={buttonKey}
           onPress={() => { 
-            //this._buttonGaEvent(buttonKey)
+            this._buttonGaEvent(buttonKey)
             button.func() 
           }}
           underlayColor="#fff"
@@ -50,4 +72,4 @@ class PlayerButtons extends Component {
 }
 
 export { PlayerButtons }
-export default connect(mapStateToProps)(PlayerButtons)
+export default connect(mapStateToProps, mapActionToProps)(PlayerButtons)

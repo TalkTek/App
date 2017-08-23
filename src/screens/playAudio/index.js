@@ -111,40 +111,28 @@ class PlayAudio extends Component {
       this.props.memberUid
     )
   }
-  
-  _buttonGaEvent(type) {
-    if (type !== 'playOrPause')
-      this.props.ga.gaSetEvent({
-        category: 'capsule',
-        action: type,
-        value: {
-          label: this.props.audioName,
-          value: 1
-        }
-      })
-    }
+
+  _gaGoBack() {
+    this.props.ga.gaSetEvent({
+      category: 'capsule',
+      action: 'close player',
+      value: {
+        label: this.props.audioName,
+        value: 1
+      }
+    })
+  }
     
-    _gaGoBack() {
-      this.props.ga.gaSetEvent({
-        category: 'capsule',
-        action: 'close player',
-        value: {
-          label: this.props.audioName,
-          value: 1
-        }
-      })
-    }
+  render () {
+    const {
+      toggleModal,
+      playState,
+      audioName,
+      audioLengthFormatted,
+      audioLengthSec,
+      currentTimeFormatted,
+    } = this.props
     
-    render () {
-      const {
-        toggleModal,
-        playState,
-        audioName,
-        audioLengthFormatted,
-        audioLengthSec,
-        currentTimeFormatted,
-      } = this.props
-      
     const buttons = {
       close: require('../../assets/img/playAudio/close.png'),
       footer: {
