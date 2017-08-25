@@ -15,11 +15,16 @@ import {
   SHOW_AUDIO_POPOUT_BAR,
   HIDE_AUDIO_POPOUT_BAR,
   AUDIO_LOAD,
-  AUDIO_PLAY,
   AUDIO_PAUSE,
   AUDIO_UPDATE_INFO,
   // --------R.Start----------
   SAVE_PLAYING_AUDIO_STATIC_INFO_SUCCESS,
+  ON_PRESS_SUCCESS,
+  AUDIO_PLAY_SUCCESS,
+  AUDIO_PAUSE_SUCCESS,
+  REMOVE_COLOR_SUCCESS,
+  ADD_COLOR_SUCCESS,
+  SAVE_PREVIOUS_KEY_SUCCESS,
 } from './audioTypes'
 /* eslint-disable*/
 
@@ -49,11 +54,16 @@ import {
 // }
 
 const initialState = {
+  isPlayed: false, // user already play audio or not ?
   isPlaying: false,
   capsules: {},
   isCpAudioLoaded: false,
+  previousKey:{
+    father: '',
+    child: '',
+  },
   playingAudioStaticInfo: {
-    active: false,
+    active: '',
     audioName: '',
     draft: '',
     id: '',
@@ -62,7 +72,8 @@ const initialState = {
       sec: ''
     },
     likeCounter: '',
-    url: ''
+    url: '',
+    parentKey: ''
   },
   playingAudioDynamicInfo: {
     currentTime: {
@@ -84,13 +95,78 @@ export default createReducder({
     }
   },
   [SAVE_PLAYING_AUDIO_STATIC_INFO_SUCCESS]: (state, action) => {
-    let audio = action.payload
+    let audio = {
+      ...action.payload.capsule,
+      // this is stateless prop,
+      // meaning to say this prop is abandon in playingAudioStaticInfo
+      // we don't use that to do anything
+      active: ''
+    }
     return {
       ...state,
       playingAudioStaticInfo: {
         ...state.playingAudioStaticInfo,
-        ...audio
+        ...audio,
       }
+    }
+  },
+  [SAVE_PREVIOUS_KEY_SUCCESS]: (state, action) => {
+    console.log('action.payload',  action.payload)
+    return {
+      ...state,
+      previousKey: {
+        father: action.payload.parentKey,
+        child: action.payload.childKey,
+      }
+    }
+  },
+  [ADD_COLOR_SUCCESS]: (state, action) => {
+    let parentKey = action.payload.parentKey
+    let childKey = action.payload.childKey
+    let finalCapsules = {
+      audios: {
+        ...state.capsules[parentKey].audios,
+        [childKey]: {
+          ...state.capsules[parentKey].audios[childKey],
+          active: true
+        }
+      },
+      title: state.capsules[parentKey].title,
+    }
+    return {
+      ...state,
+      capsules: {
+        ...state.capsules,
+        [parentKey]: finalCapsules
+      }
+    }
+  },
+  [REMOVE_COLOR_SUCCESS]: (state, action) => {
+    let parentKey = action.payload.parentKey
+    let childKey = action.payload.childKey
+    console.log('childKey',  childKey)
+    let finalCapsules = {
+      audios: {
+        ...state.capsules[parentKey].audios,
+        [childKey]: {
+          ...state.capsules[parentKey].audios[childKey],
+          active: false
+        }
+      },
+      title: state.capsules[parentKey].title,
+    }
+    return {
+      ...state,
+      capsules: {
+        ...state.capsules,
+        [parentKey]: finalCapsules
+      }
+    }
+  },
+  [ON_PRESS_SUCCESS]: (state, action) => {
+    return {
+      ...state,
+      isPlayed: true
     }
   },
   // [SETTING_PLAYING_AUDIO_INFO]: (state, action) => {
@@ -180,12 +256,6 @@ export default createReducder({
   //     draft: draft.draft
   //   }
   // }),
-  [TOGGLE_AUDIO_POPOUT_BAR]: (state, action) => {
-    return {
-      ...state,
-      isAudioPopOutBarActive: !state.isAudioPopOutBarActive,
-    }
-  },
   [SHOW_AUDIO_POPOUT_BAR]: (state) => {
     return {
       ...state,
@@ -211,13 +281,13 @@ export default createReducder({
   //     }
   //   }
   // },
-  [AUDIO_PLAY]: (state, action) => {
+  [AUDIO_PLAY_SUCCESS]: (state, action) => {
     return {
       ...state,
-      isPlaying: true
+      isPlaying: true,
     }
   },
-  [AUDIO_PAUSE]: (state, action) => {
+  [AUDIO_PAUSE_SUCCESS]: (state, action) => {
     return {
       ...state,
       isPlaying: false

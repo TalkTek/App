@@ -57,10 +57,6 @@ let buttons = {
   isCpAudioLoaded: state.audio.isCpAudioLoaded,
   lastKey: state.capsule.lastKey,
   memberUid: state.member.uid,
-  // playingAudioPos: {
-  //   i: state.audio.playingAudioInfo.pos.i,
-  //   j: state.audio.playingAudioInfo.pos.j
-  // }
 }), dispatch => ({
   actions: bindActionCreators({...audioActions, ...analyticActions, ...capsuleAction}, dispatch),
 }))

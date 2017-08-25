@@ -54,6 +54,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-google-signin')
     compile project(':react-native-google-analytics-bridge')
     compile(project(':react-native-google-signin')) {
         exclude group: "com.google.android.gms" // very important

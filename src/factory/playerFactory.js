@@ -39,8 +39,9 @@ class PlayerFactory {
   createPlayer (url) {
     this.player = new Player(url, {
       autoDestroy: false
-    })
+    }).prepare()
   }
+
 
   destroy () {
     this.player.destroy()

@@ -36,9 +36,13 @@ import {
 } from './audioTypes'
 import AudioModule from '../../api/audioModule'
 import playerModule from '../../api/playerModule'
-import {getCapsules} from './audioSelector'
+import {
+  getCapsules,
+  getPreviousKey,
+  getIsPlayedInfo
+} from './audioSelector'
 import audioActions from './audioAction'
-
+import playerFactor from '../../factory/playerFactory'
 
 /**
  * subroutines
@@ -105,21 +109,11 @@ function * getAudioDoc (data) {
  * player subroutines
  */
 
-function * onPressFlow () {
-  // let t = yield select(playingAudioState())
-  // console.log('t is', t)
-  yield put(audioActions.toggleAudioPopoutBar())
-}
-
 function * next () {
 
 }
 
 function * previous () {
-
-}
-
-function * play () {
 
 }
 
@@ -282,23 +276,112 @@ function * audioUpdateCurrentTime () {
   }})
 }
 
+
+function * updateButtonColor (parentKey, childKey) {
+  try {
+    /**
+     * playedAudioInfo: object
+     * eg: {
+     *  active: '', // this is a abandon prop, we don't use that to do anything
+     *  audioName: 'test'
+     *  draft: '<p>test</p>'
+     *  id: '-Ks8KN....JQ', <--this is childKey
+     *  length: {
+     *    formatted: '03:53',
+     *    sec: '233',
+     *  },
+     *  likeCounter: 0,
+     *  url: 'https://firebasestorage.googleapis.com/....',
+     *  parentKey: '-Ks8NFRunciomingYJ...'
+     */
+    let isPlayed = yield select(getIsPlayedInfo())
+    let previousKey = yield select(getPreviousKey())
+    if (isPlayed) {
+      console.log('HELLO', )
+      yield put(audioActions.removeColorRequest())
+      yield put(audioActions.removeColorSuccess({
+              parentKey: previousKey.father,
+              childKey: previousKey.child
+            }))
+      yield put(audioActions.addColorRequest())
+      yield put(audioActions.addColorSuccess({parentKey, childKey}))
+    } else {
+      yield put(audioActions.addColorRequest())
+      yield put(audioActions.addColorSuccess({parentKey, childKey}))
+    }
+  } catch (error) {
+    throw new Error(error)
+  }
+} 
+
+/**
+ * get url and call play function through the playFactory
+ * playFactory is a singleton object
+ *
+ * @param url : string
+ * eg:
+ * "https://firebasestorage.googlepis.com/dfkajlksfjkf...."
+ */
+function * playAudio (url) {
+  try {
+    yield put(audioActions.audioPlayRequest())
+    yield playerFactor.init(url)
+    const isPlayable = yield playerFactor.play()
+    yield put(audioActions.audioPlaySuccess())
+  } catch (error) {
+    throw new Error(error.message)
+  }
+}
+
 /**
  * get the parentKey and childKey, according that,
  * we can get the specific capsule file we want
- * when we get the capsule, saving that into redux store
  *
  * @param parentKey : string
  * @param childKey : string
  * eg: Ks8Mn5r1iPn7FB8mLWI
  */
-function * getAudioFileAndSaveIntoStore (parentKey, childKey) {
+function * getAudioFilePicked (parentKey, childKey) {
+  try {
+    let capsule = yield select(getCapsules(parentKey, childKey))
+    return capsule
+  } catch( error) {
+    throw new Error(error.message)
+  }
+}
+
+/**
+ * get the parentKey and capsule that user pick, and save capsule's file info into store
+ * @param capsule : object
+ * eg : capsule {
+ *  acitve: '',
+ *  audioName: "柯文哲好棒棒",
+ *  draft: "<p>柯文哲好棒棒</p>",
+ *  id: "KJKDFJKSFJDddfdKK",
+ *  length: {
+ *    formatted: "01:01",
+ *    sec: "123"
+ *  },
+ *  likeCounter: 0,
+ *  url: "https://firebasestorage.googlepis.com/dfkajlksfjkf....",
+ * }
+ */
+function * setCapsulePickedIntoReduxStore(capsule, parentKey) {
   try {
     yield put(audioActions.savePlayingAudioStaticInfoRequest())
-    let capsule = yield select(getCapsules(parentKey, childKey))
-    yield put(audioActions.savePlayingAudioStaticInfoSuccess(capsule))
+    yield put(audioActions.savePlayingAudioStaticInfoSuccess({capsule}))
+  } catch (error) {
+    // yield put(audioActions.savePlayingAudioStaticInfoFailure())
+    throw new Error(error.message)
   }
-  catch(error) {
-    throw new Error(error)
+}
+
+function * setPreviousKey (parentKey, childKey) {
+  try {
+    yield put(audioActions.savePreviousKeyRequest())
+    yield put(audioActions.savePreviousKeySuccess(parentKey, childKey))
+  } catch (error) {
+    throw new Error(error.message)
   }
 }
 
@@ -324,10 +407,16 @@ function * audioSaga () {
 
 function * onPressFlow () {
   while(true) {
-    const {payload: {parentKey, childKey}} = yield take(ON_PRESS)
     yield put(audioActions.onPressRequest())
-    yield call(getAudioFileAndSaveIntoStore, parentKey, childKey)
-    yield put(audioActions.toggleAudioPopoutBar())
+    const {payload: {parentKey, childKey}} = yield take(ON_PRESS)
+    let capsule = yield call(getAudioFilePicked, parentKey, childKey)
+    yield call(setCapsulePickedIntoReduxStore, capsule)
+    yield put(audioActions.showAudioPopoutBar())
+    // yield call(playAudio, capsule.url)
+    yield call(updateButtonColor, parentKey, childKey)
+    yield call(setPreviousKey, parentKey, childKey)
+    // timer
+    yield put(audioActions.onPressSuccess())
   }
 }
 

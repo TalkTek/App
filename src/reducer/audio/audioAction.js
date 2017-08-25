@@ -17,8 +17,6 @@ import {
   HIDE_AUDIO_POPOUT_BAR,
   // AUDIO_LOAD,
   AUDIO_LOADED,
-  AUDIO_PLAY,
-  AUDIO_PAUSE,
   AUDIO_SEEK,
   AUDIO_TO_NEXT_TRACK,
   AUDIO_TO_PREVIOUS_TRACK,
@@ -29,10 +27,36 @@ import {
   AUDIO_UPDATE_CURRENT_TIME,
   AUDIO_GET_NEXT_TRACK,
 // --------R_START-------------
+
+  REMOVE_COLOR,
+  REMOVE_COLOR_REQUEST,
+  REMOVE_COLOR_SUCCESS,
+  REMOVE_COLOR_FAILURE,
+
+  ADD_COLOR,
+  ADD_COLOR_REQUEST,
+  ADD_COLOR_SUCCESS,
+  ADD_COLOR_FAILURE,
+
+  AUDIO_PLAY,
+  AUDIO_PLAY_REQUEST,
+  AUDIO_PLAY_SUCCESS,
+  AUDIO_PLAY_FAILURE,
+
+  AUDIO_PAUSE,
+  AUDIO_PAUSE_REQUEST,
+  AUDIO_PAUSE_SUCCESS,
+  AUDIO_PAUSE_FAILURE,
+
   ON_PRESS,
   ON_PRESS_REQUEST,
   ON_PRESS_SUCCESS,
   ON_PRESS_FAILURE,
+
+  SAVE_PREVIOUS_KEY,
+  SAVE_PREVIOUS_KEY_REQUEST,
+  SAVE_PREVIOUS_KEY_SUCCESS,
+  SAVE_PREVIOUS_KEY_FAILURE,
 
   SAVE_PLAYING_AUDIO_STATIC_INFO,
   SAVE_PLAYING_AUDIO_STATIC_INFO_REQUEST,
@@ -85,7 +109,6 @@ export default createActions({
   [HIDE_AUDIO_POPOUT_BAR]: state => state,
   // [AUDIO_LOAD]: state => state,
   [AUDIO_LOADED]: state => state,
-  [AUDIO_PLAY]: state => state,
   [AUDIO_PAUSE]: state => state,
   [AUDIO_SEEK]: state => state,
   [AUDIO_TO_NEXT_TRACK]: state => state,
@@ -94,6 +117,40 @@ export default createActions({
   [AUDIO_UPDATE_CURRENT_TIME]: state => state,
   [AUDIO_GET_NEXT_TRACK]: state => state,
   // ---------R_START-------------
+
+  [SAVE_PREVIOUS_KEY]: state => state,
+  [SAVE_PREVIOUS_KEY_REQUEST]: state => state,
+  [SAVE_PREVIOUS_KEY_SUCCESS]: (parentKey, childKey) => ({
+    parentKey,
+    childKey
+  }),
+  [SAVE_PREVIOUS_KEY_FAILURE]: state => state,
+
+  [REMOVE_COLOR]: state => state,
+  [REMOVE_COLOR_FAILURE]: state => state,
+  [REMOVE_COLOR_REQUEST]: state => state,
+  [REMOVE_COLOR_SUCCESS]: state => ({
+    parentKey: state.parentKey,
+    childKey: state.childKey
+  }),
+
+  [ADD_COLOR]: state => state,
+  [ADD_COLOR_FAILURE]: state => state,
+  [ADD_COLOR_REQUEST]: state => state,
+  [ADD_COLOR_SUCCESS]: state => ({
+    parentKey: state.parentKey,
+    childKey: state.childKey
+  }),
+  [AUDIO_PAUSE]: state => state,
+  [AUDIO_PAUSE_REQUEST]: state => state,
+  [AUDIO_PAUSE_SUCCESS]: state => state,
+  [AUDIO_PAUSE_FAILURE]: state => state,
+
+  [AUDIO_PLAY]: state => state,
+  [AUDIO_PLAY_REQUEST]: state => state,
+  [AUDIO_PLAY_SUCCESS]: state => state,
+  [AUDIO_PLAY_FAILURE]: state => state,
+
   [ON_PRESS]: (parentKey, childKey) => ({
     parentKey,
     childKey
