@@ -4,8 +4,6 @@
 import React, { Component } from 'react'
 import { 
   View,
-  TouchableOpacity,
-  Button,
   DatePickerIOS,
   DatePickerAndroid,
   Platform
@@ -23,6 +21,7 @@ import { bindActionCreators } from 'redux'
 import memberAction from '../../reducer/member/memberAction'
 import analyticAction from '../../reducer/analytic/analyticAction'
 import { H3 } from '../../components/text'
+import { Button } from '../../components/button'
 
 let state = {
   email: '',
@@ -168,13 +167,14 @@ class MemberInfo extends Component {
               }}
               style={memberInfoStyle.avatarImg}
             />
-            <TouchableOpacity
+            <Button 
+              text='上傳照片'
+              textSize='h4'
+              borderColor='rgb(97, 97, 97)'
+              borderRadius={6}
+              border={1}
               style={memberInfoStyle.uploadBtn}
-            >
-              <H3 style={memberInfoStyle.uploadBtnText}>
-                上傳照片
-              </H3>
-            </TouchableOpacity>
+              />
           </View>
           <View style={memberInfoStyle.form}>
             {
@@ -199,28 +199,28 @@ class MemberInfo extends Component {
 })
 
 class HeaderRight extends Component {
-  render() {
-    return (
-      <Button
-        title="儲存"
-        color="#fff"
-        onPress={() => {
-          let result = {}
-          for (let i in state) {
-            if (state.hasOwnProperty(i) && state[i]) {
-              result[i] = state[i]
-            }
-          }
+  // render() {
+  //   return (
+  //     <Button
+  //       title="儲存"
+  //       color="#fff"
+  //       onPress={() => {
+  //         let result = {}
+  //         for (let i in state) {
+  //           if (state.hasOwnProperty(i) && state[i]) {
+  //             result[i] = state[i]
+  //           }
+  //         }
 
-          this.props.action({
-            memberUid: this.props.memberUid,
-            post: result
-          })
-          this.props.navigation.goBack()
-        }}
-        />
-    )
-  }
+  //         this.props.action({
+  //           memberUid: this.props.memberUid,
+  //           post: result
+  //         })
+  //         this.props.navigation.goBack()
+  //       }}
+  //       />
+  //   )
+  // }
 }
 
 export { MemberInfo as default, HeaderRight }

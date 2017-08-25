@@ -5,7 +5,6 @@ import React, { Component } from 'react'
 import {
   View,
   Image,
-  Button,
   TouchableOpacity,
   TouchableHighlight,
   Dimensions
@@ -26,6 +25,7 @@ import ListIcon from '../../components/img/icon/SmallIcon'
 import OpenIcon from '../../components/img/icon/LargeIcon'
 import Avatar from '../../components/img/Thumbnail/LargeThumb'
 import { H4 } from '../../components/text'
+import { Button } from '../../components/button'
 
 const { width: screenWidth } = Dimensions.get('window')
 
@@ -167,16 +167,14 @@ export default class MemberCenter extends Component {
             {
               this.props.memberUid
               &&
-              <TouchableHighlight
-                color="#212121"
+              <Button 
+                text="登出" 
+                border={1}
+                borderRadius={8}
+                textSize='h4'
                 onPress={this._logout}
                 style={styles.logout}
-                underlayColor="#fff"
-              >
-                <View>
-                  <H4>登出</H4>
-                </View>
-              </TouchableHighlight>
+                />  
             }
           </View>
         </Content>

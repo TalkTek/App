@@ -53,14 +53,10 @@ const style: Object = {
     alignItems: 'center'
   },
   logout: {
-    borderColor: 'rgb(158, 158, 158)',
-    borderWidth: 1,
     marginTop: 24,
     height: 40,
     marginHorizontal: 16,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center'
+    borderRadius: 8
   }
 }
 
@@ -74,18 +70,11 @@ const memberInfoStyle: Object = {
   },
   avatarImg: style.avatarImg,
   uploadBtn: {
-    borderColor: 'rgb(97, 97, 97)',
-    borderRadius: 6,
-    borderWidth: 1,
-    borderStyle: 'solid',
-    marginTop: 16
-  },
-  uploadBtnText: {
-    backgroundColor: 'transparent',
-    marginTop: 5,
-    marginBottom: 5,
-    marginLeft: 10,
-    marginRight: 10
+    marginTop: 16,
+    paddingTop:5,
+    paddingBottom: 5,
+    paddingLeft: 10,
+    paddingRight: 10
   },
   form: {
     ...style.mainBackground,
