@@ -8,10 +8,19 @@ import * as Text from '../text'
 export default class DefaultButton extends Component {
   render() {
     const TextComp = Text[String(this.props.textSize||'H3').toUpperCase()]
+    const colors = {
+      gray: null,
+      white: null,
+      green: null,
+      black: null
+    }
+    if (this.props.textColor)
+      colors[this.props.textColor] = true
+    
     return (
       <TouchableOpacity style={this.props.style} onPress={this.props.onPress}>
         <View>
-          <TextComp>{this.props.text}</TextComp>
+          <TextComp {...colors} >{this.props.text}</TextComp>
         </View>
       </TouchableOpacity>
     )

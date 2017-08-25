@@ -19,6 +19,7 @@ import {
 } from 'native-base'
 import { H4 } from '../../components/text'
 import { feedBackStyle } from './styles'
+import { Button } from '../../components/button'
 
 type toastInfo = {
   text: string,
@@ -138,11 +139,15 @@ class Feedback extends Component {
             <View style={[feedBackStyle.input, feedBackStyle.mutiInput]}>
               <Input onChangeText={(value: string) => this.setState({content: value})} multiline />
             </View>
-            <TouchableOpacity onPress={this.send} style={feedBackStyle.sendBtn}>
-              <H4 style={feedBackStyle.sendText}>
-                送出
-              </H4>
-            </TouchableOpacity>
+            <Button 
+              text="送出"
+              backgroundColor='rgb(31, 191, 179)'
+              borderRadius={8}
+              textSize='H4'
+              textColor='white'
+              style={feedBackStyle.sendBtn}
+              onPress={this.send}
+            />
           </Content>
         }
       </Container>

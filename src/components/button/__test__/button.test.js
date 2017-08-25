@@ -11,7 +11,8 @@ describe('<Button />', () => {
   const testProps = {
     border: 1,
     text: 'just a text',
-    borderRadius: 5
+    borderRadius: 5,
+    textColor: 'black'
   }
 
   const outPutStyle = [

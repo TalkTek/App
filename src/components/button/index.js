@@ -10,6 +10,7 @@ const Button = styled(DefaultButoton, (styleProps: {}) => {
   return {
     borderColor: styleProps.borderColor,
     borderRadius: styleProps.borderRadius,
+    backgroundColor: styleProps.backgroundColor,
     justifyContent: 'center',
     alignItems: 'center',
     ...borderStyle

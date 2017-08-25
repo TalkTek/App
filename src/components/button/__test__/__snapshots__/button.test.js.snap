@@ -18,6 +18,7 @@ exports[`<Button /> render output should be same with expect 1`] = `
   style={
     Object {
       "alignItems": "center",
+      "backgroundColor": undefined,
       "borderColor": "rgb(158, 158, 158)",
       "borderRadius": 5,
       "borderWidth": 1,
@@ -32,8 +33,11 @@ exports[`<Button /> render output should be same with expect 1`] = `
     <Text
       accessible={true}
       allowFontScaling={true}
+      black={true}
       ellipsizeMode="tail"
       fontSize={15}
+      gray={null}
+      green={null}
       style={
         Array [
           Object {
@@ -44,6 +48,7 @@ exports[`<Button /> render output should be same with expect 1`] = `
           undefined,
         ]
       }
+      white={null}
     >
       just a text
     </Text>

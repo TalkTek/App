@@ -239,14 +239,12 @@ const pointCenterStyle: Object = {
     textAlign: 'center'
   },
   paymentBtn: {
-    backgroundColor: 'rgb(31, 191, 179)',
     marginLeft: 16,
     marginRight: 16,
     marginTop: 24,
     padding: 10,
     flexDirection: 'row',
-    justifyContent: 'center',
-    borderRadius: 8
+    justifyContent: 'center'
   },
   btnColor: {
     color: '#fff'

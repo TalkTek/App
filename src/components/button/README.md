@@ -5,6 +5,11 @@ Button 組建
 > text
 
 按鈕文字內容
+
+> textColor (green, white, gray, black)
+
+文字顏色
+
 > textSize (string) (H1,H2,H3,H4,H5)
 
 按鈕文字大小

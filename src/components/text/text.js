@@ -12,10 +12,11 @@ const colors = {
 const text = styled(Text, (styleProps: {}) => {
   let color
   Object.keys(styleProps).forEach((ele) => {
-    if (colors[ele]) {
+    if (colors[ele] && styleProps[ele]) {
       color = colors[ele]
     }
   })
+
   return {
     fontSize: styleProps.fontSize,
     fontWeight: styleProps.bold? '700': null,
