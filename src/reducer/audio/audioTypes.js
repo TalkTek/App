@@ -24,8 +24,12 @@ module.exports = KeyMirror({
   AUDIO_TO_NEXT_TRACK: null,
   AUDIO_TO_PREVIOUS_TRACK: null,
   AUDIO_UPDATE_INFO: null,
-  AUDIO_UPDATE_CURRENT_TIME: null,
   // -----R_START--------------------
+
+  UPDATE_CURRENT_TIME: null,
+  UPDATE_CURRENT_TIME_REQUEST: null,
+  UPDATE_CURRENT_TIME_SUCCESS: null,
+  UPDATE_CURRENT_TIME_FAILURE: null,
 
   REMOVE_COLOR: null,
   REMOVE_COLOR_REQUEST: null,

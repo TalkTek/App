@@ -25,8 +25,24 @@ const getIsPlayedInfo = () => createSelector(
   }
 )
 
+const getAudioLengthBySec = () => createSelector(
+  getAudioState,
+  audioState => {
+    return audioState.playingAudioStaticInfo.length.sec
+  }
+)
+
+const isPlaying = () => createSelector(
+  getAudioState,
+  audioState => {
+    return audioState.isPlaying
+  }
+)
+
 export {
   getCapsules,
   getPreviousKey,
-  getIsPlayedInfo
+  getIsPlayedInfo,
+  getAudioLengthBySec,
+  isPlaying
 }

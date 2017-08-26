@@ -44,11 +44,11 @@ export default class PopOutBar extends Component {
     popoutAudioBarHeight: new Animated.Value(screenHeight)
   }
 
-  timer = setInterval(() => {
-    if (this.props.isPlaying) {
-      this.props.actions.audioUpdateCurrentTime()
-    }
-  }, 400)
+  // timer = setInterval(() => {
+  //   if (this.props.isPlaying) {
+  //     this.props.actions.audioUpdateCurrentTime()
+  //   }
+  // }, 400)
 
   componentWillReceiveProps (nextProps) {
     if(nextProps.isAudioPopOutBarActive) {

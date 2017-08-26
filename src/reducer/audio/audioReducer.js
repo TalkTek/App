@@ -19,6 +19,7 @@ import {
   AUDIO_UPDATE_INFO,
   // --------R.Start----------
   SAVE_PLAYING_AUDIO_STATIC_INFO_SUCCESS,
+  UPDATE_CURRENT_TIME_SUCCESS,
   ON_PRESS_SUCCESS,
   AUDIO_PLAY_SUCCESS,
   AUDIO_PAUSE_SUCCESS,
@@ -167,6 +168,17 @@ export default createReducder({
     return {
       ...state,
       isPlayed: true
+    }
+  },
+  [UPDATE_CURRENT_TIME_SUCCESS]: (state, action) => {
+    return {
+      ...state,
+      playingAudioDynamicInfo: {
+        currentTime: {
+          formatted: action.payload.formatted,
+          sec: action.payload.sec
+        }
+      }
     }
   },
   // [SETTING_PLAYING_AUDIO_INFO]: (state, action) => {

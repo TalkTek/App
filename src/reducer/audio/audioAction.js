@@ -24,9 +24,12 @@ import {
   S_ON_PRESS_SUCCESS,
   S_ON_PRESS_FAILURE,
   // AUDIO_UPDATE_INFO,
-  AUDIO_UPDATE_CURRENT_TIME,
   AUDIO_GET_NEXT_TRACK,
 // --------R_START-------------
+  UPDATE_CURRENT_TIME,
+  UPDATE_CURRENT_TIME_REQUEST,
+  UPDATE_CURRENT_TIME_SUCCESS,
+  UPDATE_CURRENT_TIME_FAILURE,
 
   REMOVE_COLOR,
   REMOVE_COLOR_REQUEST,
@@ -114,9 +117,16 @@ export default createActions({
   [AUDIO_TO_NEXT_TRACK]: state => state,
   [AUDIO_TO_PREVIOUS_TRACK]: state => state,
   // [AUDIO_UPDATE_INFO]: state => state,
-  [AUDIO_UPDATE_CURRENT_TIME]: state => state,
   [AUDIO_GET_NEXT_TRACK]: state => state,
   // ---------R_START-------------
+
+  [UPDATE_CURRENT_TIME]: state => state,
+  [UPDATE_CURRENT_TIME_REQUEST]: state => state,
+  [UPDATE_CURRENT_TIME_FAILURE]: state => state,
+  [UPDATE_CURRENT_TIME_SUCCESS]: (sec, formatted) => ({
+    sec,
+    formatted
+  }),
 
   [SAVE_PREVIOUS_KEY]: state => state,
   [SAVE_PREVIOUS_KEY_REQUEST]: state => state,

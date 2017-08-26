@@ -39,7 +39,9 @@ import playerModule from '../../api/playerModule'
 import {
   getCapsules,
   getPreviousKey,
-  getIsPlayedInfo
+  getIsPlayedInfo,
+  getAudioLengthBySec,
+  isPlaying
 } from './audioSelector'
 import audioActions from './audioAction'
 import playerFactor from '../../factory/playerFactory'
@@ -105,34 +107,6 @@ function * getAudioDoc (data) {
   })
 }
 
-/**
- * player subroutines
- */
-
-function * next () {
-
-}
-
-function * previous () {
-
-}
-
-function * stop () {
-
-}
-
-function * forward15 () {
-
-}
-
-function * backward15 () {
-
-}
-
-function * seek () {
-
-}
-
 type arg = {[key: string]: number}
 function * audioLoad (value:{payload: { [audio: string]: {}, pos: number }}) {
   const {
@@ -142,14 +116,6 @@ function * audioLoad (value:{payload: { [audio: string]: {}, pos: number }}) {
   } = value
   yield call(() => playerModule.load(audio.url))
   yield put({ type: AUDIO_LOADED })
-}
-
-function * audioLoaded () {
-  yield put({ type: AUDIO_PLAY })
-}
-
-function * audioPlay () {
-  yield call(() => playerModule.play())
 }
 
 function * audioPause () {
@@ -179,24 +145,6 @@ function * selectTrack (offset: number) {
   return { audio: datas[returnIndex], ...iJ, pos: returnIndex }
 }
 
-function countIJ (audios, index: number) {
-  // counte for i,j
-  let j = 0
-  let i = 0
-  for (i in audios.capsules) {
-    if (index - audios.capsules[i].audios.length >= 0) {
-      index -= audios.capsules[i].audios.length
-    } else {
-      j = index
-      break
-    }
-  }
-
-  return {
-    i, j
-  }
-}
-
 function * audioToNextTrack () {
   let capsule = yield call(() => selectTrack(+1))
   console.log(capsule)
@@ -214,17 +162,6 @@ function * audioToNextTrack () {
   })
 }
 
-const makePlain = (capsules: []) => {
-  let data = []
-  for (let i in capsules) {
-    data = [
-      ...data,
-      ...capsules[i].audios
-    ]
-  }
-  return data
-}
-
 function * audioToPreviousTrack () {
   let capsule = yield call(() => selectTrack(-1))
 
@@ -240,10 +177,6 @@ function * audioToPreviousTrack () {
     type: AUDIO_LOAD,
     payload: capsule
   })
-}
-
-function * audioUpdateInfo () {
-
 }
 
 function * audioSeek({ payload }) {
@@ -276,7 +209,60 @@ function * audioUpdateCurrentTime () {
   }})
 }
 
+function updateCurrentTime () {
+  try {
+    console.log('currentTime', playerFactor.player.currentTime)
+    let audioLengthBySec = select(getAudioLengthBySec())
+    // length = {
+    //   formatted: '01:30',
+    //   sec: '90',
+    // }
+    let length = playerFactor.currentTime(audioLengthBySec)
+    console.log('length', length)
+  } catch (error) {
+    throw new Error(error.message)
+  }
+}
 
+function * timer () {
+  try {
+    let isAudioPlaying = yield select(isPlaying())
+    let timer
+    if ( isAudioPlaying ) {
+      yield call(startTimer, timer)
+    } else {
+      yield call(stopTimer, timer)
+    }
+  } catch (error) {
+
+  }
+}
+
+function * startTimer (timer) {
+  try {
+    timer = setInterval(() => updateCurrentTime(), 400)
+  } catch (error) {
+    throw new Error(error.message)
+  }
+}
+
+function * stopTimer (timer) {
+  try {
+    clearInterval(timer)
+  } catch (error) {
+    throw new Error(error.message)
+  }
+}
+
+/**
+ *  past two parameters into this function, and get two state from redux store
+ *  to recognize if the audio is pressed or not , if be pressed before, then
+ *  remove the previous button color, so we need to previousKey of audio
+ *  and color the new button, so we need to currentKey of audio
+ * @param parentKey : string
+ * @param childKey : string
+ * eg: -Ks7KSNKLADs32S
+ */
 function * updateButtonColor (parentKey, childKey) {
   try {
     /**
@@ -297,7 +283,6 @@ function * updateButtonColor (parentKey, childKey) {
     let isPlayed = yield select(getIsPlayedInfo())
     let previousKey = yield select(getPreviousKey())
     if (isPlayed) {
-      console.log('HELLO', )
       yield put(audioActions.removeColorRequest())
       yield put(audioActions.removeColorSuccess({
               parentKey: previousKey.father,
@@ -315,18 +300,17 @@ function * updateButtonColor (parentKey, childKey) {
 } 
 
 /**
- * get url and call play function through the playFactory
+ * get url and call initAndPlay function through the playFactory
  * playFactory is a singleton object
  *
  * @param url : string
  * eg:
  * "https://firebasestorage.googlepis.com/dfkajlksfjkf...."
  */
-function * playAudio (url) {
+function * playNewAudio (url) {
   try {
     yield put(audioActions.audioPlayRequest())
-    yield playerFactor.init(url)
-    const isPlayable = yield playerFactor.play()
+    yield playerFactor.initAndPlay(url)
     yield put(audioActions.audioPlaySuccess())
   } catch (error) {
     throw new Error(error.message)
@@ -376,6 +360,13 @@ function * setCapsulePickedIntoReduxStore(capsule, parentKey) {
   }
 }
 
+/**
+ * get ParentKey and childKey, and save them into store
+ * this function mainly use for update the color of button
+ * @param parentKey : string
+ * @param childKey : string
+ * eg: '-Ks7SNKSFDKLLSDF'
+ */
 function * setPreviousKey (parentKey, childKey) {
   try {
     yield put(audioActions.savePreviousKeyRequest())
@@ -388,22 +379,20 @@ function * setPreviousKey (parentKey, childKey) {
 /***
  * watcher
  */
-function * audioSaga () {
-  // yield takeLatest(AUDIO_LOAD, press)
-  yield takeLatest(AUDIO_LOADED, audioLoaded)
-  yield takeLatest(AUDIO_PLAY, audioPlay)
-  yield takeLatest(AUDIO_PAUSE, audioPause)
-  yield takeLatest(AUDIO_SEEK, audioSeek)
-  yield takeLatest(AUDIO_TO_NEXT_TRACK, audioToNextTrack)
-  yield takeLatest(AUDIO_TO_PREVIOUS_TRACK, audioToPreviousTrack)
-  yield takeLatest(AUDIO_UPDATE_INFO, audioUpdateInfo)
-  yield takeLatest(AUDIO_UPDATE_CURRENT_TIME, audioUpdateCurrentTime)
-  yield takeLatest(CP_AUDIO_INFO_GET, getAudioInfo)
-  yield takeLatest(CP_AUDIO_GOOD_CHANGE, setAudioGoodState)
-  yield takeLatest(CP_AUDIO_GET_DOC, getAudioDoc)
-  // ----------R_START----------------
-  yield takeLatest(ON_PRESS, onPressFlow)
-}
+// function * audioSaga () {
+//   // yield takeLatest(AUDIO_LOAD, press)
+//   yield takeLatest(AUDIO_LOADED, audioLoaded)
+//   yield takeLatest(AUDIO_PLAY, audioPlay)
+//   yield takeLatest(AUDIO_PAUSE, audioPause)
+//   yield takeLatest(AUDIO_SEEK, audioSeek)
+//   yield takeLatest(AUDIO_TO_NEXT_TRACK, audioToNextTrack)
+//   yield takeLatest(AUDIO_TO_PREVIOUS_TRACK, audioToPreviousTrack)
+//   yield takeLatest(AUDIO_UPDATE_INFO, audioUpdateInfo)
+//   yield takeLatest(AUDIO_UPDATE_CURRENT_TIME, audioUpdateCurrentTime)
+//   yield takeLatest(CP_AUDIO_INFO_GET, getAudioInfo)
+//   yield takeLatest(CP_AUDIO_GOOD_CHANGE, setAudioGoodState)
+//   yield takeLatest(CP_AUDIO_GET_DOC, getAudioDoc)
+// }
 
 function * onPressFlow () {
   while(true) {
@@ -412,15 +401,55 @@ function * onPressFlow () {
     let capsule = yield call(getAudioFilePicked, parentKey, childKey)
     yield call(setCapsulePickedIntoReduxStore, capsule)
     yield put(audioActions.showAudioPopoutBar())
-    // yield call(playAudio, capsule.url)
+    yield call(playNewAudio, capsule.url)
     yield call(updateButtonColor, parentKey, childKey)
     yield call(setPreviousKey, parentKey, childKey)
-    // timer
+    yield call(timer)
     yield put(audioActions.onPressSuccess())
   }
 }
 
+function * playFlow () {
+  try {
+
+  } catch (error) {
+
+  }
+}
+
+function * stopFlow () {
+  try {
+
+  } catch (error) {
+
+  }
+}
+
+function * seekFlow () {
+  try {
+
+  } catch (error) {
+
+  }
+}
+
+function * forward15 () {
+  try {
+
+  } catch (error) {
+
+  }
+}
+
+function * backward15 () {
+  try {
+
+  } catch (error) {
+
+  }
+}
+
 export default [
-  fork(audioSaga),
+  // fork(audioSaga),
   fork(onPressFlow)
 ]
