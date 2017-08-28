@@ -195,8 +195,8 @@ export default class AudioComponents extends Component {
   _seek = (value) => {
     let { audioTimeSec, isPlaying, actions } = this.props
     actions.audioSeek(value >= audioTimeSec? audioTimeSec - 1: value)
-    if (!this.props.isPlaying)
-      setTimeout(() => this.props.actions.audioUpdateCurrentTime(), 50)
+    // if (!this.props.isPlaying)
+      // setTimeout(() => this.props.actions.audioUpdateCurrentTime(), 50)
   }
 
   render() {

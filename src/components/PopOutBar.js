@@ -9,7 +9,8 @@ import {
   Animated,
   Dimensions,
   TouchableHighlight,
-  Image
+  Image,
+  ActivityIndicator
 } from 'react-native'
 import { Button } from 'native-base'
 import { connect } from 'react-redux'
@@ -31,6 +32,7 @@ let buttons = {
 @connect(state => ({
   isAudioPopOutBarActive: state.audio.isAudioPopOutBarActive,
   currentTimeFormatted: state.audio.playingAudioDynamicInfo.currentTime.formatted,
+  currentTimeSec: state.audio.playingAudioDynamicInfo.currentTime.sec,
   isPlaying: state.audio.isPlaying,
   audioName: state.audio.playingAudioStaticInfo.audioName
 }), (dispatch) => {
@@ -43,12 +45,6 @@ export default class PopOutBar extends Component {
   state = {
     popoutAudioBarHeight: new Animated.Value(screenHeight)
   }
-
-  // timer = setInterval(() => {
-  //   if (this.props.isPlaying) {
-  //     this.props.actions.audioUpdateCurrentTime()
-  //   }
-  // }, 400)
 
   componentWillReceiveProps (nextProps) {
     if(nextProps.isAudioPopOutBarActive) {
@@ -101,11 +97,11 @@ export default class PopOutBar extends Component {
   render () {
     const {
       currentTimeFormatted,
+      currentTimeSec,
       isPlaying,
       audioName,
-      isAudioPopOutBarActive,
     } = this.props
-    
+
     return (
       <Animated.View
         style={[styles.container, {
@@ -117,17 +113,31 @@ export default class PopOutBar extends Component {
           onPress={this.playOrPause}
           underlayColor="#fff"
         >
-          <Image
-            source={isPlaying ? buttons.pause : buttons.playingOnAudioBar}
-            style={styles.playPauseButton}
-          />
+          {
+            currentTimeSec === -0.001 || currentTimeSec === ''
+              ?
+              <View style={styles.popBarLoading}>
+                <ActivityIndicator
+                  animating
+                  color="black"
+                  size="small"
+                />
+              </View>
+              :
+              <Image
+                source={isPlaying ? buttons.pause : buttons.playingOnAudioBar}
+                style={styles.playPauseButton}
+              />
+          }
         </TouchableHighlight>
         <View style={styles.popoutAudioBarDes}>
           <Text style={styles.popoutAudioBarText}>
             {audioName}
           </Text>
           <Text style={styles.popoutAudioBarNumber}>
-            {currentTimeFormatted ? currentTimeFormatted : '00:00'}
+            {currentTimeSec === -0.001 || currentTimeSec === ''
+              ? '00:00'
+              : currentTimeFormatted}
           </Text>
         </View>
         <Button
@@ -175,5 +185,13 @@ const styles = StyleSheet.create({
   popoutAudioBarNumber: {
     fontSize: 10,
     color: 'rgb(33, 33, 33)'
+  },
+  popBarLoading: {
+    width: 32,
+    height: 32,
+    marginLeft: 16,
+    marginRight: 12,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 })

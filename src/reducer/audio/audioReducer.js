@@ -112,7 +112,6 @@ export default createReducder({
     }
   },
   [SAVE_PREVIOUS_KEY_SUCCESS]: (state, action) => {
-    console.log('action.payload',  action.payload)
     return {
       ...state,
       previousKey: {
@@ -145,7 +144,6 @@ export default createReducder({
   [REMOVE_COLOR_SUCCESS]: (state, action) => {
     let parentKey = action.payload.parentKey
     let childKey = action.payload.childKey
-    console.log('childKey',  childKey)
     let finalCapsules = {
       audios: {
         ...state.capsules[parentKey].audios,
@@ -171,12 +169,13 @@ export default createReducder({
     }
   },
   [UPDATE_CURRENT_TIME_SUCCESS]: (state, action) => {
+    console.log('action.payload', action.payload)
     return {
       ...state,
       playingAudioDynamicInfo: {
         currentTime: {
-          formatted: action.payload.formatted,
-          sec: action.payload.sec
+          formatted: action.payload.currentTimeFormatted,
+          sec: action.payload.currentTimeSec
         }
       }
     }

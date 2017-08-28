@@ -26,6 +26,13 @@ import {
   // AUDIO_UPDATE_INFO,
   AUDIO_GET_NEXT_TRACK,
 // --------R_START-------------
+
+
+  TIMER,
+  TIMER_REQUEST,
+  TIMER_SUCCESS,
+  TIMER_FAILURE,
+
   UPDATE_CURRENT_TIME,
   UPDATE_CURRENT_TIME_REQUEST,
   UPDATE_CURRENT_TIME_SUCCESS,
@@ -120,13 +127,15 @@ export default createActions({
   [AUDIO_GET_NEXT_TRACK]: state => state,
   // ---------R_START-------------
 
+  [TIMER]: state => state,
+  [TIMER_REQUEST]: state => state,
+  [TIMER_FAILURE]: state => state,
+  [TIMER_SUCCESS]: state => state,
+
   [UPDATE_CURRENT_TIME]: state => state,
   [UPDATE_CURRENT_TIME_REQUEST]: state => state,
   [UPDATE_CURRENT_TIME_FAILURE]: state => state,
-  [UPDATE_CURRENT_TIME_SUCCESS]: (sec, formatted) => ({
-    sec,
-    formatted
-  }),
+  [UPDATE_CURRENT_TIME_SUCCESS]: state => state,
 
   [SAVE_PREVIOUS_KEY]: state => state,
   [SAVE_PREVIOUS_KEY_REQUEST]: state => state,

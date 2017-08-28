@@ -26,6 +26,11 @@ module.exports = KeyMirror({
   AUDIO_UPDATE_INFO: null,
   // -----R_START--------------------
 
+  TIMER: null,
+  TIMER_REQUEST: null,
+  TIMER_SUCCESS: null,
+  TIMER_FAILURE: null,
+
   UPDATE_CURRENT_TIME: null,
   UPDATE_CURRENT_TIME_REQUEST: null,
   UPDATE_CURRENT_TIME_SUCCESS: null,

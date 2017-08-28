@@ -6,7 +6,12 @@ import {
   select,
   take,
   put,
+  cancelled
 } from 'redux-saga/effects'
+import {
+  eventChannel,
+  END
+} from 'redux-saga'
 import {
   CP_AUDIO_INFO_GET,
   CP_AUDIO_INFO_GET_SUCCESS,
@@ -183,82 +188,86 @@ function * audioSeek({ payload }) {
   let data = yield call(() => playerModule.seek(payload*1000))
 }
 
-function * audioUpdateCurrentTime () {
-  let endTime = yield select((state) => state.audio.playingAudioInfo.length.sec)
-  let value = playerModule.currentTime * 0.001
-  value = value<0? 0: value
-  let sec = Math.floor(value % 60)
-  let min = Math.floor(value / 60)
 
-  if (sec < 10) { sec = `0${sec}` }
-  if (min < 10) { min = `0${min}` }
-
-  let formatted = `${min}:${sec}`
-  // console.log(value === endTime)
-  if (value >= endTime - 1) {
-    console.log('next')
-    yield put({
-      type: AUDIO_TO_NEXT_TRACK
-    })
-  }
-  yield put({ type: AUDIO_UPDATE_INFO, payload: {
-    currentTime: {
-      sec: value,
-      formatted
-    }
-  }})
-}
-
-function updateCurrentTime () {
-  try {
-    console.log('currentTime', playerFactor.player.currentTime)
-    let audioLengthBySec = select(getAudioLengthBySec())
-    // length = {
-    //   formatted: '01:30',
-    //   sec: '90',
-    // }
-    let length = playerFactor.currentTime(audioLengthBySec)
-    console.log('length', length)
-  } catch (error) {
-    throw new Error(error.message)
-  }
-}
-
+/**
+ * multiple conditions will use this function, such as :
+ * 1. press
+ * 2. play
+ * 3. stop
+ * 4. seek
+ * if audio state is playing, then it will call startTimer
+ * there are two sub function : startTimer and updateCurrentTimeEvent
+ * startTimer clearly practice start a timer, it will produce a event to get the value(current time)
+ * that constantly produced by updateCurrentTimeEvent until the End event was emitted.
+ */
 function * timer () {
   try {
+    yield put(audioActions.timerRequest())
     let isAudioPlaying = yield select(isPlaying())
-    let timer
     if ( isAudioPlaying ) {
-      yield call(startTimer, timer)
-    } else {
-      yield call(stopTimer, timer)
+      yield call(startTimer)
     }
   } catch (error) {
-
-  }
-}
-
-function * startTimer (timer) {
-  try {
-    timer = setInterval(() => updateCurrentTime(), 400)
-  } catch (error) {
-    throw new Error(error.message)
-  }
-}
-
-function * stopTimer (timer) {
-  try {
-    clearInterval(timer)
-  } catch (error) {
-    throw new Error(error.message)
+    throw new Error(error)
   }
 }
 
 /**
- *  past two parameters into this function, and get two state from redux store
- *  to recognize if the audio is pressed or not , if be pressed before, then
- *  remove the previous button color, so we need to previousKey of audio
- *  and color the new button, so we need to currentKey of audio
+ * producing a new eventEmitter called timerEventChannel,
+ * and watch the feedback value, length
+ * the feedback value produced by updateCurrentTimeEvent
+ * and dispatch a action every time that startTimer get the length value.
+ * the function, updateCurrentTImeEvent, will continue out the value until emitting END event take place
+ */
+function * startTimer () {
+  let audioDuration = yield select(getAudioLengthBySec())
+  const timerEventChannel = yield call(updateCurrentTimeEvent, audioDuration)
+  try {
+    while (true) {
+      let length = yield take(timerEventChannel)
+      yield put(audioActions.updateCurrentTimeSuccess(length))
+    }
+  } catch (error) {
+    throw new Error(error)
+  } finally {
+    if (yield cancelled()) {
+      timerEventChannel.close()
+    }
+  }
+}
+
+/**
+ * it's a eventEmitter function for timer,
+ * @param durationSec : string , eg: '113'
+ * @returns {Channel<any>}
+ */
+function updateCurrentTimeEvent (durationSec) {
+  return eventChannel(emitter => {
+    let length
+    const timer = setInterval(() => {
+      length = playerFactor.currentTime()
+      if (length.currentTimeSec < durationSec) {
+        emitter(length)
+      } else {
+        emitter(END)
+      }
+    },400)
+
+    // when the END event was emitted, unsubscrible will be called
+    const unsubscribe = () => {
+      clearInterval(timer)
+    }
+
+    return unsubscribe
+
+  })
+}
+
+/**
+ *  past two parameters into this function, and get two states from redux store
+ *  to recognize if the audio was pressed or not , if be pressed before, then
+ *  remove the previous button color, so we need to previousKey of the audio.
+ *  For coloring the new button, we need to currentKey of audio
  * @param parentKey : string
  * @param childKey : string
  * eg: -Ks7KSNKLADs32S
@@ -404,7 +413,7 @@ function * onPressFlow () {
     yield call(playNewAudio, capsule.url)
     yield call(updateButtonColor, parentKey, childKey)
     yield call(setPreviousKey, parentKey, childKey)
-    yield call(timer)
+    yield fork(timer)
     yield put(audioActions.onPressSuccess())
   }
 }

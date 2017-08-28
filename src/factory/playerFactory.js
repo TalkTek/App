@@ -63,10 +63,8 @@ class PlayerFactory {
    * @param audioLength :string (sec)
    * eg: '123'
    */
-  currentTime (audioLength) {
-    console.log('this.player.currnetTime',  this.player.currentTime)
+  currentTime () {
     let currentTimeSec = this.player.currentTime * 0.001
-    // console.log('currentTimeSec',  currentTimeSec)
     let currentTimeFormatted = this.caculateFormattedTime(currentTimeSec)
     return {
       currentTimeSec,
@@ -78,18 +76,14 @@ class PlayerFactory {
    * @param cT(current Time) : number
    */
   caculateFormattedTime (cT) {
-    if(Number.isNaN(cT)) {
-      throw new Error('current Time is not Number in playerFactory')
-    } else {
-      let sec = Math.floor(cT % 60)
-      let min = Math.floor(cT / 60)
+    let sec = Math.floor(cT % 60)
+    let min = Math.floor(cT / 60)
 
-      if (sec < 10) { sec = `0${sec}` }
-      if (min < 10) { min = `0${min}` }
-      let formatted = `${min}:${sec}`
+    if (sec < 10) { sec = `0${sec}` }
+    if (min < 10) { min = `0${min}` }
+    let formatted = `${min}:${sec}`
 
-      return formatted
-    }
+    return formatted
   }
 }
 
