@@ -10,9 +10,9 @@ const {
 } = Dimensions.get('window')
 
 const LargeThumb = styled(Image, (styleProps) => ({
-  resizeMode: 'cover',
-  width: screenWidth,
-  height: 160
+  width: 80,
+  height: 80,
+  borderRadius: styleProps.borderRadius ? styleProps.borderRadius : 0,
 }))
 
 LargeThumb.propTypes = {

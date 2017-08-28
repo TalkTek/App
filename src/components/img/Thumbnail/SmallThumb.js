@@ -10,9 +10,9 @@ const {
 } = Dimensions.get('window')
 
 const SmallThumb = styled(Image, (styleProps) => ({
-  resizeMode: 'cover',
-  width: screenWidth,
-  height: 160
+  width: 32,
+  height: 32,
+  borderRadius: styleProps.borderRadius ? styleProps.borderRadius : 0
 }))
 
 SmallThumb.propTypes = {

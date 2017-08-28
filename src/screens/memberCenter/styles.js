@@ -20,11 +20,6 @@ const style: Object = {
     alignItems: 'center',
     justifyContent: 'center'
   },
-  avatarImg: {
-    width: 80,
-    height: 80,
-    borderRadius: 40
-  },
   moreInfo: {
     alignSelf: 'flex-end',
     position: 'absolute',

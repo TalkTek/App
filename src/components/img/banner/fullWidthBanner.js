@@ -6,7 +6,8 @@ import styled from '../../../utils/styledComponent'
 import PropTypes from 'prop-types'
 
 const {
-  width: screenWidth
+  width: screenWidth,
+  height: screenHeight
 } = Dimensions.get('window')
 
 const fullWidthBanner = styled(Image, (styleProps) => ({

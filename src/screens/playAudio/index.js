@@ -21,12 +21,14 @@ import {
 } from 'native-base'
 import {
   TouchableHighlight,
-  Image
 } from 'react-native'
 import styles from './styles'
 import Slider from 'react-native-slider'
 import DocScreen from '../../screens/playAudio/playerDoc'
 import Modal from 'react-native-modalbox'
+import FunctionIcon from '../../components/img/icon/XLIcon'
+import CloseIcon from '../../components/img/icon/XSmallIcon'
+import Banner from '../../components/img/banner/fullWidthBanner'
 
 const mapStateToProps = (state) => {
   return {
@@ -209,9 +211,8 @@ class PlayAudio extends Component {
           underlayColor="#fff"
         >
           <View style={styles.footerFunUnit}>
-            <Image
+            <FunctionIcon
               source={this.props[button.checkActive]? button.active: button.notActive}
-              style={styles.footerImages}
             />
             <Text
               style={styles.footerText}
@@ -234,15 +235,16 @@ class PlayAudio extends Component {
           }}
           underlayColor="#fff"
         >
-          <Image
-            source={button.twoState
-              ? (playState
-                ? button.pauseLink : button.playLink
-              )
-              : button.link
-            }
-            style={styles.bodyImages}
-          />
+          <View>
+            <FunctionIcon
+              source={button.twoState
+                ? (playState
+                  ? button.pauseLink : button.playLink
+                )
+                : button.link
+              }
+            />
+          </View>
         </TouchableHighlight>
       )
     })
@@ -257,7 +259,7 @@ class PlayAudio extends Component {
               transparent
               onPress={() => toggleModal()}
             >
-              <Image
+              <CloseIcon
                 source={this.buttons.close}
               />
             </Button>
@@ -267,8 +269,7 @@ class PlayAudio extends Component {
           directionalLockEnabled
         >
           <View>
-           <Image
-             style={styles.banner}
+           <Banner
              source={require('../../assets/img/knowledgeCapsule/banner.png')}
            />
           </View>

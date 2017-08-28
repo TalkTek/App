@@ -16,7 +16,7 @@ export default {
   banner: {
     resizeMode: 'contain',
     height: screenHeight * 0.34,
-    width: screenWidth,
+    width: screenWidth
   },
   body: {
     height: 290,
@@ -86,10 +86,6 @@ export default {
   },
   footerFunUnit: {
     alignItems: 'center'
-  },
-  footerImages: {
-    width: 40,
-    height: 40
   },
   footerText: {
     fontSize: 10,
