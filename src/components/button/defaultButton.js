@@ -30,7 +30,7 @@ export default class DefaultButton extends Component {
       <TouchableOpacity style={[this.props.style, LAYOUT.horizontal, {justifyContent: 'center'}]} onPress={this.props.onPress}>
         {this.props.leftElement}
         <View style={textStyle}>
-          <TextComp {...colors}>{this.props.text}</TextComp>
+          <TextComp {...colors} bold={this.props.bold}>{this.props.text}</TextComp>
         </View>
         {this.props.rightElement}
       </TouchableOpacity>

@@ -45,6 +45,7 @@ exports[`<Button /> render output should be same with expect 1`] = `
       accessible={true}
       allowFontScaling={true}
       black={true}
+      bold={undefined}
       ellipsizeMode="tail"
       fontSize={15}
       gray={null}

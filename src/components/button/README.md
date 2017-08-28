@@ -4,7 +4,7 @@ Button 組建
 
 > text (string)
 
-按鈕文字內容
+按鈕文字內容
 
 > textColor (green, white, gray, black)
 
@@ -12,7 +12,7 @@ Button 組建
 
 > textSize (string) (H1,H2,H3,H4,H5)
 
-按鈕文字大小
+按鈕文字大小
 
 > borderRadius (int)
 
@@ -33,3 +33,7 @@ Button 組建
 > leftElement, rightElement (React Component)
 
 可放在按鈕內文字左邊或者右邊的元素
+
+> bold (boolean)
+
+是否為粗體
