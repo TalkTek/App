@@ -179,6 +179,7 @@ export default class MemberCenter extends Component {
                 border={1}
                 borderRadius={8}
                 textSize='h4'
+                padding={12}
                 onPress={this._logout}
                 style={styles.logout}
                 />  

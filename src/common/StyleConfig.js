@@ -25,10 +25,15 @@ const FORM_COLOR = {
   lightGray: 'rgb(224, 224, 224)'
 }
 
+const MEMBER_COLOR = {
+  memberBackground: 'rgb(250, 250, 250)'
+}
+
 const COLORS = {
   ...MAIN_COLORS,
   ...AUDIO_COLOR,
-  ...FORM_COLOR
+  ...FORM_COLOR,
+  ...MEMBER_COLOR
 }
 
 /**

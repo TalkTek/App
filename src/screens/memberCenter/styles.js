@@ -2,6 +2,7 @@ import {
   StyleSheet,
   Dimensions
 } from 'react-native'
+import { COLORS } from 'StyleConfig'
 
 const { width: number } = Dimensions.get('window')
 const style: Object = {
@@ -9,10 +10,10 @@ const style: Object = {
     backgroundColor: 'rgb(245, 245, 245)'
   },
   mainBackground: {
-    backgroundColor: '#fff'
+    backgroundColor: COLORS.pureWhite
   },
   subBackground:{
-    backgroundColor: 'rgb(250, 250, 250)'
+    backgroundColor: COLORS.white
   },
   avatar: {
     minHeight: 165,
@@ -30,7 +31,6 @@ const style: Object = {
   },
   logout: {
     marginTop: 24,
-    height: 40,
     marginHorizontal: 16,
     borderRadius: 8,
     justifyContent: 'center',
