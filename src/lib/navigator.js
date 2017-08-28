@@ -10,14 +10,14 @@ import Forgetpw from '../screens/loginOrRegister/forgetpw'
 import MainScreen from '../screens/Launch'
 import KnowledgeCapsule from '../screens/knowledgeCapsule/index'
 import MemberCenter from '../screens/memberCenter/index'
-import MemberInfo from '../screens/memberCenter/memberInfo'
-import MyTalk from '../screens/memberCenter/myTalk'
-import MyPoint from '../screens/memberCenter/myPoint'
-import MyCapsule from '../screens/memberCenter/myCapsule'
-import PointCenter from '../screens/memberCenter/pointCenter'
-import Feedback from '../screens/memberCenter/feedback'
-import Download from '../screens/memberCenter/download'
-import Apply from '../screens/memberCenter/apply'
+import MemberInfo from '../screens/memberCenter/subscreen/memberInfo'
+import MyTalk from '../screens/memberCenter/subscreen/myTalk'
+import MyPoint from '../screens/memberCenter/subscreen/myPoint'
+import MyCapsule from '../screens/memberCenter/subscreen/myCapsule'
+import PointCenter from '../screens/memberCenter/subscreen/pointCenter'
+import Feedback from '../screens/memberCenter/subscreen/feedback'
+import Download from '../screens/memberCenter/subscreen/download'
+import Apply from '../screens/memberCenter/subscreen/apply'
 import PlayAudio from '../screens/playAudio'
 import PlayerDoc from '../screens/playAudio/playerDoc'
 import { Platform, Image } from 'react-native'
@@ -88,11 +88,11 @@ const CapsuleScreen = StackNavigator({
 
 const MemberCenterScreen = StackNavigator({
   MemberCenterScreen: { screen: MemberCenter },
-  MemberInfo : { screen: MemberInfo, navigationOptions: { title: '個人資料' }},
+  MemberInfo: { screen: MemberInfo, navigationOptions: { title: '個人資料' } },
   MyTalk: { screen: MyTalk, navigationOptions: { title: '我的小講' } },
   MyCapsule: { screen: MyCapsule, navigationOptions: { title: '我的膠囊' } },
   MyPoint: { screen: MyPoint, navigationOptions: { title: '我的點數' } },
-  Fillup: { screen: PointCenter, navigationOptions: { title: '儲值中心' } },
+  PointCenter: { screen: PointCenter, navigationOptions: { title: '儲值中心' } },
   Feedback: { screen: Feedback, navigationOptions: { title: '意見回饋' } },
   Apply: { screen: Apply, navigationOptions: { title: '成為講師' } },
   Download: { screen: Download, navigationOptions: { title: '下載' } }
@@ -123,21 +123,21 @@ const MemberCenterScreen = StackNavigator({
 
 const AppNavigator = TabNavigator(
   {
-    // Lecture: {
-    //   screen: LectureScreen,
-    //   navigationOptions: {
-    //     tabBarLabel: '小講'
-    //     // tabBarIcon: ({tintColor, focused}) => (
-    //     //   <Image
-    //     //     source={
-    //     //       focused
-    //     //         ? require('../assets/img/tabIcon/lecture/lec_active.png')
-    //     //         : require('../assets/img/tabIcon/lecture/lec_inactive.png')
-    //     //     }
-    //     //   />
-    //     // )
-    //   }
-    // },
+    Lecture: {
+      screen: LectureScreen,
+      navigationOptions: {
+        tabBarLabel: '小講',
+        tabBarIcon: ({tintColor, focused}) => (
+          <Image
+            source={
+              focused
+                ? require('../assets/img/tabIcon/lecture/lec_active.png')
+                : require('../assets/img/tabIcon/lecture/lec_inactive.png')
+            }
+          />
+        )
+      }
+    },
     KnowledgeCapsule: {
       screen: CapsuleScreen,
       navigationOptions: {

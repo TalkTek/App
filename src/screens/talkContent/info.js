@@ -33,9 +33,8 @@ export default class Info extends Component {
         </View>
         <View style={styles.title}>
           <Text style={styles.titleText}>
-            如何成為用熱愛事物賺錢的
+            {this.props.lectureTitle}
           </Text>
-          <Text style={styles.titleText}>『知識型網紅』？</Text>
         </View>
         <View style={styles.hr} />
         <View style={styles.restInfo}>

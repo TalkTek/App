@@ -17,22 +17,22 @@ import {
   Footer
 } from 'native-base'
 import { connect } from 'react-redux'
-import MemberAction from '../../reducer/member/memberAction'
-import analyticActions from '../../reducer/analytic/analyticAction'
-import audioActions from '../../reducer/audio/audioAction'
-import downloadActions from '../../reducer/download/downloadAction'
-import globalActions from '../../reducer/global/globalAction'
+import MemberAction from '../../../reducer/member/memberAction'
+import analyticActions from '../../../reducer/analytic/analyticAction'
+import audioActions from '../../../reducer/audio/audioAction'
+import downloadActions from '../../../reducer/download/downloadAction'
+import globalActions from '../../../reducer/global/globalAction'
 import RNFetchBlob from 'react-native-fetch-blob'
-import '../../lib/global'
-import styles from '../knowledgeCapsule/styles'
-import Icon from '../../components/img/icon/SmallIcon'
+import '../../../lib/global'
+import styles from '../../knowledgeCapsule/styles'
+import Icon from '../../../components/img/icon/SmallIcon'
 
 let buttons = {
-  'playingOnAudioBar': require('../../assets/img/audioElement/play.png'),
-  'playing': require('../../assets/img/audioElement/playing2.png'),
-  'pause': require('../../assets/img/audioElement/pause.png'),
-  'expand': require('../../assets/img/knowledgeCapsule/expend.png'),
-  'playable': require('../../assets/img/audioElement/playing1.png')
+  'playingOnAudioBar': require('../../../assets/img/audioElement/play.png'),
+  'playing': require('../../../assets/img/audioElement/playing2.png'),
+  'pause': require('../../../assets/img/audioElement/pause.png'),
+  'expand': require('../../../assets/img/knowledgeCapsule/expend.png'),
+  'playable': require('../../../assets/img/audioElement/playing1.png')
 }
 
 const mapStateToProps = (state) => ({

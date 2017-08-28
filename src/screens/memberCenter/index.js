@@ -23,11 +23,12 @@ import memberAction from '../../reducer/member/memberAction'
 import analyticAction from '../../reducer/analytic/analyticAction'
 import firebase from 'firebase'
 import { Actions } from 'react-native-router-flux'
+import Listitem from './Listitem'
 
 
 const { width: screenWidth } = Dimensions.get('window')
 
-console.log('width isis', screenWidth)
+console.log('width is', screenWidth)
 
 
 @connect(state => ({
@@ -41,25 +42,32 @@ console.log('width isis', screenWidth)
 
 export default class MemberCenter extends Component {
   listsData = {
-    // my: [{
-    //   key: 'iconmyTalk',
-    //   icon: require(`../../assets/img/memberCenter/iconmyTalk.png`),
-    //   target: 'MyTalk',
-    //   text: '我的小講'
-    //   }, {
-    //   key: 'iconmyCapsule',
-    //   icon: require(`../../assets/img/memberCenter/iconmyTalk.png`),
-    //   target: 'MyCapsule',
-    //   text: '我的膠囊收藏'
-    // }],
-    // coin: [
-    //   { key: 'iconMypoint', icon: require(`../../assets/img/memberCenter/iconMypoint.png`), target: 'MyPoint', rightText: '500點', text: '我的點數' },
-    //   { key: 'iconFillup', icon: require(`../../assets/img/memberCenter/iconFillup.png`), target: 'Fillup', text: '儲值中心' }
-    // ],
+    my: [{
+      key: 'iconmyTalk',
+      icon: require(`../../assets/img/memberCenter/iconmyTalk.png`),
+      text: '我的小講',
+      func: () => Actions.mytalk()
+    }, {
+      key: 'iconmyCapsule',
+      icon: require(`../../assets/img/memberCenter/iconmyTalk.png`),
+      text: '我的膠囊收藏',
+      func: () => Actions.mycapsule()
+    }],
+    coin: [{
+      key: 'iconMypoint',
+      icon: require(`../../assets/img/memberCenter/iconMypoint.png`),
+      rightText:'500點',
+      text: '我的點數',
+      func: () => Actions.mypoint()
+    }, {
+      key: 'iconFillup',
+      icon: require(`../../assets/img/memberCenter/iconFillup.png`),
+      text: '儲值中心',
+      func: () => Actions.pointcenter()
+    }],
     other: [{
       key: 'iconFeedback',
       icon: require(`../../assets/img/memberCenter/iconFeedback.png`),
-      target: 'Feedback',
       text: '意見回饋',
       func: () => Actions.feedback()
     }, {
@@ -67,9 +75,12 @@ export default class MemberCenter extends Component {
       icon: require(`../../assets/img/memberCenter/iconFeedback.png`),
       text: '下載',
       func: () => Actions.download()
-    }
-      // { key: 'iconApply', icon: require(`../../assets/img/memberCenter/iconApply.png`), target: 'Apply', text: '成為講師' }
-    ]
+    },{
+      key: 'iconApply',
+      icon: require(`../../assets/img/memberCenter/iconApply.png`),
+      text: '成為講師',
+      func: () => Actions.apply()
+    }]
   }
 
   componentDidMount() {
@@ -86,38 +97,6 @@ export default class MemberCenter extends Component {
       .catch((error) => {
         console.warn('[SignOut Error] Messages is', error.message)
       })
-  }
-
-  _renderListItem = (rowData: Object) => {
-    console.log('rowData is', rowData)
-    return (
-      <TouchableOpacity
-        key={rowData.key}
-        onPress={() => rowData.func()}
-        style={[styles.mainBackground, styles.listItem]}
-      >
-        <View style={styles.listItemLeft}>
-          <Image
-            source={rowData.icon}
-            style={styles.listIcon}
-          />
-          <Text style={styles.listText}>
-            {rowData.text}
-          </Text>
-          {
-            rowData.rightText &&
-            <Text style={styles.listRightText}>
-              {rowData.rightText}
-            </Text>
-          }
-        </View>
-        <View style={styles.listItemMore}>
-          <Image
-            source={require('../../assets/img/memberCenter/enter.png')}
-          />
-        </View>
-      </TouchableOpacity>
-    )
   }
 
   _renderUserAvater = () => {
@@ -160,16 +139,7 @@ export default class MemberCenter extends Component {
             {this._renderUserAvater()}
           </View>
           <View style={styles.container}>
-
-            {/* <View style={styles.selectList}>*/}
-            {/*{ this.listsData.my.map(this._renderListItem) }*/}
-            {/*</View>*/}
-            {/*<View style={styles.selectList}>*/}
-            {/*{ this.listsData.coin.map(this._renderListItem) }*/}
-            {/*</View>  */}
-            <View style={styles.selectList}>
-              {this.listsData.other.map(this._renderListItem)}
-            </View>
+              <Listitem listsData={this.listsData}/>
             {
               this.props.memberUid
               &&
