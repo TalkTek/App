@@ -222,10 +222,9 @@ export default class Login extends Component {
                 text='登入'
                 backgroundColor={COLORS.green}
                 textColor='white'
-                borderRadius={10}
+                borderRadius={5}
                 padding={10}
                 fullWidth
-                style={styles.baseButton}
                 onPress={this._onEmailPasswordLogin.bind(this)}
               />
             </View>
@@ -235,26 +234,26 @@ export default class Login extends Component {
             <View style={LAYOUT.horizontal}>
               <Button
                 text="Facebook"
-                borderRadius={10}
+                borderRadius={5}
                 fullWidth
                 padding={5}
                 textColor={COLORS.pureWhite}
                 backgroundColor={COLORS.fbButton}
                 leftElement={<Icon name="facebook-square" size={28} color="white" />}
-                style={[styles.baseButton, styles.socialButton]}
+                style={styles.socialButton}
                 onPress={this._onFacebookLogin.bind(this)}
               />
             </View>
             <View style={LAYOUT.horizontal}>
               <Button
                 text="Google"
-                borderRadius={10}
+                borderRadius={5}
                 fullWidth
                 padding={5}
                 textColor={COLORS.pureWhite}
                 backgroundColor={COLORS.googleButton}
                 leftElement={<Icon name="google-plus" size={28} color="white" />}
-                style={[styles.baseButton, styles.socialButton]}
+                style={styles.socialButton}
                 onPress={this._onGoogleSignIn.bind(this)}
               />
             </View>

@@ -10,12 +10,11 @@ import {
 import {
   Container,
   Content,
-  Button,
   Form,
   View,
   Text,
   Input,
-  Item,
+  Item
 } from 'native-base'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -23,6 +22,8 @@ import firebase from 'firebase'
 import Modal from 'react-native-modalbox'
 import MemberAction from '../../reducer/member/memberAction'
 import { SubTitle, ThirdTitle, H3, H4 } from '../../components/text'
+import { Button } from '../../components/button'
+import { COLORS } from 'StyleConfig'
 // import { FIREBASE_CONFIG } from '../../lib/config'
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
@@ -99,16 +100,28 @@ export default class Forgetpw extends Component {
                 />
               </Item>
             </Form>
-            <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={this._Resetpw.bind(this)}>
-              <H3 bold style={styles.registerText}>
-                重設
-              </H3>
-            </Button>
-            <Button style={{...styles.baseButton, ...styles.cancelButton}} onPress={() => goBack()}>
-              <H4 style={styles.cancelText}>
-                取消
-              </H4>
-            </Button>
+            <Button 
+              text='重設'
+              backgroundColor={COLORS.green}
+              textColor='pureWhite'
+              fullWidth
+              padding={12}
+              borderRadius={5}
+              textSize='H4'
+              style={styles.button}
+              onPress={this._Resetpw.bind(this)}
+            />
+            <Button 
+              text='取消'
+              backgroundColor={COLORS.lightGray}
+              textColor='black'
+              fullWidth
+              padding={12}
+              borderRadius={5}
+              textSize='H4'
+              style={styles.button}
+              onPress={() => goBack()}
+            />
           </View>
 
           <Modal
@@ -123,9 +136,14 @@ export default class Forgetpw extends Component {
               <H3 style={styles.modalErrorMsgText}>
                 {this.state.errMsg}
               </H3>
-              <Button style={styles.modalButton} onPress={() => this.setState({ isOpen: !this.state.isOpen})}>
+              {/* <Button style={styles.modalButton} onPress={() => this.setState({ isOpen: !this.state.isOpen})}>
                 <H3 bold style={styles.modalButtonText}>確認</H3>
-              </Button>
+              </Button> */}
+              <Button 
+                text='確認'
+                textColor='green'
+                onPress={() => this.setState({ isOpen: !this.state.isOpen })}
+              />
           </Modal>
         </Content>
       </Container>
@@ -157,63 +175,36 @@ const styles = {
     borderRadius: 10,
   },
   container: {
-    backgroundColor: 'rgb(255, 255, 255)'
+    backgroundColor: COLORS.pureWhite
   },
   bg: {
-    flex: 1,
     height: screenHeight,
-    alignItems: 'center'
+    alignItems: 'center',
+    width: '75%',
+    alignSelf: 'center'
   },
   logo: {
     marginTop: 68,
-    height: 150,
     width: 80
   },
   form: {
     borderWidth: 2,
-    borderColor:'rgb(224, 224, 224)',
+    borderColor: COLORS.lightGray,
     borderRadius: 8,
-    marginLeft: screenWidth*0.125,
-    marginRight: screenWidth*0.125,
     marginTop: 40,
     marginBottom: 8,
-    height: 48,
-    width: screenWidth*0.75
+    width: '100%'
   },
   item: {
-    height: 48,
     marginLeft: 0
   },
   input: {
-    height: 45,
     width: '100%',
     paddingLeft: 16,
   },
-  baseButton: {
-    alignSelf: 'auto',
-    width: screenWidth*0.75,
-    elevation: (Platform.OS ==='android') ? 0 : 3,
-  },
-  registerButton: {
-    backgroundColor: 'rgb(31, 191, 179)',
-    marginBottom: 8
-  },
-  cancelButton: {
-    backgroundColor: 'rgb(224, 224, 224)',
-  },
-  registerText: {
-    marginLeft: screenWidth*0.75*0.4,
-    height: 21,
-    width: 40
-  },
-  cancelText: {
-    marginLeft: screenWidth*0.75*0.4,
-    color: 'rgb(33, 33 ,33)',
-    fontSize: 15,
-    fontWeight: '900',
-    height: 21,
-    width: 40
-  },
+  button: {
+    marginBottom: 10
+  }
 }
 
 

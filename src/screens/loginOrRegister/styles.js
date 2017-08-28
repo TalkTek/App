@@ -25,7 +25,7 @@ export const loginStyles = {
     paddingTop: 12,
     height: screenHeight * 0.2624,
     width: screenWidth * 0.8,
-    backgroundColor: 'white',
+    backgroundColor: COLORS.pureWhite,
     borderRadius: 10
   },
   container: {
@@ -44,7 +44,7 @@ export const loginStyles = {
   },
   form: {
     borderWidth: 2,
-    borderColor: 'rgb(224, 224, 224)',
+    borderColor: COLORS.lightGray,
     borderRadius: 8,
     marginTop: 20,
     marginBottom: 8,
@@ -55,12 +55,8 @@ export const loginStyles = {
     marginLeft: 0
   },
   input: {
-    height: screenHeight * 0.068,
     width: '100%',
     paddingLeft: 16,
-  },
-  baseButton: {
-    alignSelf: 'auto'
   },
   socialButton: {
     marginBottom: 12

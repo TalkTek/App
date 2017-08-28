@@ -19,15 +19,16 @@ const AUDIO_COLOR = {
   trackBarBackground: 'rgb(238, 238, 238)'
 }
 
-const SOCIAL_BUTTON = {
+const FORM_COLOR = {
   fbButton: 'rgb(58, 88, 151)',
-  googleButton: 'rgb(221, 77, 64)'
+  googleButton: 'rgb(221, 77, 64)',
+  lightGray: 'rgb(224, 224, 224)'
 }
 
 const COLORS = {
   ...MAIN_COLORS,
   ...AUDIO_COLOR,
-  ...SOCIAL_BUTTON
+  ...FORM_COLOR
 }
 
 /**
