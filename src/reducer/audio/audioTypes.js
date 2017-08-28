@@ -26,6 +26,41 @@ module.exports = KeyMirror({
   AUDIO_UPDATE_INFO: null,
   // -----R_START--------------------
 
+  PLAY: null,
+  PLAY_REQUEST: null,
+  PLAY_SUCCESS: null,
+  PLAY_FAILURE: null,
+
+  PAUSE: null,
+  PAUSE_REQUEST: null,
+  PAUSE_SUCCESS: null,
+  PAUSE_FAILURE: null,
+
+  FORWARD_15: null,
+  FORWARD_15_REQUEST: null,
+  FORWARD_15_SUCCESS: null,
+  FORWARD_15_FAILURE: null,
+
+  BACKWARD_15: null,
+  BACKWARD_15_REQUEST: null,
+  BACKWARD_15_SUCCESS: null,
+  BACKWARD_15_FAILURE: null,
+
+  NEXT: null,
+  NEXT_REQUEST: null,
+  NEXT_SUCCESS: null,
+  NEXT_FAILURE: null,
+
+  PREVIOUS: null,
+  PREVIOUS_REQUEST: null,
+  PREVIOUS_SUCCESS: null,
+  PREVIOUS_FAILURE: null,
+
+  SEEK: null,
+  SEEK_REQUEST: null,
+  SEEK_SUCCESS: null,
+  SEEK_FAILURE: null,
+
   TIMER: null,
   TIMER_REQUEST: null,
   TIMER_SUCCESS: null,

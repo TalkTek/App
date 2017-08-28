@@ -3,14 +3,8 @@ import {
 } from 'redux-actions'
 
 import {
-  // CP_AUDIO_INFO_GET,
-  // CP_AUDIO_INFO_GET_SUCCESS,
   CP_AUDIO_GOOD_CHANGE,
-  // CP_AUDIO_GOOD_CHANGE_SUCCESS,
-  // CP_AUDIO_GET_DOC,
-  // CP_AUDIO_GET_DOC_SUCCESS,
   CP_AUDIO_STORE,
-  // SETTING_PLAYING_AUDIO_INFO,
   LOAD_CP_AUDIO_SUCCESS,
   TOGGLE_AUDIO_POPOUT_BAR,
   SHOW_AUDIO_POPOUT_BAR,
@@ -20,13 +14,44 @@ import {
   AUDIO_SEEK,
   AUDIO_TO_NEXT_TRACK,
   AUDIO_TO_PREVIOUS_TRACK,
-  S_ON_PRESS_REQUEST,
-  S_ON_PRESS_SUCCESS,
-  S_ON_PRESS_FAILURE,
   // AUDIO_UPDATE_INFO,
   AUDIO_GET_NEXT_TRACK,
 // --------R_START-------------
 
+  PLAY,
+  PLAY_REQUEST,
+  PLAY_SUCCESS,
+  PLAY_FAILURE,
+
+  PAUSE,
+  PAUSE_REQUEST,
+  PAUSE_SUCCESS,
+  PAUSE_FAILURE,
+
+  NEXT,
+  NEXT_REQUEST,
+  NEXT_SUCCESS,
+  NEXT_FAILURE,
+
+  PREVIOUS,
+  PREVIOUS_REQUEST,
+  PREVIOUS_SUCCESS,
+  PREVIOUS_FAILURE,
+
+  FORWARD_15,
+  FORWARD_15_REQUEST,
+  FORWARD_15_SUCCESS,
+  FORWARD_15_FAILURE,
+
+  BACKWARD_15,
+  BACKWARD_15_REQUEST,
+  BACKWARD_15_SUCCESS,
+  BACKWARD_15_FAILURE,
+
+  SEEK,
+  SEEK_REQUEST,
+  SEEK_SUCCESS,
+  SEEK_FAILURE,
 
   TIMER,
   TIMER_REQUEST,
@@ -81,27 +106,6 @@ import {
 
 export default createActions({
   [CP_AUDIO_STORE]: audios => audios,
-  // [SETTING_PLAYING_AUDIO_INFO]: (
-  //   name,
-  //   length,
-  //   currentTime,
-  //   url,
-  //   pos,
-  //   from,
-  //   id,
-  //   parentKey,
-  //   likeCounter
-  // ) => ({
-  //   name,
-  //   length,
-  //   currentTime,
-  //   url,
-  //   pos,
-  //   from,
-  //   id,
-  //   parentKey,
-  //   likeCounter
-  // }),
   [LOAD_CP_AUDIO_SUCCESS]: state => state,
   [CP_AUDIO_GOOD_CHANGE]: (isGood, capsulesId, parentKey, userId) => ({
     isGood,
@@ -126,6 +130,41 @@ export default createActions({
   // [AUDIO_UPDATE_INFO]: state => state,
   [AUDIO_GET_NEXT_TRACK]: state => state,
   // ---------R_START-------------
+
+  [PLAY]: state => state,
+  [PLAY_REQUEST]: state => state,
+  [PLAY_SUCCESS]: state => state,
+  [PLAY_FAILURE]: state => state,
+
+  [PAUSE]: state => state,
+  [PAUSE_REQUEST]: state => state,
+  [PAUSE_SUCCESS]: state => state,
+  [PAUSE_FAILURE]: state => state,
+
+  [NEXT]: state => state,
+  [NEXT_REQUEST]: state => state,
+  [NEXT_SUCCESS]: state => state,
+  [NEXT_FAILURE]: state => state,
+
+  [PREVIOUS]: state => state,
+  [PREVIOUS_REQUEST]: state => state,
+  [PREVIOUS_SUCCESS]: state => state,
+  [PREVIOUS_FAILURE]: state => state,
+
+  [FORWARD_15]: state => state,
+  [FORWARD_15_REQUEST]: state => state,
+  [FORWARD_15_SUCCESS]: state => state,
+  [FORWARD_15_FAILURE]: state => state,
+
+  [BACKWARD_15]: state => state,
+  [BACKWARD_15_REQUEST]: state => state,
+  [BACKWARD_15_SUCCESS]: state => state,
+  [BACKWARD_15_FAILURE]: state => state,
+
+  [SEEK]: state => state,
+  [SEEK_REQUEST]: state => state,
+  [SEEK_SUCCESS]: state => state,
+  [SEEK_FAILURE]: state => state,
 
   [TIMER]: state => state,
   [TIMER_REQUEST]: state => state,

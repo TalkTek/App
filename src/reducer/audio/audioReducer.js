@@ -26,6 +26,8 @@ import {
   REMOVE_COLOR_SUCCESS,
   ADD_COLOR_SUCCESS,
   SAVE_PREVIOUS_KEY_SUCCESS,
+  PLAY_SUCCESS,
+  PAUSE_SUCCESS,
 } from './audioTypes'
 /* eslint-disable*/
 
@@ -169,7 +171,6 @@ export default createReducder({
     }
   },
   [UPDATE_CURRENT_TIME_SUCCESS]: (state, action) => {
-    console.log('action.payload', action.payload)
     return {
       ...state,
       playingAudioDynamicInfo: {
@@ -292,13 +293,13 @@ export default createReducder({
   //     }
   //   }
   // },
-  [AUDIO_PLAY_SUCCESS]: (state, action) => {
+  [PLAY_SUCCESS]: (state, action) => {
     return {
       ...state,
       isPlaying: true,
     }
   },
-  [AUDIO_PAUSE_SUCCESS]: (state, action) => {
+  [PAUSE_SUCCESS]: (state, action) => {
     return {
       ...state,
       isPlaying: false

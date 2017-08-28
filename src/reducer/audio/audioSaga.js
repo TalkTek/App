@@ -6,11 +6,12 @@ import {
   select,
   take,
   put,
-  cancelled
+  cancelled,
+  cancel
 } from 'redux-saga/effects'
 import {
   eventChannel,
-  END
+  END,
 } from 'redux-saga'
 import {
   CP_AUDIO_INFO_GET,
@@ -38,6 +39,15 @@ import {
   ON_PRESS_REQUEST,
   ON_PRESS_SUCCESS,
   ON_PRESS_FAILURE,
+
+  PLAY,
+  PAUSE,
+  NEXT,
+  PREVIOUS,
+  FORWARD_15,
+  BACKWARD_15,
+  SEEK,
+
 } from './audioTypes'
 import AudioModule from '../../api/audioModule'
 import playerModule from '../../api/playerModule'
@@ -49,7 +59,8 @@ import {
   isPlaying
 } from './audioSelector'
 import audioActions from './audioAction'
-import playerFactor from '../../factory/playerFactory'
+import playerFactory from '../../factory/playerFactory'
+import analyticAction from '../analytic/analyticAction'
 
 /**
  * subroutines
@@ -200,12 +211,14 @@ function * audioSeek({ payload }) {
  * startTimer clearly practice start a timer, it will produce a event to get the value(current time)
  * that constantly produced by updateCurrentTimeEvent until the End event was emitted.
  */
-function * timer () {
+function * Timer () {
   try {
     yield put(audioActions.timerRequest())
     let isAudioPlaying = yield select(isPlaying())
     if ( isAudioPlaying ) {
       yield call(startTimer)
+    } else {
+      GLOBAL_AUDIO_TIMER.close()
     }
   } catch (error) {
     throw new Error(error)
@@ -220,18 +233,20 @@ function * timer () {
  * the function, updateCurrentTImeEvent, will continue out the value until emitting END event take place
  */
 function * startTimer () {
+
   let audioDuration = yield select(getAudioLengthBySec())
-  const timerEventChannel = yield call(updateCurrentTimeEvent, audioDuration)
+  GLOBAL_AUDIO_TIMER = yield call(updateCurrentTimeEvent, audioDuration)
+
   try {
     while (true) {
-      let length = yield take(timerEventChannel)
+      let length = yield take(GLOBAL_AUDIO_TIMER)
       yield put(audioActions.updateCurrentTimeSuccess(length))
     }
   } catch (error) {
     throw new Error(error)
   } finally {
     if (yield cancelled()) {
-      timerEventChannel.close()
+      GLOBAL_AUDIO_TIMER.close()
     }
   }
 }
@@ -244,8 +259,8 @@ function * startTimer () {
 function updateCurrentTimeEvent (durationSec) {
   return eventChannel(emitter => {
     let length
-    const timer = setInterval(() => {
-      length = playerFactor.currentTime()
+    const t = setInterval(() => {
+      length = playerFactory.currentTime()
       if (length.currentTimeSec < durationSec) {
         emitter(length)
       } else {
@@ -255,11 +270,9 @@ function updateCurrentTimeEvent (durationSec) {
 
     // when the END event was emitted, unsubscrible will be called
     const unsubscribe = () => {
-      clearInterval(timer)
+      clearInterval(t)
     }
-
     return unsubscribe
-
   })
 }
 
@@ -318,9 +331,9 @@ function * updateButtonColor (parentKey, childKey) {
  */
 function * playNewAudio (url) {
   try {
-    yield put(audioActions.audioPlayRequest())
-    yield playerFactor.initAndPlay(url)
-    yield put(audioActions.audioPlaySuccess())
+    yield put(audioActions.playRequest())
+    yield playerFactory.initAndPlay(url)
+    yield put(audioActions.playSuccess())
   } catch (error) {
     throw new Error(error.message)
   }
@@ -385,52 +398,39 @@ function * setPreviousKey (parentKey, childKey) {
   }
 }
 
-/***
- * watcher
- */
-// function * audioSaga () {
-//   // yield takeLatest(AUDIO_LOAD, press)
-//   yield takeLatest(AUDIO_LOADED, audioLoaded)
-//   yield takeLatest(AUDIO_PLAY, audioPlay)
-//   yield takeLatest(AUDIO_PAUSE, audioPause)
-//   yield takeLatest(AUDIO_SEEK, audioSeek)
-//   yield takeLatest(AUDIO_TO_NEXT_TRACK, audioToNextTrack)
-//   yield takeLatest(AUDIO_TO_PREVIOUS_TRACK, audioToPreviousTrack)
-//   yield takeLatest(AUDIO_UPDATE_INFO, audioUpdateInfo)
-//   yield takeLatest(AUDIO_UPDATE_CURRENT_TIME, audioUpdateCurrentTime)
-//   yield takeLatest(CP_AUDIO_INFO_GET, getAudioInfo)
-//   yield takeLatest(CP_AUDIO_GOOD_CHANGE, setAudioGoodState)
-//   yield takeLatest(CP_AUDIO_GET_DOC, getAudioDoc)
-// }
-
+//-------------------------WATCHER START-------------------------------
 function * onPressFlow () {
-  while(true) {
-    yield put(audioActions.onPressRequest())
+  while (true) {
     const {payload: {parentKey, childKey}} = yield take(ON_PRESS)
+    yield put(audioActions.onPressRequest())
     let capsule = yield call(getAudioFilePicked, parentKey, childKey)
     yield call(setCapsulePickedIntoReduxStore, capsule)
     yield put(audioActions.showAudioPopoutBar())
     yield call(playNewAudio, capsule.url)
     yield call(updateButtonColor, parentKey, childKey)
     yield call(setPreviousKey, parentKey, childKey)
-    yield fork(timer)
+    yield fork(Timer)
     yield put(audioActions.onPressSuccess())
   }
 }
 
 function * playFlow () {
-  try {
-
-  } catch (error) {
-
+  while (true) {
+    yield take(PLAY)
+    yield put(audioActions.playRequest())
+    yield playerFactory.play()
+    yield put(audioActions.playSuccess())
+    yield call(Timer)
   }
 }
 
-function * stopFlow () {
-  try {
-
-  } catch (error) {
-
+function * pauseFlow () {
+  while (true) {
+    yield take(PAUSE)
+    yield put(audioActions.pauseRequest())
+    yield playerFactory.pause()
+    yield put(audioActions.pauseSuccess())
+    yield call(Timer)
   }
 }
 
@@ -458,7 +458,14 @@ function * backward15 () {
   }
 }
 
+function * next () {}
+
+function * previous () {
+}
+//-------------------------WATCHER END-------------------------------
+
 export default [
-  // fork(audioSaga),
-  fork(onPressFlow)
+  fork(onPressFlow),
+  fork(playFlow),
+  fork(pauseFlow)
 ]

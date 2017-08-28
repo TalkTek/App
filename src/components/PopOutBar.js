@@ -83,9 +83,9 @@ export default class PopOutBar extends Component {
   playOrPause = () => {
     const {isPlaying, actions} = this.props
     if (!isPlaying) {
-      actions.audioPlay()
+      actions.play()
     } else {
-      actions.audioPause()
+      actions.pause()
     }
   }
 
