@@ -207,6 +207,8 @@ function * audioSeek({ payload }) {
  * 3. stop
  * 4. seek
  * if audio state is playing, then it will call startTimer
+ * otherwise, that mean user press the pause button, so we need to clear the timer
+ * VERY CAREFULLY, the timer is a "GLOBAL VARIEABLE".
  * there are two sub function : startTimer and updateCurrentTimeEvent
  * startTimer clearly practice start a timer, it will produce a event to get the value(current time)
  * that constantly produced by updateCurrentTimeEvent until the End event was emitted.
@@ -226,7 +228,7 @@ function * Timer () {
 }
 
 /**
- * producing a new eventEmitter called timerEventChannel,
+ * producing a "GLOBAL" eventEmitter called GLOBAL_AUDIO_TIMER,
  * and watch the feedback value, length
  * the feedback value produced by updateCurrentTimeEvent
  * and dispatch a action every time that startTimer get the length value.

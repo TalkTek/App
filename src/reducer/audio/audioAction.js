@@ -199,6 +199,7 @@ export default createActions({
     parentKey: state.parentKey,
     childKey: state.childKey
   }),
+
   [AUDIO_PAUSE]: state => state,
   [AUDIO_PAUSE_REQUEST]: state => state,
   [AUDIO_PAUSE_SUCCESS]: state => state,

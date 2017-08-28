@@ -17,6 +17,9 @@ import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import { bindActionCreators } from 'redux'
 import audioAction from '../reducer/audio/audioAction'
+import Modal from 'react-native-modalbox'
+import PlayAudioScreen from '../screens/playAudio'
+
 
 const {
   width: screenWidth,
@@ -43,7 +46,8 @@ let buttons = {
 export default class PopOutBar extends Component {
 
   state = {
-    popoutAudioBarHeight: new Animated.Value(screenHeight)
+    popoutAudioBarHeight: new Animated.Value(screenHeight),
+    isModalOpen: false,
   }
 
   componentWillReceiveProps (nextProps) {
@@ -89,9 +93,17 @@ export default class PopOutBar extends Component {
     }
   }
 
+  toggleModal = () => {
+    this.setState({
+      isModalOpen: !this.state.isModalOpen
+    })
+  }
+
   openModal = () => {
-    Actions.player()
-    this.props.actions.toggleAudioPopoutBar()
+    this.setState({
+      isModalOpen: true
+    })
+    this.refs.playAudio.open()
   }
 
   render () {
@@ -103,53 +115,65 @@ export default class PopOutBar extends Component {
     } = this.props
 
     return (
-      <Animated.View
-        style={[styles.container, {
-          top: this.state.popoutAudioBarHeight
-        }]}
-      >
-        <TouchableHighlight
-          transparent
-          onPress={this.playOrPause}
-          underlayColor="#fff"
+      <View>
+        <Animated.View
+          style={[styles.container, {
+            top: this.state.popoutAudioBarHeight
+          }]}
         >
-          {
-            currentTimeSec === -0.001 || currentTimeSec === ''
-              ?
-              <View style={styles.popBarLoading}>
-                <ActivityIndicator
-                  animating
-                  color="black"
-                  size="small"
+          <TouchableHighlight
+            transparent
+            onPress={this.playOrPause}
+            underlayColor="#fff"
+          >
+            {
+              currentTimeSec === -0.001 || currentTimeSec === ''
+                ?
+                <View style={styles.popBarLoading}>
+                  <ActivityIndicator
+                    animating
+                    color="black"
+                    size="small"
+                  />
+                </View>
+                :
+                <Image
+                  source={isPlaying ? buttons.pause : buttons.playingOnAudioBar}
+                  style={styles.playPauseButton}
                 />
-              </View>
-              :
-              <Image
-                source={isPlaying ? buttons.pause : buttons.playingOnAudioBar}
-                style={styles.playPauseButton}
-              />
-          }
-        </TouchableHighlight>
-        <View style={styles.popoutAudioBarDes}>
-          <Text style={styles.popoutAudioBarText}>
-            {audioName}
-          </Text>
-          <Text style={styles.popoutAudioBarNumber}>
-            {currentTimeSec === -0.001 || currentTimeSec === ''
-              ? '00:00'
-              : currentTimeFormatted}
-          </Text>
-        </View>
-        <Button
-          transparent
-          onPress={this.openModal}
+            }
+          </TouchableHighlight>
+          <View style={styles.popoutAudioBarDes}>
+            <Text style={styles.popoutAudioBarText}>
+              {audioName}
+            </Text>
+            <Text style={styles.popoutAudioBarNumber}>
+              {currentTimeSec === -0.001 || currentTimeSec === ''
+                ? '00:00'
+                : currentTimeFormatted}
+            </Text>
+          </View>
+          <Button
+            transparent
+            onPress={this.openModal}
+          >
+            <Image
+              source={buttons.expand}
+              style={styles.open}
+            />
+          </Button>
+        </Animated.View>
+        <Modal
+          ref={'playAudio'}
+          position={'center'}
+          isOpen={this.state.isModalOpen}
+          swipeToClose={false}
         >
-          <Image
-            source={buttons.expand}
-            style={styles.open}
+          <PlayAudioScreen
+            toggleModal={this.toggleModal}
           />
-        </Button>
-      </Animated.View>
+        </Modal>
+      </View>
     )
   }
 }
