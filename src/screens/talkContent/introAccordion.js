@@ -71,10 +71,7 @@ export default class IntroAccordion extends Component {
 
     let introVisibleComponent =
       <Text style={styles.visibleComponent}>
-        專家預測,2020年美國將有50%的勞動人口-也就是近6000萬人,都是自由工
-        作者。這告訴我們,未來會有愈來愈多人,不再倚賴公司或公司賦予的職位
-        title,而是用個人品牌和專業在賺錢。
-        我們大膽預言,未來,將是知識型網紅的時代。
+        {this.props.intro}
       </Text>
 
     let introHiddenComponent  =

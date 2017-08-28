@@ -6,15 +6,34 @@ import IntroAccordion from './introAccordion'
 import Info from './info'
 import GuideList from './guideList'
 import { Container, Content } from 'native-base'
+import FirebaseDB from '../../api/lib/FirebaseDB'
+import LectureModule from '../../api/lectureModule'
+
+const styles = {
+  division: {
+    height: 8,
+    backgroundColor: 'rgb(250, 250, 250)'
+  }
+}
 
 class TalkContent extends Component {
+  state = {
+    lecture: {}
+  }
+  componentDidMount () {
+    let x = new LectureModule().load('-KsawU_btRda8tYA16qh')
+    x.then((x) => {
+      console.log(x)
+      this.setState({lecture: x})
+    })
+  }
   render () {
     return (
       <Container>
         <Content>
-          <Info />
+          <Info lectureTitle={this.state.lecture.lectureTitle}/>
           <View style={styles.division} />
-          <IntroAccordion />
+          <IntroAccordion intro={this.state.lecture.intro}/>
           <View style={styles.division} />
           <GuideList />
         </Content>
@@ -22,12 +41,5 @@ class TalkContent extends Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  division: {
-    height: 8,
-    backgroundColor: 'rgb(250, 250, 250)'
-  }
-})
 
 export default TalkContent

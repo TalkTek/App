@@ -4,9 +4,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import memberAction from '../../reducer/member/memberAction'
+import memberAction from '../../../reducer/member/memberAction'
 import { 
   View,
+  Text,
   TouchableOpacity,
   ActivityIndicator
 } from 'react-native'
@@ -17,9 +18,43 @@ import {
   Picker,
   Toast
 } from 'native-base'
-import { H4 } from '../../components/text'
-import { feedBackStyle } from './styles'
-import { Button } from '../../components/button'
+import styles from '../styles'
+const feedBackStyle = {
+  content: {
+    ...styles.subBackground,
+    paddingLeft: 16,
+    paddingRight: 16
+  },
+  textLabel: {
+    marginTop: 16,
+    paddingLeft: 8,
+    paddingRight: 8,
+    color: 'rgb(158, 158, 158)'
+  },
+  indicator: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  input: {
+    backgroundColor: '#fff',
+    borderColor: 'rgb(224, 224, 224)',
+    borderWidth: 1,
+    borderRadius: 8,
+    marginTop: 4
+  },
+  mutiInput: {
+    minHeight: 96
+  },
+  sendBtn: {
+    ...styles.paymentBtn,
+    marginLeft: 0,
+    marginRight: 0,
+    marginTop: 24
+  },
+  sendText: {
+    color: '#fff'
+  }
+}
 
 type toastInfo = {
   text: string,
@@ -111,9 +146,9 @@ class Feedback extends Component {
         {
           this.props.status !== 1 &&
           <Content style={feedBackStyle.content}>
-            <H4 gray style={feedBackStyle.textLabel}> 
+            <Text style={feedBackStyle.textLabel}> 
               選擇回饋類型
-            </H4> 
+            </Text> 
             <View>
               <Picker
                 mode="dropdown"
@@ -133,21 +168,17 @@ class Feedback extends Component {
                 }
               </Picker>
             </View>
-            <H4 gray style={feedBackStyle.textLabel}>
+            <Text style={feedBackStyle.textLabel}>
               內容（必填）
-            </H4>
+            </Text>
             <View style={[feedBackStyle.input, feedBackStyle.mutiInput]}>
               <Input onChangeText={(value: string) => this.setState({content: value})} multiline />
             </View>
-            <Button 
-              text="送出"
-              backgroundColor='rgb(31, 191, 179)'
-              borderRadius={8}
-              textSize='H4'
-              textColor='white'
-              style={feedBackStyle.sendBtn}
-              onPress={this.send}
-            />
+            <TouchableOpacity onPress={this.send} style={feedBackStyle.sendBtn}>
+              <Text style={feedBackStyle.sendText}>
+                送出
+              </Text>
+            </TouchableOpacity>
           </Content>
         }
       </Container>

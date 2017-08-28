@@ -12,7 +12,63 @@ import {
   Container,
   Content
 } from 'native-base'
-import { pointCenterStyle } from './styles'
+import styles from '../styles'
+
+const pointCenterStyle = {
+  container: {...styles.container},
+  nowPoint: {
+    paddingTop: 32,
+    paddingBottom: 32,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  myPointText: {
+    color: 'rgb(33, 33, 33)',
+    textAlign: 'center',
+  },
+  selector: {
+    ...styles.subBackground,
+    borderColor: 'rgb(224, 224, 224)',
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 16,
+    marginLeft: 16,
+    marginRight: 16,
+    marginBottom: 8,
+    justifyContent: 'center'
+  },
+  pointCostWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 16
+  },
+  buyPointText: {
+    color: 'rgb(31, 191, 179)',
+    marginRight: 10
+  },
+  otherText: {
+    marginTop: 16,
+    color: 'rgb(158, 158, 158)'
+  },
+  smallText: {
+    fontSize: 13
+  },
+  bigText: {
+    fontSize: 18
+  },
+  textCenter: {
+    textAlign: 'center'
+  },
+  paymentBtn: {...styles.paymentBtn},
+  btnColor: {
+    color: '#fff'
+  },
+  selected: {
+    borderColor: 'rgb(31, 191, 179)',
+    borderWidth: 2,
+    marginBottom: 7
+  }
+}
 
 class PointCenter extends Component {
   point = {

@@ -69,7 +69,7 @@ const initialState = {
     pos: {
       i: 0,
       j: 0,
-      pos: 0
+      pos: -1
     },
     from: ''
   },

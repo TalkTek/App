@@ -6,6 +6,8 @@ import { bindActionCreators } from 'redux'
 import audioActions from '../../reducer/audio/audioAction'
 import analyticActions from '../../reducer/analytic/analyticAction'
 import capsuleAction from '../../reducer/capsule/capsuleAction'
+import downloadActions from '../../reducer/download/downloadAction'
+import globalActions from '../../reducer/global/globalAction'
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
 import {
@@ -61,15 +63,18 @@ let buttons = {
   playingAudioPosI: state.audio.playingAudioInfo.pos.i,
   playingAudioPosJ:state.audio.playingAudioInfo.pos.j
 }), dispatch => ({
-  actions: bindActionCreators({...audioActions, ...analyticActions}, dispatch),
+  actions: bindActionCreators({...audioActions, ...analyticActions, ...downloadActions, ...globalActions}, dispatch),
   capsule: bindActionCreators(capsuleAction, dispatch)
-}))
+})
+)
 
-export default class KnowledgeCapsule extends Component {
+export class KnowledgeCapsule extends Component {
 
   state = {
     audioBarActive: false,
-    offsetY: 0
+    offsetY: 0,
+    fabActive: '',
+    fabScale: new Animated.Value(0)
   }
 
   loadCount = 2
@@ -83,7 +88,7 @@ export default class KnowledgeCapsule extends Component {
     })
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { actions, lastKey } = this.props
     this.resolveData(lastKey)
     actions.gaSetScreen('KnowledgeCapsule')
@@ -129,7 +134,7 @@ export default class KnowledgeCapsule extends Component {
       actions,
       memberUid
     } = this.props
-    
+    actions.setAudiosource('remote')
     actions.showAudioPopoutBar()
     actions.cpAudioInfoGet(
       {
@@ -150,7 +155,9 @@ export default class KnowledgeCapsule extends Component {
 
   toggleButtonColor = (i: number, j: number) => {
     const { capsules, playingAudioPosI, playingAudioPosJ } = this.props
+    if (capsules[playingAudioPosI])
     capsules[playingAudioPosI].audios[playingAudioPosJ].active = false
+    if (capsules[i])
     capsules[i].audios[j].active = true
   }
 
@@ -196,8 +203,56 @@ export default class KnowledgeCapsule extends Component {
                         source={audio.active ? buttons.playing : buttons.playable}
                         marginRight={12}
                       />
-                      <H3 style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>{audio.name}</H3>
+                      <H3 style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>{audio.audioName}</H3>
                       <H4 gray>{audio.length ? audio.length.formatted : ''}</H4>
+                    </View>
+                  </TouchableHighlight>
+                  <TouchableHighlight
+                    underlayColor="#fff"
+                    onPress={() => {
+                      this.setState({ fabActive: audio.id, fabScale: new Animated.Value(0) },
+                        () =>
+                          Animated.spring(
+                            this.state.fabScale,
+                            {
+                              toValue: 1,
+                              speed: 5,
+                              bounciness: 12
+                            }
+                          ).start()
+                      )
+                      //this.props.actions.cpAudioDownload(audio.url)
+                    }}>
+                    <View>
+                      {
+                        audio.id &&
+                        this.state.fabActive === audio.id &&
+                        <Animated.View style={{ transform: [{ scale: this.state.fabScale }], opacity: 0.9, position: 'absolute', left: -70, width: 70, height: 28, backgroundColor: 'white', borderRadius: 20, shadowColor: 'rgba(0,0,0,0.2)', shadowOffset: { width: 0, height: 1 }, shadowRadius: 5, shadowOpacity: 10 }}>
+                          <TouchableHighlight
+                            onPress={() => {
+                              console.log(audio.audioName + ' download')
+                              this.props.actions.cpAudioDownload(audio)
+                              }}
+                          >
+                            <View>
+                              <H3 style={{textAlign: 'center', textAlignVertical: 'center', lineHeight: 28}}>{'下載'}</H3>
+                            </View>
+                          </TouchableHighlight>
+                          {/* <Button
+                            light
+                            style={{ height: 25, width: 10, position: 'absolute', right: 20 }}
+                            onPress={() => {
+                              console.log(audio.audioName + ' download')
+                              this.props.actions.cpAudioDownload(audio)
+                              }}
+                          >
+                          </Button> */}
+                        </Animated.View>
+                      }
+                      <Icon
+                        source={buttons.playing}
+                        style={styles.capPlayPauseButtonImage}
+                      />
                     </View>
                   </TouchableHighlight>
                 </View>
@@ -236,5 +291,6 @@ export default class KnowledgeCapsule extends Component {
     )
   }
 }
+export default KnowledgeCapsule
 
 

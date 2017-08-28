@@ -12,7 +12,48 @@ import {
   Content,
   Thumbnail
 } from 'native-base'
-import { myTalkStyle } from './styles'
+import styles from '../styles'
+
+const myTalkStyle = {
+  container: {
+    ...styles.subBackground
+  },
+  card: {
+    flexDirection: 'column',
+    marginLeft: 24,
+    marginRight: 24,
+    marginTop: 16,
+    marginBottom: 16,
+    borderColor: 'rgb(245, 245, 245)',
+    borderStyle: 'solid',
+    borderBottomWidth: 1
+  },
+  authorInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  author: {
+    marginLeft: 16,
+    fontSize: 12
+  },
+  contentWrapper: {
+    flexDirection: 'row'
+  },
+  content: {
+    paddingTop: 4,
+    paddingBottom: 4,
+    fontSize: 13,
+    flex: 9
+  },
+  date: {
+    color: 'rgb(158, 158, 158)',
+    fontSize: 13
+  },
+  cost: {
+    flex: 1,
+    color: 'rgb(31, 191, 179)'
+  }
+}
 
 class PostList extends Component {
   
@@ -31,7 +72,7 @@ class PostList extends Component {
         <View 
           style={myTalkStyle.authorInfo}>
           <Thumbnail 
-            source={require('../../assets/img/memberCenter/profileIcon.png')}
+            source={require('../../../assets/img/memberCenter/profileIcon.png')}
             small
           />
           <Text style={myTalkStyle.author}>

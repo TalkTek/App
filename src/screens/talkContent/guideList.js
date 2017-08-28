@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 import Slider from 'react-native-slider'
 import {
-  Player,
+  Player
 } from 'react-native-audio-toolkit'
 
 const { width } = Dimensions.get('window')
@@ -33,30 +33,17 @@ export default class GuideList extends Component {
     super(props)
     this.state = {
       progress: 0,
-      progress2: 0,
-      progress3: 0,
       playing: false, // audio playing or not for Icon
-      playing2: false, // audio playing or not for Icon
-      playing3: false, // audio playing or not for Icon
       active: false, // accordion
-      active2: false, // accordion
-      active3: false, // accordion
       animationHeight: new Animated.Value(),
-      animationHeight2: new Animated.Value(),
-      animationHeight3: new Animated.Value(),
       duration: 0,
-      duration2: 0,
-      duration3: 0,
-      sliderThumbStatus: true , // true mean disable
-      sliderThumbStatus2: true , // true mean disable
-      sliderThumbStatus3: true , // true mean disable
+      sliderThumbStatus: true  // true mean disable
+
     }
   }
 
   componentWillMount () {
     this.player = null
-    this.player2 = null
-    this.player3 = null
     this._createPlayer()
   }
 
@@ -64,12 +51,7 @@ export default class GuideList extends Component {
     if (this.player) {
       this.player.destroy()
     }
-    if (this.player2) {
-      this.player2.destroy()
-    }
-    if (this.player3) {
-      this.player3.destroy()
-    }
+
 
     this.player = new Player(audioUrl1)
       .prepare((err) => {
@@ -78,23 +60,8 @@ export default class GuideList extends Component {
           console.log('err is', err)
         }
       })
-
-    this.player2 = new Player(audioUrl2)
-      .prepare((err) => {
-        if(err) {
-          console.log('error at _createPlayer()')
-          console.log('err is', err)
-        }
-      })
-
-    this.player3 = new Player(audioUrl3)
-      .prepare((err) => {
-        if(err) {
-          console.log('error at _createPlayer()')
-          console.log('err is', err)
-        }
-      })
   }
+
 
   _onPress () {
     if (this.state.playing) {
@@ -113,40 +80,6 @@ export default class GuideList extends Component {
     }
   }
 
-  _onPress2 () {
-    if (this.state.playing2) {
-      this.setState({
-        playing2: false
-      })
-      this.player2.pause()
-    } else {
-      this.player2.play(() => {
-        this.setState({
-          duration2: this.player.duration,
-          playing2: true,
-          sliderThumbStatus2: false
-        })
-      })
-    }
-  }
-
-  _onPress3 () {
-    if (this.state.playing3) {
-      this.setState({
-        playing3: false
-      })
-      this.player3.pause()
-    } else {
-      this.player3.play(() => {
-        this.setState({
-          duration3: this.player.duration,
-          playing3: true,
-          sliderThumbStatus3: false
-        })
-      })
-    }
-  }
-
   _setMaxHeight (event) {
     this.setState({
       maxHeight: event.nativeEvent.layout.height
@@ -157,32 +90,6 @@ export default class GuideList extends Component {
     this.state.animationHeight.setValue(event.nativeEvent.layout.height)
     this.setState({
       minHeight: event.nativeEvent.layout.height
-    })
-  }
-
-  _setMaxHeight2 (event) {
-    this.setState({
-      maxHeight2: event.nativeEvent.layout.height
-    })
-  }
-
-  _setMinHeight2 (event) {
-    this.state.animationHeight2.setValue(event.nativeEvent.layout.height)
-    this.setState({
-      minHeight2: event.nativeEvent.layout.height
-    })
-  }
-
-  _setMaxHeight3 (event) {
-    this.setState({
-      maxHeight3: event.nativeEvent.layout.height
-    })
-  }
-
-  _setMinHeight3 (event) {
-    this.state.animationHeight3.setValue(event.nativeEvent.layout.height)
-    this.setState({
-      minHeight3: event.nativeEvent.layout.height
     })
   }
 
@@ -204,42 +111,6 @@ export default class GuideList extends Component {
     ).start()
   }
 
-  _toggleAudioView2 () {
-    const { active2, minHeight2, maxHeight2 } = this.state
-    let initHeight2 = active2 ? minHeight2 + maxHeight2 : minHeight2
-    let finalHeight2 = active2 ? minHeight2 : maxHeight2 + minHeight2
-
-    this.setState({
-      active2: !active2
-    })
-
-    this.state.animationHeight2.setValue(initHeight2)
-    Animated.spring(
-      this.state.animationHeight2,
-      {
-        toValue: finalHeight2
-      }
-    ).start()
-  }
-
-  _toggleAudioView3 () {
-    const { active3, minHeight3, maxHeight3 } = this.state
-    let initHeight3 = active3 ? minHeight3 + maxHeight3 : minHeight3
-    let finalHeight3 = active3 ? minHeight3 : maxHeight3 + minHeight3
-
-    this.setState({
-      active3: !active3
-    })
-
-    this.state.animationHeight3.setValue(initHeight3)
-    Animated.spring(
-      this.state.animationHeight3,
-      {
-        toValue: finalHeight3
-      }
-    ).start()
-  }
-
   _seek (value) {
     if (this.state.playing) {
       if (this.state.duration) {
@@ -253,33 +124,8 @@ export default class GuideList extends Component {
     }
   }
 
-  _seek2 (value) {
-    if (this.state.playing2) {
-      if (this.state.duration2) {
-        let seekTime = (value / 100) * this.state.duration2
-        this.player2.seek(seekTime, () => {
-          this.setState({
-            progress2: value
-          })
-        })
-      }
-    }
-  }
-
-  _seek3 (value) {
-    if (this.state.playing3) {
-      if (this.state.duration3) {
-        let seekTime = (value / 100) * this.state.duration3
-        this.player3.seek(seekTime, () => {
-          this.setState({
-            progress3: value
-          })
-        })
-      }
-    }
-  }
   render () {
-    let icon, icon2, icon3
+    let icon
     if (this.state.playing) {
       icon = icons['stop']
       if (this.state.duration) {
@@ -300,49 +146,6 @@ export default class GuideList extends Component {
     } else {
       icon = icons['play']
     }
-
-    if (this.state.playing2) {
-      icon2 = icons['stop']
-      if (this.state.duration2) {
-        setTimeout(() => {
-          if (this.state.progress2 <= 101) {
-            this.setState({
-              progress2: this.state.progress2 + 1
-            })
-          } else {
-            this.player2.stop()
-            this.setState({
-              playing2: false,
-              progress2: 0
-            })
-          }
-        }, this.state.duration2 / 97)
-      }
-    } else {
-      icon2 = icons['play']
-    }
-
-    if (this.state.playing3) {
-      icon3 = icons['stop']
-      if (this.state.duration3) {
-        setTimeout(() => {
-          if (this.state.progress3 <= 101) {
-            this.setState({
-              progress3: this.state.progress3 + 1
-            })
-          } else {
-            this.player3.stop()
-            this.setState({
-              playing3: false,
-              progress3: 0
-            })
-          }
-        }, this.state.duration3 / 97)
-      }
-    } else {
-      icon3 = icons['play']
-    }
-
     return (
       <View style={styles.container}>
         <Text style={styles.caption}>講單</Text>
@@ -397,103 +200,6 @@ export default class GuideList extends Component {
             </View>
           </Animated.View>
           <View style={styles.hr} />
-        </View>
-        {/*----------------------------------------------------------------------------------------------------------*/}
-        <View style={styles.unit}>
-          <View style={styles.divideSection}>
-            <View style={styles.rec} />
-            <Text style={styles.divideText}>我夠不夠格成為知識型網紅？</Text>
-          </View>
-          <View style={styles.hr} />
-          <Animated.View
-            style={[styles.animationView2, {height: this.state.animationHeight2}]}
-          >
-            <View onLayout={this._setMinHeight2.bind(this)}>
-              <TouchableHighlight
-                onPress={this._toggleAudioView2.bind(this)}
-                underlayColor='#fff'
-              >
-                <View style={styles.subTitle}>
-                  <View style={styles.subTitleLeftContainer}>
-                    <Text style={styles.title}>先問問自己，你的專業是什麼？</Text>
-                  </View>
-                  <View style={styles.subTitleRightContainer}>
-                    <Text style={styles.timeText}>01:48</Text>
-                  </View>
-                </View>
-              </TouchableHighlight>
-            </View>
-
-            <View onLayout={this._setMaxHeight2.bind(this)}>
-              <Slider
-                value={this.state.progress2}
-                step={1}
-                maximumValue={103}
-                onSlidingComplete={(value) => this._seek2.bind(this, value)()}
-                trackStyle={styles.track}
-                thumbStyle={this.state.sliderThumbStatus2 ? styles.trackThumbDisable : styles.trackThumb}
-                minimumTrackTintColor='rgb(31, 191, 179)'
-                thumbTouchSize={{width: 20, height: 20}}
-                disabled={this.state.sliderThumbStatus2}
-              />
-              <TouchableHighlight
-                onPress={this._onPress2.bind(this)}
-                underlayColor='#fff'
-                style={styles.pp}
-              >
-                <Image
-                  source={icon2}
-                  style={styles.ppImage}
-                />
-              </TouchableHighlight>
-            </View>
-          </Animated.View>
-          <View style={styles.hr} />
-          <Animated.View
-            style={[styles.animationView3, {height: this.state.animationHeight3}]}
-          >
-            <View onLayout={this._setMinHeight3.bind(this)}>
-              <TouchableHighlight
-                onPress={this._toggleAudioView3.bind(this)}
-                underlayColor='#fff'
-              >
-                <View style={styles.subTitle}>
-                  <View style={styles.subTitleLeftContainer}>
-                    <Text style={styles.title}>專業不夠，讓大家知道你很專業才是要緊事</Text>
-                  </View>
-                  <View style={styles.subTitleRightContainer}>
-                    <Text style={styles.timeText}>01:47</Text>
-                  </View>
-                </View>
-              </TouchableHighlight>
-            </View>
-
-            <View onLayout={this._setMaxHeight3.bind(this)}>
-              <Slider
-                value={this.state.progress3}
-                step={1}
-                maximumValue={103}
-                onSlidingComplete={(value) => this._seek3.bind(this, value)()}
-                trackStyle={styles.track}
-                thumbStyle={this.state.sliderThumbStatus3 ? styles.trackThumbDisable : styles.trackThumb}
-                minimumTrackTintColor='rgb(31, 191, 179)'
-                thumbTouchSize={{width: 20, height: 20}}
-                disabled={this.state.sliderThumbStatus3}
-              />
-              <TouchableHighlight
-                onPress={this._onPress3.bind(this)}
-                underlayColor='#fff'
-                style={styles.pp}
-              >
-                <Image
-                  source={icon3}
-                  style={styles.ppImage}
-                />
-              </TouchableHighlight>
-            </View>
-          </Animated.View>
-          <View style={styles.hr} />
-          {/*----------------------------------------------------------------------------------------------------------*/}
         </View>
       </View>
     )

@@ -262,12 +262,12 @@ export default class Login extends Component {
               <Button 
                 text='註冊新帳號'
                 textColor='green'
-                onPress={() => navigate('Register')}
+                onPress={() => navigate('register')}
               />
               <Button 
                 text='忘記密碼'
                 textColor='green'
-                onPress={() => navigate('Forgetpw')}
+                onPress={() => navigate('forgetpw')}
               />
             </View>
           </View>

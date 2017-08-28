@@ -4,6 +4,9 @@
 import React, { Component } from 'react'
 import { 
   View,
+  Text,
+  TouchableOpacity,
+  Button,
   DatePickerIOS,
   DatePickerAndroid,
   Platform
@@ -15,13 +18,11 @@ import {
   Container,
   Picker
 } from 'native-base'
-import { memberInfoStyle } from './styles'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import memberAction from '../../reducer/member/memberAction'
-import analyticAction from '../../reducer/analytic/analyticAction'
-import { H3 } from '../../components/text'
-import { Button } from '../../components/button'
+import memberAction from '../../../reducer/member/memberAction'
+import analyticAction from '../../../reducer/analytic/analyticAction'
+import styles from '../styles'
 
 let state = {
   email: '',
@@ -29,6 +30,75 @@ let state = {
   name: '',
   gender: '',
   birthday: ''
+}
+const memberInfoStyle = {
+  container: {
+    backgroundColor: 'rgb(245, 245, 245)'
+  },
+  avatar: { 
+    minHeight: 165,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center', 
+    backgroundColor: 'rgb(250, 250, 250)'
+  },
+  avatarImg: {
+    width: 80,
+    height: 80,
+    borderRadius: 40
+  },
+  uploadBtn: {
+    borderColor: 'rgb(97, 97, 97)',
+    borderRadius: 6,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    marginTop: 16
+  },
+  uploadBtnText: {
+    backgroundColor: 'transparent',
+    fontSize: 15,
+    marginTop: 5,
+    marginBottom: 5,
+    marginLeft: 10,
+    marginRight: 10
+  },
+  form: {
+    ...styles.mainBackground,
+    marginTop: 16,
+    width: '120%' // this is a bug, but don't know why
+  },
+  formInput: {
+    paddingTop: 2,
+    paddingBottom: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent:'space-between',
+    borderStyle: 'solid',
+    borderColor: 'rgb(250, 250, 250)',
+    borderBottomWidth: 1
+  },
+  input: {
+    flex: 2,
+    minWidth: 100
+  },
+  inputLabel: {
+    paddingLeft: 24
+  },
+  inputArea: {
+    flex: 8
+  },
+  textInput: {
+    color: 'rgb(31, 191, 179)'
+  },
+  dateSelect: {
+    paddingTop: 15,
+    paddingLeft: 5,
+    paddingBottom: 15,
+    paddingRight: 5
+  },
+  saveButton: {
+    fontSize: 10
+  }
 }
 
 @connect(state => ({
@@ -122,7 +192,7 @@ class MemberInfo extends Component {
               style={[memberInfoStyle.inputArea, memberInfoStyle.dateSelect]}
               onPress={this._openAndroidDatePicker}
             >
-              <H3 style={memberInfoStyle.textInput}>{this.state['birthday']||'選擇生日'}</H3>
+              <Text style={memberInfoStyle.textInput}>{this.state['birthday']||'選擇生日'}</Text>
             </TouchableOpacity>
         )
         break
@@ -149,7 +219,7 @@ class MemberInfo extends Component {
     return (
       <View key={key} style={memberInfoStyle.formInput}>
         <View style={memberInfoStyle.input}>
-          <H3 style={memberInfoStyle.inputLabel}>{data.text}</H3>
+          <Text style={memberInfoStyle.inputLabel}>{data.text}</Text>
         </View>
        { this._renderFormElement(key, data) }
       </View>
@@ -167,14 +237,13 @@ class MemberInfo extends Component {
               }}
               style={memberInfoStyle.avatarImg}
             />
-            <Button 
-              text='上傳照片'
-              textSize='h4'
-              borderColor='rgb(97, 97, 97)'
-              borderRadius={6}
-              border={1}
+            <TouchableOpacity
               style={memberInfoStyle.uploadBtn}
-              />
+            >
+              <Text style={memberInfoStyle.uploadBtnText}>
+                上傳照片
+              </Text>
+            </TouchableOpacity>
           </View>
           <View style={memberInfoStyle.form}>
             {
@@ -199,28 +268,28 @@ class MemberInfo extends Component {
 })
 
 class HeaderRight extends Component {
-  // render() {
-  //   return (
-  //     <Button
-  //       title="儲存"
-  //       color="#fff"
-  //       onPress={() => {
-  //         let result = {}
-  //         for (let i in state) {
-  //           if (state.hasOwnProperty(i) && state[i]) {
-  //             result[i] = state[i]
-  //           }
-  //         }
+  render() {
+    return (
+      <Button 
+        title="儲存"
+        color="#fff"
+        onPress={() => {
+          let result = {}
+          for (let i in state) {
+            if (state.hasOwnProperty(i) && state[i]) {
+              result[i] = state[i]
+            }
+          }
 
-  //         this.props.action({
-  //           memberUid: this.props.memberUid,
-  //           post: result
-  //         })
-  //         this.props.navigation.goBack()
-  //       }}
-  //       />
-  //   )
-  // }
+          this.props.action({
+            memberUid: this.props.memberUid,
+            post: result
+          })
+          this.props.navigation.goBack()
+        }}
+        />
+    )
+  }
 }
 
 export { MemberInfo as default, HeaderRight }

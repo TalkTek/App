@@ -52,7 +52,7 @@ function * loadCapsules ({payload}) {
           active: false,
           parentKey,
           id: audio.id,
-          name: audio.audioName,
+          audioName: audio.audioName,
           length: audio.length,
           url: audio.url,
           likeCounter: audio.likeCounter || 0,
