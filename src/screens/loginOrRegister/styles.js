@@ -2,6 +2,7 @@ import {
   Dimensions,
   Platform
 } from 'react-native'
+import { COLORS } from 'StyleConfig'
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
 
@@ -16,7 +17,7 @@ export const loginStyles = {
   },
   modalButton: {
     alignSelf: 'auto',
-    backgroundColor: '#fff'
+    backgroundColor: COLORS.pureWhite
   },
   modal: {
     alignItems: 'center',
@@ -28,16 +29,16 @@ export const loginStyles = {
     borderRadius: 10
   },
   container: {
-    backgroundColor: 'rgb(255, 255, 255)'
+    backgroundColor: COLORS.pureWhite
   },
   bg: {
-    flex: 1,
     height: screenHeight,
-    alignItems: 'center'
+    alignItems: 'center',
+    width: '75%',
+    alignSelf: 'center'
   },
   logo: {
     marginTop: screenHeight * 0.1,
-    height: screenHeight * 0.224,
     width: 80,
     zIndex: 0
   },
@@ -45,12 +46,9 @@ export const loginStyles = {
     borderWidth: 2,
     borderColor: 'rgb(224, 224, 224)',
     borderRadius: 8,
-    marginLeft: screenWidth * 0.125,
-    marginRight: screenWidth * 0.125,
-    marginTop: screenHeight * 0.03,
+    marginTop: 20,
     marginBottom: 8,
-    height: screenHeight * 0.143,
-    width: screenWidth * 0.75
+    width: '100%'
   },
   item: {
     height: screenHeight * 0.07,
@@ -62,52 +60,13 @@ export const loginStyles = {
     paddingLeft: 16,
   },
   baseButton: {
-    alignSelf: 'auto',
-    width: screenWidth * 0.75,
-    height: screenHeight * 0.06,
-    elevation: (Platform.OS === 'android') ? 0 : 3,
+    alignSelf: 'auto'
   },
-  loginButton: {
-    backgroundColor: 'rgb(31, 191, 179)',
-  },
-  facebookButton: {
-    backgroundColor: 'rgb(58, 88, 151)',
-    justifyContent: 'center',
-    marginBottom: 8
-  },
-  googleButton: {
-    backgroundColor: 'rgb(221, 77, 64)',
-    justifyContent: 'center',
-    marginBottom: 8
-  },
-  loginText: {
-    marginLeft: screenWidth*0.75*0.4,
-    color: 'rgb(255,255, 255)'
-  },
-  facebookNGoogleText: {
-    color: 'rgb(255, 255, 255)',
-    marginLeft: 15
+  socialButton: {
+    marginBottom: 12
   },
   or: {
-    fontSize: 14,
-    color: 'rgb(158, 158, 158)',
-    marginVertical: screenHeight * 0.04,
-    letterSpacing: -0.2,
+    marginVertical: 20,
     lineHeight: 17
-  },
-  registerText: {
-    color: 'rgb(31, 191, 179)',
-    lineHeight: 21
-  },
-  registerButton: {
-    backgroundColor: 'white'
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: screenWidth * 0.75
-  },
-  footerButton: {
-    backgroundColor: 'white'
   }
 }

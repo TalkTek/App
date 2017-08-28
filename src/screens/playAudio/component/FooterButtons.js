@@ -5,7 +5,7 @@ import {
   TouchableHighlight,
   View
 } from 'react-native'
-import styles from '../styles'
+import { COLORS } from 'StyleConfig'
 
 export class FooterButtons extends Component {
   style = {
@@ -13,11 +13,16 @@ export class FooterButtons extends Component {
     flexDirection: 'row',
     bottom: 10,
     borderTopWidth: 1,
-    borderTopColor: 'rgb(224, 224, 224)',
+    borderTopColor: COLORS.borderTop,
     height: 75,
     alignItems: 'center',
     justifyContent: 'space-around'
   }
+
+  wrapperStyle = {
+    alignItems: 'center'
+  }
+  
   render() {
     let { data } = this.props
     let lists = Object.values(data||{}).map((button, i) => {
@@ -28,7 +33,7 @@ export class FooterButtons extends Component {
           onPress={typeof button.func === 'function'? button.func: null}
           underlayColor="#fff"
         >
-          <View style={styles.footerFunUnit}>
+          <View style={this.wrapperStyle}>
             <FunctionIcon
               source={button.checkActive? button.active: button.notActive}
             />

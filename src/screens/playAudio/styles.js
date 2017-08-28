@@ -1,4 +1,5 @@
 import { Dimensions } from 'react-native'
+import { COLORS } from 'StyleConfig'
 
 const {
   height: screenHeight,
@@ -7,10 +8,10 @@ const {
 
 export default {
   container: {
-    backgroundColor: 'white'
+    backgroundColor: COLORS.pureWhite
   },
   header: {
-    backgroundColor: 'white',
+    backgroundColor: COLORS.pureWhite,
     borderBottomWidth: 0
   },
   banner: {
@@ -37,15 +38,15 @@ export default {
   track: {
     height: 2,
     borderRadius: 2,
-    backgroundColor: 'rgb(238, 238, 238)'
+    backgroundColor: COLORS.trackBarBackground
   },
   trackThumb: {
     top: 22,
     width: 20,
     height: 20,
     borderRadius: 30 / 2,
-    backgroundColor: 'white',
-    borderColor: 'rgb(31, 191, 179)',
+    backgroundColor: COLORS.white,
+    borderColor: COLORS.green,
     borderWidth: 2
   },
   sliderTime: {
@@ -54,8 +55,5 @@ export default {
   },
   footer: {
     height: 75
-  },
-  footerFunUnit: {
-    alignItems: 'center'
   }
 }

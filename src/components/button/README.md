@@ -2,7 +2,7 @@ Button 組建
 ---
 可用參數
 
-> text
+> text (string)
 
 按鈕文字內容
 
@@ -14,7 +14,7 @@ Button 組建
 
 按鈕文字大小
 
-> borderRadius
+> borderRadius (int)
 
 邊框圓角
 
@@ -26,4 +26,10 @@ Button 組建
 
 邊框顏色
 
+> fullWidth (boolean)
 
+寬度最寬（受 parent 元素樣式引響）
+
+> leftElement, rightElement (React Component)
+
+可放在按鈕內文字左邊或者右邊的元素

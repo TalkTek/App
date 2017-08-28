@@ -12,18 +12,14 @@ describe('<Button />', () => {
     border: 1,
     text: 'just a text',
     borderRadius: 5,
-    textColor: 'black'
+    textColor: 'black',
+    fullWidth: true
   }
 
   const outPutStyle = [
-    { 
-      borderColor: 'rgb(158, 158, 158)',
-      borderRadius: 5,
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderWidth: 1
-    },
-      undefined 
+    [{"alignItems": "center", "backgroundColor": undefined, "borderColor": "rgb(158, 158, 158)", "borderRadius": 5, "borderWidth": 1, "justifyContent": "center", "padding": undefined, "width": "100%"}, undefined], 
+    {"flexDirection": "row", "flexWrap": "wrap", "justifyContent": "space-between"}, 
+    {"justifyContent": "center"}
   ]
 
   it('should render a correct style button', () => {

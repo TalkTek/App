@@ -1,10 +1,11 @@
 import styled from '../../utils/styledComponent'
 import DefaultButoton from './defaultButton'
+import { COLORS } from 'StyleConfig'
 
 const Button = styled(DefaultButoton, (styleProps: {}) => {
   // console.log(styleProps)
   let borderStyle = styleProps.border? {
-    borderColor: 'rgb(158, 158, 158)',
+    borderColor: COLORS.gray,
     borderWidth: Number(styleProps.border)
   }: {}
   return {
@@ -13,6 +14,8 @@ const Button = styled(DefaultButoton, (styleProps: {}) => {
     backgroundColor: styleProps.backgroundColor,
     justifyContent: 'center',
     alignItems: 'center',
+    width: styleProps.fullWidth? '100%': undefined,
+    padding: styleProps.padding,
     ...borderStyle
   }
 })

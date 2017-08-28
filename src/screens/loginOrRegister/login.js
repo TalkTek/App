@@ -13,11 +13,10 @@ import {
 import {
   Container,
   Content,
-  Button,
   Form,
   View,
   Input,
-  Item,
+  Item
 } from 'native-base'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -30,6 +29,8 @@ import { loginStyles as styles } from './styles'
 import memberAction from '../../reducer/member/memberAction'
 import { Actions } from 'react-native-router-flux'
 import { H2, H3, H4 } from '../../components/text'
+import { Button } from '../../components/button'
+import { COLORS, LAYOUT } from 'StyleConfig'
 
 let tracker = new GoogleAnalyticsTracker('UA-100475279-1',{ test: 3})
 
@@ -216,31 +217,59 @@ export default class Login extends Component {
                 />
               </Item>
             </Form>
-            <Button
-              style={{...styles.baseButton, ...styles.loginButton}}
-              onPress={this._onEmailPasswordLogin.bind(this)}
-            >
-              <H3 style={styles.loginText}>
-                登入
-              </H3>
-            </Button>
-            <H4 style={styles.or}>
+            <View style={LAYOUT.horizontal}>
+              <Button 
+                text='登入'
+                backgroundColor={COLORS.green}
+                textColor='white'
+                borderRadius={10}
+                padding={10}
+                fullWidth
+                style={styles.baseButton}
+                onPress={this._onEmailPasswordLogin.bind(this)}
+              />
+            </View>
+            <H4 gray style={styles.or}>
               或透過第三方服務
             </H4>
-            <Button style={{...styles.baseButton, ...styles.facebookButton}} onPress={this._onFacebookLogin.bind(this)}>
-              <Icon name="facebook-square" size={28} color="white" />
-              <H3 style={styles.facebookNGoogleText}>Facebook</H3>
-            </Button>
-            <Button style={{...styles.baseButton, ...styles.googleButton}} onPress={this._onGoogleSignIn.bind(this)}>
-              <Icon name="google-plus" size={28} color="white" />
-              <H3 style={styles.facebookNGoogleText}>Google</H3>
-            </Button>
-            <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={() => navigate('Register')}>
-              <H3 style={styles.registerText}>註冊新帳號</H3>
-            </Button>
-            <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={() => navigate('Forgetpw')}>
-              <H3 style={styles.registerText}>忘記密碼</H3>
-            </Button>
+            <View style={LAYOUT.horizontal}>
+              <Button
+                text="Facebook"
+                borderRadius={10}
+                fullWidth
+                padding={5}
+                textColor={COLORS.pureWhite}
+                backgroundColor={COLORS.fbButton}
+                leftElement={<Icon name="facebook-square" size={28} color="white" />}
+                style={[styles.baseButton, styles.socialButton]}
+                onPress={this._onFacebookLogin.bind(this)}
+              />
+            </View>
+            <View style={LAYOUT.horizontal}>
+              <Button
+                text="Google"
+                borderRadius={10}
+                fullWidth
+                padding={5}
+                textColor={COLORS.pureWhite}
+                backgroundColor={COLORS.googleButton}
+                leftElement={<Icon name="google-plus" size={28} color="white" />}
+                style={[styles.baseButton, styles.socialButton]}
+                onPress={this._onGoogleSignIn.bind(this)}
+              />
+            </View>
+            <View style={LAYOUT.horizontal}>
+              <Button 
+                text='註冊新帳號'
+                textColor='green'
+                onPress={() => navigate('Register')}
+              />
+              <Button 
+                text='忘記密碼'
+                textColor='green'
+                onPress={() => navigate('Forgetpw')}
+              />
+            </View>
           </View>
           <Modal
             style={styles.modal}
@@ -254,9 +283,13 @@ export default class Login extends Component {
               <H3 style={styles.modalErrorMsgText}>
                 {this.state.errMsg}
               </H3>
-              <Button style={styles.modalButton} onPress={() => this.setState({ isOpen: !this.state.isOpen})}>
-                <H3 bold green>確認</H3>
-              </Button>
+              <Button 
+                text='確認'
+                textColor='green'
+                style={styles.modalButton}
+                padding={20}
+                onPress={() => this.setState({ isOpen: !this.state.isOpen})}
+              />
           </Modal>
           <Modal
             style={styles.spinningModal}

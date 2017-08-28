@@ -22,14 +22,25 @@ exports[`<Button /> render output should be same with expect 1`] = `
       "borderColor": "rgb(158, 158, 158)",
       "borderRadius": 5,
       "borderWidth": 1,
+      "flexDirection": "row",
+      "flexWrap": "wrap",
       "justifyContent": "center",
       "opacity": 1,
+      "padding": undefined,
+      "width": "100%",
     }
   }
   testID={undefined}
   tvParallaxProperties={undefined}
 >
-  <View>
+  <View
+    style={
+      Object {
+        "paddingLeft": 10,
+        "paddingRight": 10,
+      }
+    }
+  >
     <Text
       accessible={true}
       allowFontScaling={true}
@@ -38,6 +49,7 @@ exports[`<Button /> render output should be same with expect 1`] = `
       fontSize={15}
       gray={null}
       green={null}
+      pureWhite={null}
       style={
         Array [
           Object {
