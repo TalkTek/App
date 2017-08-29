@@ -6,6 +6,7 @@ import {
   Easing,
   Dimensions
 } from 'react-native'
+import { COLORS } from 'StyleConfig'
 
 const style = {
   wrapper: {
@@ -15,6 +16,24 @@ const style = {
   },
   scroller: {
     flexDirection: 'row'
+  },
+  indicatorView: {
+    position: 'absolute',
+    bottom: '0%',
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  indicator: {
+    width: 7,
+    height: 7,
+    borderRadius: 5,
+    backgroundColor: 'rgba(255,255,255,0.8)',
+    marginVertical:5,
+    marginHorizontal:3
+  },
+  selected: {
+    backgroundColor: COLORS.pureWhite
   }
 }
 
@@ -129,6 +148,18 @@ class ScrollBanner extends Component {
           }
           <Banner source={source[0]} />
         </Animated.View>
+        <View style={style.indicatorView}>
+          {
+            source.map((ele, index) => {
+              return <View key={index} style={[style.indicator, 
+              (
+                  index === this.state.index ||
+                  (this.state.index === this.props.source.length && index==0)) ?
+                  style.selected: null
+                ]}></View>
+            })
+          }
+        </View>
       </View>
     )
   }
