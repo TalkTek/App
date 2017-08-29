@@ -14,8 +14,7 @@ const style = {
     flexDirection: 'row'
   },
   scroller: {
-    flexDirection: 'row',
-    left: '-10%'
+    flexDirection: 'row'
   }
 }
 
@@ -29,27 +28,37 @@ class ScrollBanner extends Component {
 
   timer = null
 
+  touchPosition = null
+
   componentDidMount() {
+    this.startTimer()
+  }
+  
+  _animateScroll = () => {
+    const {index} = this.state
+    const imgList = this.props.source
+    this._changeImg()
+    this.state.scrollPercent.setValue(width*(index>imgList.length-1?0:index)*-1)
+    this.scrollAnimate()
+  }
+
+  scrollAnimate() {
     const totalTime = this.props.totalTime||1000
-    const timeOut = 2000
-    this.timer = setInterval(() => {
-      this._changeImg()
-      this.state.scrollPercent.setValue(0)
-      Animated.timing(
-        this.state.scrollPercent,
-        {
-          toValue: width * -1,
-          ease: Easing.back,
-          duration: totalTime
-        }
-      ).start()
-    }, timeOut)
+    const {index} = this.state
+    Animated.timing(
+      this.state.scrollPercent,
+      {
+        toValue: width * index * -1,
+        ease: Easing.back,
+        duration: totalTime
+      }
+    ).start()
   }
 
   _changeImg() {
     const imgList = this.props.source
     let {index} = this.state
-    if (index+1 < imgList.length) {
+    if (index+1 <= imgList.length) {
       index ++
     } else {
       index = 0
@@ -60,18 +69,65 @@ class ScrollBanner extends Component {
     })
   }
 
+  _touchStart = (e) => {
+    this.touchPosition = e.nativeEvent.pageX
+    clearInterval(this.timer)
+  }
+  
+  _touchMove = (e) => {
+    const {index} = this.state
+    const position = width*index*-1
+    const offset = e.nativeEvent.pageX - this.touchPosition
+
+    this.state.scrollPercent.setValue(position+offset)
+  }
+
+  _touchEnd = (e) => {
+    const imgList = this.props.source
+    const offset = e.nativeEvent.pageX - this.touchPosition
+    let {index} = this.state
+    if (offset>width*0.3) {
+      index = (index-1<0)? imgList.length-1:index - 1
+    } 
+    if (offset<width*-0.3) {
+      index = (index+1>imgList.length)? 1:index + 1
+    }
+    
+    this.setState({
+      index
+    }, () =>this.scrollAnimate())
+    this.startTimer()
+  }
+
+  startTimer() {
+    const timeOut = 2000
+    const {source: imgList} = this.props
+    if (imgList.length>1)
+      this.timer = setInterval(this._animateScroll, timeOut)
+  }
+
   render() {
     const {scrollPercent, index} = this.state
     const {source} = this.props
     
     return (
-      <View style={style.wrapper} removeClippedSubviews>
+      <View 
+        onTouchStart={this._touchStart}
+        onTouchMove={this._touchMove}
+        onTouchEnd={this._touchEnd}
+        style={style.wrapper} removeClippedSubviews>
         {/* scroll view */}
         <Animated.View style={[style.scroller, {
           left: scrollPercent
         }]}>
-          <Banner source={source[index]} />
-          <Banner source={index+1>source.length-1?source[0]: source[index+1]} />
+          {
+            source.map((ele, index) => {
+              return (
+                <Banner source={ele} key={index} />
+              )
+            })
+          }
+          <Banner source={source[0]} />
         </Animated.View>
       </View>
     )
