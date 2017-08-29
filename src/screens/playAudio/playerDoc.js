@@ -21,21 +21,16 @@ import HtmlView from 'react-native-htmlview'
 import styles from './styles'
 
 @connect((state) => ({
-  capsuleId: state.audio.playingAudioInfo.capsulesId,
-  parentKey: state.audio.playingAudioInfo.parentKey,
-  draft: state.audio.playingAudioInfo.draft
+  capsuleId: state.audio.playingAudioStaticInfo.capsulesId,
+  parentKey: state.audio.playingAudioStaticInfo.parentKey,
+  draft: state.audio.playingAudioStaticInfo.draft
 }), (dispatch) => ({
   actions: bindActionCreators({...audioAction, ...analyticAction}, dispatch),
 }))
 
 class PlayerDoc extends Component {
-  static navigationOptions = {
-    header: null
-  }
-
   componentDidMount() {
     let { capsuleId, parentKey, actions } = this.props
-    actions.cpAudioGetDoc({capsuleId, parentKey})
     actions.gaSetScreen(`playerDoc/${capsuleId}/${new Date().getHours()}`)
   }
 

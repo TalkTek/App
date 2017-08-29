@@ -100,10 +100,7 @@ export default class PopOutBar extends Component {
   }
 
   openModal = () => {
-    this.setState({
-      isModalOpen: true
-    })
-    this.refs.playAudio.open()
+    Actions.playAudioScreen()
   }
 
   render () {
@@ -115,7 +112,6 @@ export default class PopOutBar extends Component {
     } = this.props
 
     return (
-      <View>
         <Animated.View
           style={[styles.container, {
             top: this.state.popoutAudioBarHeight
@@ -163,17 +159,6 @@ export default class PopOutBar extends Component {
             />
           </Button>
         </Animated.View>
-        <Modal
-          ref={'playAudio'}
-          position={'center'}
-          isOpen={this.state.isModalOpen}
-          swipeToClose={false}
-        >
-          <PlayAudioScreen
-            toggleModal={this.toggleModal}
-          />
-        </Modal>
-      </View>
     )
   }
 }

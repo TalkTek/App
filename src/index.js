@@ -5,8 +5,6 @@ import React, { Component } from 'react'
 import { Provider, connect } from 'react-redux'
 import createStore from './lib/configureStore'
 import CodePush from 'react-native-code-push'
-// import AudioComponents from './components/AudioComponents'
-import AudioPlayerComponents from './components/AudioPlayerComponents'
 import './lib/global'
 import {
   StatusBar,
@@ -24,6 +22,7 @@ import KnowledgeCapsule from './screens/knowledgeCapsule'
 import MemberCenter from './screens/memberCenter'
 import MemberInfo from './screens/memberCenter/memberInfo'
 import FeedBack from './screens/memberCenter/feedback'
+import PlayAudioScreen from './screens/playAudio'
 import Login from './screens/loginOrRegister/login'
 import Register from './screens/loginOrRegister/register'
 import ForgotPassword from './screens/loginOrRegister/forgetpw'
@@ -69,7 +68,6 @@ class App extends Component {
               <Scene
                 key='popOutBar'
                 component={PopOutBar}
-                initial
               />
               <Scene key='modal' modal hideNavBar initial>
                 <Scene
@@ -79,18 +77,16 @@ class App extends Component {
                   initial
                 >
                   <Scene
-                    animationEnabled={false}
-                    key='player'
-                    replace
-                    hideNavBar
-                    component={AudioPlayerComponents}
-                  />
-                  <Scene
                     key='launch'
                     component={Launch}
                     initial
                     hideNavBar
                     hideTabBar
+                  />
+                  <Scene
+                    key='playAudioScreen'
+                    hideNavBar
+                    component={PlayAudioScreen}
                   />
                   <Scene
                     key='login'

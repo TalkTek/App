@@ -29,21 +29,23 @@ import Modal from 'react-native-modalbox'
 import FunctionIcon from '../../components/img/icon/XLIcon'
 import CloseIcon from '../../components/img/icon/XSmallIcon'
 import Banner from '../../components/img/banner/fullWidthBanner'
+import { Actions } from 'react-native-router-flux'
 
 const mapStateToProps = (state) => {
   return {
+    isPlaying: state.audio.isPlaying,
     memberUid: state.member.uid,
-    likeCounter: state.audio.playingAudioInfo.likeCounter,
-    audioIsGood: state.audio.playingAudioInfo.audioIsGood,
-    capsulesId: state.audio.playingAudioInfo.capsulesId,
-    parentKey: state.audio.playingAudioInfo.parentKey,
+    likeCounter: state.audio.playingAudioStaticInfo.likeCounter,
+    userFavoriteCapsules: state.member.favoriteCapsule,
+    capsulesId: state.audio.playingAudioStaticInfo.id,
+    parentKey: state.audio.playingAudioStaticInfo.parentKey,
     playState: state.audio.isPlaying,
-    audioName: state.audio.playingAudioInfo.name,
-    audioUrl: state.audio.playingAudioInfo.url,
-    audioLengthFormatted: state.audio.playingAudioInfo.length.formatted,
-    audioLengthSec: Number(state.audio.playingAudioInfo.length.sec),
-    currentTimeFormatted: state.audio.playingAudioInfo.currentTime.formatted,
-    currentTimeSec: Number(state.audio.playingAudioInfo.currentTime.sec)
+    audioName: state.audio.playingAudioStaticInfo.audioName,
+    audioUrl: state.audio.playingAudioStaticInfo.url,
+    audioLengthFormatted: state.audio.playingAudioStaticInfo.length.formatted,
+    audioLengthSec: Number(state.audio.playingAudioStaticInfo.length.sec),
+    currentTimeFormatted: state.audio.playingAudioDynamicInfo.currentTime.formatted,
+    currentTimeSec: Number(state.audio.playingAudioDynamicInfo.currentTime.sec)
   }
 }
 
@@ -68,7 +70,7 @@ class PlayAudio extends Component {
        good: {
           notActive: require('../../assets/img/playAudio/good.png'),
           active: require('../../assets/img/playAudio/goodActive.png'),
-          checkActive: 'audioIsGood',
+          checkActive: this.isGood,
           name: 'likeCounter',
           func: this._audioIsGoodToggle
         },
@@ -105,7 +107,7 @@ class PlayAudio extends Component {
         twoState: true,
         playLink: require('../../assets/img/playAudio/play.png'),
         pauseLink: require('../../assets/img/audioElement/pause.png'),
-        func: this.props.playOrPause
+        func: () => this.playOrPause()
       },
       forward: {
         twoState: false,
@@ -121,6 +123,8 @@ class PlayAudio extends Component {
   }
 
   componentDidMount() {
+    const { actions } = this.props
+    actions.hideAudioPopoutBar()
     this.props.ga.gaSetEvent({
       category: 'capsule',
       action: 'open player',
@@ -129,6 +133,20 @@ class PlayAudio extends Component {
         value: 1
       }
     })
+  }
+
+  playOrPause = () => {
+    const {isPlaying, actions} = this.props
+    if (!isPlaying) {
+      actions.play()
+    } else {
+      actions.pause()
+    }
+  }
+
+  isGood = () => {
+    const { userFavoriteCapsules, capsulesId } = this.props
+    return userFavoriteCapsules[capsulesId]
   }
 
   _onSlidingComplete = (value) => {
@@ -142,7 +160,6 @@ class PlayAudio extends Component {
   }
 
   openModal = () => {
-    console.log("hello world")
     this.setState({
       isModalOpen: true,
       swipeToClose: !this.state.swipeToClose
@@ -192,6 +209,12 @@ class PlayAudio extends Component {
     })
   }
 
+  back = () => {
+    const { actions } = this.props
+    actions.showAudioPopoutBar()
+    Actions.pop()
+  }
+
   render () {
     const {
       toggleModal,
@@ -212,7 +235,7 @@ class PlayAudio extends Component {
         >
           <View style={styles.footerFunUnit}>
             <FunctionIcon
-              source={this.props[button.checkActive]? button.active: button.notActive}
+              source={button.checkActive? button.active: button.notActive}
             />
             <Text
               style={styles.footerText}
@@ -257,7 +280,7 @@ class PlayAudio extends Component {
           <Right>
             <Button
               transparent
-              onPress={() => toggleModal()}
+              onPress={this.back}
             >
               <CloseIcon
                 source={this.buttons.close}
