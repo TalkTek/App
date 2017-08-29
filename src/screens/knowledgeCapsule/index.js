@@ -40,6 +40,7 @@ import {
 } from 'react-native-router-flux'
 import Icon from '../../components/img/icon/SmallIcon'
 import Banner from '../../components/img/banner/fullWidthBanner'
+import ScrollBanner from '../../components/img/scrollBanner'
 import { H3, H4 } from '../../components/text'
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
@@ -266,14 +267,18 @@ export class KnowledgeCapsule extends Component {
       <Container style={styles.container}
         onMoveShouldSetResponder={this.props.isPlaying? this.onScroll: null}
       >
-        <View>
-          <Banner
-            source={require('../../assets/img/knowledgeCapsule/banner.png')}
-          />
-        </View>
         <Content
           onMomentumScrollEnd={this.onScrollEndReached}
         >
+        <View>
+          <ScrollBanner
+            source={[
+              require('../../assets/img/knowledgeCapsule/banner.png'),
+              require('../../assets/img/demo_banner.jpg'),
+              require('../../assets/img/TalkListbanner.png')
+            ]}
+          />
+        </View>
           {
             isCpAudioLoaded
               ? CapUnit
