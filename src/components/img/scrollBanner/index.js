@@ -62,7 +62,7 @@ class ScrollBanner extends Component {
   }
 
   scrollAnimate() {
-    const totalTime = this.props.totalTime||1000
+    const totalTime = this.props.aniTime||1000
     const {index} = this.state
     Animated.timing(
       this.state.scrollPercent,
@@ -95,21 +95,24 @@ class ScrollBanner extends Component {
   
   _touchMove = (e) => {
     const {index} = this.state
+    const {source} = this.props
     const position = width*index*-1
     const offset = e.nativeEvent.pageX - this.touchPosition
-
-    this.state.scrollPercent.setValue(position+offset)
+    const locationX = position + offset
+   
+    if(!(locationX>=0||locationX<width*(source.length-1)*-1))
+      this.state.scrollPercent.setValue(position+offset)
   }
 
   _touchEnd = (e) => {
     const imgList = this.props.source
     const offset = e.nativeEvent.pageX - this.touchPosition
     let {index} = this.state
-    if (offset>width*0.3) {
-      index = (index-1<0)? imgList.length-1:index - 1
+    if (offset>width*0.3) { //previous
+      index = (index-1<0)? index:index - 1
     } 
-    if (offset<width*-0.3) {
-      index = (index+1>imgList.length)? 1:index + 1
+    if (offset<width*-0.3) { //next
+      index = (index+1>imgList.length-1)? index:index + 1
     }
     
     this.setState({
@@ -119,7 +122,7 @@ class ScrollBanner extends Component {
   }
 
   startTimer() {
-    const timeOut = 2000
+    const timeOut = this.props.timeOut||2000
     const {source: imgList} = this.props
     if (imgList.length>1)
       this.timer = setInterval(this._animateScroll, timeOut)
