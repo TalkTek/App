@@ -56,7 +56,8 @@ import {
   getPreviousKey,
   getIsPlayedInfo,
   getAudioLengthBySec,
-  isPlaying
+  getCurrentTimeSec,
+  isPlaying,
 } from './audioSelector'
 import audioActions from './audioAction'
 import playerFactory from '../../factory/playerFactory'
@@ -437,30 +438,37 @@ function * pauseFlow () {
 }
 
 function * seekFlow () {
-  try {
-
-  } catch (error) {
-
+  while (true) {
+    const { pos } =  yield take(SEEK)
+    yield put(audioActions.seekRequest())
+    yield playerFactory.seek(pos)
+    yield put(audioActions.seekSuccess())
   }
 }
 
 function * forward15 () {
-  try {
-
-  } catch (error) {
-
+  while (true) {
+    yield take(FORWARD_15)
+    yield put(audioActions.forward15Request())
+    const currentTimeSec = yield select(getCurrentTimeSec())
+    yield playerFactory.seek(currentTimeSec - 15)
+    yield put(audioActions.forward15Success())
   }
 }
 
 function * backward15 () {
-  try {
-
-  } catch (error) {
-
+  while (true) {
+    yield take(BACKWARD_15)
+    yield put(audioActions.backward15Request())
+    const currentTimeSec = yield select(getCurrentTimeSec())
+    yield playerFactory.seek(currentTimeSec + 15)
+    yield put(audioActions.backward15Success())
   }
 }
 
-function * next () {}
+function * next () {
+
+}
 
 function * previous () {
 }
@@ -469,5 +477,8 @@ function * previous () {
 export default [
   fork(onPressFlow),
   fork(playFlow),
-  fork(pauseFlow)
+  fork(pauseFlow),
+  fork(seekFlow),
+  fork(forward15),
+  fork(backward15)
 ]

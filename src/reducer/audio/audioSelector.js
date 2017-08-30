@@ -39,10 +39,18 @@ const isPlaying = () => createSelector(
   }
 )
 
+const getCurrentTimeSec = () => createSelector(
+  getAudioState,
+  audioState => {
+    return audioState.playingAudioDynamicInfo.currentTime.sec
+  }
+)
+
 export {
   getCapsules,
   getPreviousKey,
   getIsPlayedInfo,
   getAudioLengthBySec,
-  isPlaying
+  isPlaying,
+  getCurrentTimeSec
 }

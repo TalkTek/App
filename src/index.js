@@ -69,7 +69,7 @@ class App extends Component {
                 key='popOutBar'
                 component={PopOutBar}
               />
-              <Scene key='modal' modal hideNavBar initial>
+              <Scene key='modal' hideNavBar initial>
                 <Scene
                   key='root'
                   hideNavBar
@@ -87,6 +87,7 @@ class App extends Component {
                     key='playAudioScreen'
                     hideNavBar
                     component={PlayAudioScreen}
+                    direction='vertical'
                   />
                   <Scene
                     key='login'

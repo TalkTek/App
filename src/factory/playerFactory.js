@@ -31,7 +31,7 @@ class PlayerFactory {
   }
 
   seek (pos) {
-    this.player.seek(pos)
+    this.player.seek(pos*1000)
   }
 
   nextOrPrevious (url) {

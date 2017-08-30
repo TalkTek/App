@@ -153,10 +153,15 @@ export default class PopOutBar extends Component {
             transparent
             onPress={this.openModal}
           >
-            <Image
-              source={buttons.expand}
-              style={styles.open}
-            />
+            {
+              currentTimeSec === -0.001 || currentTimeSec === ''
+                ? null
+                :
+                <Image
+                  source={buttons.expand}
+                  style={styles.open}
+                />
+            }
           </Button>
         </Animated.View>
     )

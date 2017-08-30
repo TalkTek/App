@@ -86,14 +86,6 @@ export default class KnowledgeCapsule extends Component {
     actions.gaSetScreen('KnowledgeCapsule')
   }
 
-  // componentWillReceiveProps(nextProps: object) {
-  //   let {playingAudioPos} = nextProps
-  //   let { i, j } = this.props.playingAudioPos
-  //   if ( playingAudioPos.i!=i || playingAudioPos.j!=j ) {
-  //     this.toggleButtonColor(playingAudioPos.i, playingAudioPos.j)
-  //   }
-  // }
-
   onScroll = (event) => {
     const {
       actions
@@ -116,33 +108,7 @@ export default class KnowledgeCapsule extends Component {
   onPress = (parentKey, childKey) => {
     const { actions } = this.props
     actions.onPress(parentKey, childKey)
-    // const {
-    //   actions,
-    //   memberUid
-    // } = this.props
-    //
-    // // actions.toggleAudioPopoutBar()
-    // actions.cpAudioInfoGet(
-    //   {
-    //     parentKey: audio.parentKey,
-    //     capsuleId: audio.id,
-    //     memberUid
-    //   }
-    // )
-    // actions.audioLoad({
-    //   audio,
-    //   i,
-    //   j,
-    //   pos
-    // })
-    // this.toggleButtonColor(i, j)
   }
-
-  // toggleButtonColor = (i: number, j: number) => {
-  //   const { capsules, playingAudioPos } = this.props
-  //   capsules[playingAudioPos.i].audios[playingAudioPos.j].active = false
-  //   capsules[i].audios[j].active = true
-  // }
 
   onScrollEndReached = () => {
     const { lastKey } = this.props
