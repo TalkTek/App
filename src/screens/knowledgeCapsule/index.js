@@ -16,7 +16,8 @@ import {
   Dimensions,
   ActivityIndicator,
   Platform,
-  NetInfo
+  NetInfo,
+  Share
 } from 'react-native'
 import {
   Container,
@@ -42,6 +43,7 @@ import Icon from '../../components/img/icon/SmallIcon'
 import Banner from '../../components/img/banner/fullWidthBanner'
 import ScrollBanner from '../../components/img/scrollBanner'
 import { H3, H4 } from '../../components/text'
+import jwt from 'react-native-jwt-io'
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 console.log('screenHeight', screenHeight);
@@ -172,6 +174,18 @@ export class KnowledgeCapsule extends Component {
     }
   }
 
+  _callShare(capsuleId, parentId) {
+    // const token = btoa(`{"parentId": "${capsuleId}", "capsuleId": "${parentId}"}`)
+    const token = jwt.encode({
+      capsuleId,
+      parentId
+    }, 'secret')
+    Share.share({
+      title: 'talk 小講膠囊分享',
+      url: `http://192.168.31.111:3000/capsule/${token}`
+    })
+  }
+
   render() {
     let CapUnit = null
     const {
@@ -181,6 +195,7 @@ export class KnowledgeCapsule extends Component {
     if(capsules) {
       let counter = 0
       let index
+      console.log(capsules)
       CapUnit = capsules.map((cap, i) => {
         let length = cap.audios.length
         counter += length
@@ -228,7 +243,7 @@ export class KnowledgeCapsule extends Component {
                       {
                         audio.id &&
                         this.state.fabActive === audio.id &&
-                        <Animated.View style={{ transform: [{ scale: this.state.fabScale }], opacity: 0.9, position: 'absolute', left: -70, width: 70, height: 28, backgroundColor: 'white', borderRadius: 20, shadowColor: 'rgba(0,0,0,0.2)', shadowOffset: { width: 0, height: 1 }, shadowRadius: 5, shadowOpacity: 10 }}>
+                        <Animated.View style={{ transform: [{ scale: this.state.fabScale }], opacity: 0.9, position: 'absolute', padding: 5, right: 30, bottom: -10, minWidth: 70, backgroundColor: 'white', borderRadius: 20, shadowColor: 'rgba(0,0,0,0.2)', shadowOffset: { width: 0, height: 1 }, shadowRadius: 5, shadowOpacity: 10, zIndex: 5 }}>
                           <TouchableHighlight
                             onPress={() => {
                               console.log(audio.audioName + ' download')
@@ -236,7 +251,14 @@ export class KnowledgeCapsule extends Component {
                               }}
                           >
                             <View>
-                              <H3 style={{textAlign: 'center', textAlignVertical: 'center', lineHeight: 28}}>{'下載'}</H3>
+                              <H3 style={{textAlign: 'center', textAlignVertical: 'center', lineHeight: 28}}>下載</H3>
+                            </View>
+                          </TouchableHighlight>
+                          <TouchableHighlight
+                            onPress={this._callShare.bind(this, audio.id, audio.parentKey)}
+                          >
+                            <View>
+                              <H3 style={{textAlign: 'center', textAlignVertical: 'center', lineHeight: 28}}>分享</H3>
                             </View>
                           </TouchableHighlight>
                           {/* <Button
