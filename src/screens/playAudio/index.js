@@ -101,7 +101,7 @@ class PlayAudio extends Component {
       backward: {
         twoState: false,
         link: require('../../assets/img/audioElement/backward.png'),
-        func: this.props.backward
+        func: () => this.props.actions.previous()
       },
       playOrPause: {
         twoState: true,
@@ -112,7 +112,7 @@ class PlayAudio extends Component {
       forward: {
         twoState: false,
         link: require('../../assets/img/audioElement/forward.png'),
-        func: this.props.forward
+        func: () => this.props.actions.next()
       },
       forward15: {
         twoState: false,
@@ -149,8 +149,8 @@ class PlayAudio extends Component {
     return userFavoriteCapsules[capsulesId]
   }
 
-  _onSlidingComplete = (value) => {
-    this.props.actions.seek(value)
+  _onSlidingComplete = (pos) => {
+    this.props.actions.seek(pos)
   }
 
   toggleModal = () => {
@@ -217,7 +217,6 @@ class PlayAudio extends Component {
 
   render () {
     const {
-      toggleModal,
       playState,
       audioName,
       audioLengthFormatted,

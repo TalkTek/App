@@ -98,18 +98,11 @@ export default createReducder({
     }
   },
   [SAVE_PLAYING_AUDIO_STATIC_INFO_SUCCESS]: (state, action) => {
-    let audio = {
-      ...action.payload.capsule,
-      // this is stateless prop,
-      // meaning to say this prop is abandon in playingAudioStaticInfo
-      // we don't use that to do anything
-      active: ''
-    }
     return {
       ...state,
       playingAudioStaticInfo: {
         ...state.playingAudioStaticInfo,
-        ...audio,
+        ...action.payload.capsule,
       }
     }
   },

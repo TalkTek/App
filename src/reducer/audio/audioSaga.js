@@ -52,12 +52,14 @@ import {
 import AudioModule from '../../api/audioModule'
 import playerModule from '../../api/playerModule'
 import {
+  getCapsule,
   getCapsules,
-  getPreviousKey,
   getIsPlayedInfo,
   getAudioLengthBySec,
   getCurrentTimeSec,
   isPlaying,
+  getCurrentKey,
+  getPreviousKey
 } from './audioSelector'
 import audioActions from './audioAction'
 import playerFactory from '../../factory/playerFactory'
@@ -164,7 +166,6 @@ function * selectTrack (offset: number) {
 
 function * audioToNextTrack () {
   let capsule = yield call(() => selectTrack(+1))
-  console.log(capsule)
   yield put({
     type: CP_AUDIO_INFO_GET,
     payload: {
@@ -181,7 +182,6 @@ function * audioToNextTrack () {
 
 function * audioToPreviousTrack () {
   let capsule = yield call(() => selectTrack(-1))
-
   yield put({
     type: CP_AUDIO_INFO_GET,
     payload: {
@@ -201,6 +201,131 @@ function * audioSeek({ payload }) {
 }
 
 
+function * getNextCapsuleFlow () {
+  let capsule
+  let nextKey
+  const { parentKey, childKey } = yield select(getCurrentKey())
+
+  try {
+    if (nextKey = yield call(isNextChildExisted, parentKey, childKey)) {
+      capsule = yield call(getCapsuleIfNextChildExisted, parentKey, nextKey)
+    } else if ( nextKey = yield call(isNextParentExisted, parentKey, childKey)) {
+      capsule = yield call(getCapsuleIfNextParentExisted, nextKey)
+    } else {
+      capsule = yield call(getCurrentCapsule, parentKey, childKey)
+    }
+    return capsule
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+function * getCurrentCapsule (parentKey, childKey) {
+  try {
+    const capsule = yield select(getCapsule(parentKey, childKey))
+    return capsule
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+function * isNextChildExisted (parentKey, childKey) {
+  try {
+    const capsules = yield select(getCapsules(parentKey))
+    let pos = Object.keys(capsules).indexOf(childKey)
+    return Object.keys(capsules)[pos + 1]
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+function * isNextParentExisted (parentKey) {
+  try {
+    const capsules = yield select(getCapsules())
+    let pos = Object.keys(capsules).indexOf(parentKey)
+    return Object.keys(capsules)[pos+1]
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+
+function * getCapsuleIfNextChildExisted (parentKey ,nextKey) {
+  try {
+    const capsules = yield select(getCapsules(parentKey))
+    return capsules[nextKey]
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+function * getCapsuleIfNextParentExisted (nextKey) {
+  try {
+    const capsules = yield select(getCapsules())
+    return capsules[nextKey].audios[0]
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+function * getPreviousCapsuleFlow () {
+  let capsule
+  let nextKey
+  const { parentKey, childKey } = yield select(getCurrentKey())
+  try {
+    if (nextKey = yield call(isPreviousChildExisted, parentKey, childKey)) {
+      capsule = yield call(getCapsuleIfPreviousChildExisted, parentKey, nextKey)
+    } else if ( nextKey = yield call(isPreviousParentExisted, parentKey, childKey)) {
+      capsule = yield call(getCapsuleIfPreviousParentExisted, nextKey)
+    } else {
+      capsule = yield call(getCurrentCapsule, parentKey, childKey)
+    }
+    return capsule
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+function * getCapsuleIfPreviousChildExisted (parentKey, nextKey) {
+  try {
+    const capsules = yield select(getCapsules(parentKey))
+    return capsules[nextKey]
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+function * getCapsuleIfPreviousParentExisted (nextParentKey) {
+  try {
+    const capsules = yield select(getCapsules(nextParentKey))
+    const length = Object.keys(capsules).length -1
+    const childKey = Object.keys(capsules)[length]
+    return capsules[childKey]
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+function * isPreviousChildExisted (parentKey, childKey) {
+  try {
+    const capsules = yield select(getCapsules(parentKey))
+    let pos = Object.keys(capsules).indexOf(childKey)
+    return Object.keys(capsules)[pos - 1]
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+function * isPreviousParentExisted (parentKey) {
+  try {
+    const capsules = yield select(getCapsules())
+    let pos = Object.keys(capsules).indexOf(parentKey)
+    return Object.keys(capsules)[pos - 1]
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 /**
  * multiple conditions will use this function, such as :
  * 1. press
@@ -219,6 +344,9 @@ function * Timer () {
     yield put(audioActions.timerRequest())
     let isAudioPlaying = yield select(isPlaying())
     if ( isAudioPlaying ) {
+      if (GLOBAL_AUDIO_TIMER) {
+        GLOBAL_AUDIO_TIMER.close()
+      }
       yield call(startTimer)
     } else {
       GLOBAL_AUDIO_TIMER.close()
@@ -326,7 +454,11 @@ function * updateButtonColor (parentKey, childKey) {
 
 /**
  * get url and call initAndPlay function through the playFactory
- * playFactory is a singleton object
+ * it's important to note that the function focus on the event that
+ * the audio is firstly loaded such as, onPress, next, previous.
+ * But playFlow doesn't use this function, because playFlow only use for
+ * the situation that user press play button after they press pause.
+ * in this case, the audio is same.
  *
  * @param url : string
  * eg:
@@ -352,7 +484,7 @@ function * playNewAudio (url) {
  */
 function * getAudioFilePicked (parentKey, childKey) {
   try {
-    let capsule = yield select(getCapsules(parentKey, childKey))
+    let capsule = yield select(getCapsule(parentKey, childKey))
     return capsule
   } catch( error) {
     throw new Error(error.message)
@@ -375,24 +507,25 @@ function * getAudioFilePicked (parentKey, childKey) {
  *  url: "https://firebasestorage.googlepis.com/dfkajlksfjkf....",
  * }
  */
-function * setCapsulePickedIntoReduxStore(capsule, parentKey) {
+function * setCapsulePickedIntoReduxStore(capsule) {
   try {
     yield put(audioActions.savePlayingAudioStaticInfoRequest())
     yield put(audioActions.savePlayingAudioStaticInfoSuccess({capsule}))
   } catch (error) {
     // yield put(audioActions.savePlayingAudioStaticInfoFailure())
-    throw new Error(error.message)
+    throw new Error(error)
   }
 }
 
 /**
- * get ParentKey and childKey, and save them into store
+ * get ParentKey and childKey from the button that user now press
+ * and save them into store
  * this function mainly use for update the color of button
  * @param parentKey : string
  * @param childKey : string
  * eg: '-Ks7SNKSFDKLLSDF'
  */
-function * setPreviousKey (parentKey, childKey) {
+function * setKey (parentKey, childKey) {
   try {
     yield put(audioActions.savePreviousKeyRequest())
     yield put(audioActions.savePreviousKeySuccess(parentKey, childKey))
@@ -411,7 +544,7 @@ function * onPressFlow () {
     yield put(audioActions.showAudioPopoutBar())
     yield call(playNewAudio, capsule.url)
     yield call(updateButtonColor, parentKey, childKey)
-    yield call(setPreviousKey, parentKey, childKey)
+    yield call(setKey, parentKey, childKey)
     yield fork(Timer)
     yield put(audioActions.onPressSuccess())
   }
@@ -439,38 +572,58 @@ function * pauseFlow () {
 
 function * seekFlow () {
   while (true) {
-    const { pos } =  yield take(SEEK)
+    const {payload: pos} =  yield take(SEEK)
+    console.log('pos', pos)
     yield put(audioActions.seekRequest())
     yield playerFactory.seek(pos)
     yield put(audioActions.seekSuccess())
   }
 }
 
-function * forward15 () {
+function * forward15Flow () {
   while (true) {
     yield take(FORWARD_15)
     yield put(audioActions.forward15Request())
     const currentTimeSec = yield select(getCurrentTimeSec())
-    yield playerFactory.seek(currentTimeSec - 15)
+    yield playerFactory.seek(currentTimeSec + 15)
     yield put(audioActions.forward15Success())
   }
 }
 
-function * backward15 () {
+function * backward15Flow () {
   while (true) {
     yield take(BACKWARD_15)
     yield put(audioActions.backward15Request())
     const currentTimeSec = yield select(getCurrentTimeSec())
-    yield playerFactory.seek(currentTimeSec + 15)
+    yield playerFactory.seek(currentTimeSec - 15)
     yield put(audioActions.backward15Success())
   }
 }
 
-function * next () {
-
+function * nextFlow () {
+  while (true) {
+    yield take(NEXT)
+    let capsule = yield call(getNextCapsuleFlow)
+    yield call(setCapsulePickedIntoReduxStore, capsule)
+    yield call(playNewAudio, capsule.url)
+    yield call(updateButtonColor, capsule.parentKey, capsule.id)
+    yield call(setKey, capsule.parentKey, capsule.id)
+    yield fork(Timer)
+    yield put(audioActions.nextSuccess())
+  }
 }
 
-function * previous () {
+function * previousFlow () {
+  while (true) {
+    yield take(PREVIOUS)
+    let capsule = yield call(getPreviousCapsuleFlow)
+    yield call(setCapsulePickedIntoReduxStore, capsule)
+    yield call(playNewAudio, capsule.url)
+    yield call(updateButtonColor, capsule.parentKey, capsule.id)
+    yield call(setKey, capsule.parentKey, capsule.id)
+    yield fork(Timer)
+    yield put(audioActions.previousSuccess())
+  }
 }
 //-------------------------WATCHER END-------------------------------
 
@@ -479,6 +632,8 @@ export default [
   fork(playFlow),
   fork(pauseFlow),
   fork(seekFlow),
-  fork(forward15),
-  fork(backward15)
+  fork(forward15Flow),
+  fork(backward15Flow),
+  fork(nextFlow),
+  fork(previousFlow)
 ]
