@@ -451,7 +451,7 @@ function * forward15 () {
     yield take(FORWARD_15)
     yield put(audioActions.forward15Request())
     const currentTimeSec = yield select(getCurrentTimeSec())
-    yield playerFactory.seek(currentTimeSec - 15)
+    yield playerFactory.seek(currentTimeSec + 15)
     yield put(audioActions.forward15Success())
   }
 }
@@ -461,7 +461,7 @@ function * backward15 () {
     yield take(BACKWARD_15)
     yield put(audioActions.backward15Request())
     const currentTimeSec = yield select(getCurrentTimeSec())
-    yield playerFactory.seek(currentTimeSec + 15)
+    yield playerFactory.seek(currentTimeSec - 15)
     yield put(audioActions.backward15Success())
   }
 }

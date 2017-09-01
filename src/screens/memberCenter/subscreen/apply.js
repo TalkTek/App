@@ -11,10 +11,18 @@ import {
   Content
 } from 'native-base'
 import FeedBack from './feedback'
-import { applyStyle } from './styles'
+import styles from '../styles'
 
+const applyStyle = {
+  welcomeJoin: {
+    ...styles.subBackground,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 80
+  }
+}
 class Apply extends Component {
-  render() {
+  render () {
     return (
       <Container>
         <Content>

@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux'
 import audioActions from '../../reducer/audio/audioAction'
 import analyticActions from '../../reducer/analytic/analyticAction'
 import capsuleAction from '../../reducer/capsule/capsuleAction'
+import downloadActions from '../../reducer/download/downloadAction'
 import { connect } from 'react-redux'
 import {
   TouchableHighlight,
@@ -58,14 +59,16 @@ let buttons = {
   lastKey: state.capsule.lastKey,
   memberUid: state.member.uid,
 }), dispatch => ({
-  actions: bindActionCreators({...audioActions, ...analyticActions, ...capsuleAction}, dispatch),
+  actions: bindActionCreators({...audioActions, ...analyticActions, ...capsuleAction, ...downloadActions}, dispatch),
 }))
 
 export default class KnowledgeCapsule extends Component {
 
   state = {
     audioBarActive: false,
-    offsetY: 0
+    offsetY: 0,
+    fabActive: '',
+    fabScale: new Animated.Value(0)
   }
 
   loadCount = 2
@@ -153,14 +156,55 @@ export default class KnowledgeCapsule extends Component {
                             source={audio.active ? buttons.playing : buttons.playable}
                             marginRight={12}
                           />
-                          <Text style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>
-                            {audio.audioName}
+                          <View>
+                            <Text style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>
+                              {audio.audioName}
                             </Text>
-                          <Text style={styles.audioLengthText}>
-                            {audio.length ? audio.length.formatted : ''}
+                            <Text style={styles.audioLengthText}>
+                              {audio.downloaded ? `${audio.length.formatted} 已下載` : audio.length.formatted}
                             </Text>
+                            {/* <Text style={styles.audioLengthText}>
+                              {audio.length ? audio.length.formatted : ''}
+                            </Text> */}
+                          </View>
                         </View>
                       </TouchableHighlight>
+                      <TouchableHighlight
+                    underlayColor="#fff"
+                    onPress={() => {
+                      this.setState({ fabActive: audio.id, fabScale: new Animated.Value(0) },
+                        () =>
+                          Animated.spring(
+                            this.state.fabScale,
+                            {
+                              toValue: 1,
+                              speed: 5,
+                              bounciness: 12
+                            }
+                          ).start()
+                      )
+                    }}>
+                    <View>
+                      {
+                        audio.id &&
+                        this.state.fabActive === audio.id &&
+                        <Animated.View style={{ transform: [{ scale: this.state.fabScale }], opacity: 0.9, position: 'absolute', left: -70, width: 70, height: 28, backgroundColor: 'white', borderRadius: 20, shadowColor: 'rgba(0,0,0,0.2)', shadowOffset: { width: 0, height: 1 }, shadowRadius: 5, shadowOpacity: 10 }}>
+                          <TouchableHighlight
+                            onPress={() => {
+                              console.log(audio.audioName + ' download')
+                              this.props.actions.cpAudioDownload({...audio, parentKey: parentKey})
+                              }}
+                          >
+                            <Text style={{textAlign: 'center', textAlignVertical: 'center', lineHeight: 28}}>{'下載'}</Text>
+                          </TouchableHighlight>
+                        </Animated.View>
+                      }
+                      <Icon
+                        source={buttons.playing}
+                        style={styles.capPlayPauseButtonImage}
+                      />
+                    </View>
+                  </TouchableHighlight>
                     </View>
                   )
                 })
@@ -172,6 +216,7 @@ export default class KnowledgeCapsule extends Component {
     return (
       <Container style={styles.container}
         onMoveShouldSetResponder={this.props.isPlaying? this.onScroll: null}
+        onStartShouldSetResponder={() => this.setState({fabActive: ''})}
       >
         <View>
           <Banner

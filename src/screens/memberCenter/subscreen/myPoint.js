@@ -13,7 +13,44 @@ import {
   Thumbnail
 } from 'native-base'
 import MyTalk from './myTalk'
-import { myPointStyle } from './styles'
+import styles from '../styles'
+
+const myPointStyle = {
+  container: {
+    ...styles.subBackground,
+    paddingTop: 16,
+    paddingBottom: 4,
+    paddingLeft: 24,
+    paddingRight: 24,
+    fontSize: 13
+  },
+  pointList: {
+    backgroundColor: '#fff',
+    paddingLeft: 24,
+    paddingRight: 16,
+    paddingTop: 16,
+    paddingBottom: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent:'space-between',
+  },
+  coin: {
+    width: 24,
+    height: 24,
+    flex: 1
+  },
+  pointText: {
+    flex: 3,
+    paddingLeft: 13,
+    color: 'rgb(31, 191, 179)'
+  },
+  term: {
+    flex: 3
+  },
+  enterIcon: {
+    flex: 0
+  }
+}
 
 class MyPoint extends Component {
   data = {
@@ -32,13 +69,13 @@ class MyPoint extends Component {
         style={myPointStyle.pointList}
       >
         <Image 
-          source={require('../../assets/img/memberCenter/iconMypoint.png')}
+          source={require('../../../assets/img/memberCenter/iconMypoint.png')}
           style={MyPoint.coin}
         />
         <Text style={myPointStyle.pointText}>500 點</Text>
         <Text style={myPointStyle.term}>2017-06-10 號到期</Text>
         <Image 
-          source={require('../../assets/img/memberCenter/enter.png')}
+          source={require('../../../assets/img/memberCenter/enter.png')}
           style={myPointStyle.enterIcon}
         />
       </View>

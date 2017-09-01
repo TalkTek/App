@@ -6,6 +6,7 @@ import {
   takeLatest
 } from 'redux-saga/effects'
 import CapsuleModule from '../../api/capsuleModule'
+import DownloadModule from '../../api/downloadModule'
 import {
   LOAD_CP_AUDIO_SUCCESS,
   CP_AUDIO_STORE
@@ -26,6 +27,18 @@ function * loadCapsules ({payload}) {
     capsules = yield call(() => new CapsuleModule().loadLimitWithLastKey(limitToLast + 1, lastKey))
   } else {
     capsules = yield call(() => new CapsuleModule().loadLimit(limitToLast + 1))
+  }
+  for (let parentKey in capsules) {
+    for (let childkey in capsules[parentKey].audios) {
+      let isdownloaded = yield call(() => new DownloadModule().getDownloadedCapsulesID(childkey))
+      capsules[parentKey].audios[childkey] = {
+        ...capsules[parentKey].audios[childkey],
+        // some properties that should be handled by local
+        active: false,
+        downloaded: isdownloaded
+        // some properties that should be handled by local
+      }
+    }
   }
   yield put({type: CP_AUDIO_STORE, payload: capsules})
   // capsules = Object.keys(capPush)

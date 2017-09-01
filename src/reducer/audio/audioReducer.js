@@ -28,6 +28,7 @@ import {
   SAVE_PREVIOUS_KEY_SUCCESS,
   PLAY_SUCCESS,
   PAUSE_SUCCESS,
+  UPDATE_CP_AUDIO
 } from './audioTypes'
 /* eslint-disable*/
 
@@ -303,6 +304,16 @@ export default createReducder({
     return {
       ...state,
       isPlaying: false
+    }
+  },
+  [UPDATE_CP_AUDIO]: (state, {payload}) => {
+    const {parentKey, id} = payload
+    console.log(state)
+    let capsules = Object.assign({}, state.capsules)
+    capsules[parentKey].audios[id].downloaded = true
+    return {
+      ...state,
+      capsules
     }
   }
 }, initialState)
