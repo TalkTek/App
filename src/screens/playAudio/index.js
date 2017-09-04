@@ -37,7 +37,7 @@ const mapStateToProps = (state) => {
     memberUid: state.member.uid,
     likeCounter: state.audio.playingAudioStaticInfo.likeCounter,
     userFavoriteCapsules: state.member.favoriteCapsule,
-    capsulesId: state.audio.playingAudioStaticInfo.id,
+    capsuleId: state.audio.playingAudioStaticInfo.id,
     parentKey: state.audio.playingAudioStaticInfo.parentKey,
     playState: state.audio.isPlaying,
     audioName: state.audio.playingAudioStaticInfo.audioName,
@@ -168,6 +168,9 @@ class PlayAudio extends Component {
   }
 
   _audioIsGoodToggle() {
+    const { userFavoriteCapsules, capsulesId } = this.props
+    let isPositive = userFavoriteCapsules[capsulesId]
+
     this.props.ga.gaSetEvent({
       category: 'capsule',
       action: this.props.audioIsGood? 'unlike capsule' : 'like capsule',
@@ -178,9 +181,9 @@ class PlayAudio extends Component {
     })
     this.props
       .actions
-      .cpAudioGoodChange(
-        !this.props.audioIsGood,
-        this.props.capsulesId,
+      .setEvaluation(
+        isPositive,
+        this.props.capsuleId,
         this.props.parentKey,
         this.props.memberUid
       )

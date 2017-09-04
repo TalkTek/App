@@ -1,4 +1,4 @@
-import FirebaseDB from './lib/FirebaseDB'
+import FirebaseDB from './Firebase'
 
 export default class AudioModule extends FirebaseDB {
   async cpAudioGood (capsulesId, parentKey, userId, counter) {
@@ -30,19 +30,5 @@ export default class AudioModule extends FirebaseDB {
   getAudioInfo (capsulesId, parentKey) {
     let path = `capsules/${parentKey}/audios/${capsulesId}`
     return this.readOnce(path)
-  }
-
-  async checkAudioIsLiked (capsuleId, memberUid) {
-    let isLiked =
-      await this.exists(`users/${memberUid}/favorite/${capsuleId}`)
-
-    return isLiked
-  }
-
-  async getAudioDoc (capsuleId, parentKey) {
-    // console.log(`capsules/${parentKey}/audios/${capsuleId}/draft`)
-    let draft = await this.readOnce(`capsules/${parentKey}/audios/${capsuleId}/draft`)
-
-    return draft
   }
 }

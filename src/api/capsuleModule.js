@@ -1,4 +1,4 @@
-import FirebaseDB from './lib/FirebaseDB'
+import FirebaseDB from './Firebase'
 
 export default class CapsuleModule extends FirebaseDB {
   async loadLimit (limit = 1) {

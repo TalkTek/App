@@ -29,6 +29,14 @@ export default class FirebaseDB {
     return await this.database.ref(`${path}`).once('value')
   }
 
+  updateSpecificField(path='', value) {
+    try {
+      return this.database.ref(`${path}`).updateChildValues(value)
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
   /**
    * read data from path 
    * @param {string/firebase db} path 

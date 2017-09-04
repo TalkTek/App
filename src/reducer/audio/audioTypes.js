@@ -26,6 +26,11 @@ module.exports = KeyMirror({
   AUDIO_UPDATE_INFO: null,
   // -----R_START--------------------
 
+  SET_EVALUATION: null,
+  SET_EVALUATION_REQUEST: null,
+  SET_EVALUATION_SUCCESS: null,
+  SET_EVALUATION_FAILURE: null,
+
   PLAY: null,
   PLAY_REQUEST: null,
   PLAY_SUCCESS: null,
