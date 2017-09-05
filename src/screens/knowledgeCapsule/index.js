@@ -182,7 +182,7 @@ export class KnowledgeCapsule extends Component {
     }, 'secret')
     Share.share({
       title: 'talk 小講膠囊分享',
-      url: `http://192.168.31.111:3000/capsule/${token}`
+      url: `https://talktekfront.herokuapp.com/capsule/${token}`
     })
   }
 
