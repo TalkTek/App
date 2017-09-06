@@ -51,10 +51,10 @@ export class Download extends Component {
   componentDidMount() {
     this.props.actions.cpAudioDownloadedInfoGet()
   }
-  onPress = (audio, index) => {
-    this.props.actions.cpAudioInfoGetSuccess(audio)
-    this.props.actions.audioLoad({audio: audio, pos: index, i: -1, j: -1})
-    this.props.actions.showAudioPopoutBar()
+
+  onPress = (parentKey, childKey) => {
+    const { actions } = this.props
+    actions.onPress(parentKey, childKey, 'local')
   }
 
   render() {
@@ -73,7 +73,7 @@ export class Download extends Component {
           <View key={i + j} style={styles.capUnit}>
             <TouchableHighlight
               style={styles.capPlayPauseButton}
-              //onPress={() => this.onPress(capsules[parentKey], i)}
+              onPress={() => this.onPress(parentKey, childKey)}
               underlayColor="#fff"
             >
             <View style={styles.capAudio}>

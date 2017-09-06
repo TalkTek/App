@@ -192,7 +192,7 @@ export default class KnowledgeCapsule extends Component {
                           <TouchableHighlight
                             onPress={() => {
                               console.log(audio.audioName + ' download')
-                              this.props.actions.cpAudioDownload({...audio, parentKey: parentKey})
+                              this.props.actions.cpAudioDownload({...audio, parentKey: parentKey, title: capsules[parentKey].title})
                               }}
                           >
                             <Text style={{textAlign: 'center', textAlignVertical: 'center', lineHeight: 28}}>{'下載'}</Text>

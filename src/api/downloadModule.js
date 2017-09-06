@@ -10,18 +10,22 @@ export default class DownlaodModule {
     let res = await RNFetchBlob
       .config({
         fileCache: true,
-        appendExt: 'm4a'
+        appendExt: 'mp3'
       })
       .fetch('GET', audio.url, {
       })
       .progress((received, total) => {
         console.log('progress', received / total)
       })
-    audio.url = 'file://' + res.path()
+    let newaudio = {
+      ...audio,
+      url: 'file://' + res.path(),
+      active: false
+    }
     global.storageGlobal.save({
       key: 'capsule-audio',
-      id: audio.id,
-      data: audio
+      id: newaudio.id,
+      data: newaudio
     })
     console.log(res.path())
     return res.path()
@@ -40,7 +44,8 @@ export default class DownlaodModule {
     for (let childKey in childobject) {
       capsuleobject[childobject[childKey].parentKey] = {
         ...capsuleobject[childobject[childKey].parentKey],
-        audios: {}
+        audios: {},
+        title: childobject[childKey].title
       }
     }
     for (let childKey in childobject) {

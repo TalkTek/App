@@ -22,11 +22,30 @@ import {
 function * loadCapsules ({payload}) {
   let { lastKey, limitToLast } = payload
   let capsules
-
+  
   if (lastKey) {
     capsules = yield call(() => new CapsuleModule().loadLimitWithLastKey(limitToLast + 1, lastKey))
   } else {
-    capsules = yield call(() => new CapsuleModule().loadLimit(limitToLast + 1))
+    let downloadedCapsules = yield call(new DownloadModule().getDownloadedCapsules)
+    let remoteCapsules = {}
+    try {
+      remoteCapsules = yield new Promise((resolve, reject) => {
+        let status = false
+        new CapsuleModule().loadLimit(limitToLast + 1).then((remoteCapsules) => {
+          status = true
+          resolve(remoteCapsules)
+        })
+        setTimeout(() => {
+          if (!status) {
+            reject(null)
+          }
+        }, 5000)
+      })
+    } catch (e) {
+      console.log('yoooo')
+    }
+    capsules = {...downloadedCapsules, ...remoteCapsules}
+    console.log(capsules)
   }
   for (let parentKey in capsules) {
     for (let childkey in capsules[parentKey].audios) {
