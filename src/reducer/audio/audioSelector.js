@@ -4,19 +4,24 @@ import {
 
 const getAudioState = state => state.audio
 
-const getCapsules = (parentKey, childKey) => createSelector(
+const getCapsule = (parentKey, childKey) => createSelector(
   getAudioState,
   audioState => {
     return audioState.capsules[parentKey].audios[childKey]
   }
 )
 
-const getPreviousKey = () => createSelector(
+const getCapsules = (parentKey = undefined) => createSelector(
   getAudioState,
   audioState => {
-    return audioState.previousKey
+    return parentKey ? audioState.capsules[parentKey].audios : audioState.capsules
   }
 )
+
+/**
+ * use for the change of button's color, you need to know the key of the button
+ * , by it, if user press new button, you can reset its color by the record
+ */
 
 const getIsPlayedInfo = () => createSelector(
   getAudioState,
@@ -46,11 +51,30 @@ const getCurrentTimeSec = () => createSelector(
   }
 )
 
+const getCurrentKey = () => createSelector(
+  getAudioState,
+  audioState => {
+    return {
+      parentKey: audioState.playingAudioStaticInfo.parentKey,
+      childKey: audioState.playingAudioStaticInfo.id
+    }
+  }
+)
+
+const getPreviousKey = () => createSelector(
+  getAudioState,
+  audioState => {
+    return audioState.previousKey
+  }
+)
+
 export {
+  getCapsule,
   getCapsules,
-  getPreviousKey,
   getIsPlayedInfo,
   getAudioLengthBySec,
   isPlaying,
-  getCurrentTimeSec
+  getCurrentTimeSec,
+  getCurrentKey,
+  getPreviousKey
 }

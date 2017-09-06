@@ -35,8 +35,7 @@ class PlayerFactory {
   }
 
   nextOrPrevious (url) {
-    this.init(url)
-    this.play()
+    this.initAndPlay(url)
   }
 
   isPlayerExisted () {
