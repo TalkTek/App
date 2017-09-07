@@ -25,7 +25,6 @@ import {
   SEEK,
   SET_EVALUATION
 } from './audioTypes'
-import AudioModule from '../../api/audioModule'
 import {
   getCapsule,
   getCapsules,
@@ -43,26 +42,6 @@ import memberActions from '../member/memberAction'
 import playerFactory from '../../factory/playerFactory'
 import audioAPI from './audioAPI'
 import memberAPI from '../member/memberAPI'
-
-function * setAudioGoodState (data) {
-  const { isGood, capsulesId, parentKey, userId } = data.payload
-  let audioInfo = yield call(() => new AudioModule().getAudioInfo(capsulesId, parentKey))
-  try {
-    let likeCounter = yield call(() => new AudioModule()[isGood ? 'cpAudioGood' : 'cpAudioNotGood'](capsulesId, parentKey, userId, (audioInfo.likeCounter||0) + (isGood ? +1 : -1)))
-    yield put({
-      type: CP_AUDIO_GOOD_CHANGE_SUCCESS,
-      payload: {
-        isGood,
-        likeCounter
-      }
-    })
-  } catch (e) {
-    yield put({
-      type: CP_AUDIO_GOOD_CHANGE_FAILURE,
-      payload: e
-    })
-  }
-}
 
 /**
  * set like to certain capsule on firebase

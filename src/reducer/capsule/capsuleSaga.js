@@ -5,7 +5,7 @@ import {
   all,
   takeLatest
 } from 'redux-saga/effects'
-import CapsuleModule from '../../api/capsuleModule'
+import capsuleAPI from './capsuleAPI'
 import {
   LOAD_CP_AUDIO_SUCCESS,
   CP_AUDIO_STORE
@@ -23,9 +23,9 @@ function * loadCapsules ({payload}) {
   let capsules
 
   if (lastKey) {
-    capsules = yield call(() => new CapsuleModule().loadLimitWithLastKey(limitToLast + 1, lastKey))
+    capsules = yield call(capsuleAPI.loadLimitWithLastKey, limitToLast + 1, lastKey)
   } else {
-    capsules = yield call(() => new CapsuleModule().loadLimit(limitToLast + 1))
+    capsules = yield call(capsuleAPI.loadLimit, limitToLast + 1)
   }
   yield put({type: CP_AUDIO_STORE, payload: capsules})
   // capsules = Object.keys(capPush)
