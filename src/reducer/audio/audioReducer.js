@@ -29,6 +29,7 @@ import {
   PLAY_SUCCESS,
   PAUSE_SUCCESS,
   SET_LIKE_EVALUATION_ON_CAPSULE_SUCCESS,
+  REMOVE_LIKE_EVALUATION_ON_CAPSULE_SUCCESS,
 } from './audioTypes'
 /* eslint-disable*/
 
@@ -70,6 +71,15 @@ export default createReducder({
       capsules: {
         ...state.capsules,
         ...action.payload
+      }
+    }
+  },
+  [REMOVE_LIKE_EVALUATION_ON_CAPSULE_SUCCESS]: (state, action) => {
+    return {
+      ...state,
+      playingAudioStaticInfo: {
+        ...state.playingAudioStaticInfo,
+        likeCounter: state.playingAudioStaticInfo.likeCounter - 1
       }
     }
   },

@@ -54,6 +54,8 @@ export default createActions({
 
   [REMOVE_FAVORITE_CAPSULE_ON_USER]: state => state,
   [REMOVE_FAVORITE_CAPSULE_ON_USER_REQUEST]: state => state,
-  [REMOVE_FAVORITE_CAPSULE_ON_USER_SUCCESS]: state => state,
-  [REMOVE_FAVORITE_CAPSULE_ON_USER_FAILURE]: state => state
+  [REMOVE_FAVORITE_CAPSULE_ON_USER_FAILURE]: state => state,
+  [REMOVE_FAVORITE_CAPSULE_ON_USER_SUCCESS]: capsuleId => ({
+    capsuleId
+  })
 })
