@@ -4,6 +4,8 @@ import {
 
 const getAudioState = state => state.audio
 
+const getMemberState = state => state.member
+
 const getCapsule = (parentKey, childKey) => createSelector(
   getAudioState,
   audioState => {
@@ -15,6 +17,13 @@ const getCapsules = (parentKey = undefined) => createSelector(
   getAudioState,
   audioState => {
     return parentKey ? audioState.capsules[parentKey].audios : audioState.capsules
+  }
+)
+
+const getLikeCounter = () => createSelector(
+  getAudioState,
+  audioState => {
+    return audioState.playingAudioStaticInfo.likeCounter
   }
 )
 
@@ -76,5 +85,7 @@ export {
   isPlaying,
   getCurrentTimeSec,
   getCurrentKey,
-  getPreviousKey
+  getPreviousKey,
+  getMemberState,
+  getLikeCounter
 }

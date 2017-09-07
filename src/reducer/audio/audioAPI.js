@@ -1,13 +1,21 @@
 import FirebaseDB from '../../api/Firebase'
 
-export default class AudioAPI extends FirebaseDB {
-  setPositive (parentKey, childKey, likeCounter) {
-    let path = `capsules/${parentKey}/audios/${childKey}/likeCounter`
-    this.updateSpecificField(path, likeCounter)
+class AudioAPI extends FirebaseDB {
+  setLike = (parentKey, capsuleId, likeCounter) => {
+    let path = `capsules/${parentKey}/audios/${capsuleId}`
+    this.update(path, {
+      likeCounter: likeCounter
+    })
   }
 
-  removePositive (parentKey, childKey, likeCounter) {
-    let path = `capsules/${parentKey}/audios/${childKey}/likeCounter`
-    this.updateSpecificField(path, likeCounter)
+  removeLike = (parentKey, capsuleId, likeCounter) => {
+    let path = `capsules/${parentKey}/audios/${capsuleId}`
+    this.update(path, {
+      likeCounter: likeCounter
+    })
   }
 }
+
+const audioAPI = new AudioAPI()
+
+export default audioAPI

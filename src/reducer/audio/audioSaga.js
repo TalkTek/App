@@ -5,7 +5,7 @@ import {
   select,
   take,
   put,
-  cancelled,
+  cancelled
 } from 'redux-saga/effects'
 import {
   eventChannel,
@@ -34,10 +34,15 @@ import {
   getCurrentTimeSec,
   isPlaying,
   getCurrentKey,
-  getPreviousKey
+  getPreviousKey,
+  getLikeCounter,
+  getMemberState
 } from './audioSelector'
 import audioActions from './audioAction'
+import memberActions from '../member/memberAction'
 import playerFactory from '../../factory/playerFactory'
+import audioAPI from './audioAPI'
+import memberAPI from '../member/memberAPI'
 
 function * setAudioGoodState (data) {
   const { isGood, capsulesId, parentKey, userId } = data.payload
@@ -59,12 +64,75 @@ function * setAudioGoodState (data) {
   }
 }
 
-function * setPositiveOnCapsule (isPositive, capsuleId, parentKey) {
+/**
+ * set like to certain capsule on firebase
+ * if successfully, add 1 from likeCounter in redux store
+ * @param capsuleId
+ * @param parentKey
+ * string: eg: 'Ks7-sSKFSDFJKSDFKJKSF'
+ */
+function * setLikeOnCapsule (capsuleId, parentKey) {
   try {
-
-
+    yield put(audioActions.setLikeEvaluationOnCapsuleRequest())
+    const likeCounter = yield select(getLikeCounter())
+    yield call(audioAPI.setLike, parentKey, capsuleId, likeCounter + 1)
+    yield put(audioActions.setLikeEvaluationOnCapsuleSuccess())
   } catch (error) {
+    throw new Error(error)
+  }
+}
 
+/**
+ * add the audio's key info into favorite field of the member on firebase
+ * if successfully, save the audio id into the member in redux store
+ * @param capsuleId
+ * @param parentKey
+ * @param memberUid
+ * string: eg: 'Ks7-sSKFSDFJKSDFKJKSF'
+ */
+function * setFavoriteCapsuleOnUser (capsuleId, parentKey, memberUid) {
+  try {
+    yield put(memberActions.setFavoriteCapsuleOnUserRequest())
+    yield call(memberAPI.setFavoriteCapsule, memberUid, capsuleId, parentKey)
+    yield put(memberActions.setFavoriteCapsuleOnUserSuccess(capsuleId, parentKey))
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+/**
+ * remove like to certain capsule on firebase
+ * if successfully, subtract 1 from likeCounter in redux store
+ * @param capsuleId
+ * @param parentKey
+ * string: eg: 'Ks7-sSKFSDFJKSDFKJKSF'
+ */
+function * removeLikeOnCapsule (capsuleId, parentKey) {
+  try {
+    yield put(audioActions.removeLikeEvaluationOnCapsuleRequest())
+    const likeCounter = yield select(getLikeCounter())
+    yield call(audioAPI.removeLike, parentKey, capsuleId, likeCounter - 1)
+    yield put(audioActions.removeLikeEvaluationOnCapsuleSuccess())
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+/**
+ * remove the audio in favorite field of the member on firebase
+ * if successfully, remove the audio id in the member in redux store
+ * @param capsuleId
+ * @param capsuleId
+ * @param memberUid
+ * string: eg: 'Ks7-sSKFSDFJKSDFKJKSF'
+ */
+function * removeFavoriteCapsuleOnUser (capsuleId, memberUid) {
+  try {
+    yield put(memberActions.removeFavoriteCapsuleOnUserRequest())
+    yield call(memberAPI.removeFavoriteCapsule, memberUid, capsuleId)
+    yield put(memberActions.removeFavoriteCapsuleOnUserSuccess(capsuleId))
+  } catch (error) {
+    throw new Error(error)
   }
 }
 
@@ -315,7 +383,7 @@ function * getPreviousCapsuleFlow () {
  * @param parentKey
  * @param nextKey : the next audio key
  * string, eg: '7w4SEKsFJLHKDKFJKLS'
-**/
+ **/
 function * getCapsuleIfPreviousChildExisted (parentKey, nextKey) {
   try {
     const capsules = yield select(getCapsules(parentKey))
@@ -562,9 +630,9 @@ function * updateButtonColor (parentKey, childKey) {
     if (isPlayed) {
       yield put(audioActions.removeColorRequest())
       yield put(audioActions.removeColorSuccess({
-              parentKey: previousKey.father,
-              childKey: previousKey.child
-            }))
+        parentKey: previousKey.father,
+        childKey: previousKey.child
+      }))
       yield put(audioActions.addColorRequest())
       yield put(audioActions.addColorSuccess({parentKey, childKey}))
     } else {
@@ -574,7 +642,7 @@ function * updateButtonColor (parentKey, childKey) {
   } catch (error) {
     throw new Error(error)
   }
-} 
+}
 
 /**
  * get url and call initAndPlay function through the playFactory
@@ -610,7 +678,7 @@ function * getAudioFilePicked (parentKey, childKey) {
   try {
     let capsule = yield select(getCapsule(parentKey, childKey))
     return capsule
-  } catch( error) {
+  } catch (error) {
     throw new Error(error.message)
   }
 }
@@ -631,7 +699,7 @@ function * getAudioFilePicked (parentKey, childKey) {
  *  url: "https://firebasestorage.googlepis.com/dfkajlksfjkf....",
  * }
  */
-function * setCapsulePickedIntoReduxStore(capsule) {
+function * setCapsulePickedIntoReduxStore (capsule) {
   try {
     yield put(audioActions.savePlayingAudioStaticInfoRequest())
     yield put(audioActions.savePlayingAudioStaticInfoSuccess({capsule}))
@@ -658,7 +726,7 @@ function * setKey (parentKey, childKey) {
   }
 }
 
-//-------------------------WATCHER START-------------------------------
+// -------------------------WATCHER START-------------------------------
 function * onPressFlow () {
   while (true) {
     const {payload: {parentKey, childKey}} = yield take(ON_PRESS)
@@ -749,32 +817,32 @@ function * previousFlow () {
   }
 }
 
-function * togglePositiveFlow () {
+function * toggleLikeFlow () {
   while (true) {
-    const {
-      payload: {
-        isPositive,
-        capsuleId,
-        parentKey,
-        memberUid
-      }
-    } = yield take(SET_EVALUATION)
+    yield take(SET_EVALUATION)
+    yield put(audioActions.setEvaluationRequest())
+    const userInfo = yield select(getMemberState)
+    const currentKey = yield select(getCurrentKey())
+    let isLike = userInfo.favoriteCapsule[currentKey.childKey]
 
-    if (isPositive) {
-      yield call(setPositiveOnCapsule, isPositive, capsuleId, parentKey)
+    // the capsule was not set Like before
+    if (!isLike) {
+      // set like on capsule on firebase , if successfully, will set likeCounter in audio in redux store
+      yield call(setLikeOnCapsule, currentKey.childKey, currentKey.parentKey)
+      // set favoriteCapsule on user on firebase , if successfully, will add new favorite capusle in member in redux store
+      yield call(setFavoriteCapsuleOnUser, currentKey.childKey, currentKey.parentKey, userInfo.uid)
     } else {
-      yield call(removePositiveOnCapsule, isPositive, capsuleId, parentKey)
+      // remove like on capsule on firebase , if successfully, will set likeCounter in audio in redux store
+      yield call(removeLikeOnCapsule, currentKey.childKey, currentKey.parentKey)
+      // remove favoriteCapsule on user on firebase , if successfully, will add new favorite capusle in member in redux store
+      yield call(removeFavoriteCapsuleOnUser, currentKey.childKey, userInfo.uid)
     }
-
-    // toggle Postive to specific capusle
-    // setPostive to user's favorite capsule
-    yield call(togglePostiveOnUser, isPositive, capsuleId, parentKey, memberUid)
     // update reducer's data: likeCounter
-    yield put(audioActions.setPositiveSuccess(isPositive))
+    yield put(audioActions.setEvaluationSuccess())
   }
 }
 
-//-------------------------WATCHER END-------------------------------
+// -------------------------WATCHER END-------------------------------
 
 export default [
   fork(onPressFlow),
@@ -785,5 +853,5 @@ export default [
   fork(backward15Flow),
   fork(nextFlow),
   fork(previousFlow),
-  fork(togglePositiveFlow)
+  fork(toggleLikeFlow)
 ]

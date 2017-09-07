@@ -70,9 +70,9 @@ class PlayAudio extends Component {
        good: {
           notActive: require('../../assets/img/playAudio/good.png'),
           active: require('../../assets/img/playAudio/goodActive.png'),
-          checkActive: this.isGood,
+          checkActive: () => this.isGood(),
           name: 'likeCounter',
-          func: this._audioIsGoodToggle
+          func: () => this._audioIsGoodToggle()
         },
         // timer: {
         //   notActive: require('../../assets/img/playAudio/timer.png'),
@@ -145,8 +145,10 @@ class PlayAudio extends Component {
   }
 
   isGood = () => {
-    const { userFavoriteCapsules, capsulesId } = this.props
-    return userFavoriteCapsules[capsulesId]
+    const { userFavoriteCapsules, capsuleId } = this.props
+    console.log('userFavoriteCapsules', userFavoriteCapsules )
+    console.log('capsulesId', capsuleId)
+    return userFavoriteCapsules[capsuleId]
   }
 
   _onSlidingComplete = (pos) => {
@@ -167,9 +169,9 @@ class PlayAudio extends Component {
     this.refs.docScreen.open()
   }
 
-  _audioIsGoodToggle() {
-    const { userFavoriteCapsules, capsulesId } = this.props
-    let isPositive = userFavoriteCapsules[capsulesId]
+  _audioIsGoodToggle = () => {
+    const { userFavoriteCapsules, capsuleId } = this.props
+    let isPositive = userFavoriteCapsules[capsuleId]
 
     this.props.ga.gaSetEvent({
       category: 'capsule',
@@ -228,16 +230,23 @@ class PlayAudio extends Component {
     } = this.props
 
     const footerButtons = Object.values(this.buttons.footer).map((button, i) => {
+      if(typeof button.checkActive === 'function') {
+        console.log('checkActive====>', button.checkActive() )
+      }
       return (
         <TouchableHighlight
           transparent
           key={i}
-          onPress={typeof button.func === 'function'? button.func.bind(this): null}
+          onPress={typeof button.func === 'function'? () => button.func(): null}
           underlayColor="#fff"
         >
           <View style={styles.footerFunUnit}>
             <FunctionIcon
-              source={button.checkActive? button.active: button.notActive}
+              source={
+                typeof button.checkActive === 'function'
+                  ? (button.checkActive() ? button.active : button.notActive)
+                  : undefined
+              }
             />
             <Text
               style={styles.footerText}

@@ -12,7 +12,7 @@ export default class FirebaseDB {
    * @return {Promise}
    */
   write(path = '', value) {
-    return this.database.ref(`${path}`).set(value)
+    return this.database.ref(path).set(value)
   }
 
   /**
@@ -22,7 +22,7 @@ export default class FirebaseDB {
    * @return {Promise} 
    */
   update(path = '', value) {
-    return this.database.ref(`${path}`).update(value)
+    return this.database.ref(path).update(value)
   }
 
   async _read(path) {

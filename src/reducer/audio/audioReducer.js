@@ -28,6 +28,7 @@ import {
   SAVE_PREVIOUS_KEY_SUCCESS,
   PLAY_SUCCESS,
   PAUSE_SUCCESS,
+  SET_LIKE_EVALUATION_ON_CAPSULE_SUCCESS,
 } from './audioTypes'
 /* eslint-disable*/
 
@@ -49,15 +50,15 @@ const initialState = {
       formatted: '',
       sec: ''
     },
-    likeCounter: '',
     url: '',
-    parentKey: ''
+    parentKey: '',
+    likeCounter: 0,
   },
   playingAudioDynamicInfo: {
     currentTime: {
       formatted: '',
-      sec: ''
-    }
+      sec: '',
+    },
   },
   isAudioPopOutBarActive: false
 }
@@ -69,6 +70,15 @@ export default createReducder({
       capsules: {
         ...state.capsules,
         ...action.payload
+      }
+    }
+  },
+  [SET_LIKE_EVALUATION_ON_CAPSULE_SUCCESS]: (state, action) => {
+    return {
+      ...state,
+      playingAudioStaticInfo: {
+        ...state.playingAudioStaticInfo,
+        likeCounter: state.playingAudioStaticInfo.likeCounter + 1
       }
     }
   },
@@ -142,6 +152,7 @@ export default createReducder({
     return {
       ...state,
       playingAudioDynamicInfo: {
+        ...state.playingAudioDynamicInfo,
         currentTime: {
           formatted: action.payload.currentTimeFormatted,
           sec: action.payload.currentTimeSec
