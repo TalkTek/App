@@ -300,10 +300,11 @@ export default createReducder({
     }
   },
   [UPDATE_CP_AUDIO]: (state, {payload}) => {
-    const {parentKey, id} = payload
+    const {parentKey, id, url} = payload
     console.log(state)
     let capsules = Object.assign({}, state.capsules)
     capsules[parentKey].audios[id].downloaded = true
+    capsules[parentKey].audios[id].url = url
     return {
       ...state,
       capsules

@@ -17,9 +17,10 @@ export default class DownlaodModule {
       .progress((received, total) => {
         console.log('progress', received / total)
       })
+    const path = 'file://' + res.path()
     let newaudio = {
       ...audio,
-      url: 'file://' + res.path(),
+      url: path,
       active: false
     }
     global.storageGlobal.save({
@@ -28,7 +29,7 @@ export default class DownlaodModule {
       data: newaudio
     })
     console.log(res.path())
-    return res.path()
+    return path
   }
 /**
  * get downloaded capsules

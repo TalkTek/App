@@ -43,7 +43,8 @@ function * saveAudioFile (data) {
   yield put({
     type: UPDATE_CP_AUDIO,
     payload: {
-      ...data.payload
+      ...data.payload,
+      url: filepath
     }
   })
 }

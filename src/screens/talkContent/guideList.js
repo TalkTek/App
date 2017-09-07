@@ -24,8 +24,8 @@ const audioUrl2 = 'https://firebasestorage.googleapis.com/v0/b/talktek-4edac.app
 const audioUrl3 = 'https://firebasestorage.googleapis.com/v0/b/talktek-4edac.appspot.com/o/2.b%20%E5%B0%88%E6%A5%AD%E4%B8%8D%E5%A4%A0%EF%BC%8C%E8%AE%93%E5%A4%A7%E5%AE%B6%E7%9F%A5%E9%81%93%E4%BD%A0%E5%BE%88%E5%B0%88%E6%A5%AD%E6%89%8D%E6%98%AF%E8%A6%81%E7%B7%8A%E4%BA%8B.m4a?alt=media&token=9ca88bc4-767f-48f6-a0d9-9350fcdab11a'
 
 let icons = {
-  'play': require('../../assets/img/play@2x.png'),
-  'stop': require('../../assets/img/pause@2x.png')
+  // 'play': require('../../assets/img/play@2x.png'),
+  // 'stop': require('../../assets/img/pause@2x.png')
 }
 
 export default class GuideList extends Component {
