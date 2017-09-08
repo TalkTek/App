@@ -6,7 +6,7 @@ import {
   GA_SET_SCREEN,
   GA_SET_EVENT
 } from './analyticTypes'
-import Analytic from '../../api/lib/Analytic'
+import Analytic from '../../api/Analytic'
 
 /**
  * subroutines

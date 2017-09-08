@@ -6,7 +6,7 @@ import IntroAccordion from './introAccordion'
 import Info from './info'
 import GuideList from './guideList'
 import { Container, Content } from 'native-base'
-import FirebaseDB from '../../api/lib/FirebaseDB'
+import Firebase from '../../api/Firebase'
 import LectureModule from '../../api/lectureModule'
 
 const styles = {

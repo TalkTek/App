@@ -1,4 +1,4 @@
-import FirebaseDB from './lib/FirebaseDB'
+import FirebaseDB from './Firebase'
 
 export default class memberModule extends FirebaseDB {
   async writeProfile (uid, memberState) {
@@ -11,24 +11,6 @@ export default class memberModule extends FirebaseDB {
     }
 
     this.write(path, Object.assign(profile, memberState))
-  }
-
-  async getLikeCapsule (uid) {
-    let path = `users/${uid}/favorite`
-    let data = await this.readOnce(path)
-    let capsules = []
-
-    if (data) {
-      for (let key in data) {
-        if (data.hasOwnProperty(key)) {
-          let { parentKey } = data[key]
-          let tmp = await this.readOnce(`capsules/${parentKey}/audios/${key}`)
-          tmp.author = tmp.audioName
-          capsules.push(tmp)
-        }
-      }
-      return capsules
-    }
   }
 
   async changeMemberProfile (uid, memberData) {
@@ -79,9 +61,9 @@ export default class memberModule extends FirebaseDB {
     }
   }
 
-  async getMemberState (uid) {
+  async getMemberInfo (uid) {
     try {
-      return await this.readOnce(`/users/${uid}/profile`)
+      return await this.readOnce(`/users/${uid}/`)
     } catch (e) {
       return e
     }

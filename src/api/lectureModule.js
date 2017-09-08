@@ -1,6 +1,6 @@
-import FirebaseDB from './lib/FirebaseDB'
+import Firebase from './Firebase'
 
-export default class LectureModule extends FirebaseDB {
+export default class LectureModule extends Firebase {
   async load (id) {
     let db = this.database
       .ref(`lectures/${id}`)

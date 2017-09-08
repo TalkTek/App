@@ -5,8 +5,6 @@ import React, { Component } from 'react'
 import { Provider, connect } from 'react-redux'
 import createStore from './lib/configureStore'
 import CodePush from 'react-native-code-push'
-// import AudioComponents from './components/AudioComponents'
-import AudioPlayerComponents from './components/AudioPlayerComponents'
 import './lib/global'
 import {
   StatusBar,
@@ -19,9 +17,11 @@ import {
 } from 'react-native-router-flux'
 
 import Launch from './screens/Launch'
-import MemberCenterTab from './screens/memberCenter/Tab'
 import KnowledgeCapsuleTab from './screens/knowledgeCapsule/Tab'
-import TaikContentTab from './screens/talkContent/Tab'
+import MemberCenterTab from './screens/memberCenter/Tab'
+import MemberInfo from './screens/memberCenter/subscreen/memberInfo'
+import FeedBack from './screens/memberCenter/subscreen/feedback'
+import PlayAudioScreen from './screens/playAudio'
 import Login from './screens/loginOrRegister/login'
 import Register from './screens/loginOrRegister/register'
 import ForgotPassword from './screens/loginOrRegister/forgetpw'
@@ -54,9 +54,8 @@ class App extends Component {
               <Scene
                 key='popOutBar'
                 component={PopOutBar}
-                initial
               />
-              <Scene key='modal' modal hideNavBar initial>
+              <Scene key='modal' hideNavBar initial>
                 <Scene
                   key='root'
                   hideNavBar
@@ -64,18 +63,17 @@ class App extends Component {
                   initial
                 >
                   <Scene
-                    animationEnabled={false}
-                    key='player'
-                    replace
-                    hideNavBar
-                    component={AudioPlayerComponents}
-                  />
-                  <Scene
                     key='launch'
                     component={Launch}
                     initial
                     hideNavBar
                     hideTabBar
+                  />
+                  <Scene
+                    key='playAudioScreen'
+                    hideNavBar
+                    component={PlayAudioScreen}
+                    direction='vertical'
                   />
                   <Scene
                     key='login'

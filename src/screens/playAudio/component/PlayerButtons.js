@@ -11,7 +11,7 @@ import analyticAction from '../../../reducer/analytic/analyticAction'
 const mapStateToProps = (state) => {
   return {
     playState: state.audio.isPlaying,
-    audioName: state.audio.playingAudioInfo.name
+    audioName: state.audio.playingAudioStaticInfo.audioName
   }
 }
 

@@ -28,23 +28,26 @@ import Modal from 'react-native-modalbox'
 import FunctionIcon from '../../components/img/icon/XLIcon'
 import CloseIcon from '../../components/img/icon/XSmallIcon'
 import Banner from '../../components/img/banner/fullWidthBanner'
+import { Actions } from 'react-native-router-flux'
 import PlayerButtons from './component/PlayerButtons'
 import FooterButtons from './component/FooterButtons'
 import { H2, H4, H5 } from '../../components/text'
 
 const mapStateToProps = (state) => {
   return {
+    isPlaying: state.audio.isPlaying,
     memberUid: state.member.uid,
-    likeCounter: state.audio.playingAudioInfo.likeCounter,
-    audioIsGood: state.audio.playingAudioInfo.audioIsGood,
-    capsulesId: state.audio.playingAudioInfo.capsulesId,
-    parentKey: state.audio.playingAudioInfo.parentKey,
+    likeCounter: state.audio.playingAudioStaticInfo.likeCounter,
+    userFavoriteCapsules: state.member.favoriteCapsule,
+    capsuleId: state.audio.playingAudioStaticInfo.id,
+    parentKey: state.audio.playingAudioStaticInfo.parentKey,
     playState: state.audio.isPlaying,
-    audioName: state.audio.playingAudioInfo.name,
-    audioLengthFormatted: state.audio.playingAudioInfo.length.formatted,
-    audioLengthSec: Number(state.audio.playingAudioInfo.length.sec),
-    currentTimeFormatted: state.audio.playingAudioInfo.currentTime.formatted,
-    currentTimeSec: Number(state.audio.playingAudioInfo.currentTime.sec)
+    audioName: state.audio.playingAudioStaticInfo.audioName,
+    audioUrl: state.audio.playingAudioStaticInfo.url,
+    audioLengthFormatted: state.audio.playingAudioStaticInfo.length.formatted,
+    audioLengthSec: Number(state.audio.playingAudioStaticInfo.length.sec),
+    currentTimeFormatted: state.audio.playingAudioDynamicInfo.currentTime.formatted,
+    currentTimeSec: Number(state.audio.playingAudioDynamicInfo.currentTime.sec)
   }
 }
 
@@ -65,6 +68,8 @@ class PlayAudio extends Component {
 
   
   componentDidMount() {
+    const { actions } = this.props
+    actions.hideAudioPopoutBar()
     this.props.ga.gaSetEvent({
       category: 'capsule',
       action: 'open player',
@@ -74,11 +79,27 @@ class PlayAudio extends Component {
       }
     })
   }
-  
-  _onSlidingComplete = (value) => {
-    this.props.seek(value)
+
+  playOrPause = () => {
+    const {isPlaying, actions} = this.props
+    if (!isPlaying) {
+      actions.play()
+    } else {
+      actions.pause()
+    }
   }
-  
+
+  isGood = () => {
+    const { userFavoriteCapsules, capsuleId } = this.props
+    console.log('userFavoriteCapsules', userFavoriteCapsules )
+    console.log('capsulesId', capsuleId)
+    return userFavoriteCapsules[capsuleId]
+  }
+
+  _onSlidingComplete = (pos) => {
+    this.props.actions.seek(pos)
+  }
+
   toggleModal = () => {
     this.setState({
       isModalOpen: !this.state.isModalOpen
@@ -92,8 +113,11 @@ class PlayAudio extends Component {
     })
     this.refs.docScreen.open()
   }
-  
-  _audioIsGoodToggle() {
+
+  _audioIsGoodToggle = () => {
+    const { userFavoriteCapsules, capsuleId } = this.props
+    let isPositive = userFavoriteCapsules[capsuleId]
+
     this.props.ga.gaSetEvent({
       category: 'capsule',
       action: this.props.audioIsGood? 'unlike capsule' : 'like capsule',
@@ -103,13 +127,13 @@ class PlayAudio extends Component {
       }
     })
     this.props
-    .actions
-    .cpAudioGoodChange(
-      !this.props.audioIsGood,
-      this.props.capsulesId,
-      this.props.parentKey,
-      this.props.memberUid
-    )
+      .actions
+      .setEvaluation(
+        isPositive,
+        this.props.capsuleId,
+        this.props.parentKey,
+        this.props.memberUid
+      )
   }
 
   _gaGoBack() {
@@ -122,10 +146,15 @@ class PlayAudio extends Component {
       }
     })
   }
-    
+
+  back = () => {
+    const { actions } = this.props
+    actions.showAudioPopoutBar()
+    Actions.pop()
+  }
+
   render () {
     const {
-      toggleModal,
       playState,
       audioName,
       audioLengthFormatted,
@@ -139,7 +168,7 @@ class PlayAudio extends Component {
           good: {
             notActive: require('../../assets/img/playAudio/good.png'),
             active: require('../../assets/img/playAudio/goodActive.png'),
-            checkActive: this.props.audioIsGood,
+            checkActive: this.props.userFavoriteCapsules[this.props.capsuleId],
             name: this.props.likeCounter==null?'likeCounter':this.props.likeCounter,
             func: () => this._audioIsGoodToggle()
           },
@@ -165,32 +194,32 @@ class PlayAudio extends Component {
         backward15: {
           twoState: false,
           link: require('../../assets/img/audioElement/backward15.png'),
-          func: this.props.backward15s
+          func: this.props.actions.backward15
         },
         backward: {
           twoState: false,
           link: require('../../assets/img/audioElement/backward.png'),
-          func: this.props.backward
+          func: this.props.actions.previous
         },
         playOrPause: {
           twoState: true,
           playLink: require('../../assets/img/playAudio/play.png'),
           pauseLink: require('../../assets/img/audioElement/pause.png'),
-          func: this.props.playOrPause
+          func: this.playOrPause
         },
         forward: {
           twoState: false,
           link: require('../../assets/img/audioElement/forward.png'),
-          func: this.props.forward
+          func: this.props.actions.next
         },
         forward15: {
           twoState: false,
           link: require('../../assets/img/audioElement/forward15.png'),
-          func: this.props.forward15s
+          func: this.props.actions.forward15
         },
       }
     }
-
+    console.log(this.props.actions)
     return (
       <Container style={styles.container}>
         <Header style={styles.header}>
@@ -199,7 +228,7 @@ class PlayAudio extends Component {
           <Right>
             <Button
               transparent
-              onPress={() => toggleModal()}
+              onPress={this.back}
             >
               <CloseIcon
                 source={buttons.close}
