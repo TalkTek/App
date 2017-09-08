@@ -161,7 +161,7 @@ export default class KnowledgeCapsule extends Component {
                               {audio.audioName}
                             </Text>
                             <Text style={styles.audioLengthText}>
-                              {audio.downloaded ? `${audio.length.formatted} 已下載` : audio.length.formatted}
+                              {audio.downloaded === null ? audio.length.formatted : `${audio.length.formatted} 已下載`}
                             </Text>
                             {/* <Text style={styles.audioLengthText}>
                               {audio.length ? audio.length.formatted : ''}

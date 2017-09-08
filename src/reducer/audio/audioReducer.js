@@ -28,7 +28,7 @@ import {
   SAVE_PREVIOUS_KEY_SUCCESS,
   PLAY_SUCCESS,
   PAUSE_SUCCESS,
-  UPDATE_CP_AUDIO
+  UPDATE_CP_AUDIO_ISDOWNLOADED
 } from './audioTypes'
 /* eslint-disable*/
 
@@ -299,12 +299,19 @@ export default createReducder({
       isPlaying: false
     }
   },
-  [UPDATE_CP_AUDIO]: (state, {payload}) => {
+  [UPDATE_CP_AUDIO_ISDOWNLOADED]: (state, {payload}) => {
     const {parentKey, id, url} = payload
     console.log(state)
     let capsules = Object.assign({}, state.capsules)
-    capsules[parentKey].audios[id].downloaded = true
-    capsules[parentKey].audios[id].url = url
+    if(url === null) {
+      console
+      capsules[parentKey].audios[payload.childKey].url = capsules[parentKey].audios[payload.childKey].downloaded
+      capsules[parentKey].audios[payload.childKey].downloaded = null
+    }
+    else {
+      capsules[parentKey].audios[id].downloaded = capsules[parentKey].audios[id].url
+      capsules[parentKey].audios[id].url = url
+    }
     return {
       ...state,
       capsules

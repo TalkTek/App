@@ -23,6 +23,7 @@ export default class DownlaodModule {
       url: path,
       active: false
     }
+
     global.storageGlobal.save({
       key: 'capsule-audio',
       id: newaudio.id,
@@ -59,7 +60,7 @@ export default class DownlaodModule {
     return capsuleobject
   }
 /**
- * given an id, it will look up it in local storage
+ * given an id, it will look it up in local storage
  *
  * retrun true if it find it
  */
@@ -67,5 +68,18 @@ export default class DownlaodModule {
     let capsulesID = await global.storageGlobal.getIdsForKey('capsule-audio')
     if (capsulesID.find((capsuleid) => { return capsuleid === id }) === undefined) return false
     else return true
+  }
+  /**
+   * given an id, it will look it up in local storage, then
+   */
+  removeCapsuleFromStorage (id) {
+    global.storageGlobal.remove({
+      key: 'capsule-audio',
+      id: id.childKey
+    })
+  }
+  
+  removeCapsuleFromCache (path) {
+    RNFetchBlob.fs.unlink(path.slice(0, 6))
   }
 }

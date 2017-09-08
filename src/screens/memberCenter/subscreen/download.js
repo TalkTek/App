@@ -69,29 +69,34 @@ export class Download extends Component {
         if (capsules[parentKey].audios[childKey].downloaded)
           return (
             <SwipeRow
-            style={{margin: 0}}
-            leftOpenValue={75}
             rightOpenValue={-75}
-            body={<View key={i + j} style={styles.capUnit}>
+            disableRightSwipe
+            body={<View key={i + j} style={{width: '100%'}}>
               <TouchableHighlight
-                style={styles.capPlayPauseButton}
                 onPress={() => this.onPress(parentKey, childKey)}
                 underlayColor="#fff"
               >
-              <View style={styles.capAudio}>
-              <Icon
-                source={capsules[parentKey].audios[childKey].active ? buttons.playing : buttons.playable}
-                marginRight={12}
-              />
-              <Text style={capsules[parentKey].audios[childKey].active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>
-                {capsules[parentKey].audios[childKey].audioName}
-                </Text>
-              <Text style={styles.audioLengthText}>
-                {capsules[parentKey].audios[childKey].length ? capsules[parentKey].audios[childKey].length.formatted : ''}
-                </Text>
-            </View>
+                <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                  <Icon
+                    source={capsules[parentKey].audios[childKey].active ? buttons.playing : buttons.playable}
+                    marginRight={12}
+                  />
+                  <Text style={capsules[parentKey].audios[childKey].active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>
+                    {capsules[parentKey].audios[childKey].audioName}
+                  </Text>
+                  <Text style={styles.audioLengthText}>
+                    {capsules[parentKey].audios[childKey].length ? capsules[parentKey].audios[childKey].length.formatted : ''}
+                  </Text>
+                </View>
               </TouchableHighlight>
             </View>
+            }
+            right={
+              <TouchableHighlight onPress={() => this.props.actions.cpAudioDownloadedRemove({parentKey, childKey})}>
+                <View style={{backgroundColor: 'red', height: '100%', justifyContent: 'center', alignItems: 'center'}}>
+                  <Text style={{color: 'white'}}>Delete</Text>
+                </View>
+              </TouchableHighlight>
             }
             />
           )

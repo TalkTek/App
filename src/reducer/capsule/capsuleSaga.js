@@ -55,7 +55,7 @@ function * loadCapsules ({payload}) {
         ...capsules[parentKey].audios[childkey],
         // some properties that should be handled by local
         active: false,
-        downloaded: isdownloaded
+        downloaded: isdownloaded ? capsules[parentKey].audios[childkey].url : null
         // some properties that should be handled by local
       }
     }
