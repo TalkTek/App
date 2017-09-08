@@ -76,12 +76,4 @@ export default class memberModule extends FirebaseDB {
       return e
     }
   }
-
-  addFavoriteCapsule (uid) {
-
-  }
-
-  removeFavoriteCapsule (uid) {
-
-  }
 }
