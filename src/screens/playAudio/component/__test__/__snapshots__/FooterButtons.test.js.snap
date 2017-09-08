@@ -1,0 +1,89 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`playAudio/component/FooterButtons test should render same length item 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "borderTopColor": "rgb(224, 224, 224)",
+      "borderTopWidth": 1,
+      "bottom": 10,
+      "flex": 1,
+      "flexDirection": "row",
+      "height": 75,
+      "justifyContent": "space-around",
+    }
+  }
+>
+  <View
+    accessibilityComponentType={undefined}
+    accessibilityLabel={undefined}
+    accessibilityTraits={undefined}
+    accessible={true}
+    hasTVPreferredFocus={undefined}
+    hitSlop={undefined}
+    isTVSelectable={true}
+    onLayout={undefined}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Array [
+        Object {
+          "backgroundColor": "transparent",
+        },
+        undefined,
+      ]
+    }
+    testID={undefined}
+    tvParallaxProperties={undefined}
+  >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+        }
+      }
+    >
+      <Image
+        source={1}
+        style={
+          Array [
+            Object {
+              "height": 40,
+              "marginBottom": 0,
+              "marginLeft": 0,
+              "marginRight": 0,
+              "marginTop": 0,
+              "width": 40,
+            },
+            undefined,
+          ]
+        }
+      />
+      <Text
+        accessible={true}
+        allowFontScaling={true}
+        ellipsizeMode="tail"
+        fontSize={10}
+        gray={true}
+        style={
+          Array [
+            Object {
+              "color": "rgb(158, 158, 158)",
+              "fontSize": 10,
+              "fontWeight": null,
+            },
+            undefined,
+          ]
+        }
+      >
+        likeCounter
+      </Text>
+    </View>
+  </View>
+</View>
+`;

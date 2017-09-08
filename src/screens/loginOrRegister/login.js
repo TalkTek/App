@@ -13,12 +13,10 @@ import {
 import {
   Container,
   Content,
-  Button,
   Form,
   View,
-  Text,
   Input,
-  Item,
+  Item
 } from 'native-base'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -30,6 +28,9 @@ import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge'
 import { loginStyles as styles } from './styles'
 import memberAction from '../../reducer/member/memberAction'
 import { Actions } from 'react-native-router-flux'
+import { H2, H3, H4 } from '../../components/text'
+import { Button } from '../../components/button'
+import { COLORS, LAYOUT } from 'StyleConfig'
 
 let tracker = new GoogleAnalyticsTracker('UA-100475279-1',{ test: 3})
 
@@ -161,7 +162,6 @@ export default class Login extends Component {
       password: this.state.password
     })
     tracker.trackEvent('EmailPasswordLogin', 'Fill In')
-    Actions.tab()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -186,6 +186,8 @@ export default class Login extends Component {
         errMsg,
         isOpen: true
       })
+    } else if (nextProps.sendStatus === 0 ) {
+      Actions.tab()
     }
   }
 
@@ -215,31 +217,58 @@ export default class Login extends Component {
                 />
               </Item>
             </Form>
-            <Button
-              style={{...styles.baseButton, ...styles.loginButton}}
-              onPress={this._onEmailPasswordLogin.bind(this)}
-            >
-              <Text style={styles.loginText}>
-                登入
-              </Text>
-            </Button>
-            <Text style={styles.or}>
+            <View style={LAYOUT.horizontal}>
+              <Button 
+                text='登入'
+                backgroundColor={COLORS.green}
+                textColor='white'
+                borderRadius={5}
+                padding={10}
+                fullWidth
+                onPress={this._onEmailPasswordLogin.bind(this)}
+              />
+            </View>
+            <H4 gray style={styles.or}>
               或透過第三方服務
-            </Text>
-            <Button style={{...styles.baseButton, ...styles.facebookButton}} onPress={this._onFacebookLogin.bind(this)}>
-              <Icon name="facebook-square" size={28} color="white" />
-              <Text style={styles.facebookNGoogleText}>Facebook</Text>
-            </Button>
-            <Button style={{...styles.baseButton, ...styles.googleButton}} onPress={this._onGoogleSignIn.bind(this)}>
-              <Icon name="google-plus" size={28} color="white" />
-              <Text style={styles.facebookNGoogleText}>Google</Text>
-            </Button>
-            <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={() => navigate('Register')}>
-              <Text style={styles.registerText}>註冊新帳號</Text>
-            </Button>
-            <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={() => navigate('Forgetpw')}>
-              <Text style={styles.registerText}>忘記密碼</Text>
-            </Button>
+            </H4>
+            <View style={LAYOUT.horizontal}>
+              <Button
+                text="Facebook"
+                borderRadius={5}
+                fullWidth
+                padding={5}
+                textColor={COLORS.pureWhite}
+                backgroundColor={COLORS.fbButton}
+                leftElement={<Icon name="facebook-square" size={28} color="white" />}
+                style={styles.socialButton}
+                onPress={this._onFacebookLogin.bind(this)}
+              />
+            </View>
+            <View style={LAYOUT.horizontal}>
+              <Button
+                text="Google"
+                borderRadius={5}
+                fullWidth
+                padding={5}
+                textColor={COLORS.pureWhite}
+                backgroundColor={COLORS.googleButton}
+                leftElement={<Icon name="google-plus" size={28} color="white" />}
+                style={styles.socialButton}
+                onPress={this._onGoogleSignIn.bind(this)}
+              />
+            </View>
+            <View style={LAYOUT.horizontal}>
+              <Button 
+                text='註冊新帳號'
+                textColor='green'
+                onPress={() => navigate('register')}
+              />
+              <Button 
+                text='忘記密碼'
+                textColor='green'
+                onPress={() => navigate('forgetpw')}
+              />
+            </View>
           </View>
           <Modal
             style={styles.modal}
@@ -249,13 +278,17 @@ export default class Login extends Component {
             backdropOpacity={0.3}
             isOpen={this.state.isOpen}
           >
-              <Text style={styles.modalHeadlineText}>登入失敗</Text>
-              <Text style={styles.modalErrorMsgText}>
+              <H3 bold>登入失敗</H3>
+              <H3 style={styles.modalErrorMsgText}>
                 {this.state.errMsg}
-              </Text>
-              <Button style={styles.modalButton} onPress={() => this.setState({ isOpen: !this.state.isOpen})}>
-                <Text style={styles.modalButtonText}>確認</Text>
-              </Button>
+              </H3>
+              <Button 
+                text='確認'
+                textColor='green'
+                style={styles.modalButton}
+                padding={20}
+                onPress={() => this.setState({ isOpen: !this.state.isOpen})}
+              />
           </Modal>
           <Modal
             style={styles.spinningModal}

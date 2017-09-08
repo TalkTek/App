@@ -8,8 +8,7 @@ import CodePush from 'react-native-code-push'
 import './lib/global'
 import {
   StatusBar,
-  View,
-  StyleSheet
+  View
 } from 'react-native'
 import {
   Router,
@@ -25,9 +24,10 @@ import ForgotPassword from './screens/loginOrRegister/forgetpw'
 import PopOutBar from './components/PopOutBar'
 import KnowledgeCapsuleTab from './screens/knowledgeCapsule/Tab'
 import MemberCenterTab from './screens/memberCenter/Tab'
+
 class App extends Component {
   componentDidMount () {
-    CodePush.sync({installMode: CodePush.InstallMode.ON_NEXT_RESTART})
+    CodePush.sync({ installMode: CodePush.InstallMode.ON_NEXT_RESTART })
   }
 
   render () {
@@ -43,7 +43,7 @@ class App extends Component {
 
     return (
       <Provider store={store}>
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <StatusBar
             barStyle='light-content'
           />
@@ -79,6 +79,11 @@ class App extends Component {
                     hideNavBar
                   />
                   <Scene
+                    key='forgetpw'
+                    component={ForgotPassword}
+                    hideNavBar
+                  />
+                  <Scene
                     key='register'
                     component={Register}
                     hideNavBar
@@ -108,18 +113,6 @@ class App extends Component {
   }
 }
 
-const styles = StyleSheet.create({
-  headerStyle: {
-    backgroundColor: 'rgb(31, 191, 179)',
-    height: 64
-  },
-  titleStyle: {
-    color: 'white',
-    fontSize: 17,
-    lineHeight: 22
-  }
-})
-
 let codePushOptions = {
   checkFrequency: CodePush.CheckFrequency.ON_APP_START
 }
@@ -127,4 +120,3 @@ let codePushOptions = {
 App = CodePush(codePushOptions)(App)
 
 export default App
-

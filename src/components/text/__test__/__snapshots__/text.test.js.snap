@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Text /> render correct snapshot 1`] = `
+<Text
+  accessible={true}
+  allowFontScaling={true}
+  ellipsizeMode="tail"
+  style={
+    Array [
+      Object {
+        "color": "rgb(33, 33, 33)",
+        "fontSize": undefined,
+        "fontWeight": null,
+      },
+      undefined,
+    ]
+  }
+/>
+`;
+
+exports[`<Text /> should have correct style 1`] = `
+<Text
+  accessible={true}
+  allowFontScaling={true}
+  bold={true}
+  color="#000"
+  ellipsizeMode="tail"
+  fontSize={12}
+  style={
+    Array [
+      Object {
+        "color": "#000",
+        "fontSize": 12,
+        "fontWeight": "700",
+      },
+      undefined,
+    ]
+  }
+/>
+`;
+
+exports[`<Text /> should have correct text color 1`] = `
+<Text
+  accessible={true}
+  allowFontScaling={true}
+  ellipsizeMode="tail"
+  gray={true}
+  style={
+    Array [
+      Object {
+        "color": "rgb(158, 158, 158)",
+        "fontSize": undefined,
+        "fontWeight": null,
+      },
+      undefined,
+    ]
+  }
+/>
+`;

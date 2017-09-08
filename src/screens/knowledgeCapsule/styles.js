@@ -48,18 +48,12 @@ export default {
     marginRight: 12
   },
   capAudioTextPlaying: {
-    fontSize: 15,
     width: screenWidth * 0.65,
     color: 'rgb(31, 191, 179)',
     marginRight: 5
   },
   capAudioTextNotPlaying: {
-    fontSize: 15,
     width: screenWidth * 0.65,
     marginRight: 5
-  },
-  audioLengthText: {
-    fontSize: 13,
-    color: 'rgb(158, 158, 158)'
   }
 }

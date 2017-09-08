@@ -50,7 +50,7 @@ const styles = {
 
 export default class Listitem extends Component {
     _renderListItem = (rowData: Object) => {
-        console.log('rowData is', rowData)
+        // console.log('rowData is', rowData)
         return (
           <TouchableOpacity
             key={rowData.key}

@@ -4,9 +4,7 @@
 import React, { Component } from 'react'
 import {
   View,
-  Text,
   Image,
-  Button,
   TouchableOpacity,
   TouchableHighlight,
   Dimensions
@@ -27,6 +25,8 @@ import ListIcon from '../../components/img/icon/SmallIcon'
 import OpenIcon from '../../components/img/icon/LargeIcon'
 import Avatar from '../../components/img/Thumbnail/LargeThumb'
 import Listitem from './Listitem'
+import { H4 } from '../../components/text'
+import { Button } from '../../components/button'
 
 const { width: screenWidth } = Dimensions.get('window')
 
@@ -110,14 +110,14 @@ export default class MemberCenter extends Component {
             source={rowData.icon}
             marginLeft={24}
           />
-          <Text style={styles.listText}>
+          <H4 style={styles.listText}>
             {rowData.text}
-          </Text>
+          </H4>
           {
             rowData.rightText &&
-            <Text style={styles.listRightText}>
+            <H4 green style={styles.listRightText}>
               {rowData.rightText}
-            </Text>
+            </H4>
           }
         </View>
         <View style={styles.listItemMore}>
@@ -140,16 +140,16 @@ export default class MemberCenter extends Component {
           }
           borderRadius={40}
         />
-        <Text
-          style={styles.email}
+        <H4 
+          style={styles.email} 
           onPress={() => {
             if (!this.props.memberUid) {
               Actions.login()
             }
           }}
         >
-          {this.props.memberUid ? this.props.memberEmail : '登入'}
-        </Text>
+          { this.props.memberUid? this.props.memberEmail: '登入' }
+        </H4>
         {
           this.props.memberUid &&
           <TouchableOpacity onPress={() => Actions.memberInfo()} style={styles.moreInfo}>
@@ -174,14 +174,15 @@ export default class MemberCenter extends Component {
             {
               this.props.memberUid
               &&
-              <TouchableHighlight
-                color="#212121"
+              <Button 
+                text="登出" 
+                border={1}
+                borderRadius={8}
+                textSize='h4'
+                padding={12}
                 onPress={this._logout}
                 style={styles.logout}
-                underlayColor="#fff"
-              >
-                <Text>登出</Text>
-              </TouchableHighlight>
+                />  
             }
           </View>
         </Content>

@@ -1,0 +1,70 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Button /> render output should be same with expect 1`] = `
+<View
+  accessibilityComponentType={undefined}
+  accessibilityLabel={undefined}
+  accessibilityTraits={undefined}
+  accessible={true}
+  hitSlop={undefined}
+  isTVSelectable={true}
+  onLayout={undefined}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Object {
+      "alignItems": "center",
+      "backgroundColor": undefined,
+      "borderColor": "rgb(158, 158, 158)",
+      "borderRadius": 5,
+      "borderWidth": 1,
+      "flexDirection": "row",
+      "flexWrap": "wrap",
+      "justifyContent": "center",
+      "opacity": 1,
+      "padding": undefined,
+      "width": "100%",
+    }
+  }
+  testID={undefined}
+  tvParallaxProperties={undefined}
+>
+  <View
+    style={
+      Object {
+        "paddingLeft": 10,
+        "paddingRight": 10,
+      }
+    }
+  >
+    <Text
+      accessible={true}
+      allowFontScaling={true}
+      black={true}
+      bold={undefined}
+      ellipsizeMode="tail"
+      fontSize={15}
+      gray={null}
+      green={null}
+      pureWhite={null}
+      style={
+        Array [
+          Object {
+            "color": "rgb(33, 33, 33)",
+            "fontSize": 15,
+            "fontWeight": null,
+          },
+          undefined,
+        ]
+      }
+      white={null}
+    >
+      just a text
+    </Text>
+  </View>
+</View>
+`;

@@ -8,19 +8,20 @@ import analyticActions from '../../reducer/analytic/analyticAction'
 import capsuleAction from '../../reducer/capsule/capsuleAction'
 import downloadActions from '../../reducer/download/downloadAction'
 import { connect } from 'react-redux'
+import { createSelector } from 'reselect'
 import {
   TouchableHighlight,
   Animated,
   Dimensions,
   ActivityIndicator,
   Platform,
-  NetInfo
+  NetInfo,
+  Share
 } from 'react-native'
 import {
   Container,
   Content,
   View,
-  Text,
   Left,
   Right,
   Button,
@@ -39,6 +40,10 @@ import {
 } from 'react-native-router-flux'
 import Icon from '../../components/img/icon/SmallIcon'
 import Banner from '../../components/img/banner/fullWidthBanner'
+import ScrollBanner from '../../components/img/scrollBanner'
+import { H3, H4 } from '../../components/text'
+import { LAYOUT } from 'StyleConfig'
+import jwt from 'react-native-jwt-io'
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 console.log('screenHeight', screenHeight);
@@ -62,7 +67,7 @@ let buttons = {
   actions: bindActionCreators({...audioActions, ...analyticActions, ...capsuleAction, ...downloadActions}, dispatch),
 }))
 
-export default class KnowledgeCapsule extends Component {
+export class KnowledgeCapsule extends Component {
 
   state = {
     audioBarActive: false,
@@ -83,7 +88,7 @@ export default class KnowledgeCapsule extends Component {
     })
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { actions, lastKey } = this.props
     this.resolveData(lastKey)
     actions.gaSetScreen('KnowledgeCapsule')
@@ -123,6 +128,18 @@ export default class KnowledgeCapsule extends Component {
     }
   }
 
+  _callShare(capsuleId, parentId) {
+    // const token = btoa(`{"parentId": "${capsuleId}", "capsuleId": "${parentId}"}`)
+    const token = jwt.encode({
+      capsuleId,
+      parentId
+    }, 'secret')
+    Share.share({
+      title: 'talk 小講膠囊分享',
+      url: `https://talktekfront.herokuapp.com/capsule/${token}`
+    })
+  }
+
   render() {
     let CapUnit = null
     const {
@@ -137,9 +154,9 @@ export default class KnowledgeCapsule extends Component {
         return (
           <View key={i} style={styles.capContainer}>
             <View style={styles.capTitle}>
-              <Text style={styles.capTitleText}>
+              <H3>
                 {capsules[parentKey].title}
-              </Text>
+              </H3>
             </View>
               {
                 Object.keys(capsules[parentKey].audios).map((childKey, j) => {
@@ -156,55 +173,62 @@ export default class KnowledgeCapsule extends Component {
                             source={audio.active ? buttons.playing : buttons.playable}
                             marginRight={12}
                           />
-                          <View>
-                            <Text style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>
+                          <View style={LAYOUT.vertical}>
+                            <H3 style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>
                               {audio.audioName}
-                            </Text>
-                            <Text style={styles.audioLengthText}>
-                              {audio.downloaded === null ? audio.length.formatted : `${audio.length.formatted} 已下載`}
-                            </Text>
-                            {/* <Text style={styles.audioLengthText}>
-                              {audio.length ? audio.length.formatted : ''}
-                            </Text> */}
+                            </H3>
+                            <H4 gray style={styles.audioLengthText}>
+                                {audio.downloaded === null ? audio.length.formatted : `${audio.length.formatted} 已下載`}
+                            </H4>
                           </View>
                         </View>
                       </TouchableHighlight>
-                      <TouchableHighlight
-                    underlayColor="#fff"
-                    onPress={() => {
-                      this.setState({ fabActive: audio.id, fabScale: new Animated.Value(0) },
-                        () =>
-                          Animated.spring(
-                            this.state.fabScale,
-                            {
-                              toValue: 1,
-                              speed: 5,
-                              bounciness: 12
-                            }
-                          ).start()
-                      )
-                    }}>
-                    <View>
-                      {
-                        audio.id &&
-                        this.state.fabActive === audio.id &&
-                        <Animated.View style={{ transform: [{ scale: this.state.fabScale }], opacity: 0.9, position: 'absolute', left: -70, width: 70, height: 28, backgroundColor: 'white', borderRadius: 20, shadowColor: 'rgba(0,0,0,0.2)', shadowOffset: { width: 0, height: 1 }, shadowRadius: 5, shadowOpacity: 10 }}>
-                          <TouchableHighlight
-                            onPress={() => {
-                              console.log(audio.audioName + ' download')
-                              this.props.actions.cpAudioDownload({...audio, parentKey: parentKey, title: capsules[parentKey].title})
-                              }}
-                          >
-                            <Text style={{textAlign: 'center', textAlignVertical: 'center', lineHeight: 28}}>{'下載'}</Text>
-                          </TouchableHighlight>
-                        </Animated.View>
-                      }
-                      <Icon
-                        source={buttons.playing}
-                        style={styles.capPlayPauseButtonImage}
-                      />
-                    </View>
-                  </TouchableHighlight>
+                      <TouchableHighlight 
+                        underlayColor="#fff" 
+                        onPress={() => { 
+                          this.setState({ fabActive: audio.id, fabScale: new Animated.Value(0) }, 
+                            () => 
+                              Animated.spring( 
+                                this.state.fabScale, 
+                                { 
+                                  toValue: 1, 
+                                  speed: 5, 
+                                  bounciness: 12 
+                                } 
+                              ).start() 
+                          ) 
+                          //this.props.actions.cpAudioDownload(audio.url) 
+                        }}> 
+                        <View>
+                          { 
+                            audio.id && 
+                            this.state.fabActive === audio.id && 
+                            <Animated.View style={{ transform: [{ scale: this.state.fabScale }], opacity: 0.9, position: 'absolute', padding: 5, right: 30, bottom: -10, minWidth: 70, backgroundColor: 'white', borderRadius: 20, shadowColor: 'rgba(0,0,0,0.2)', shadowOffset: { width: 0, height: 1 }, shadowRadius: 5, shadowOpacity: 10, zIndex: 5 }}> 
+                              <TouchableHighlight 
+                                onPress={() => { 
+                                  console.log(audio.audioName + ' download') 
+                                  this.props.actions.cpAudioDownload(audio) 
+                                  }} 
+                              > 
+                                <View> 
+                                  <H3 style={{textAlign: 'center', textAlignVertical: 'center', lineHeight: 28}}>下載</H3> 
+                                </View> 
+                              </TouchableHighlight> 
+                              <TouchableHighlight 
+                                onPress={this._callShare.bind(this, audio.id, audio.parentKey)} 
+                              > 
+                                <View> 
+                                  <H3 style={{textAlign: 'center', textAlignVertical: 'center', lineHeight: 28}}>分享</H3> 
+                                </View> 
+                              </TouchableHighlight>
+                            </Animated.View> 
+                          } 
+                          <Icon 
+                            source={buttons.playing} 
+                            style={styles.capPlayPauseButtonImage} 
+                          />
+                          </View>
+                        </TouchableHighlight>
                     </View>
                   )
                 })
@@ -213,19 +237,24 @@ export default class KnowledgeCapsule extends Component {
         )
       })
     }
+    
     return (
       <Container style={styles.container}
         onMoveShouldSetResponder={this.props.isPlaying? this.onScroll: null}
         onStartShouldSetResponder={() => this.setState({fabActive: ''})}
       >
-        <View>
-          <Banner
-            source={require('../../assets/img/knowledgeCapsule/banner.png')}
-          />
-        </View>
         <Content
           onMomentumScrollEnd={this.onScrollEndReached}
         >
+        <View>
+          <ScrollBanner
+            source={[
+              require('../../assets/img/knowledgeCapsule/banner.png'),
+              require('../../assets/img/demo_banner.jpg'),
+              require('../../assets/img/TalkListbanner.png')
+            ]}
+          />
+        </View>
           {
             isCpAudioLoaded
               ? CapUnit
@@ -243,5 +272,6 @@ export default class KnowledgeCapsule extends Component {
     )
   }
 }
+export default KnowledgeCapsule
 
 

@@ -10,10 +10,8 @@ import {
 import {
   Container,
   Content,
-  Button,
   Form,
   View,
-  Text,
   Input,
   Item,
 } from 'native-base'
@@ -23,6 +21,9 @@ import { NavigationActions } from 'react-navigation'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import memberActoion from '../../reducer/member/memberAction'
+import { H3, H4 } from '../../components/text'
+import { Button } from '../../components/button'
+import { COLORS } from 'StyleConfig'
 
 const { height: screenHeight, width: screenWidth }: Object = Dimensions.get('window')
 
@@ -132,18 +133,27 @@ export default class Register extends Component {
                 />
               </Item>
             </Form>
-            <Button style={{...styles.baseButton, ...styles.registerButton}} onPress={this._onRegister.bind(this)}>
-              <Text style={styles.registerText}>
-                註冊
-              </Text>
-            </Button>
-            <Button style={{...styles.baseButton, ...styles.cancelButton}} onPress={() => goBack()}>
-              <Text style={styles.cancelText}>
-                取消
-              </Text>
-            </Button>
+            <Button
+              text='註冊'
+              backgroundColor={COLORS.green}
+              textColor='pureWhite'
+              fullWidth
+              padding={10}
+              borderRadius={5}
+              style={styles.button}
+              onPress={this._onRegister.bind(this)}
+            />
+            <Button
+              text='取消'
+              backgroundColor={COLORS.lightGray}
+              textColor='black'
+              fullWidth
+              padding={10}
+              borderRadius={5}
+              style={styles.button}
+              onPress={() => goBack()}
+            />
           </View>
-
           <Modal
             style={styles.modal}
             backdrop={true}
@@ -152,15 +162,17 @@ export default class Register extends Component {
             backdropOpacity={0.3}
             isOpen={this.state.isOpen}
           >
-              <Text style={styles.modalHeadlineText}>登入失敗</Text>
-              <Text style={styles.modalErrorMsgText}>
+              <H4 style={styles.modalHeadlineText}>登入失敗</H4>
+              <H4 style={styles.modalErrorMsgText}>
                 {this.state.errMsg}
-              </Text>
-              <Button style={styles.modalButton} onPress={() => this.setState({ isOpen: !this.state.isOpen})}>
-                <Text style={styles.modalButtonText}>確認</Text>
-              </Button>
+              </H4>
+              <Button
+                text='確認'
+                textColor='green'
+                textSize='H4'
+                onPress={() => this.setState({ isOpen: !this.state.isOpen})}
+              />
           </Modal>
-
         </Content>
       </Container>
     )
@@ -180,81 +192,46 @@ const styles = {
   },
   modalButton: {
     alignSelf: 'auto',
-    backgroundColor: '#fff'
-  },
-  modalButtonText: {
-    color: 'rgb(31, 191, 179)',
-    fontWeight: 'bold',
-    fontSize: 15,
+    backgroundColor: COLORS.pureWhite
   },
   modal: {
     justifyContent: 'center',
     alignItems: 'center',
     height: screenHeight*0.26,
-    width: screenWidth*0.8,
-    backgroundColor: 'white',
+    width: '80%',
+    backgroundColor: COLORS.pureWhite,
     borderRadius: 10,
   },
   container: {
-    backgroundColor: 'rgb(255, 255, 255)'
+    backgroundColor: COLORS.pureWhite
   },
   bg: {
-    flex: 1,
     height: screenHeight,
-    alignItems: 'center'
+    alignItems: 'center',
+    width: '75%',
+    alignSelf: 'center'
   },
   logo: {
     marginTop: 68,
-    height: 150,
     width: 80
   },
   form: {
     borderWidth: 2,
-    borderColor:'rgb(224, 224, 224)',
+    borderColor: COLORS.lightGray,
     borderRadius: 8,
-    marginLeft: screenWidth*0.125,
-    marginRight: screenWidth*0.125,
     marginTop: 40,
     marginBottom: 8,
-    height: 144,
-    width: screenWidth*0.75
+    width: '100%'
   },
   item: {
-    height: 48,
     marginLeft: 0
   },
   input: {
-    height: 45,
+    height: 48,
     width: '100%',
     paddingLeft: 16,
   },
-  baseButton: {
-    alignSelf: 'auto',
-    width: screenWidth*0.75,
-    elevation: (Platform.OS ==='android') ? 0 : 3,
-  },
-  registerButton: {
-    backgroundColor: 'rgb(31, 191, 179)',
+  button: {
     marginBottom: 8
-  },
-  cancelButton: {
-    backgroundColor: 'rgb(224, 224, 224)',
-  },
-  registerText: {
-    marginLeft: screenWidth*0.75*0.4,
-    fontSize: 15,
-    fontWeight: '900',
-    height: 21,
-    width: 40
-  },
-  cancelText: {
-    marginLeft: screenWidth*0.75*0.4,
-    color: 'rgb(33, 33 ,33)',
-    fontSize: 15,
-    fontWeight: '900',
-    height: 21,
-    width: 40
-  },
+  }
 }
-
-

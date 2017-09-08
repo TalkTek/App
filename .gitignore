@@ -53,3 +53,4 @@ fastlane/Preview.html
 fastlane/screenshots
 
 src/lib/config.js
+coverage/*
