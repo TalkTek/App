@@ -4,7 +4,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 export default {
   container: {
     backgroundColor: 'white',
-    zIndex: 0,
+    zIndex: 0
   },
   banner: {
     resizeMode: 'cover',
@@ -32,7 +32,8 @@ export default {
   capUnit: {
     paddingVertical: 16,
     borderBottomColor: 'rgb(224, 224, 224)',
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
+    flexDirection: 'row'
   },
   capPlayPauseButton: {
     marginRight: 8

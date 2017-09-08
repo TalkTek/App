@@ -5,8 +5,8 @@ import {
   Text
 } from 'react-native'
 import { connect } from 'react-redux'
-import MemberAction from '../../reducer/member/memberAction'
-import analyticAction from '../../reducer/analytic/analyticAction'
+import MemberAction from '../../../reducer/member/memberAction'
+import analyticAction from '../../../reducer/analytic/analyticAction'
 import PostList from './postList'
 
 @connect((state) => ({

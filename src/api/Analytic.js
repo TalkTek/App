@@ -1,6 +1,12 @@
 import { GoogleAnalyticsTracker } from 'react-native-google-analytics-bridge'
 
-const GA_DB = 'UA-100475279-1'
+let GA_DB
+
+if(__DEV__) {
+  GA_DB = 'UA-104998542-1'
+} else {
+  GA_DB = 'UA-100475279-1'
+}
 
 export default class Analytic {
   _Analytic = new GoogleAnalyticsTracker(GA_DB)

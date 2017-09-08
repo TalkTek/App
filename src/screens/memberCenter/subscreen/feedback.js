@@ -4,7 +4,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import memberAction from '../../reducer/member/memberAction'
+import memberAction from '../../../reducer/member/memberAction'
 import { 
   View,
   Text,
@@ -18,7 +18,43 @@ import {
   Picker,
   Toast
 } from 'native-base'
-import { feedBackStyle } from './styles'
+import styles from '../styles'
+const feedBackStyle = {
+  content: {
+    ...styles.subBackground,
+    paddingLeft: 16,
+    paddingRight: 16
+  },
+  textLabel: {
+    marginTop: 16,
+    paddingLeft: 8,
+    paddingRight: 8,
+    color: 'rgb(158, 158, 158)'
+  },
+  indicator: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  input: {
+    backgroundColor: '#fff',
+    borderColor: 'rgb(224, 224, 224)',
+    borderWidth: 1,
+    borderRadius: 8,
+    marginTop: 4
+  },
+  mutiInput: {
+    minHeight: 96
+  },
+  sendBtn: {
+    ...styles.paymentBtn,
+    marginLeft: 0,
+    marginRight: 0,
+    marginTop: 24
+  },
+  sendText: {
+    color: '#fff'
+  }
+}
 
 type toastInfo = {
   text: string,

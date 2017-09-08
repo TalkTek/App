@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 import Slider from 'react-native-slider'
 import {
-  Player,
+  Player
 } from 'react-native-audio-toolkit'
 
 const { width } = Dimensions.get('window')

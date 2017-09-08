@@ -18,11 +18,11 @@ import {
   Container,
   Picker
 } from 'native-base'
-import { memberInfoStyle } from './styles'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import memberAction from '../../reducer/member/memberAction'
-import analyticAction from '../../reducer/analytic/analyticAction'
+import memberAction from '../../../reducer/member/memberAction'
+import analyticAction from '../../../reducer/analytic/analyticAction'
+import styles from '../styles'
 
 let state = {
   email: '',
@@ -30,6 +30,75 @@ let state = {
   name: '',
   gender: '',
   birthday: ''
+}
+const memberInfoStyle = {
+  container: {
+    backgroundColor: 'rgb(245, 245, 245)'
+  },
+  avatar: { 
+    minHeight: 165,
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center', 
+    backgroundColor: 'rgb(250, 250, 250)'
+  },
+  avatarImg: {
+    width: 80,
+    height: 80,
+    borderRadius: 40
+  },
+  uploadBtn: {
+    borderColor: 'rgb(97, 97, 97)',
+    borderRadius: 6,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    marginTop: 16
+  },
+  uploadBtnText: {
+    backgroundColor: 'transparent',
+    fontSize: 15,
+    marginTop: 5,
+    marginBottom: 5,
+    marginLeft: 10,
+    marginRight: 10
+  },
+  form: {
+    ...styles.mainBackground,
+    marginTop: 16,
+    width: '120%' // this is a bug, but don't know why
+  },
+  formInput: {
+    paddingTop: 2,
+    paddingBottom: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent:'space-between',
+    borderStyle: 'solid',
+    borderColor: 'rgb(250, 250, 250)',
+    borderBottomWidth: 1
+  },
+  input: {
+    flex: 2,
+    minWidth: 100
+  },
+  inputLabel: {
+    paddingLeft: 24
+  },
+  inputArea: {
+    flex: 8
+  },
+  textInput: {
+    color: 'rgb(31, 191, 179)'
+  },
+  dateSelect: {
+    paddingTop: 15,
+    paddingLeft: 5,
+    paddingBottom: 15,
+    paddingRight: 5
+  },
+  saveButton: {
+    fontSize: 10
+  }
 }
 
 @connect(state => ({

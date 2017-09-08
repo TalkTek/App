@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux'
 import audioActions from '../../reducer/audio/audioAction'
 import analyticActions from '../../reducer/analytic/analyticAction'
 import capsuleAction from '../../reducer/capsule/capsuleAction'
+import downloadActions from '../../reducer/download/downloadAction'
 import { connect } from 'react-redux'
 import {
   TouchableHighlight,
@@ -57,28 +58,26 @@ let buttons = {
   isCpAudioLoaded: state.audio.isCpAudioLoaded,
   lastKey: state.capsule.lastKey,
   memberUid: state.member.uid,
-  playingAudioPos: {
-    i: state.audio.playingAudioInfo.pos.i,
-    j: state.audio.playingAudioInfo.pos.j
-  }
 }), dispatch => ({
-  actions: bindActionCreators({...audioActions, ...analyticActions}, dispatch),
-  capsule: bindActionCreators(capsuleAction, dispatch)
+  actions: bindActionCreators({...audioActions, ...analyticActions, ...capsuleAction, ...downloadActions}, dispatch),
 }))
 
 export default class KnowledgeCapsule extends Component {
 
   state = {
     audioBarActive: false,
-    offsetY: 0
+    offsetY: 0,
+    fabActive: '',
+    fabScale: new Animated.Value(0)
   }
 
   loadCount = 2
 
   touchY = -1
+
   resolveData(lastKey) {
     const { actions } = this.props
-    this.props.capsule.loadCpAudio({
+    actions.loadCpAudio({
       lastKey,
       limitToLast: this.loadCount
     })
@@ -90,68 +89,28 @@ export default class KnowledgeCapsule extends Component {
     actions.gaSetScreen('KnowledgeCapsule')
   }
 
-  componentWillReceiveProps(nextProps: object) {
-    let {playingAudioPos} = nextProps
-    let { i, j } = this.props.playingAudioPos
-    if ( playingAudioPos.i!=i || playingAudioPos.j!=j ) {
-      this.toggleButtonColor(playingAudioPos.i, playingAudioPos.j)
-    }
-  }
-
   onScroll = (event) => {
     const {
-      showAudioPopoutBar,
-      hideAudioPopoutBar
-    } = this.props.actions
-      // let currentOffsetY = event.nativeEvent.contentOffset.y
+      actions
+    } = this.props
     if (this.touchY === -1) {
       this.touchY = event.nativeEvent.pageY
     } else {
-      // console.log(eve.nativeEvent.pageY - this.touchY)
-      // const diff = currentOffsetY - this.state.offsetY
       const diff = event.nativeEvent.pageY - this.state.offsetY
       if(diff > 10) {
-        // _toggleAudioBarDown()
-        showAudioPopoutBar()
+        actions.showAudioPopoutBar()
       } else if(diff < -10) {
-        // _toggleAudioBarUp()
-        hideAudioPopoutBar()
+        actions.hideAudioPopoutBar()
       }
-      console.log(diff)
       this.setState({
         offsetY: event.nativeEvent.pageY
       })
     }
   }
 
-  onPress = (audio: object, i: number, j: number, pos: number) => {
-    const {
-      actions,
-      memberUid
-    } = this.props
-    
-    actions.toggleAudioPopoutBar()
-    actions.cpAudioInfoGet(
-      {
-        parentKey: audio.parentKey,
-        capsuleId: audio.id,
-        memberUid
-      }
-    )
-    actions.audioLoad({
-      audio,
-      i,
-      j,
-      pos
-    })
-    this.toggleButtonColor(i, j)
-    // _onPress.bind(this, audio, i, j)()
-  }
-
-  toggleButtonColor = (i: number, j: number) => {
-    const { capsules, playingAudioPos } = this.props
-    capsules[playingAudioPos.i].audios[playingAudioPos.j].active = false
-    capsules[i].audios[j].active = true
+  onPress = (parentKey, childKey) => {
+    const { actions } = this.props
+    actions.onPress(parentKey, childKey)
   }
 
   onScrollEndReached = () => {
@@ -173,36 +132,83 @@ export default class KnowledgeCapsule extends Component {
     if(capsules) {
       let counter = 0
       let index
-      CapUnit = capsules.map((cap, i) => {
-        let length = cap.audios.length
-        counter += length
+
+      CapUnit = Object.keys(capsules).map((parentKey, i) => {
         return (
           <View key={i} style={styles.capContainer}>
             <View style={styles.capTitle}>
               <Text style={styles.capTitleText}>
-                {cap.title}
+                {capsules[parentKey].title}
               </Text>
             </View>
-            {
-              cap.audios.map((audio, j) =>
-                <View key={j} style={styles.capUnit}>
-                  <TouchableHighlight
-                    style={styles.capPlayPauseButton}
-                    onPress={this.onPress.bind(this, audio, i, j, counter-(length-j))}
+              {
+                Object.keys(capsules[parentKey].audios).map((childKey, j) => {
+                  let audio = capsules[parentKey].audios[childKey]
+                  return (
+                    <View style={styles.capUnit} key={j}>
+                      <TouchableHighlight
+                        style={styles.capPlayPauseButton}
+                        onPress={this.onPress.bind(this, parentKey, childKey)}
+                        underlayColor="#fff"
+                      >
+                        <View style={styles.capAudio}>
+                          <Icon
+                            source={audio.active ? buttons.playing : buttons.playable}
+                            marginRight={12}
+                          />
+                          <View>
+                            <Text style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>
+                              {audio.audioName}
+                            </Text>
+                            <Text style={styles.audioLengthText}>
+                              {audio.downloaded === null ? audio.length.formatted : `${audio.length.formatted} 已下載`}
+                            </Text>
+                            {/* <Text style={styles.audioLengthText}>
+                              {audio.length ? audio.length.formatted : ''}
+                            </Text> */}
+                          </View>
+                        </View>
+                      </TouchableHighlight>
+                      <TouchableHighlight
                     underlayColor="#fff"
-                  >
-                    <View style={styles.capAudio}>
+                    onPress={() => {
+                      this.setState({ fabActive: audio.id, fabScale: new Animated.Value(0) },
+                        () =>
+                          Animated.spring(
+                            this.state.fabScale,
+                            {
+                              toValue: 1,
+                              speed: 5,
+                              bounciness: 12
+                            }
+                          ).start()
+                      )
+                    }}>
+                    <View>
+                      {
+                        audio.id &&
+                        this.state.fabActive === audio.id &&
+                        <Animated.View style={{ transform: [{ scale: this.state.fabScale }], opacity: 0.9, position: 'absolute', left: -70, width: 70, height: 28, backgroundColor: 'white', borderRadius: 20, shadowColor: 'rgba(0,0,0,0.2)', shadowOffset: { width: 0, height: 1 }, shadowRadius: 5, shadowOpacity: 10 }}>
+                          <TouchableHighlight
+                            onPress={() => {
+                              console.log(audio.audioName + ' download')
+                              this.props.actions.cpAudioDownload({...audio, parentKey: parentKey, title: capsules[parentKey].title})
+                              }}
+                          >
+                            <Text style={{textAlign: 'center', textAlignVertical: 'center', lineHeight: 28}}>{'下載'}</Text>
+                          </TouchableHighlight>
+                        </Animated.View>
+                      }
                       <Icon
-                        source={audio.active ? buttons.playing : buttons.playable}
-                        marginRight={12}
+                        source={buttons.playing}
+                        style={styles.capPlayPauseButtonImage}
                       />
-                      <Text style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>{audio.name}</Text>
-                      <Text style={styles.audioLengthText}>{audio.length ? audio.length.formatted : ''}</Text>
                     </View>
                   </TouchableHighlight>
-                </View>
-              )
-            }
+                    </View>
+                  )
+                })
+              }
           </View>
         )
       })
@@ -210,6 +216,7 @@ export default class KnowledgeCapsule extends Component {
     return (
       <Container style={styles.container}
         onMoveShouldSetResponder={this.props.isPlaying? this.onScroll: null}
+        onStartShouldSetResponder={() => this.setState({fabActive: ''})}
       >
         <View>
           <Banner
