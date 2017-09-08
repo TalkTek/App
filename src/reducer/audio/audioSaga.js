@@ -1,45 +1,21 @@
 // @flow
 import {
   fork,
-  takeLatest,
   call,
   select,
   take,
   put,
-  cancelled,
-  cancel
+  cancelled
 } from 'redux-saga/effects'
 import {
   eventChannel,
-  END,
+  END
 } from 'redux-saga'
 import {
-  CP_AUDIO_INFO_GET,
-  CP_AUDIO_INFO_GET_SUCCESS,
-  CP_AUDIO_INFO_GET_FAILURE,
   CP_AUDIO_GOOD_CHANGE_SUCCESS,
   CP_AUDIO_GOOD_CHANGE_FAILURE,
-  CP_AUDIO_GET_DOC_SUCCESS,
-  CP_AUDIO_GET_DOC_FAILURE,
-  CP_AUDIO_GOOD_CHANGE,
-  CP_AUDIO_GET_DOC,
-  AUDIO_LOAD,
-  AUDIO_LOADED,
-  AUDIO_PLAY,
-  AUDIO_PAUSE,
-  AUDIO_SEEK,
-  AUDIO_TO_NEXT_TRACK,
-  AUDIO_TO_PREVIOUS_TRACK,
-  AUDIO_UPDATE_INFO,
-  AUDIO_UPDATE_CURRENT_TIME,
-  AUDIO_GET_NEXT_TRACK,
-  AUDIO_GET_PREVIOUS_TRACK,
   // --------R_START-------------
   ON_PRESS,
-  ON_PRESS_REQUEST,
-  ON_PRESS_SUCCESS,
-  ON_PRESS_FAILURE,
-
   PLAY,
   PAUSE,
   NEXT,
@@ -47,10 +23,8 @@ import {
   FORWARD_15,
   BACKWARD_15,
   SEEK,
-
+  SET_EVALUATION
 } from './audioTypes'
-import AudioModule from '../../api/audioModule'
-import playerModule from '../../api/playerModule'
 import {
   getCapsule,
   getCapsules,
@@ -59,148 +33,96 @@ import {
   getCurrentTimeSec,
   isPlaying,
   getCurrentKey,
-  getPreviousKey
+  getPreviousKey,
+  getLikeCounter,
+  getMemberState
 } from './audioSelector'
 import audioActions from './audioAction'
+import memberActions from '../member/memberAction'
 import playerFactory from '../../factory/playerFactory'
-import analyticAction from '../analytic/analyticAction'
+import audioAPI from './audioAPI'
+import memberAPI from '../member/memberAPI'
 
 /**
- * subroutines
+ * set like to certain capsule on firebase
+ * if successfully, add 1 from likeCounter in redux store
+ * @param capsuleId
+ * @param parentKey
+ * string: eg: 'Ks7-sSKFSDFJKSDFKJKSF'
  */
-
-function * getAudioInfo (data) {
-  let { parentKey, capsuleId, memberUid } = data.payload
-  let value = yield call(() => new AudioModule().readOnce(`capsules/${parentKey}/audios/${capsuleId}`))
-  let audioIsGood = yield call(() => new AudioModule().checkAudioIsLiked(capsuleId, memberUid))
-  let key
-  if (value) {
-    key = CP_AUDIO_INFO_GET_SUCCESS
-  } else {
-    key = CP_AUDIO_INFO_GET_FAILURE
-  }
-  yield put({
-    type: key,
-    payload: {
-      ...value,
-      audioIsGood
-    }
-  })
-}
-
-function * setAudioGoodState (data) {
-  const { isGood, capsulesId, parentKey, userId } = data.payload
-  let audioInfo = yield call(() => new AudioModule().getAudioInfo(capsulesId, parentKey))
+function * setLikeOnCapsule (capsuleId, parentKey) {
   try {
-    let likeCounter = yield call(() => new AudioModule()[isGood ? 'cpAudioGood' : 'cpAudioNotGood'](capsulesId, parentKey, userId, (audioInfo.likeCounter||0) + (isGood ? +1 : -1)))
-    yield put({
-      type: CP_AUDIO_GOOD_CHANGE_SUCCESS,
-      payload: {
-        isGood,
-        likeCounter
-      }
-    })
-  } catch (e) {
-    yield put({
-      type: CP_AUDIO_GOOD_CHANGE_FAILURE,
-      payload: e
-    })
+    yield put(audioActions.setLikeEvaluationOnCapsuleRequest())
+    const likeCounter = yield select(getLikeCounter())
+    yield call(audioAPI.setLike, parentKey, capsuleId, likeCounter + 1)
+    yield put(audioActions.setLikeEvaluationOnCapsuleSuccess())
+  } catch (error) {
+    throw new Error(error)
   }
 }
 
-function * getAudioDoc (data) {
-  let { capsuleId, parentKey } = data.payload
-  let draft = yield call(() => new AudioModule().getAudioDoc(capsuleId, parentKey))
-  let type
-
-  if (typeof draft === 'string') {
-    type = CP_AUDIO_GET_DOC_SUCCESS
-  } else {
-    type = CP_AUDIO_GET_DOC_FAILURE
+/**
+ * add the audio's key info into favorite field of the member on firebase
+ * if successfully, save the audio id into the member in redux store
+ * @param capsuleId
+ * @param parentKey
+ * @param memberUid
+ * string: eg: 'Ks7-sSKFSDFJKSDFKJKSF'
+ */
+function * setFavoriteCapsuleOnUser (capsuleId, parentKey, memberUid) {
+  try {
+    yield put(memberActions.setFavoriteCapsuleOnUserRequest())
+    yield call(memberAPI.setFavoriteCapsule, memberUid, capsuleId, parentKey)
+    yield put(memberActions.setFavoriteCapsuleOnUserSuccess(capsuleId, parentKey))
+  } catch (error) {
+    throw new Error(error)
   }
-  yield put({
-    type,
-    payload: {
-      draft
-    }
-  })
 }
 
-type arg = {[key: string]: number}
-function * audioLoad (value:{payload: { [audio: string]: {}, pos: number }}) {
-  const {
-    payload: {
-      audio
-    }
-  } = value
-  yield call(() => playerModule.load(audio.url))
-  yield put({ type: AUDIO_LOADED })
-}
-
-function * audioPause () {
-  yield call(() => playerModule.pause())
-}
-
-const getInfo: {} = (state) => state.audio.playingAudioInfo
-const getAudios: {} = (state) => state.audio
-
-function * selectTrack (offset: number) {
-  let audios = yield select(getAudios)
-  let {pos} = audios.playingAudioInfo.pos
-  let datas = makePlain(audios.capsules)
-  let index = pos + offset
-  let returnIndex = 0
-  let data
-  if (index < 0) {
-    returnIndex = datas.length - 1
+/**
+ * remove like to certain capsule on firebase
+ * if successfully, subtract 1 from likeCounter in redux store
+ * @param capsuleId
+ * @param parentKey
+ * string: eg: 'Ks7-sSKFSDFJKSDFKJKSF'
+ */
+function * removeLikeOnCapsule (capsuleId, parentKey) {
+  try {
+    yield put(audioActions.removeLikeEvaluationOnCapsuleRequest())
+    const likeCounter = yield select(getLikeCounter())
+    yield call(audioAPI.removeLike, parentKey, capsuleId, likeCounter - 1)
+    yield put(audioActions.removeLikeEvaluationOnCapsuleSuccess())
+  } catch (error) {
+    throw new Error(error)
   }
-  else if (index >= datas.length) {
-    returnIndex = 0
-  } else {
-    returnIndex = index
+}
+
+/**
+ * remove the audio in favorite field of the member on firebase
+ * if successfully, remove the audio id in the member in redux store
+ * @param capsuleId
+ * @param capsuleId
+ * @param memberUid
+ * string: eg: 'Ks7-sSKFSDFJKSDFKJKSF'
+ */
+function * removeFavoriteCapsuleOnUser (capsuleId, memberUid) {
+  try {
+    yield put(memberActions.removeFavoriteCapsuleOnUserRequest())
+    yield call(memberAPI.removeFavoriteCapsule, memberUid, capsuleId)
+    yield put(memberActions.removeFavoriteCapsuleOnUserSuccess(capsuleId))
+  } catch (error) {
+    throw new Error(error)
   }
-  
-  const iJ = countIJ(audios, returnIndex)
-  return { audio: datas[returnIndex], ...iJ, pos: returnIndex }
 }
 
-function * audioToNextTrack () {
-  let capsule = yield call(() => selectTrack(+1))
-  yield put({
-    type: CP_AUDIO_INFO_GET,
-    payload: {
-      parentKey: capsule.audio.parentKey,
-      capsuleId: capsule.audio.id,
-      memberUid: yield select((state) => (state.member.uid))
-    }
-  })
-  yield put({
-    type: AUDIO_LOAD,
-    payload: capsule
-  })
-}
-
-function * audioToPreviousTrack () {
-  let capsule = yield call(() => selectTrack(-1))
-  yield put({
-    type: CP_AUDIO_INFO_GET,
-    payload: {
-      parentKey: capsule.audio.parentKey,
-      capsuleId: capsule.audio.id,
-      memberUid: yield select((state) => (state.member.uid))
-    }
-  })
-  yield put({
-    type: AUDIO_LOAD,
-    payload: capsule
-  })
-}
-
-function * audioSeek({ payload }) {
-  let data = yield call(() => playerModule.seek(payload*1000))
-}
-
-
+/**
+ * it's a flow that get the next capsule info when user press next button
+ * there are three different conditions will be happened
+ * 1. the next child exist
+ * 2. the next child not exist, but next parent exist
+ * 3. the next child not exist, and the next parent not exist either
+ * According to the above conditions, we use different ways to deal with that.
+ */
 function * getNextCapsuleFlow () {
   let capsule
   let nextKey
@@ -209,7 +131,7 @@ function * getNextCapsuleFlow () {
   try {
     if (nextKey = yield call(isNextChildExisted, parentKey, childKey)) {
       capsule = yield call(getCapsuleIfNextChildExisted, parentKey, nextKey)
-    } else if ( nextKey = yield call(isNextParentExisted, parentKey, childKey)) {
+    } else if (nextKey = yield call(isNextParentExisted, parentKey, childKey)) {
       capsule = yield call(getCapsuleIfNextParentExisted, nextKey)
     } else {
       capsule = yield call(getCurrentCapsule, parentKey, childKey)
@@ -220,18 +142,64 @@ function * getNextCapsuleFlow () {
   }
 }
 
+/**
+ * this function only use for the condition
+ * that there are not parent and child for the audio
+ * when user press "next" or "previous" button
+ * meaning to say, the audio is the last or the start
+ * @param parentKey
+ * @param childKey
+ * string, eg: '7w4SEKsFJLHKDKFJKLS'
+ */
 function * getCurrentCapsule (parentKey, childKey) {
   try {
     const capsule = yield select(getCapsule(parentKey, childKey))
+    /**
+     * {
+     *  audioName: '',
+     *  draft: '',
+     *  id: '',
+     *  length: {
+     *    formatted: '',
+     *    sec: '',
+     *  },
+     *  likeCounter: 0,
+     *  parentKey: '',
+     *  url: '',
+     */
     return capsule
   } catch (error) {
     throw new Error(error)
   }
 }
 
+/**
+ * check if the next child exist or not
+ * @param parentKey
+ * @param childKey
+ * string, eg: '7w4SEKsFJLHKDKFJKLS'
+ */
 function * isNextChildExisted (parentKey, childKey) {
   try {
     const capsules = yield select(getCapsules(parentKey))
+    /**
+     * capsules : object
+     *  {
+     *    -KsZqtddsDKLALWED': object,
+     *    -KsZqtddsDKDASDWED': object,
+     *    -KsZqtdDDSDKDASDED': {
+     *      audioName: '',
+     *      draft: '',
+     *      id: '',
+     *      length: {
+     *        formatted: '',
+     *        sec: '',
+     *      },
+     *      likeCounter: 0,
+     *      parentKey: '',
+     *      url: '',
+     *  }
+     */
     let pos = Object.keys(capsules).indexOf(childKey)
     return Object.keys(capsules)[pos + 1]
   } catch (error) {
@@ -239,35 +207,125 @@ function * isNextChildExisted (parentKey, childKey) {
   }
 }
 
+/**
+ * check if the next parent exist or not
+ * @param parentKey
+ * string, eg: '7w4SEKsFJLHKDKFJKLS'
+ */
 function * isNextParentExisted (parentKey) {
   try {
     const capsules = yield select(getCapsules())
+    /**
+     * capsules : object
+     *  {
+     *    -KsZqtddsDKLALWED': object,
+     *    -KsZqtddsDKDASDWED': object,
+     *    -KsZqtdDDSDKDASDED': {
+     *      audios: {
+     *       -KsZqtddsDKLALWED': object,
+     *       -KsZqtddsDKDASDWED': object,
+     *       -KsZqtddsDKDASDWED': {
+     *          audioName: '',
+     *          draft: '',
+     *          id: '',
+     *          length: {
+     *          formatted: '',
+     *          sec: '',
+     *          },
+     *          likeCounter: 0,
+     *          parentKey: '',
+     *          url: '',
+     *        }
+     *     }
+     *  }
+     */
     let pos = Object.keys(capsules).indexOf(parentKey)
-    return Object.keys(capsules)[pos+1]
+    return Object.keys(capsules)[pos + 1]
   } catch (error) {
     throw new Error(error)
   }
 }
 
-
-function * getCapsuleIfNextChildExisted (parentKey ,nextKey) {
+/**
+ * get the next audio info
+ * @param parentKey
+ * @param nextKey : the next audio key
+ * string, eg: '7w4SEKsFJLHKDKFJKLS'
+ */
+function * getCapsuleIfNextChildExisted (parentKey, nextKey) {
   try {
     const capsules = yield select(getCapsules(parentKey))
+    /**
+     * capsules : object
+     *  {
+     *    -KsZqtddsDKLALWED': object,
+     *    -KsZqtddsDKDASDWED': object,
+     *    -KsZqtdDDSDKDASDED': {
+     *      audioName: '',
+     *      draft: '',
+     *      id: '',
+     *      length: {
+     *        formatted: '',
+     *        sec: '',
+     *      },
+     *      likeCounter: 0,
+     *      parentKey: '',
+     *      url: '',
+     *  }
+     */
     return capsules[nextKey]
   } catch (error) {
     throw new Error(error)
   }
 }
 
+/**
+ * get the next audio info
+ * @param nextKey : the next audio key
+ * string, eg: '7w4SEKsFJLHKDKFJKLS'
+ */
 function * getCapsuleIfNextParentExisted (nextKey) {
   try {
     const capsules = yield select(getCapsules())
-    return capsules[nextKey].audios[0]
+    const childKey = Object.keys(capsules[nextKey].audios)[0]
+    /**
+     * capsules : object
+     *  {
+     *    -KsZqtddsDKLALWED': object,
+     *    -KsZqtddsDKDASDWED': object,
+     *    -KsZqtdDDSDKDASDED': {
+     *      audios: {
+     *       -KsZqtddsDKLALWED': object,
+     *       -KsZqtddsDKDASDWED': object,
+     *       -KsZqtddsDKDASDWED': {
+     *          audioName: '',
+     *          draft: '',
+     *          id: '',
+     *          length: {
+     *          formatted: '',
+     *          sec: '',
+     *          },
+     *          likeCounter: 0,
+     *          parentKey: '',
+     *          url: '',
+     *        }
+     *     }
+     *  }
+     */
+    return capsules[nextKey].audios[childKey]
   } catch (error) {
     throw new Error(error)
   }
 }
 
+/**
+ * it's a flow that get the previous capsule info when user press previous button
+ * there are three different conditions will be happened
+ * 1. the previous child exist
+ * 2. the previous child not exist, but previous parent exist
+ * 3. the previous child not exist, and the previous parent not exist either
+ * According to the above conditions, we use different ways to deal with that.
+ */
 function * getPreviousCapsuleFlow () {
   let capsule
   let nextKey
@@ -275,6 +333,19 @@ function * getPreviousCapsuleFlow () {
   try {
     if (nextKey = yield call(isPreviousChildExisted, parentKey, childKey)) {
       capsule = yield call(getCapsuleIfPreviousChildExisted, parentKey, nextKey)
+      /**
+       * {
+       *  audioName: '',
+       *  draft: '',
+       *  id: '',
+       *  length: {
+       *    formatted: '',
+       *    sec: '',
+       *  },
+       *  likeCounter: 0,
+       *  parentKey: '',
+       *  url: '',
+       */
     } else if ( nextKey = yield call(isPreviousParentExisted, parentKey, childKey)) {
       capsule = yield call(getCapsuleIfPreviousParentExisted, nextKey)
     } else {
@@ -286,19 +357,66 @@ function * getPreviousCapsuleFlow () {
   }
 }
 
+/**
+ * get the next audio info
+ * @param parentKey
+ * @param nextKey : the next audio key
+ * string, eg: '7w4SEKsFJLHKDKFJKLS'
+ **/
 function * getCapsuleIfPreviousChildExisted (parentKey, nextKey) {
   try {
     const capsules = yield select(getCapsules(parentKey))
+    /**
+     * capsules : object
+     *  {
+     *    -KsZqtddsDKLALWED': object,
+     *    -KsZqtddsDKDASDWED': object,
+     *    -KsZqtdDDSDKDASDED': {
+     *      audioName: '',
+     *      draft: '',
+     *      id: '',
+     *      length: {
+     *        formatted: '',
+     *        sec: '',
+     *      },
+     *      likeCounter: 0,
+     *      parentKey: '',
+     *      url: '',
+     *  }
+     */
     return capsules[nextKey]
   } catch (error) {
     throw new Error(error)
   }
 }
 
+/**
+ * get the previous audio capsule
+ * @param nextParentKey : the next audio key
+ * string, eg: '7w4SEKsFJLHKDKFJKLS'
+ **/
 function * getCapsuleIfPreviousParentExisted (nextParentKey) {
   try {
     const capsules = yield select(getCapsules(nextParentKey))
-    const length = Object.keys(capsules).length -1
+    /**
+     * capsules : object
+     *  {
+     *    -KsZqtddsDKLALWED': object,
+     *    -KsZqtddsDKDASDWED': object,
+     *    -KsZqtdDDSDKDASDED': {
+     *      audioName: '',
+     *      draft: '',
+     *      id: '',
+     *      length: {
+     *        formatted: '',
+     *        sec: '',
+     *      },
+     *      likeCounter: 0,
+     *      parentKey: '',
+     *      url: '',
+     *  }
+     */
+    const length = Object.keys(capsules).length - 1
     const childKey = Object.keys(capsules)[length]
     return capsules[childKey]
   } catch (error) {
@@ -306,9 +424,33 @@ function * getCapsuleIfPreviousParentExisted (nextParentKey) {
   }
 }
 
+/**
+ * check if the previous child exist or not
+ * @param parentKey
+ * @param childKey : the next audio key
+ * string, eg: '7w4SEKsFJLHKDKFJKLS'
+ **/
 function * isPreviousChildExisted (parentKey, childKey) {
   try {
     const capsules = yield select(getCapsules(parentKey))
+    /**
+     * capsules : object
+     *  {
+     *    -KsZqtddsDKLALWED': object,
+     *    -KsZqtddsDKDASDWED': object,
+     *    -KsZqtdDDSDKDASDED': {
+     *      audioName: '',
+     *      draft: '',
+     *      id: '',
+     *      length: {
+     *        formatted: '',
+     *        sec: '',
+     *      },
+     *      likeCounter: 0,
+     *      parentKey: '',
+     *      url: '',
+     *  }
+     */
     let pos = Object.keys(capsules).indexOf(childKey)
     return Object.keys(capsules)[pos - 1]
   } catch (error) {
@@ -316,9 +458,38 @@ function * isPreviousChildExisted (parentKey, childKey) {
   }
 }
 
+/**
+ * check if the previous parent exist or not
+ * @param parentKey
+ * string, eg: '7w4SEKsFJLHKDKFJKLS'
+ **/
 function * isPreviousParentExisted (parentKey) {
   try {
     const capsules = yield select(getCapsules())
+    /**
+     * capsules : object
+     *  {
+     *    -KsZqtddsDKLALWED': object,
+     *    -KsZqtddsDKDASDWED': object,
+     *    -KsZqtdDDSDKDASDED': {
+     *      audios: {
+     *       -KsZqtddsDKLALWED': object,
+     *       -KsZqtddsDKDASDWED': object,
+     *       -KsZqtddsDKDASDWED': {
+     *          audioName: '',
+     *          draft: '',
+     *          id: '',
+     *          length: {
+     *          formatted: '',
+     *          sec: '',
+     *          },
+     *          likeCounter: 0,
+     *          parentKey: '',
+     *          url: '',
+     *        }
+     *     }
+     *  }
+     */
     let pos = Object.keys(capsules).indexOf(parentKey)
     return Object.keys(capsules)[pos - 1]
   } catch (error) {
@@ -438,9 +609,9 @@ function * updateButtonColor (parentKey, childKey) {
     if (isPlayed) {
       yield put(audioActions.removeColorRequest())
       yield put(audioActions.removeColorSuccess({
-              parentKey: previousKey.father,
-              childKey: previousKey.child
-            }))
+        parentKey: previousKey.father,
+        childKey: previousKey.child
+      }))
       yield put(audioActions.addColorRequest())
       yield put(audioActions.addColorSuccess({parentKey, childKey}))
     } else {
@@ -450,7 +621,7 @@ function * updateButtonColor (parentKey, childKey) {
   } catch (error) {
     throw new Error(error)
   }
-} 
+}
 
 /**
  * get url and call initAndPlay function through the playFactory
@@ -486,7 +657,7 @@ function * getAudioFilePicked (parentKey, childKey) {
   try {
     let capsule = yield select(getCapsule(parentKey, childKey))
     return capsule
-  } catch( error) {
+  } catch (error) {
     throw new Error(error.message)
   }
 }
@@ -507,7 +678,7 @@ function * getAudioFilePicked (parentKey, childKey) {
  *  url: "https://firebasestorage.googlepis.com/dfkajlksfjkf....",
  * }
  */
-function * setCapsulePickedIntoReduxStore(capsule) {
+function * setCapsulePickedIntoReduxStore (capsule) {
   try {
     yield put(audioActions.savePlayingAudioStaticInfoRequest())
     yield put(audioActions.savePlayingAudioStaticInfoSuccess({capsule}))
@@ -534,7 +705,7 @@ function * setKey (parentKey, childKey) {
   }
 }
 
-//-------------------------WATCHER START-------------------------------
+// -------------------------WATCHER START-------------------------------
 function * onPressFlow () {
   while (true) {
     const {payload: {parentKey, childKey}} = yield take(ON_PRESS)
@@ -572,8 +743,7 @@ function * pauseFlow () {
 
 function * seekFlow () {
   while (true) {
-    const {payload: pos} =  yield take(SEEK)
-    console.log('pos', pos)
+    const {payload: pos} = yield take(SEEK)
     yield put(audioActions.seekRequest())
     yield playerFactory.seek(pos)
     yield put(audioActions.seekSuccess())
@@ -625,7 +795,33 @@ function * previousFlow () {
     yield put(audioActions.previousSuccess())
   }
 }
-//-------------------------WATCHER END-------------------------------
+
+function * toggleLikeFlow () {
+  while (true) {
+    yield take(SET_EVALUATION)
+    yield put(audioActions.setEvaluationRequest())
+    const userInfo = yield select(getMemberState)
+    const currentKey = yield select(getCurrentKey())
+    let isLike = userInfo.favoriteCapsule[currentKey.childKey]
+
+    // the capsule was not set Like before
+    if (!isLike) {
+      // set like on capsule on firebase , if successfully, will set likeCounter in audio in redux store
+      yield call(setLikeOnCapsule, currentKey.childKey, currentKey.parentKey)
+      // set favoriteCapsule on user on firebase , if successfully, will add new favorite capusle in member in redux store
+      yield call(setFavoriteCapsuleOnUser, currentKey.childKey, currentKey.parentKey, userInfo.uid)
+    } else {
+      // remove like on capsule on firebase , if successfully, will set likeCounter in audio in redux store
+      yield call(removeLikeOnCapsule, currentKey.childKey, currentKey.parentKey)
+      // remove favoriteCapsule on user on firebase , if successfully, will add new favorite capusle in member in redux store
+      yield call(removeFavoriteCapsuleOnUser, currentKey.childKey, userInfo.uid)
+    }
+    // update reducer's data: likeCounter
+    yield put(audioActions.setEvaluationSuccess())
+  }
+}
+
+// -------------------------WATCHER END-------------------------------
 
 export default [
   fork(onPressFlow),
@@ -635,5 +831,6 @@ export default [
   fork(forward15Flow),
   fork(backward15Flow),
   fork(nextFlow),
-  fork(previousFlow)
+  fork(previousFlow),
+  fork(toggleLikeFlow)
 ]

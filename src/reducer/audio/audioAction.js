@@ -4,19 +4,24 @@ import {
 
 import {
   CP_AUDIO_GOOD_CHANGE,
-  CP_AUDIO_STORE,
   LOAD_CP_AUDIO_SUCCESS,
-  TOGGLE_AUDIO_POPOUT_BAR,
   SHOW_AUDIO_POPOUT_BAR,
   HIDE_AUDIO_POPOUT_BAR,
-  // AUDIO_LOAD,
-  AUDIO_LOADED,
-  AUDIO_SEEK,
-  AUDIO_TO_NEXT_TRACK,
-  AUDIO_TO_PREVIOUS_TRACK,
-  // AUDIO_UPDATE_INFO,
-  AUDIO_GET_NEXT_TRACK,
-// --------R_START-------------
+
+  SET_LIKE_EVALUATION_ON_CAPSULE,
+  SET_LIKE_EVALUATION_ON_CAPSULE_REQUEST,
+  SET_LIKE_EVALUATION_ON_CAPSULE_SUCCESS,
+  SET_LIKE_EVALUATION_ON_CAPSULE_FAILURE,
+
+  REMOVE_LIKE_EVALUATION_ON_CAPSULE,
+  REMOVE_LIKE_EVALUATION_ON_CAPSULE_REQUEST,
+  REMOVE_LIKE_EVALUATION_ON_CAPSULE_SUCCESS,
+  REMOVE_LIKE_EVALUATION_ON_CAPSULE_FAILURE,
+
+  SET_EVALUATION,
+  SET_EVALUATION_REQUEST,
+  SET_EVALUATION_SUCCESS,
+  SET_EVALUATION_FAILURE,
 
   PLAY,
   PLAY_REQUEST,
@@ -105,31 +110,31 @@ import {
 } from './audioTypes.js'
 
 export default createActions({
-  [CP_AUDIO_STORE]: audios => audios,
   [LOAD_CP_AUDIO_SUCCESS]: state => state,
-  [CP_AUDIO_GOOD_CHANGE]: (isGood, capsulesId, parentKey, userId) => ({
-    isGood,
-    capsulesId,
-    parentKey,
-    userId
-  }),
-  // [CP_AUDIO_GOOD_CHANGE_SUCCESS]: state => state,
-  // [CP_AUDIO_INFO_GET]: state => state,
-  // [CP_AUDIO_INFO_GET_SUCCESS]: state => state,
-  // [CP_AUDIO_GET_DOC]: state => state,
-  // [CP_AUDIO_GET_DOC_SUCCESS]: state => state,
-  [TOGGLE_AUDIO_POPOUT_BAR]: state => state,
   [SHOW_AUDIO_POPOUT_BAR]: state => state,
   [HIDE_AUDIO_POPOUT_BAR]: state => state,
-  // [AUDIO_LOAD]: state => state,
-  [AUDIO_LOADED]: state => state,
-  [AUDIO_PAUSE]: state => state,
-  [AUDIO_SEEK]: state => state,
-  [AUDIO_TO_NEXT_TRACK]: state => state,
-  [AUDIO_TO_PREVIOUS_TRACK]: state => state,
-  // [AUDIO_UPDATE_INFO]: state => state,
-  [AUDIO_GET_NEXT_TRACK]: state => state,
-  // ---------R_START-------------
+
+  [SET_EVALUATION]: (isPositive, capsuleId, parentKey, memberUid) => ({
+    isPositive,
+    capsuleId,
+    parentKey,
+    memberUid
+  }),
+  [SET_EVALUATION_REQUEST]: state => state,
+  [SET_EVALUATION_SUCCESS]: (isPositive) => ({
+    isPositive
+  }),
+  [SET_EVALUATION_FAILURE]: state => state,
+
+  [SET_LIKE_EVALUATION_ON_CAPSULE]: state => state,
+  [SET_LIKE_EVALUATION_ON_CAPSULE_REQUEST]: state => state,
+  [SET_LIKE_EVALUATION_ON_CAPSULE_SUCCESS]: state => state,
+  [SET_LIKE_EVALUATION_ON_CAPSULE_FAILURE]: state => state,
+
+  [REMOVE_LIKE_EVALUATION_ON_CAPSULE]: state => state,
+  [REMOVE_LIKE_EVALUATION_ON_CAPSULE_REQUEST]: state => state,
+  [REMOVE_LIKE_EVALUATION_ON_CAPSULE_SUCCESS]: state => state,
+  [REMOVE_LIKE_EVALUATION_ON_CAPSULE_FAILURE]: state => state,
 
   [PLAY]: state => state,
   [PLAY_REQUEST]: state => state,
