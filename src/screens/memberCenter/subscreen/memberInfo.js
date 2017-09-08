@@ -6,6 +6,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Button,
   DatePickerIOS,
   DatePickerAndroid,
   Platform
@@ -21,8 +22,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import memberAction from '../../../reducer/member/memberAction'
 import analyticAction from '../../../reducer/analytic/analyticAction'
-import { Button } from '../../../components/button'
-import { COLORS } from 'StyleConfig'
+import styles from '../styles'
 
 let state = {
   email: '',
@@ -33,14 +33,14 @@ let state = {
 }
 const memberInfoStyle = {
   container: {
-    backgroundColor: COLORS.memberBackground
+    backgroundColor: 'rgb(245, 245, 245)'
   },
   avatar: { 
     minHeight: 165,
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: COLORS.white
+    justifyContent: 'center', 
+    backgroundColor: 'rgb(250, 250, 250)'
   },
   avatarImg: {
     width: 80,
@@ -48,11 +48,22 @@ const memberInfoStyle = {
     borderRadius: 40
   },
   uploadBtn: {
-    marginTop: 16,
-    paddingVertical: 5
+    borderColor: 'rgb(97, 97, 97)',
+    borderRadius: 6,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    marginTop: 16
+  },
+  uploadBtnText: {
+    backgroundColor: 'transparent',
+    fontSize: 15,
+    marginTop: 5,
+    marginBottom: 5,
+    marginLeft: 10,
+    marginRight: 10
   },
   form: {
-    backgroundColor: COLORS.pureWhite,
+    ...styles.mainBackground,
     marginTop: 16,
     width: '120%' // this is a bug, but don't know why
   },
@@ -63,7 +74,7 @@ const memberInfoStyle = {
     alignItems: 'center',
     justifyContent:'space-between',
     borderStyle: 'solid',
-    borderColor: COLORS.white,
+    borderColor: 'rgb(250, 250, 250)',
     borderBottomWidth: 1
   },
   input: {
@@ -77,7 +88,7 @@ const memberInfoStyle = {
     flex: 8
   },
   textInput: {
-    color: COLORS.green
+    color: 'rgb(31, 191, 179)'
   },
   dateSelect: {
     paddingTop: 15,
@@ -226,14 +237,13 @@ class MemberInfo extends Component {
               }}
               style={memberInfoStyle.avatarImg}
             />
-            <Button 
-              text='上傳照片'
-              textColor='black'
-              borderColor='black'
-              border={1}
-              borderRadius={5}
+            <TouchableOpacity
               style={memberInfoStyle.uploadBtn}
-            />
+            >
+              <Text style={memberInfoStyle.uploadBtnText}>
+                上傳照片
+              </Text>
+            </TouchableOpacity>
           </View>
           <View style={memberInfoStyle.form}>
             {

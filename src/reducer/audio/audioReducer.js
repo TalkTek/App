@@ -27,6 +27,8 @@ import {
   SAVE_PREVIOUS_KEY_SUCCESS,
   PLAY_SUCCESS,
   PAUSE_SUCCESS,
+  UPDATE_CP_AUDIO_ISDOWNLOADED,
+  
   SET_LIKE_EVALUATION_ON_CAPSULE_SUCCESS,
   REMOVE_LIKE_EVALUATION_ON_CAPSULE_SUCCESS,
 } from './audioTypes'
@@ -197,6 +199,24 @@ export default createReducder({
     return {
       ...state,
       isPlaying: false
+    }
+  },
+  [UPDATE_CP_AUDIO_ISDOWNLOADED]: (state, {payload}) => {
+    const {parentKey, id, url} = payload
+    console.log(state)
+    let capsules = Object.assign({}, state.capsules)
+    if(url === null) {
+      console
+      capsules[parentKey].audios[payload.childKey].url = capsules[parentKey].audios[payload.childKey].downloaded
+      capsules[parentKey].audios[payload.childKey].downloaded = null
+    }
+    else {
+      capsules[parentKey].audios[id].downloaded = capsules[parentKey].audios[id].url
+      capsules[parentKey].audios[id].url = url
+    }
+    return {
+      ...state,
+      capsules
     }
   }
 }, initialState)

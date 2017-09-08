@@ -19,6 +19,7 @@ import PostList from './postList'
 
 class MyCapsule extends Component {
   componentDidMount() {
+    this.props.actions.memberCapsuleGet(this.props.Uid)
     this.props.ga.gaSetScreen('MyCapsule')
   }
 

@@ -17,15 +17,13 @@ import {
 } from 'react-native-router-flux'
 
 import Launch from './screens/Launch'
-import KnowledgeCapsuleTab from './screens/knowledgeCapsule/Tab'
-import MemberCenterTab from './screens/memberCenter/Tab'
-import MemberInfo from './screens/memberCenter/subscreen/memberInfo'
-import FeedBack from './screens/memberCenter/subscreen/feedback'
 import PlayAudioScreen from './screens/playAudio'
 import Login from './screens/loginOrRegister/login'
 import Register from './screens/loginOrRegister/register'
 import ForgotPassword from './screens/loginOrRegister/forgetpw'
 import PopOutBar from './components/PopOutBar'
+import KnowledgeCapsuleTab from './screens/knowledgeCapsule/Tab'
+import MemberCenterTab from './screens/memberCenter/Tab'
 
 class App extends Component {
   componentDidMount () {
@@ -102,9 +100,8 @@ class App extends Component {
                     }}
                     activeTintColor='rgb(31, 191, 179)'
                   >
-                    {/* {TaikContentTab} */}
-                    {KnowledgeCapsuleTab}
-                    {MemberCenterTab}
+                  {KnowledgeCapsuleTab}
+                  {MemberCenterTab}
                   </Scene>
                 </Scene>
               </Scene>

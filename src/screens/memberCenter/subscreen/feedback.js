@@ -19,11 +19,9 @@ import {
   Toast
 } from 'native-base'
 import styles from '../styles'
-import { COLORS } from 'StyleConfig'
-import { Button } from '../../../components/button'
 const feedBackStyle = {
   content: {
-    backgroundColor: COLORS.memberBackground,
+    ...styles.subBackground,
     paddingLeft: 16,
     paddingRight: 16
   },
@@ -31,15 +29,15 @@ const feedBackStyle = {
     marginTop: 16,
     paddingLeft: 8,
     paddingRight: 8,
-    color: COLORS.gray
+    color: 'rgb(158, 158, 158)'
   },
   indicator: {
     flex: 1,
     justifyContent: 'center'
   },
   input: {
-    backgroundColor: COLORS.pureWhite,
-    borderColor: COLORS.lightGray,
+    backgroundColor: '#fff',
+    borderColor: 'rgb(224, 224, 224)',
     borderWidth: 1,
     borderRadius: 8,
     marginTop: 4
@@ -48,7 +46,13 @@ const feedBackStyle = {
     minHeight: 96
   },
   sendBtn: {
+    ...styles.paymentBtn,
+    marginLeft: 0,
+    marginRight: 0,
     marginTop: 24
+  },
+  sendText: {
+    color: '#fff'
   }
 }
 
@@ -170,15 +174,11 @@ class Feedback extends Component {
             <View style={[feedBackStyle.input, feedBackStyle.mutiInput]}>
               <Input onChangeText={(value: string) => this.setState({content: value})} multiline />
             </View>
-            <Button 
-              text='送出'
-              textColor='pureWhite'
-              padding={10}
-              borderRadius={7}
-              backgroundColor={COLORS.green}
-              onPress={this.send}
-              style={feedBackStyle.sendBtn}
-              />
+            <TouchableOpacity onPress={this.send} style={feedBackStyle.sendBtn}>
+              <Text style={feedBackStyle.sendText}>
+                送出
+              </Text>
+            </TouchableOpacity>
           </Content>
         }
       </Container>

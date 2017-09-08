@@ -7,7 +7,6 @@ import audioActions from '../../reducer/audio/audioAction'
 import analyticActions from '../../reducer/analytic/analyticAction'
 import capsuleAction from '../../reducer/capsule/capsuleAction'
 import downloadActions from '../../reducer/download/downloadAction'
-import globalActions from '../../reducer/global/globalAction'
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
 import {
@@ -43,6 +42,7 @@ import Icon from '../../components/img/icon/SmallIcon'
 import Banner from '../../components/img/banner/fullWidthBanner'
 import ScrollBanner from '../../components/img/scrollBanner'
 import { H3, H4 } from '../../components/text'
+import { LAYOUT } from 'StyleConfig'
 import jwt from 'react-native-jwt-io'
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
@@ -173,12 +173,14 @@ export class KnowledgeCapsule extends Component {
                             source={audio.active ? buttons.playing : buttons.playable}
                             marginRight={12}
                           />
-                          <H3 style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>
-                            {audio.audioName}
-                          </H3>
-                          <H4 gray style={styles.audioLengthText}>
-                            {audio.length ? audio.length.formatted : ''}
-                          </H4>
+                          <View style={LAYOUT.vertical}>
+                            <H3 style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>
+                              {audio.audioName}
+                            </H3>
+                            <H4 gray style={styles.audioLengthText}>
+                                {audio.downloaded === null ? audio.length.formatted : `${audio.length.formatted} 已下載`}
+                            </H4>
+                          </View>
                         </View>
                       </TouchableHighlight>
                       <TouchableHighlight 
@@ -239,6 +241,7 @@ export class KnowledgeCapsule extends Component {
     return (
       <Container style={styles.container}
         onMoveShouldSetResponder={this.props.isPlaying? this.onScroll: null}
+        onStartShouldSetResponder={() => this.setState({fabActive: ''})}
       >
         <Content
           onMomentumScrollEnd={this.onScrollEndReached}

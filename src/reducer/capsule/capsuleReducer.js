@@ -1,7 +1,8 @@
 // @flow
 import {
   CAPSULE_SET_LASTKEY,
-  CAPSULE_STORE
+  CAPSULE_STORE,
+  UPDATE_CP_AUDIO
 } from './capsuleTypes'
 import createReducder from '../../lib/configureReducer'
 

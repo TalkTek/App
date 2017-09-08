@@ -14,7 +14,8 @@ import {
   Button,
   List,
   ListItem,
-  Footer
+  Footer,
+  SwipeRow
 } from 'native-base'
 import { connect } from 'react-redux'
 import MemberAction from '../../../reducer/member/memberAction'
@@ -37,11 +38,10 @@ let buttons = {
 
 const mapStateToProps = (state) => ({
   //isPlaying: state.audio.isPlaying,
-  capsules: state.download.capsules,
+  capsules: state.audio.capsules,
   //isCpAudioLoaded: state.audio.isCpAudioLoaded,
   lastKey: state.capsule.lastKey,
   //memberUid: state.member.uid,
-  playingAudioPos: state.audio.playingAudioInfo.pos.pos
 }
 )
 const mapDispatchToProps = (dispatch) => ({
@@ -49,47 +49,62 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 export class Download extends Component {
-  componentDidMount() {
-    this.props.actions.cpAudioDownloadedInfoGet()
-  }
-  onPress = (audio, index) => {
-    this.props.actions.setAudiosource('local')
-    this.props.actions.cpAudioInfoGetSuccess(audio)
-    this.props.actions.audioLoad({audio: audio, pos: index, i: -1, j: -1})
-    this.props.actions.showAudioPopoutBar()
+  onPress = (parentKey, childKey) => {
+    const { actions } = this.props
+    actions.onPress(parentKey, childKey, 'local')
   }
 
   render() {
     let CapUnit = null
     const {
-      capsules,
-      playingAudioPos
+      capsules
     } = this.props
     if (capsules) {
       let counter = 0
       let index
-      CapUnit = capsules.map((cap, i) => {
-        return (
-          <View key={i} style={styles.capUnit}>
-            <TouchableHighlight
-              style={styles.capPlayPauseButton}
-              onPress={() => this.onPress(cap, i)}
-              underlayColor="#fff"
-            >
-              <View style={styles.capAudio}>
-                <Icon
-                  source={playingAudioPos === i ? buttons.playing : buttons.playable}
-                  marginRight={12}
-                />
-                <Text style={playingAudioPos === i ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>{cap.audioName}</Text>
-                <Text style={styles.audioLengthText}>{cap.length ? cap.length.formatted : ''}</Text>
-              </View>
-            </TouchableHighlight>
-          </View>
-        )
-      }
-      )
+      CapUnit = Object.keys(capsules).map((parentKey, i) => {
+        return(
+        Object.keys(capsules[parentKey].audios).map((childKey, j) => {
+        console.log(capsules[parentKey].audios[childKey]) 
+        if (capsules[parentKey].audios[childKey].downloaded)
+          return (
+            <SwipeRow
+            rightOpenValue={-75}
+            disableRightSwipe
+            body={<View key={i + j} style={{width: '100%'}}>
+              <TouchableHighlight
+                onPress={() => this.onPress(parentKey, childKey)}
+                underlayColor="#fff"
+              >
+                <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                  <Icon
+                    source={capsules[parentKey].audios[childKey].active ? buttons.playing : buttons.playable}
+                    marginRight={12}
+                  />
+                  <Text style={capsules[parentKey].audios[childKey].active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>
+                    {capsules[parentKey].audios[childKey].audioName}
+                  </Text>
+                  <Text style={styles.audioLengthText}>
+                    {capsules[parentKey].audios[childKey].length ? capsules[parentKey].audios[childKey].length.formatted : ''}
+                  </Text>
+                </View>
+              </TouchableHighlight>
+            </View>
+            }
+            right={
+              <TouchableHighlight onPress={() => this.props.actions.cpAudioDownloadedRemove({parentKey, childKey})}>
+                <View style={{backgroundColor: 'red', height: '100%', justifyContent: 'center', alignItems: 'center'}}>
+                  <Text style={{color: 'white'}}>Delete</Text>
+                </View>
+              </TouchableHighlight>
+            }
+            />
+          )
+      })
+    )
     }
+  )
+ }
     return (
       <Container style={styles.container}>
         <Content>
