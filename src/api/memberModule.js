@@ -5,7 +5,7 @@ export default class memberModule extends FirebaseDB {
     let path = `users/${uid}/profile`
     let profile
     if (await this.exists(path)) {
-      profile = await this.getMemberState(uid)
+      profile = await this.getMemberInfo(uid)
     } else {
       profile = {}
     }
