@@ -3,7 +3,8 @@ import {
   takeLatest,
   fork,
   call,
-  put
+  put,
+  take
 } from 'redux-saga/effects'
 import {
   SEND_FEEDBACK_SUCCESS,
@@ -68,10 +69,10 @@ function * createMember ({ payload: {email, password} }) {
 function * getMemberInfo ({ payload: { uid } }) {
   let member = yield call(() => new MemberModule().getMemberInfo(uid))
   if (member) {
-    yield put({type: MEMBER_STATE_GET_SUCCESS})
-    yield put({type: CHANGE_MEMBER_STATE, payload: {...member, uid}})
+    // yield put({type: CHANGE_MEMBER_STATE, payload: {...member, uid}})
+    return {type: MEMBER_STATE_GET_SUCCESS, payload: {...member, uid}}
   } else {
-    yield put({type: MEMBER_STATE_GET_FAILURE})
+    return { type: MEMBER_STATE_GET_FAILURE }
   }
 }
 
@@ -97,18 +98,70 @@ function * resetMemberEmail ({ payload }) {
 /**
  * watcher
  */
+function * getMemberInfo () {
+  while (true) {
+    let { payload } = yield take(GET_MEMBER_INFO)
+    const getMemberType = yield call(() => getMemberInfo(payload))
+    // yield put({type: CHANGE_MEMBER_STATE, payload: {...member, uid}})
+    console.log('get member info')
+    console.log(payload.uid)
+  }
+}
+
+function * createMemberFlow () {
+  while (true) {
+    yield take(CREATE_MEMBER)
+  }
+}
+
+function * loginMemberFlow () {
+  while (true) {
+    yield take(LOGIN_MEMBER)
+  }
+}
+
+function * loginMemberEmailFlow () {
+  while (true) {
+    yield take(LOGIN_MEMBER_EMAIL)
+  }
+}
+
+function * logoutMemberFlow () {
+  while (true) {
+    yield take(LOGOUT_MEMBER)
+  }
+}
+
+function * saveMemberChangeFlow () {
+  while (true) {
+    yield take(SAVE_MEMBER_CHANGE)
+  }
+}
+
+function * sendFeedBackFlow () {
+  while (true) {
+    yield take(SEND_FEEDBACK)
+  }
+}
 
 function * member () {
-  yield takeLatest(SEND_RESET_PASSWORD_EMAIL, resetMemberEmail)
-  yield takeLatest(GET_MEMBER_INFO, getMemberInfo)
-  yield takeLatest(CREATE_MEMBER, createMember)
-  yield takeLatest(LOGIN_MEMBER, loginMember)
-  yield takeLatest(LOGIN_MEMBER_EMAIL, loginMemberEmail)
-  yield takeLatest(LOGOUT_MEMBER, logoutMember)
-  yield takeLatest(SAVE_MEMBER_CHANGE, changeMember)
-  yield takeLatest(SEND_FEEDBACK, sendFeedBack)
+  // yield takeLatest(SEND_RESET_PASSWORD_EMAIL, resetMemberEmail)
+  // yield takeLatest(GET_MEMBER_INFO, getMemberInfo)
+  // yield takeLatest(CREATE_MEMBER, createMember)
+  // yield takeLatest(LOGIN_MEMBER, loginMember)
+  // yield takeLatest(LOGIN_MEMBER_EMAIL, loginMemberEmail)
+  // yield takeLatest(LOGOUT_MEMBER, logoutMember)
+  // yield takeLatest(SAVE_MEMBER_CHANGE, changeMember)
+  // yield takeLatest(SEND_FEEDBACK, sendFeedBack)
 }
 
 export default [
-  fork(member)
+  fork(createMemberFlow),
+  fork(getMemberInfo),
+  fork(createMemberFlow),
+  fork(loginMemberFlow),
+  fork(loginMemberEmailFlow),
+  fork(logoutMemberFlow),
+  fork(saveMemberChangeFlow),
+  fork(sendFeedBackFlow)
 ]

@@ -224,8 +224,8 @@ export class KnowledgeCapsule extends Component {
                             </Animated.View> 
                           } 
                           <Icon 
-                            source={buttons.playing} 
-                            style={styles.capPlayPauseButtonImage} 
+                            source={buttons.playing}
+                            style={styles.capPlayPauseButtonImage}
                           />
                           </View>
                         </TouchableHighlight>
