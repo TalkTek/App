@@ -3,6 +3,7 @@ import {
 } from '../lib/firebase'
 
 export default class FirebaseDB {
+  database = database
   /**
    * write data from path
    * @param {string} path
