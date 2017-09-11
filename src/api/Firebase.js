@@ -1,51 +1,49 @@
-import Firebase from 'firebase'
+import {
+  database
+} from '../lib/firebase'
 
 export default class FirebaseDB {
-  database = Firebase.database()
-  storage = Firebase.storage()
-  auth = Firebase.auth()
-
   /**
    * write data from path
    * @param {string} path
    * @param {*} value
    * @return {Promise}
    */
-  write(path = '', value) {
-    return this.database.ref(path).set(value)
+  write (path = '', value) {
+    return database.ref(path).set(value)
   }
 
   /**
    * update data from path
    * @param {string} path
    * @param {*} value
-   * @return {Promise} 
+   * @return {Promise}
    */
-  update(path = '', value) {
-    return this.database.ref(path).update(value)
+  update (path = '', value) {
+    return database.ref(path).update(value)
   }
 
-  async _read(path) {
-    return await this.database.ref(`${path}`).once('value')
+  async _read (path) {
+    return database.ref(`${path}`).once('value')
   }
 
-  updateSpecificField(path='', value) {
+  updateSpecificField (path = '', value) {
     try {
-      return this.database.ref(`${path}`).updateChildValues(value)
+      return database.ref(`${path}`).updateChildValues(value)
     } catch (error) {
       throw new Error(error)
     }
   }
 
   /**
-   * read data from path 
-   * @param {string/firebase db} path 
+   * read data from path
+   * @param {string/firebase db} path
    * @return {Promise}
    */
-  async readOnce(path = '') {
+  async readOnce (path = '') {
     let data
 
-    if (typeof path == 'object') {
+    if (typeof path === 'object') {
       data = await path.once('value')
     } else {
       data = await this._read(path)
@@ -58,16 +56,16 @@ export default class FirebaseDB {
    * @param {string} path
    * @return {Promise}
    */
-  remove(path = '') {
-    return this.database.ref(path).remove()
+  remove (path = '') {
+    return database.ref(path).remove()
   }
 
   /**
    * check ref path is exists
    * @param {string} path
-   * @return {Promise} 
+   * @return {Promise}
    */
-  async exists(path = '') {
+  async exists (path = '') {
     let snapshot = await this._read(path)
     return snapshot.exists()
   }
@@ -79,8 +77,8 @@ export default class FirebaseDB {
    * @return {Promise}
    */
 
-  push(path = '', value) {
-    let newKey = this.database.ref(path).push().key
+  push (path = '', value) {
+    let newKey = database.ref(path).push().key
     return this.update(`${path}/${newKey}`, value)
   }
 

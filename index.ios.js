@@ -1,8 +1,8 @@
 // @flow
 import {
-  AppRegistry,
+  AppRegistry
 } from 'react-native'
 
 import index from './src/index'
 
-AppRegistry.registerComponent('talkTekApp', () => index)
+AppRegistry.registerComponent('talkTekApp', () => index )

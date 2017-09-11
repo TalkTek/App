@@ -2,20 +2,13 @@
 'use strict'
 
 import React, { Component } from 'react'
-import CONFIG from '../lib/config'
-import firebase from 'firebase'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import memberAction from '../reducer/member/memberAction'
+import {auth} from '../lib/firebase'
 import {
   Actions
 } from 'react-native-router-flux'
-
-if ( __DEV__ ) {
-  firebase.initializeApp(CONFIG.FIREBASE.DEV)
-} else {
-  firebase.initializeApp(CONFIG.FIREBASE.PRODUCTION)
-}
 
 @connect( undefined, dispatch => ({
   actions: bindActionCreators(memberAction, dispatch)
@@ -23,7 +16,7 @@ if ( __DEV__ ) {
 
 export default class Main extends Component {
   componentDidMount () {
-    firebase.auth().onAuthStateChanged( user => {
+    auth.onAuthStateChanged( user => {
       if (user) {
         const { actions } = this.props
         actions.getMemberInfo({

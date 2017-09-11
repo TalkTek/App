@@ -12,9 +12,6 @@ import {
   END
 } from 'redux-saga'
 import {
-  CP_AUDIO_GOOD_CHANGE_SUCCESS,
-  CP_AUDIO_GOOD_CHANGE_FAILURE,
-  // --------R_START-------------
   ON_PRESS,
   PLAY,
   PAUSE,
