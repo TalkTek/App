@@ -8,6 +8,8 @@ import GuideList from './guideList'
 import { Container, Content } from 'native-base'
 import Firebase from '../../api/Firebase'
 import LectureApi from './lectureApi'
+import Comment from './comment'
+import Subscribe from './component/subscribe'
 
 const styles = {
   division: {
@@ -36,7 +38,11 @@ class TalkContent extends Component {
           <IntroAccordion intro={this.state.lecture.intro}/>
           <View style={styles.division} />
           <GuideList />
+          <Comment />
         </Content>
+        <View>
+          <Subscribe />
+        </View>
       </Container>
     )
   }

@@ -10,6 +10,7 @@ import {
 import { H3, H4 } from '../../components/text'
 import { COLORS, LAYOUT } from 'StyleConfig'
 import GuideAudioList from './component/guideAudioList'
+import Hr from './component/hr'
 // import {
 //   Player
 // } from 'react-native-audio-toolkit'
@@ -40,17 +41,17 @@ export default class GuideList extends Component {
       <View style={styles.container}>
         <H3 style={styles.caption}>講單</H3>
         <View>
-          <View style={styles.hr} />
+          <Hr />
           <View style={styles.divideSection}>
             <View style={styles.rec} />
             <H3 style={styles.divideText}>未來，屬於知識型網紅</H3>
           </View>
-          <View style={styles.hr} />
+          <Hr />
           <GuideAudioList 
             title="什麼是『 知識型網紅 』？"
             time="01:46"
             />
-          <View style={styles.hr} />
+            <Hr />
         </View>
       </View>
     )
@@ -88,10 +89,5 @@ const styles = StyleSheet.create({
   ppImage: {
     height: 40,
     width: 40
-  },
-  hr: {
-    height: 1,
-    width: '100%',
-    backgroundColor: COLORS.lightGray
   }
 })
