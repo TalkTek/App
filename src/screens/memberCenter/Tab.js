@@ -1,5 +1,5 @@
 import React from 'react'
-import {Scene} from 'react-native-router-flux'
+import {Scene, Stack} from 'react-native-router-flux'
 import MemberCenter from './index'
 import MemberInfo from './subscreen/memberInfo'
 import FeedBack from './subscreen/feedback'
@@ -13,7 +13,7 @@ import Icon from '../../components/img/icon/MediumIcon'
 import {Tabstyles, TabIconLink} from '../Tabstyles'
 
 export default (
-  <Scene
+  <Stack
     key='memberCenter'
     tabBarLabel='我的'
     icon={(props) => {
@@ -91,5 +91,5 @@ export default (
       backTitle=''
       title='儲值中心'
     />
-  </Scene>
+  </Stack>
 )

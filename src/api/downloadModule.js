@@ -37,7 +37,6 @@ export default class DownlaodModule {
  */
   async getDownloadedCapsules () {
     let capsules = await global.storageGlobal.getAllDataForKey('capsule-audio')
-    console.log(capsules)
     let capsuleobject = {}
     let childobject = {}
     for (let i = 0; i < capsules.length; i++) {

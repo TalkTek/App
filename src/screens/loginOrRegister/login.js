@@ -45,15 +45,9 @@ const {
   sendMsg: state.member.sendMsg,
   sendStatus: state.member.sendStatus
 }), dispatch => ({
-  member: bindActionCreators(memberAction, dispatch)
+  actions: bindActionCreators(memberAction, dispatch)
 }))
-
 export default class Login extends Component {
-  static navigationOptions = {
-    header: null,
-    tabBarVisible: false
-  }
-
   constructor (props) {
     super(props)
     this.state = {
@@ -80,7 +74,7 @@ export default class Login extends Component {
 
   async _onFacebookLogin () {
     const { dispatch } = this.props.navigation
-    const { member } = this.props
+    const { actions } = this.props
     try {
       tracker.trackEvent('FacebookLogin', 'Click')
       setTimeout(() => this.refs.spinning.open(), 1200)
@@ -94,7 +88,7 @@ export default class Login extends Component {
         // firebase setting
         const credential_facebook = firebase.auth.FacebookAuthProvider.credential(token)
         const user = await firebase.auth().signInWithCredential(credential_facebook)
-        member.loginMember({
+        actions.loginMember({
           uid:user.uid, 
           post: {
             name: user.displayName,
@@ -125,7 +119,7 @@ export default class Login extends Component {
 
   async _onGoogleSignIn() {
     const { dispatch } = this.props.navigation
-    const { member } = this.props
+    const { actions } = this.props
     
     try {
       tracker.trackEvent('GoogleLogin', 'Click')
@@ -138,7 +132,7 @@ export default class Login extends Component {
       const credential_google = await firebase.auth.GoogleAuthProvider.credential(idToken, accessToken)
       const user = await firebase.auth().signInWithCredential(credential_google)
 
-      member.loginMember({
+      actions.loginMember({
         uid:user.uid, 
         post: {
           name: user.displayName,
@@ -156,8 +150,8 @@ export default class Login extends Component {
   
   async _onEmailPasswordLogin () {
     const { navigate, dispatch } = this.props.navigation
-    const { member } = this.props
-     member.loginMemberEmail({
+    const { actions } = this.props
+     actions.loginMemberEmail({
       email: this.state.email,
       password: this.state.password
     })

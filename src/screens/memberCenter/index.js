@@ -19,7 +19,6 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import memberAction from '../../reducer/member/memberAction'
 import analyticAction from '../../reducer/analytic/analyticAction'
-import firebase from 'firebase'
 import { Actions } from 'react-native-router-flux'
 import ListIcon from '../../components/img/icon/SmallIcon'
 import OpenIcon from '../../components/img/icon/LargeIcon'
@@ -27,6 +26,7 @@ import Avatar from '../../components/img/Thumbnail/LargeThumb'
 import Listitem from './Listitem'
 import { H4 } from '../../components/text'
 import { Button } from '../../components/button'
+import {auth} from '../../lib/firebase'
 
 const { width: screenWidth } = Dimensions.get('window')
 
@@ -86,9 +86,8 @@ export default class MemberCenter extends Component {
     this.props.ga.gaSetScreen('MemberCenter')
   }
 
-  _logout = async () => {
-    await firebase
-      .auth()
+  _logout = () => {
+    auth
       .signOut()
       .then(() => {
         Actions.login()
