@@ -1,34 +1,31 @@
 import {
-  CP_AUDIO_DOWNLOAD,
-  CP_AUDIO_DOWNLOAD_SUCCESS,
-  CP_AUDIO_DOWNLOADED_INFO_GET,
-  CP_AUDIO_DOWNLOADED_INFO_GET_SUCCESS,
-  CP_AUDIO_DOWNLOADED_REMOVE,
-  CP_AUDIO_DOWNLOADED_REMOVE_SUCCESS
-} from './downloadTypes.js'
-import createReducder from '../../lib/configureReducer'
+  DOWNLOAD_CP_AUDIO_SUCCESS,
+  GET_DOWNLOADED_CP_AUDIO_SUCCESS,
+  REMOVE_DOWNLOADED_CP_AUDIO_SUCCESS
+} from './downloadTypes'
+// import createReducder from '../../lib/configureReducer'
 
-const initState = {
-  capsules: []
-}
+// const initState = {
+//   capsules: []
+// }
 
-export default createReducder({
-  [CP_AUDIO_DOWNLOAD_SUCCESS]: (state, { payload }) => {
-    return {
-      ...state,
-      capsules: payload.capsules
-    }
-  },
-  [CP_AUDIO_DOWNLOADED_INFO_GET_SUCCESS]: (state, { payload }) => {
-    return {
-      ...state,
-      capsules: payload.capsules
-    }
-  },
-  [CP_AUDIO_DOWNLOADED_REMOVE_SUCCESS]: (state, { payload }) => {
-    return {
-      ...state,
-      capsules: payload.capsules
-    }
-  }
-}, initState)
+// export default createReducder({
+//   // [DOWNLOAD_CP_AUDIO_SUCCESS]: (state, { payload }) => {
+//   //   return {
+//   //     ...state,
+//   //     capsules: payload.capsules
+//   //   }
+//   // },
+//   // [GET_DOWNLOADED_CP_AUDIO_SUCCESS]: (state, { payload }) => {
+//   //   return {
+//   //     ...state,
+//   //     capsules: payload.capsules
+//   //   }
+//   // },
+//   // [REMOVE_DOWNLOADED_CP_AUDIO_SUCCESS]: (state, { payload }) => {
+//   //   return {
+//   //     ...state,
+//   //     capsules: payload.capsules
+//   //   }
+//   // }
+// }, initState)

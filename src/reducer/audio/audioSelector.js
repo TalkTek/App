@@ -6,17 +6,19 @@ const getAudioState = state => state.audio
 
 const getMemberState = state => state.member
 
+const getAudioCapsules = state => state.audio.audioSource === 'remote' ? state.audio.capsules : state.audio.downloadedcapsules
+
 const getCapsule = (parentKey, childKey) => createSelector(
-  getAudioState,
-  audioState => {
-    return audioState.capsules[parentKey].audios[childKey]
+  getAudioCapsules,
+  capsules => {
+    return capsules[parentKey].audios[childKey]
   }
 )
 
 const getCapsules = (parentKey = undefined) => createSelector(
-  getAudioState,
-  audioState => {
-    return parentKey ? audioState.capsules[parentKey].audios : audioState.capsules
+  getAudioCapsules,
+  capsules => {
+    return parentKey ? capsules[parentKey].audios : capsules
   }
 )
 

@@ -6,7 +6,8 @@ import {
   takeLatest
 } from 'redux-saga/effects'
 // import CapsuleModule from '../../api/capsuleModule'
-import DownloadModule from '../../api/downloadModule'
+// import DownloadModule from '../../api/downloadModule'
+import downloadAPI from '../download/downloadAPI'
 import capsuleAPI from './capsuleAPI'
 import {
   LOAD_CP_AUDIO_SUCCESS,
@@ -24,39 +25,40 @@ import deepAssign from 'deep-assign'
 function * loadCapsules ({payload}) {
   let { lastKey, limitToLast } = payload
   let capsules
-  let downloadedCapsules = yield call(new DownloadModule().getDownloadedCapsules)
+  let downloadedCapsules = yield call(downloadAPI.getDownloadedCapsules)
   let remoteCapsules = {}
 
   if (lastKey) {
-    remoteCapsules = yield call(capsuleAPI.loadLimitWithLastKey(limitToLast + 1, lastKey))
+    capsules = yield call(capsuleAPI.loadLimitWithLastKey, limitToLast + 1, lastKey)
   } else {
-    try {
-      remoteCapsules = yield new Promise((resolve, reject) => {
-        let status = false
-        capsuleAPI.loadLimit(limitToLast + 1).then((remoteCapsules) => {
-          status = true
-          resolve(remoteCapsules)
-        })
-        setTimeout(() => {
-          if (!status) {
-            reject(null)
-          }
-        }, 5000)
-      })
-    } catch (e) {
-      console.log('yoooo')
-    }
-    console.log(capsules)
+    capsules = yield call(capsuleAPI.loadLimit, limitToLast + 1)
+    // try {
+    //   remoteCapsules = yield new Promise((resolve, reject) => {
+    //     let status = false
+    //     capsuleAPI.loadLimit(limitToLast + 1).then((remoteCapsules) => {
+    //       status = true
+    //       resolve(remoteCapsules)
+    //     })
+    //     setTimeout(() => {
+    //       if (!status) {
+    //         reject(null)
+    //       }
+    //     }, 5000)
+    //   })
+    // } catch (e) {
+    //   console.log('yoooo')
+    // }
+    // console.log(capsules)
   }
-  capsules = deepAssign(remoteCapsules, downloadedCapsules)
+  // capsules = deepAssign(remoteCapsules, downloadedCapsules)
   for (let parentKey in capsules) {
     for (let childkey in capsules[parentKey].audios) {
-      let isdownloaded = yield call(() => new DownloadModule().getDownloadedCapsulesID(childkey))
+      let isdownloaded = yield call(downloadAPI.getDownloadedCapsulesID, childkey)
       capsules[parentKey].audios[childkey] = {
         ...capsules[parentKey].audios[childkey],
         // some properties that should be handled by local
         active: false,
-        downloaded: isdownloaded ? capsules[parentKey].audios[childkey].url : null
+        downloaded: isdownloaded
         // some properties that should be handled by local
       }
     }

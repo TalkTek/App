@@ -110,7 +110,7 @@ export default class KnowledgeCapsule extends Component {
 
   onPress = (parentKey, childKey) => {
     const { actions } = this.props
-    actions.onPress(parentKey, childKey)
+    actions.onPress(parentKey, childKey, 'remote')
   }
 
   onScrollEndReached = () => {
@@ -161,7 +161,7 @@ export default class KnowledgeCapsule extends Component {
                               {audio.audioName}
                             </Text>
                             <Text style={styles.audioLengthText}>
-                              {audio.downloaded === null ? audio.length.formatted : `${audio.length.formatted} 已下載`}
+                              {audio.downloaded ? `${audio.length.formatted} 已下載` : audio.length.formatted }
                             </Text>
                             {/* <Text style={styles.audioLengthText}>
                               {audio.length ? audio.length.formatted : ''}
@@ -192,7 +192,7 @@ export default class KnowledgeCapsule extends Component {
                           <TouchableHighlight
                             onPress={() => {
                               console.log(audio.audioName + ' download')
-                              this.props.actions.cpAudioDownload({...audio, parentKey: parentKey, title: capsules[parentKey].title})
+                              this.props.actions.downloadCpAudio({...audio, parentKey: parentKey, title: capsules[parentKey].title})
                               }}
                           >
                             <Text style={{textAlign: 'center', textAlignVertical: 'center', lineHeight: 28}}>{'下載'}</Text>

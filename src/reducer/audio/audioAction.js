@@ -107,6 +107,11 @@ import {
   SAVE_PLAYING_AUDIO_DYNAMIC_INFO_REQUEST,
   SAVE_PLAYING_AUDIO_DYNAMIC_INFO_SUCCESS,
   SAVE_PLAYING_AUDIO_DYNAMIC_CNFO_FAILURE,
+
+  SET_AUDIO_SOURCE,
+  SET_AUDIO_SOURCE_REQUEST,
+  SET_AUDIO_SOURCE_SUCCESS,
+  SET_AUDIO_SOURCE_FAILURE
 } from './audioTypes.js'
 
 export default createActions({
@@ -215,9 +220,10 @@ export default createActions({
   [AUDIO_PLAY_SUCCESS]: state => state,
   [AUDIO_PLAY_FAILURE]: state => state,
 
-  [ON_PRESS]: (parentKey, childKey) => ({
+  [ON_PRESS]: (parentKey, childKey, audiosource) => ({
     parentKey,
-    childKey
+    childKey,
+    audiosource
   }),
   [ON_PRESS_REQUEST]: state => state,
   [ON_PRESS_SUCCESS]: state => state,
@@ -231,5 +237,10 @@ export default createActions({
   [SAVE_PLAYING_AUDIO_DYNAMIC_INFO]: state => state,
   [SAVE_PLAYING_AUDIO_DYNAMIC_INFO_REQUEST]: state => state,
   [SAVE_PLAYING_AUDIO_DYNAMIC_INFO_SUCCESS]: state => state,
-  [SAVE_PLAYING_AUDIO_DYNAMIC_CNFO_FAILURE]: state => state
+  [SAVE_PLAYING_AUDIO_DYNAMIC_CNFO_FAILURE]: state => state,
+
+  [SET_AUDIO_SOURCE]: state => state,
+  [SET_AUDIO_SOURCE_REQUEST]: state => state,
+  [SET_AUDIO_SOURCE_SUCCESS]: state => state,
+  [SET_AUDIO_SOURCE_FAILURE]: state => state
 })
