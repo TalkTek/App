@@ -25,61 +25,16 @@ import {
   SAVE_MEMBER_CHANGE,
   SEND_FEEDBACK
 } from './memberTypes'
-import MemberModule from '../../api/memberModule'
+import MemberAPI from './memberAPI'
 
 /**
  * subroutines
  */
 
 function * changeMember ({ payload: {post, memberUid} }) {
-  yield call(() => new MemberModule().changeMemberProfile(memberUid, post))
+  yield call(() => MemberAPI.changeMemberProfile(memberUid, post))
 }
 
-function * sendFeedBack ({ payload: { type, content, userId } }) {
-  let res:Object|null = yield call(() => new MemberModule().sendFeedBack(type, content, userId))
-  let key:string
-  if (res) {
-    key = SEND_FEEDBACK_FAILURE
-  } else {
-    key = SEND_FEEDBACK_SUCCESS
-  }
-  yield put({
-    type: key,
-    payload: {}
-  })
-}
-
-function * logoutMember () {
-  new MemberModule().logoutMember().catch((err: Object):void => {
-    console.warn('[SignOut Error] Messages is', err.message)
-  })
-}
-
-function * loginMember ({payload: { uid, post }}) {
-  yield call(() => new MemberModule().writeProfile(uid, post))
-  yield put({ type: CHANGE_MEMBER_STATE, payload: Object.assign(post, {uid}) })
-}
-
-function * createMember ({ payload: {email, password} }) {
-  // cteate member
-  let res = yield call(() => new MemberModule().registerMember(email, password))
-  yield call(() => resStatus(res))
-}
-
-function * getMemberInfo ({ payload: { uid } }) {
-  let member = yield call(() => new MemberModule().getMemberInfo(uid))
-  if (member) {
-    // yield put({type: CHANGE_MEMBER_STATE, payload: {...member, uid}})
-    return {type: MEMBER_STATE_GET_SUCCESS, payload: {...member, uid}}
-  } else {
-    return { type: MEMBER_STATE_GET_FAILURE }
-  }
-}
-
-function * loginMemberEmail ({ payload: {email, password} }) {
-  let res = yield call(() => new MemberModule().loginMemberEmail(email, password))
-  yield call(() => resStatus(res))
-}
 
 // control response status
 function * resStatus (res = {}) {
@@ -90,69 +45,86 @@ function * resStatus (res = {}) {
   }
 }
 
-function * resetMemberEmail ({ payload }) {
-  let res = yield call(() => new MemberModule().sendResetPasswordEmail(payload))
-  yield call(() => resStatus(res))
-}
-
 /**
  * watcher
  */
 function * getMemberInfo () {
   while (true) {
-    let { payload } = yield take(GET_MEMBER_INFO)
-    const getMemberType = yield call(() => getMemberInfo(payload))
-    // yield put({type: CHANGE_MEMBER_STATE, payload: {...member, uid}})
-    console.log('get member info')
-    console.log(payload.uid)
+    let { payload: { uid } } = yield take(GET_MEMBER_INFO)
+    let member = yield call(() => MemberAPI.getMemberInfo(uid))
+    if (member) {
+      // yield put({type: CHANGE_MEMBER_STATE, payload: {...member, uid}})
+      yield put({type: MEMBER_STATE_GET_SUCCESS, payload: {...member, uid}})
+    } else {
+      yield put({ type: MEMBER_STATE_GET_FAILURE })
+    }
   }
 }
 
 function * createMemberFlow () {
   while (true) {
-    yield take(CREATE_MEMBER)
+    const { payload: { email, password } } = yield take(CREATE_MEMBER)
+    let res = yield call(() => MemberAPI.registerMember(email, password))
+    yield call(() => resStatus(res))
   }
 }
 
 function * loginMemberFlow () {
   while (true) {
-    yield take(LOGIN_MEMBER)
+    const {payload} = yield take(LOGIN_MEMBER)
+    const {post, uid} = payload
+    yield call(() => MemberAPI.setMemberInfo(uid, post))
   }
 }
 
 function * loginMemberEmailFlow () {
   while (true) {
-    yield take(LOGIN_MEMBER_EMAIL)
+    const { payload: {email, password} } = yield take(LOGIN_MEMBER_EMAIL)
+    let res = yield call(() => MemberAPI.loginMemberEmail(email, password))
+    yield call(() => resStatus(res))
   }
 }
 
 function * logoutMemberFlow () {
   while (true) {
     yield take(LOGOUT_MEMBER)
+    MemberAPI.logoutMember().catch((err: Object):void => {
+      console.warn('[SignOut Error] Messages is', err.message)
+    })
   }
 }
 
 function * saveMemberChangeFlow () {
   while (true) {
-    yield take(SAVE_MEMBER_CHANGE)
+    const {payload: {post, memberUid}} = yield take(SAVE_MEMBER_CHANGE)
+    yield call(() => MemberAPI.changeMemberProfile(memberUid, post))
   }
 }
 
 function * sendFeedBackFlow () {
   while (true) {
-    yield take(SEND_FEEDBACK)
+    const {payload: {type, content, userId}} = yield take(SEND_FEEDBACK)
+    console.log(type, content, userId)
+    let res:Object|null = yield call(() => MemberAPI.sendFeedBack(type, content, userId))
+    let key:string
+    if (res) {
+      key = SEND_FEEDBACK_FAILURE
+    } else {
+      key = SEND_FEEDBACK_SUCCESS
+    }
+    yield put({
+      type: key,
+      payload: {}
+    })
   }
 }
 
-function * member () {
-  // yield takeLatest(SEND_RESET_PASSWORD_EMAIL, resetMemberEmail)
-  // yield takeLatest(GET_MEMBER_INFO, getMemberInfo)
-  // yield takeLatest(CREATE_MEMBER, createMember)
-  // yield takeLatest(LOGIN_MEMBER, loginMember)
-  // yield takeLatest(LOGIN_MEMBER_EMAIL, loginMemberEmail)
-  // yield takeLatest(LOGOUT_MEMBER, logoutMember)
-  // yield takeLatest(SAVE_MEMBER_CHANGE, changeMember)
-  // yield takeLatest(SEND_FEEDBACK, sendFeedBack)
+function * sendResetPasswordEmail () {
+  while (true) {
+    let {payload} = yield take(SEND_RESET_PASSWORD_EMAIL)
+    let res = yield call(() => MemberAPI.sendResetPasswordEmail(payload))
+    yield call(() => resStatus(res))
+  }
 }
 
 export default [
@@ -163,5 +135,6 @@ export default [
   fork(loginMemberEmailFlow),
   fork(logoutMemberFlow),
   fork(saveMemberChangeFlow),
-  fork(sendFeedBackFlow)
+  fork(sendFeedBackFlow),
+  fork(sendResetPasswordEmail)
 ]

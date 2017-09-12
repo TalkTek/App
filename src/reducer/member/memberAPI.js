@@ -1,4 +1,7 @@
 import FirebaseDB from '../../api/Firebase'
+import {
+  auth
+} from '../../lib/firebase.js'
 
 class MemberAPI extends FirebaseDB {
   setFavoriteCapsule = (memberUid, capsuleId, parentKey) => {
@@ -33,12 +36,12 @@ class MemberAPI extends FirebaseDB {
   }
 
   logoutMember () {
-    return this.auth.signOut()
+    return auth.signOut()
   }
 
   async registerMember (email, password) {
     try {
-      let user = await this.auth
+      let user = await auth
         .createUserWithEmailAndPassword(email, password)
 
       await this.write(`/users/${user.uid}/profile`, {
@@ -53,12 +56,22 @@ class MemberAPI extends FirebaseDB {
   }
 
   async loginMemberEmail (email, password) {
+    console.log(auth)
     try {
-      let user = await this.auth.signInWithEmailAndPassword(email, password)
+      let user = await auth.signInWithEmailAndPassword(email, password)
       return user
     } catch (e) {
       return e
     }
+  }
+
+  async setMemberInfo(uid, user) {
+    await this.write(`/users/${uid}/profile`, {
+      name: user.name,
+      email: user.email,
+      avatarUrl: user.avatarUrl,
+      from: user.from
+    })
   }
 
   async getMemberInfo (uid) {
@@ -71,7 +84,7 @@ class MemberAPI extends FirebaseDB {
 
   async sendResetPasswordEmail (email) {
     try {
-      return await this.auth.sendPasswordResetEmail(email)
+      return await auth.sendPasswordResetEmail(email)
     } catch (e) {
       return e
     }
