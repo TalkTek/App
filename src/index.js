@@ -13,9 +13,14 @@ import {
 import {
   Router,
   Scene,
-  Reducer
+  Reducer,
+  Overlay,
+  Tabs,
+  Modal,
+  Stack,
+  Lightbox
 } from 'react-native-router-flux'
-
+import CardStackStyleInterpolator from 'react-navigation/src/views/CardStackStyleInterpolator'
 import Launch from './screens/Launch'
 import PlayAudioScreen from './screens/playAudio'
 import Login from './screens/loginOrRegister/login'
@@ -47,51 +52,37 @@ class App extends Component {
           <StatusBar
             barStyle='light-content'
           />
-          <Router createReducer={reducerCreate} tintColor='white'>
-            <Scene overlay>
-              <Scene
-                key='popOutBar'
-                component={PopOutBar}
-              />
-              <Scene key='modal' hideNavBar initial>
-                <Scene
+          <Router createReducer={reducerCreate}>
+            <Overlay>
+              <Modal
+                hideNavBar
+                transitionConfig={() => ({ screenInterpolator: CardStackStyleInterpolator.forVertical })}
+              >
+                <Stack
                   key='root'
                   hideNavBar
                   hideTabBar
-                  initial
                 >
                   <Scene
                     key='launch'
                     component={Launch}
                     initial
-                    hideNavBar
-                    hideTabBar
-                  />
-                  <Scene
-                    key='playAudioScreen'
-                    hideNavBar
-                    component={PlayAudioScreen}
-                    direction='vertical'
                   />
                   <Scene
                     key='login'
                     component={Login}
-                    hideNavBar
                   />
                   <Scene
                     key='forgetpw'
                     component={ForgotPassword}
-                    hideNavBar
                   />
                   <Scene
                     key='register'
                     component={Register}
-                    hideNavBar
                     back
                   />
-                  <Scene
+                  <Tabs
                     key='tab'
-                    tabs
                     tabBarStyle={{
                       height: 49,
                       backgroundColor: 'white',
@@ -100,12 +91,20 @@ class App extends Component {
                     }}
                     activeTintColor='rgb(31, 191, 179)'
                   >
-                  {KnowledgeCapsuleTab}
-                  {MemberCenterTab}
-                  </Scene>
-                </Scene>
-              </Scene>
-            </Scene>
+                    {KnowledgeCapsuleTab}
+                    {MemberCenterTab}
+                  </Tabs>
+                </Stack>
+                <Scene
+                  key='playAudioScreen'
+                  component={PlayAudioScreen}
+                />
+              </Modal>
+              <Scene
+                key='popOutBar'
+                component={PopOutBar}
+              />
+            </Overlay>
           </Router>
         </View>
       </Provider>
