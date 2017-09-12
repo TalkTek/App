@@ -56,8 +56,7 @@ class App extends Component {
             <Overlay>
               <Modal
                 hideNavBar
-                transitionConfig={() => ({ screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid })}
-                duration={700}
+                transitionConfig={() => ({ screenInterpolator: CardStackStyleInterpolator.forVertical })}
               >
                 <Stack
                   key='root'
@@ -68,28 +67,22 @@ class App extends Component {
                     key='launch'
                     component={Launch}
                     initial
-                    hideNavBar
-                    hideTabBar
                   />
                   <Scene
                     key='login'
                     component={Login}
-                    hideNavBar
                   />
                   <Scene
                     key='forgetpw'
                     component={ForgotPassword}
-                    hideNavBar
                   />
                   <Scene
                     key='register'
                     component={Register}
-                    hideNavBar
                     back
                   />
-                  <Scene
+                  <Tabs
                     key='tab'
-                    tabs
                     tabBarStyle={{
                       height: 49,
                       backgroundColor: 'white',
@@ -98,15 +91,13 @@ class App extends Component {
                     }}
                     activeTintColor='rgb(31, 191, 179)'
                   >
-                  {KnowledgeCapsuleTab}
-                  {MemberCenterTab}
-                  </Scene>
+                    {KnowledgeCapsuleTab}
+                    {MemberCenterTab}
+                  </Tabs>
                 </Stack>
                 <Scene
                   key='playAudioScreen'
-                  hideNavBar
                   component={PlayAudioScreen}
-                  direction='vertical'
                 />
               </Modal>
               <Scene
