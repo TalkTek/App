@@ -23,7 +23,7 @@ export default class FirebaseDB {
     return database.ref(path).update(value)
   }
 
-  async _read (path) {
+  _read (path) {
     return database.ref(`${path}`).once('value')
   }
 

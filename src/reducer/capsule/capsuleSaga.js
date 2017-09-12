@@ -44,9 +44,8 @@ function * loadCapsules ({payload}) {
         }, 5000)
       })
     } catch (e) {
-      console.log('yoooo')
+      console.log('e=>', e)
     }
-    console.log(capsules)
   }
   capsules = deepAssign(remoteCapsules, downloadedCapsules)
   for (let parentKey in capsules) {

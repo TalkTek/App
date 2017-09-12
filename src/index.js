@@ -2,7 +2,7 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Provider, connect } from 'react-redux'
+import { Provider } from 'react-redux'
 import createStore from './lib/configureStore'
 import CodePush from 'react-native-code-push'
 import './lib/global'

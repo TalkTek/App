@@ -76,7 +76,7 @@ export class KnowledgeCapsule extends Component {
     fabScale: new Animated.Value(0)
   }
 
-  loadCount = 2
+  loadCount = 3
 
   touchY = -1
 
