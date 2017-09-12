@@ -13,9 +13,14 @@ import {
 import {
   Router,
   Scene,
-  Reducer
+  Reducer,
+  Overlay,
+  Tabs,
+  Modal,
+  Stack,
+  Lightbox
 } from 'react-native-router-flux'
-
+import CardStackStyleInterpolator from 'react-navigation/src/views/CardStackStyleInterpolator'
 import Launch from './screens/Launch'
 import PlayAudioScreen from './screens/playAudio'
 import Login from './screens/loginOrRegister/login'
@@ -47,18 +52,17 @@ class App extends Component {
           <StatusBar
             barStyle='light-content'
           />
-          <Router createReducer={reducerCreate} tintColor='white'>
-            <Scene overlay>
-              <Scene
-                key='popOutBar'
-                component={PopOutBar}
-              />
-              <Scene key='modal' hideNavBar initial>
-                <Scene
+          <Router createReducer={reducerCreate}>
+            <Overlay>
+              <Modal
+                hideNavBar
+                transitionConfig={() => ({ screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid })}
+                duration={700}
+              >
+                <Stack
                   key='root'
                   hideNavBar
                   hideTabBar
-                  initial
                 >
                   <Scene
                     key='launch'
@@ -66,12 +70,6 @@ class App extends Component {
                     initial
                     hideNavBar
                     hideTabBar
-                  />
-                  <Scene
-                    key='playAudioScreen'
-                    hideNavBar
-                    component={PlayAudioScreen}
-                    direction='vertical'
                   />
                   <Scene
                     key='login'
@@ -103,9 +101,19 @@ class App extends Component {
                   {KnowledgeCapsuleTab}
                   {MemberCenterTab}
                   </Scene>
-                </Scene>
-              </Scene>
-            </Scene>
+                </Stack>
+                <Scene
+                  key='playAudioScreen'
+                  hideNavBar
+                  component={PlayAudioScreen}
+                  direction='vertical'
+                />
+              </Modal>
+              <Scene
+                key='popOutBar'
+                component={PopOutBar}
+              />
+            </Overlay>
           </Router>
         </View>
       </Provider>
