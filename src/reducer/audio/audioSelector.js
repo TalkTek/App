@@ -6,6 +6,10 @@ const getAudioState = state => state.audio
 
 const getMemberState = state => state.member
 
+/**
+ * getting the correct audiosource depends on state.audioSource
+ * @param {*} state
+ */
 const getAudioCapsules = state => state.audio.audioSource === 'remote' ? state.audio.capsules : state.audio.downloadedcapsules
 
 const getCapsule = (parentKey, childKey) => createSelector(

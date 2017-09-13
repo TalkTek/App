@@ -707,7 +707,7 @@ function * setKey (parentKey, childKey) {
 /**
  * set the audio source
  *
- * it can be 'remote' or 'local' now
+ * it can be 'remote' or 'local' now (should use 'switch...case' in the future)
  */
 function * setAudioSource (audiosource) {
   try {

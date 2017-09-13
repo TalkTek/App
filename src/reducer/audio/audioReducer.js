@@ -27,7 +27,7 @@ import {
   SAVE_PREVIOUS_KEY_SUCCESS,
   PLAY_SUCCESS,
   PAUSE_SUCCESS,
-  UPDATE_CP_AUDIO_ISDOWNLOADED,
+  UPDATE_CP_AUDIO_ISDOWNLOADED_SUCCESS,
   
   SET_LIKE_EVALUATION_ON_CAPSULE_SUCCESS,
   REMOVE_LIKE_EVALUATION_ON_CAPSULE_SUCCESS,
@@ -237,7 +237,7 @@ export default createReducder({
       isPlaying: false
     }
   },
-  [UPDATE_CP_AUDIO_ISDOWNLOADED]: (state, {payload}) => {
+  [UPDATE_CP_AUDIO_ISDOWNLOADED_SUCCESS]: (state, {payload}) => {
     const {parentKey, id, isdownloaded} = payload
 
     // console.log(state)

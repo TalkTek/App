@@ -20,10 +20,12 @@ import {
   REMOVE_DOWNLOADED_CP_AUDIO_FAILURE
 } from './downloadTypes'
 import downloadActions from './downloadAction'
-import {
-  UPDATE_CP_AUDIO_ISDOWNLOADED
-} from '../audio/audioTypes'
 import downloadAPI from './downloadAPI'
+
+import {
+  UPDATE_CP_AUDIO_ISDOWNLOADED_SUCCESS
+} from '../audio/audioTypes'
+import audioActions from '../audio/audioAction'
 
 /**
  * save audio data to local storage
@@ -49,8 +51,9 @@ function * saveAudioFileflow (data) {
       capsules
     }
   })
+  yield put(audioActions.updateCpAudioIsdownloadedRequest())
   yield put({
-    type: UPDATE_CP_AUDIO_ISDOWNLOADED,
+    type: UPDATE_CP_AUDIO_ISDOWNLOADED_SUCCESS,
     payload: {
       ...data.payload,
       isdownloaded: isdownloaded
@@ -79,14 +82,19 @@ function * getDownloadedCapsulesflow () {
     }
   })
 }
+/**
+ * remove downloaded capsules
+ * @param {*} data
+ */
 function * removeDownloadedCapsuleflow (data) {
   yield put(downloadActions.removeDownloadedCpAudioRequest())
   let path = data.payload.url
   yield call(downloadAPI.removeCapsuleFromCache, path)
   yield call(downloadAPI.removeCapsuleFromStorage, data.payload.id)
   let isdownloaded = yield call(downloadAPI.getDownloadedCapsulesID, data.payload.id)
+  yield put(audioActions.updateCpAudioIsdownloadedRequest())
   yield put({
-    type: UPDATE_CP_AUDIO_ISDOWNLOADED,
+    type: UPDATE_CP_AUDIO_ISDOWNLOADED_SUCCESS,
     payload: {
       ...data.payload,
       isdownloaded: isdownloaded

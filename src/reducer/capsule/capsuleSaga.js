@@ -17,7 +17,7 @@ import {
   CAPSULE_SET_LASTKEY,
   LOAD_CP_AUDIO
 } from './capsuleTypes.js'
-import deepAssign from 'deep-assign'
+// import deepAssign from 'deep-assign'
 /**
  * subroutines
  */
@@ -25,8 +25,8 @@ import deepAssign from 'deep-assign'
 function * loadCapsules ({payload}) {
   let { lastKey, limitToLast } = payload
   let capsules
-  let downloadedCapsules = yield call(downloadAPI.getDownloadedCapsules)
-  let remoteCapsules = {}
+  // let downloadedCapsules = yield call(downloadAPI.getDownloadedCapsules)
+  // let remoteCapsules = {}
 
   if (lastKey) {
     capsules = yield call(capsuleAPI.loadLimitWithLastKey, limitToLast + 1, lastKey)
