@@ -284,11 +284,11 @@ class PlayAudio extends Component {
 }
 
 PlayAudio.propTypes = {
-  actions: React.PropTypes.object,
-  audioDynamicInfo: React.PropTypes.object,
-  audioStaticInfo: React.PropTypes.object,
-  isPlaying: React.PropTypes.bool,
-  userFavoriteCapsules: React.PropTypes.object,
+  actions: PropTypes.objectOf(PropTypes.func),
+  audioDynamicInfo: PropTypes.objectOf(PropTypes.object),
+  audioStaticInfo: PropTypes.objectOf(PropTypes.string),
+  isPlaying: PropTypes.bool,
+  userFavoriteCapsules: PropTypes.objectOf(PropTypes.object),
 }
 
 export default PlayAudio
