@@ -704,12 +704,26 @@ function * setKey (parentKey, childKey) {
     throw new Error(error.message)
   }
 }
+/**
+ * set the audio source
+ *
+ * it can be 'remote' or 'local' now (should use 'switch...case' in the future)
+ */
+function * setAudioSource (audiosource) {
+  try {
+    yield put(audioActions.setAudioSourceRequest())
+    yield put(audioActions.setAudioSourceSuccess(audiosource))
+  } catch (error) {
+    throw new Error(error.message)
+  }
+}
 
 // -------------------------WATCHER START-------------------------------
 function * onPressFlow () {
   while (true) {
-    const {payload: {parentKey, childKey}} = yield take(ON_PRESS)
+    const {payload: {parentKey, childKey, audiosource}} = yield take(ON_PRESS)
     yield put(audioActions.onPressRequest())
+    yield call(setAudioSource, audiosource)
     let capsule = yield call(getAudioFilePicked, parentKey, childKey)
     yield call(setCapsulePickedIntoReduxStore, capsule)
     yield put(audioActions.showAudioPopoutBar())

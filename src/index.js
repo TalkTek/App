@@ -18,29 +18,13 @@ import {
 } from 'react-native-router-flux'
 
 import Launch from './screens/Launch'
-import KnowledgeCapsule from './screens/knowledgeCapsule'
-import MemberCenter from './screens/memberCenter'
-import MemberInfo from './screens/memberCenter/memberInfo'
-import FeedBack from './screens/memberCenter/feedback'
 import PlayAudioScreen from './screens/playAudio'
 import Login from './screens/loginOrRegister/login'
 import Register from './screens/loginOrRegister/register'
 import ForgotPassword from './screens/loginOrRegister/forgetpw'
 import PopOutBar from './components/PopOutBar'
-
-import Icon from './components/img/icon/MediumIcon'
-
-const TabIconLink = {
-  active: {
-    knowledgeCapsule: require('./assets/img/tabIcon/knowledgeCapsule/cap_active.png'),
-    memberCenter: require('./assets/img/tabIcon/memberCenter/member_active.png')
-  },
-  inActive: {
-    knowledgeCapsule: require('./assets/img/tabIcon/knowledgeCapsule/cap_inactive.png'),
-    memberCenter: require('./assets/img/tabIcon/memberCenter/member_inactive.png')
-  }
-}
-
+import KnowledgeCapsuleTab from './screens/knowledgeCapsule/Tab'
+import MemberCenterTab from './screens/memberCenter/Tab'
 class App extends Component {
   componentDidMount () {
     CodePush.sync({installMode: CodePush.InstallMode.ON_NEXT_RESTART})
@@ -111,67 +95,8 @@ class App extends Component {
                     }}
                     activeTintColor='rgb(31, 191, 179)'
                   >
-                    <Scene
-                      key='knowledgeCapsule'
-                      tabBarLabel='知識膠囊'
-                      icon={(props) => {
-                        return (
-                          <Icon
-                            source={
-                              props.focused
-                                ? TabIconLink.active.knowledgeCapsule
-                                : TabIconLink.inActive.knowledgeCapsule
-                            }
-                          />
-                        )
-                      }}
-                    >
-                      <Scene
-                        initial
-                        key='knowledgeCapsuleList'
-                        component={KnowledgeCapsule}
-                        title='知識膠囊'
-                        titleStyle={styles.titleStyle}
-                        navigationBarStyle={styles.headerStyle}
-                      />
-                    </Scene>
-                    <Scene
-                      key='memberCenter'
-                      tabBarLabel='我的'
-                      icon={(props) => {
-                        return (
-                          <Icon
-                            source={
-                              props.focused
-                                ? TabIconLink.active.memberCenter
-                                : TabIconLink.inActive.memberCenter
-                            }
-                          />
-                        )
-                      }}
-                      titleStyle={styles.titleStyle}
-                      navigationBarStyle={styles.headerStyle}
-                    >
-                      <Scene
-                        initial
-                        key='memberCenterList'
-                        component={MemberCenter}
-                        title='我的'
-                      />
-                      <Scene
-                        key='memberInfo'
-                        component={MemberInfo}
-                        back
-                        title='個人資料'
-                      />
-                      <Scene
-                        key='feedback'
-                        component={FeedBack}
-                        back
-                        backTitle=''
-                        title='意見反饋'
-                      />
-                    </Scene>
+                  {KnowledgeCapsuleTab}
+                  {MemberCenterTab}
                   </Scene>
                 </Scene>
               </Scene>
