@@ -14,8 +14,6 @@ import {
   Animated,
   Dimensions,
   ActivityIndicator,
-  Platform,
-  NetInfo,
   Share
 } from 'react-native'
 import {
@@ -29,18 +27,9 @@ import {
   ListItem,
   Footer
 } from 'native-base'
-import firebase from 'firebase'
 import styles from './styles'
-import {
-  MessageBarAlert,
-  MessageBarManager
-} from 'react-native-message-bar'
-import {
-  Actions
-} from 'react-native-router-flux'
 import Icon from '../../components/img/icon/SmallIcon'
-import Banner from '../../components/img/banner/fullWidthBanner'
-import ScrollBanner from '../../components/img/scrollBanner'
+import ScrollBanner from '../../components/ScrollBanner'
 import { H3, H4 } from '../../components/text'
 import { LAYOUT } from 'StyleConfig'
 import jwt from 'react-native-jwt-io'
@@ -66,7 +55,6 @@ let buttons = {
 }), dispatch => ({
   actions: bindActionCreators({...audioActions, ...analyticActions, ...capsuleAction, ...downloadActions}, dispatch),
 }))
-
 export class KnowledgeCapsule extends Component {
 
   state = {
@@ -197,8 +185,7 @@ export class KnowledgeCapsule extends Component {
                                 } 
                               ).start() 
                           ) 
-                          //this.props.actions.cpAudioDownload(audio.url) 
-                        }}> 
+                        }}>
                         <View>
                           { 
                             audio.id && 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Banner from '../banner/fullWidthBanner'
+import Banner from '../img/banner/fullWidthBanner'
 import {
   View,
   Animated,
@@ -151,15 +151,19 @@ class ScrollBanner extends Component {
           }
           <Banner source={source[0]} />
         </Animated.View>
+        {/*scroll dot*/}
         <View style={style.indicatorView}>
           {
             source.map((ele, index) => {
-              return <View key={index} style={[style.indicator, 
+              return <View key={index} style={[style.indicator,
               (
                   index === this.state.index ||
-                  (this.state.index === this.props.source.length && index==0)) ?
-                  style.selected: null
-                ]}></View>
+                  (this.state.index === this.props.source.length && index==0)
+              )
+                ? style.selected
+                : null
+                ]}>
+              </View>
             })
           }
         </View>
