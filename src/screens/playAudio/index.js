@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux'
 import audioActions from '../../reducer/audio/audioAction'
 import analyticAction from '../../reducer/analytic/analyticAction'
 import { connect } from 'react-redux'
+import { createStructuredSelector } from 'reselect';
 import {
   Container,
   View,
@@ -19,33 +20,30 @@ import {
   Content,
   Footer
 } from 'native-base'
-import {
-  TouchableHighlight,
-} from 'react-native'
 import styles from './styles'
 import Slider from 'react-native-slider'
 import DocScreen from '../../screens/playAudio/playerDoc'
 import Modal from 'react-native-modalbox'
-import FunctionIcon from '../../components/img/icon/XLIcon'
 import CloseIcon from '../../components/img/icon/XSmallIcon'
 import Banner from '../../components/img/banner/fullWidthBanner'
 import { Actions } from 'react-native-router-flux'
 import PlayerButtons from './component/PlayerButtons'
 import FooterButtons from './component/FooterButtons'
 import { H2, H4, H5 } from '../../components/text'
+import {
+  getPlayingAudioStaticInfo,
+  getPlayingAudioDynamicInfo,
+  isPlaying,
+} from '../../reducer/audio/audioSelector'
+import {
+  getFavoriteCapsule
+} from '../../reducer/member/memberSelector'
 
-@connect(state => ({
-  isPlaying: state.audio.isPlaying,
-  memberUid: state.member.uid,
-  userFavoriteCapsules: state.member.favoriteCapsule,
-  capsuleId: state.audio.playingAudioStaticInfo.id,
-  parentKey: state.audio.playingAudioStaticInfo.parentKey,
-  audioName: state.audio.playingAudioStaticInfo.audioName,
-  audioUrl: state.audio.playingAudioStaticInfo.url,
-  audioLengthFormatted: state.audio.playingAudioStaticInfo.length.formatted,
-  audioLengthSec: Number(state.audio.playingAudioStaticInfo.length.sec),
-  currentTimeFormatted: state.audio.playingAudioDynamicInfo.currentTime.formatted,
-  currentTimeSec: Number(state.audio.playingAudioDynamicInfo.currentTime.sec)
+@connect(createStructuredSelector({
+  audioStaticInfo: getPlayingAudioStaticInfo(),
+  audioDynamicInfo: getPlayingAudioDynamicInfo(),
+  isPlaying: isPlaying(),
+  userFavoriteCapsules: getFavoriteCapsule()
 }), dispatch => ({
   actions: bindActionCreators({...audioActions, ...analyticAction}, dispatch)
 }))
@@ -63,7 +61,7 @@ class PlayAudio extends Component {
         active: require('../../assets/img/playAudio/goodActive.png'),
         checkActive: () => this.isGood(),
         name: 'likeCounter',
-        func: () => this._audioIsGoodToggle()
+        func: () => this.toggleLike()
       },
       // timer: {
       //   notActive: require('../../assets/img/playAudio/timer.png'),
@@ -114,13 +112,13 @@ class PlayAudio extends Component {
   }
 
   componentDidMount() {
-    const { actions } = this.props
+    const { actions, audioStaticInfo } = this.props
     actions.hideAudioPopoutBar()
     actions.gaSetEvent({
       category: 'capsule',
       action: 'open player',
       value: {
-        label: this.props.audioName,
+        label: audioStaticInfo.audioName,
         value: 1
       }
     })
@@ -141,15 +139,18 @@ class PlayAudio extends Component {
   }
 
   _onSlidingComplete = (pos) => {
-    this.props.actions.seek(pos)
+    const { actions } = this.props
+    actions.seek(pos)
   }
 
+  // toggle Doc screen modal
   toggleModal = () => {
     this.setState({
       isModalOpen: !this.state.isModalOpen
     })
   }
 
+  // open Doc Moal
   openModal = () => {
     this.setState({
       isModalOpen: true,
@@ -158,45 +159,39 @@ class PlayAudio extends Component {
     this.refs.docScreen.open()
   }
 
-  _audioIsGoodToggle = () => {
-    const { userFavoriteCapsules, capsuleId, actions } = this.props
-    let isPositive = userFavoriteCapsules[capsuleId]
-
+  toggleLike = () => {
+    const { actions, audioStaticInfo } = this.props
     actions.gaSetEvent({
       category: 'capsule',
-      action: this.props.audioIsGood? 'unlike capsule' : 'like capsule',
+      action: this.isGood() ? 'unlike capsule' : 'like capsule',
       value: {
-        label: this.props.audioName,
+        label: audioStaticInfo.audioName,
         value: 1
       }
     })
-    actions
-      .setEvaluation(
-        isPositive,
-        this.props.capsuleId,
-        this.props.parentKey,
-        this.props.memberUid
-      )
+    actions.setEvaluation()
   }
 
   _buttonGaEvent(type) {
+    const { actions, audioStaticInfo } = this.props
     if (type !== 'playOrPause')
-      this.props.ga.gaSetEvent({
+      actions.gaSetEvent({
         category: 'capsule',
         action: type,
         value: {
-          label: this.props.audioName,
+          label: audioStaticInfo.audioName,
           value: 1
         }
       })
   }
 
   _gaGoBack() {
-    this.props.ga.gaSetEvent({
+    const { actions, audioStaticInfo } = this.props
+    actions.gaSetEvent({
       category: 'capsule',
       action: 'close player',
       value: {
-        label: this.props.audioName,
+        label: audioStaticInfo.audioName,
         value: 1
       }
     })
@@ -210,10 +205,8 @@ class PlayAudio extends Component {
 
   render () {
     const {
-      audioName,
-      audioLengthFormatted,
-      audioLengthSec,
-      currentTimeFormatted,
+      audioStaticInfo,
+      audioDynamicInfo: { currentTime }
     } = this.props
 
     return (
@@ -243,7 +236,7 @@ class PlayAudio extends Component {
           <View style={styles.body}>
             <View style={styles.title}>
               <H2 black>
-                {audioName}
+                {audioStaticInfo.audioName}
               </H2>
             </View>
             <View style={styles.audioType}>
@@ -253,14 +246,14 @@ class PlayAudio extends Component {
             </View>
             <View style={styles.slider}>
               <View style={styles.sliderTime}>
-                <H5 gray>{currentTimeFormatted ? currentTimeFormatted : '00:00'}</H5>
+                <H5 gray>{currentTime.formatted ? currentTime.formatted : '00:00'}</H5>
                 <H4/>
-                <H5 gray>{audioLengthFormatted}</H5>
+                <H5 gray>{audioStaticInfo.length.formatted}</H5>
               </View>
               <Slider
                 value={this.props.currentTimeSec}
                 step={1}
-                maximumValue={audioLengthSec}
+                maximumValue={Number(audioStaticInfo.length.sec)}
                 onSlidingComplete={this._onSlidingComplete}
                 minimumTrackTintColor='rgb(31, 191, 179)'
                 thumbTouchSize={{width: 20, height: 20}}
@@ -290,4 +283,12 @@ class PlayAudio extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PlayAudio)
+PlayAudio.propTypes = {
+  actions: React.PropTypes.object,
+  audioDynamicInfo: React.PropTypes.object,
+  audioStaticInfo: React.PropTypes.object,
+  isPlaying: React.PropTypes.bool,
+  userFavoriteCapsules: React.PropTypes.object,
+}
+
+export default PlayAudio

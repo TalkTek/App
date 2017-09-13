@@ -77,6 +77,20 @@ const getPreviousKey = () => createSelector(
   }
 )
 
+const getPlayingAudioStaticInfo = () => createSelector(
+  getAudioState,
+  audioState => {
+    return audioState.playingAudioStaticInfo
+  }
+)
+
+const getPlayingAudioDynamicInfo = () => createSelector(
+  getAudioState,
+  audioState => {
+    return audioState.playingAudioDynamicInfo
+  }
+)
+
 export {
   getCapsule,
   getCapsules,
@@ -87,5 +101,7 @@ export {
   getCurrentKey,
   getPreviousKey,
   getMemberState,
-  getLikeCounter
+  getLikeCounter,
+  getPlayingAudioDynamicInfo,
+  getPlayingAudioStaticInfo
 }
