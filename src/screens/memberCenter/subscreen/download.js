@@ -37,7 +37,7 @@ let buttons = {
 
 const mapStateToProps = (state) => ({
   //isPlaying: state.audio.isPlaying,
-  capsules: state.audio.capsules,
+  capsules: state.audio.downloadedcapsules,
   //isCpAudioLoaded: state.audio.isCpAudioLoaded,
   lastKey: state.capsule.lastKey,
   //memberUid: state.member.uid,
@@ -48,6 +48,9 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 export class Download extends Component {
+  componentDidMount(){
+    this.props.actions.getDownloadedCpAudio()
+  }
   onPress = (parentKey, childKey) => {
     const { actions } = this.props
     actions.onPress(parentKey, childKey, 'local')
@@ -65,7 +68,7 @@ export class Download extends Component {
         return(
         Object.keys(capsules[parentKey].audios).map((childKey, j) => {
         console.log(capsules[parentKey].audios[childKey]) 
-        if (capsules[parentKey].audios[childKey].downloaded)
+        //if (capsules[parentKey].audios[childKey].downloaded)
           return (
             <SwipeRow
             rightOpenValue={-75}
@@ -91,7 +94,7 @@ export class Download extends Component {
             </View>
             }
             right={
-              <TouchableHighlight onPress={() => this.props.actions.cpAudioDownloadedRemove({parentKey, childKey})}>
+              <TouchableHighlight onPress={() => this.props.actions.removeDownloadedCpAudio({...capsules[parentKey].audios[childKey], parentKey: parentKey})}>
                 <View style={{backgroundColor: 'red', height: '100%', justifyContent: 'center', alignItems: 'center'}}>
                   <Text style={{color: 'white'}}>Delete</Text>
                 </View>
