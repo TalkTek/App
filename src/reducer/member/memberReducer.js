@@ -3,11 +3,11 @@ import {
   CHANGE_MEMBER_STATE,
   LOGOUT_MEMBER,
   SAVE_MEMBER_CHANGE,
-  MEMBER_CAPSULE_GET_SUCCESS,
   SEND_FEEDBACK,
   SEND_FEEDBACK_SUCCESS,
   MEMBER_FAIL,
   MEMBER_SUCCESS,
+  MEMBER_STATE_GET_SUCCESS,
   SET_FAVORITE_CAPSULE_ON_USER_SUCCESS,
   REMOVE_FAVORITE_CAPSULE_ON_USER_SUCCESS,
 } from './memberTypes.js'
@@ -29,13 +29,13 @@ type MemberStateType = {
   }
 }
 const initMemberState : MemberStateType = {
-  avatarUrl: null,
-  email: null,
-  name: null,
+  avatarUrl: '',
+  email: '',
+  name: '',
   uid: null,
-  from: null,
-  birthday: null,
-  gender: null,
+  from: '',
+  birthday: '',
+  gender: '',
   favoriteCapsule: {},
   sendStatus: 0, // 0 finish, 1 pending, 2 fail
   sendMsg: {code: '', message: ''}
@@ -85,13 +85,6 @@ export default createReducder({
       gender: action.payload.post.gender || memberState.gender
     }
   },
-  [MEMBER_CAPSULE_GET_SUCCESS]: (memberState: MemberStateType, action: {payload: {capsules: []}}) => {
-    // console.log(action)
-    return {
-      ...memberState,
-      favoriteCapsule: action.payload.capsules
-    }
-  },
   [SEND_FEEDBACK]: (memberState: MemberStateType) => ({
     ...memberState,
     sendStatus: 1
@@ -108,6 +101,14 @@ export default createReducder({
       message: action.payload.message
     }
   }),
+  [MEMBER_STATE_GET_SUCCESS]: (state, {payload}) => {
+    return {
+      ...state,
+      favoriteCapsule: payload.favorite||{},
+      ...payload.profile,
+      uid: payload.uid
+    }
+  },
   [MEMBER_SUCCESS]: (state: MemberStateType) => ({
     ...state,
     sendStatus: 0,

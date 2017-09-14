@@ -4,46 +4,81 @@
 import React, { Component } from 'react'
 import { Image, View, Text, StyleSheet, Dimensions } from 'react-native'
 import { Left, Right } from 'native-base'
+import { H2, H4 } from '../../components/text'
+import { COLORS, LAYOUT } from 'StyleConfig'
 
 const { width, height } = Dimensions.get('window')
 let margin = Number(((width) * 0.06).toFixed())
 
 export default class Info extends Component {
-  constructor (props: any) {
-    super(props)
+  images = {
+    avatar: require('../../assets/img/bubu.png'),
+    banner: require('../../assets/img/demo_banner.jpg')
+  }
+  _renderAvatar() {
+    return (
+      <View style={styles.thumbnail}>
+        <Image
+          source={this.images.avatar}
+          style={styles.thumbnailImage}
+        />
+        <H4 style={styles.thumbnailText}>
+          艾希莉布 | Talk小講編輯部
+        </H4>
+      </View>
+    )
   }
 
+  _renderTag () {
+    const style = {
+      marginTop: 8
+    }
+
+    return (
+      <View style={style}>
+        <H4 green>#網紅 #賺錢 #小資時代</H4>
+      </View>
+    )
+  }
+
+  _renderTime () {
+    const style = {
+      marginTop: 8
+    }
+
+    return (
+      <View style={style}>
+        <H4 gray>2017.06.10 PM 04:02</H4>
+      </View>
+    )
+  }
   render () {
     return (
-      <View style={styles.main}>
+      <View style={styles.bg}>
         <View>
           <Image
             style={styles.bannerImage}
-            source={require('../../assets/img/demo_banner.jpg')}
+            source={this.images.banner}
           />
         </View>
-        <View style={styles.thumbnail}>
-          <Image
-            source={require('../../assets/img/bubu.png')}
-            style={styles.thumbnailImage}
-          />
-          <Text style={styles.thumbnailText}>
-            艾希莉布 | Talk小講編輯部
-          </Text>
-        </View>
-        <View style={styles.title}>
-          <Text style={styles.titleText}>
-            {this.props.lectureTitle}
-          </Text>
-        </View>
-        <View style={styles.hr} />
-        <View style={styles.restInfo}>
-          <Left>
-            <Text style={styles.numberOfListener}>累積100人次收聽</Text>
-          </Left>
-          <Right>
-            <Text style={styles.lengthOfVoice}>25分鐘語音</Text>
-          </Right>
+        <View style={styles.main}>
+          {this._renderAvatar()}
+          <View style={styles.title}>
+            <H2 bold>
+              {this.props.lectureTitle}
+            </H2>
+          </View>
+          {this._renderTag()}
+          {this._renderTime()}
+          <View style={styles.hr} />
+          <View style={styles.restInfo}>
+            <Left>
+              <H4 style={styles.restInfoText}>累積100人次收聽</H4>
+            </Left>
+            <Right>
+              <H4 style={styles.restInfoText}>25分鐘語音</H4>
+            </Right>
+          </View>
         </View>
       </View>
     )
@@ -51,68 +86,49 @@ export default class Info extends Component {
 }
 
 const styles = StyleSheet.create({
+  bg: {
+    backgroundColor: COLORS.pureWhite
+  },
   main: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: 'rgb(255, 255, 255)',
+    backgroundColor: COLORS.pureWhite,
+    marginLeft: 25,
+    marginRight: 25
   },
   bannerImage: {
     resizeMode: 'cover',
-    width: width,
+    width: '100%',
     height: 140
   },
   thumbnail: {
-    flex: 1,
-    flexDirection: 'row',
-    paddingTop: 12,
-    paddingBottom: 12
+    ...LAYOUT.horizontal,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginTop: 12
   },
   thumbnailImage: {
     width: 32,
     height: 32,
-    marginLeft: margin,
-    marginRight: margin,
     borderRadius: 15
   },
   thumbnailText: {
-    paddingTop: 8,
-    fontSize: 12
+    marginLeft: 18
   },
   title: {
-    marginLeft: margin,
-    marginRight: margin,
-    padding: 0,
+    marginTop: 8,
     marginBottom: 8
   },
-  titleText: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    lineHeight: 20
-  },
   hr: {
-    marginLeft: margin,
-    marginRight: margin,
     marginTop: 8,
     marginBottom: 12,
     height: 1,
-    width: width - margin*2,
-    backgroundColor: 'rgb(224, 224, 224)',
+    width: '100%',
+    backgroundColor: COLORS.lightGray,
   },
   restInfo: {
-    flex: 1,
-    flexDirection: 'row',
-    marginLeft: margin,
-    marginRight: margin,
-    marginBottom: 12,
+    ...LAYOUT.horizontal,
+    paddingBottom: 12
   },
-  numberOfListener: {
-    fontSize: 12,
-    lineHeight: 17,
-    letterSpacing: 1,
-  },
-  lengthOfVoice: {
-    fontSize: 12,
-    lineHeight: 17,
+  restInfoText: {
     letterSpacing: 1,
   },
 })
