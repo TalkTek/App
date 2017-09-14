@@ -137,22 +137,12 @@ export default createReducder({
       },
       title: targetCapsules[parentKey].title,
     }
-    if(state.audioSource === 'remote'){
-      return {
-        ...state,
-        capsules: {
-          ...targetCapsules,
-          [parentKey]: finalCapsules
-        }
-      }
-    }
-    else{
-      return {
-        ...state,
-        downloadedcapsules: {
-          ...targetCapsules,
-          [parentKey]: finalCapsules
-        }
+    let capsulesNeedToChange = state.audioSource === 'remote' ? 'capsules' : 'downloadedcapsules'
+     return {
+      ...state,
+      [capsulesNeedToChange]: {
+        ...targetCapsules,
+        [parentKey]: finalCapsules
       }
     }
   },
@@ -170,22 +160,12 @@ export default createReducder({
       },
       title: targetCapsules[parentKey].title,
     }
-    if(state.audioSource === 'remote'){
-      return {
-        ...state,
-        capsules: {
-          ...targetCapsules,
-          [parentKey]: finalCapsules
-        }
-      }
-    }
-    else{
-      return {
-        ...state,
-        downloadedcapsules: {
-          ...targetCapsules,
-          [parentKey]: finalCapsules
-        }
+    let capsulesNeedToChange = state.audioSource === 'remote' ? 'capsules' : 'downloadedcapsules'
+    return {
+      ...state,
+      [capsulesNeedToChange]: {
+        ...targetCapsules,
+        [parentKey]: finalCapsules
       }
     }
   },
@@ -239,20 +219,9 @@ export default createReducder({
   },
   [UPDATE_CP_AUDIO_ISDOWNLOADED_SUCCESS]: (state, {payload}) => {
     const {parentKey, id, isdownloaded} = payload
-
-    // console.log(state)
     let capsules = Object.assign({}, state.capsules)
     console.log(capsules)
     capsules[parentKey].audios[id].downloaded = isdownloaded
-    // if(url === null) {
-    //   console
-    //   capsules[parentKey].audios[payload.childKey].url = capsules[parentKey].audios[payload.childKey].downloaded
-    //   capsules[parentKey].audios[payload.childKey].downloaded = null
-    // }
-    // else {
-    //   capsules[parentKey].audios[id].downloaded = capsules[parentKey].audios[id].url
-    //   capsules[parentKey].audios[id].url = url
-    // }
     return {
       ...state,
       capsules

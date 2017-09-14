@@ -1,7 +1,11 @@
 import { testSaga, expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import downloadAPI from '../downloadAPI'
-import { downloadSaga } from '../downloadSaga'
+import {
+  saveAudioFileflow,
+  getDownloadedCapsulesflow,
+  removeDownloadedCapsuleflow
+} from '../downloadSaga'
 import {
   DOWNLOAD_CP_AUDIO,
   DOWNLOAD_CP_AUDIO_REQUEST,
@@ -29,7 +33,7 @@ import {
 const data = {payload: {downloaded: false}}
 
 it('save audio flow', () => {
-  return expectSaga(downloadSaga)
+  return expectSaga(saveAudioFileflow)
     .provide([
       [matchers.call.fn(downloadAPI.downloadAudio), 'some path'],
       [matchers.call.fn(downloadAPI.getDownloadedCapsules), data.payload],
@@ -44,7 +48,7 @@ it('save audio flow', () => {
 })
 
 it('get downloaded audio flow', () => {
-  return expectSaga(downloadSaga)
+  return expectSaga(getDownloadedCapsulesflow)
   .provide([
     [matchers.call.fn(downloadAPI.getDownloadedCapsules), data.payload]
   ])
@@ -55,7 +59,7 @@ it('get downloaded audio flow', () => {
 })
 
 it('remove audio flow', () => {
-  return expectSaga(downloadSaga)
+  return expectSaga(removeDownloadedCapsuleflow)
   .provide([
     [matchers.call.fn(downloadAPI.removeCapsuleFromCache)],
     [matchers.call.fn(downloadAPI.removeCapsuleFromStorage)],

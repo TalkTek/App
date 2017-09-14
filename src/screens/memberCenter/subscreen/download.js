@@ -51,7 +51,7 @@ export class Download extends Component {
   componentDidMount(){
     this.props.actions.getDownloadedCpAudio()
   }
-  onPress = (parentKey, childKey) => {
+  _onPress = (parentKey, childKey) => {
     const { actions } = this.props
     actions.onPress(parentKey, childKey, 'local')
   }
@@ -75,7 +75,7 @@ export class Download extends Component {
             disableRightSwipe
             body={<View key={i + j} style={{width: '100%'}}>
               <TouchableHighlight
-                onPress={() => this.onPress(parentKey, childKey)}
+                onPress={() => this._onPress(parentKey, childKey)}
                 underlayColor="#fff"
               >
                 <View style={{flexDirection: 'row', justifyContent: 'center'}}>
