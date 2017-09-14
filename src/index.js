@@ -17,8 +17,7 @@ import {
   Overlay,
   Tabs,
   Modal,
-  Stack,
-  Lightbox
+  Stack
 } from 'react-native-router-flux'
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStackStyleInterpolator'
 import Launch from './screens/Launch'

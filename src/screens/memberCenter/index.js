@@ -38,7 +38,6 @@ const { width: screenWidth } = Dimensions.get('window')
   logout: bindActionCreators(memberAction.logoutMember, dispatch),
   ga: bindActionCreators(analyticAction, dispatch)
 }))
-
 export default class MemberCenter extends Component {
   listsData = {
     my: [{

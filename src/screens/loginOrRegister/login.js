@@ -73,7 +73,6 @@ export default class Login extends Component {
   }
 
   async _onFacebookLogin () {
-    const { dispatch } = this.props.navigation
     const { actions } = this.props
     try {
       tracker.trackEvent('FacebookLogin', 'Click')
@@ -118,9 +117,7 @@ export default class Login extends Component {
   }
 
   async _onGoogleSignIn() {
-    const { dispatch } = this.props.navigation
     const { actions } = this.props
-    
     try {
       tracker.trackEvent('GoogleLogin', 'Click')
       // google setting
@@ -149,7 +146,6 @@ export default class Login extends Component {
   }
   
   async _onEmailPasswordLogin () {
-    const { navigate, dispatch } = this.props.navigation
     const { actions } = this.props
      actions.loginMemberEmail({
       email: this.state.email,
