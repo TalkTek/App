@@ -28,6 +28,7 @@ import ForgotPassword from './screens/loginOrRegister/forgetpw'
 import PopOutBar from './components/PopOutBar'
 import KnowledgeCapsuleTab from './screens/knowledgeCapsule/Tab'
 import MemberCenterTab from './screens/memberCenter/Tab'
+import TalkContent from './screens/talkContent/Tab'
 
 class App extends Component {
   componentDidMount () {
@@ -90,6 +91,7 @@ class App extends Component {
                     }}
                     activeTintColor='rgb(31, 191, 179)'
                   >
+                  {TalkContent}
                     {KnowledgeCapsuleTab}
                     {MemberCenterTab}
                   </Tabs>

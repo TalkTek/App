@@ -86,14 +86,8 @@ export default class MemberCenter extends Component {
   }
 
   _logout = () => {
-    auth
-      .signOut()
-      .then(() => {
-        Actions.login()
-      })
-      .catch((error) => {
-        console.warn('[SignOut Error] Messages is', error.message)
-      })
+    this.props.logout()
+    Actions.login()
   }
 
   _renderListItem = (rowData: Object) => {
@@ -132,7 +126,7 @@ export default class MemberCenter extends Component {
       <View style={[styles.mainBackground, styles.avatar]}>
         <Avatar
           source={
-            this.props.memberUid ?
+            this.props.memberUid && this.props.memberAvatar ?
               { uri: this.props.memberAvatar } :
               require('../../assets/img/memberCenter/profileIcon.png')
           }

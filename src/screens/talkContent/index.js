@@ -7,7 +7,9 @@ import Info from './info'
 import GuideList from './guideList'
 import { Container, Content } from 'native-base'
 import Firebase from '../../api/Firebase'
-import LectureModule from '../../api/lectureModule'
+import LectureApi from './lectureApi'
+import Comment from './comment'
+import Subscribe from './component/subscribe'
 
 const styles = {
   division: {
@@ -21,7 +23,7 @@ class TalkContent extends Component {
     lecture: {}
   }
   componentDidMount () {
-    let x = new LectureModule().load('-KsawU_btRda8tYA16qh')
+    let x = new LectureApi().load('-KsbLuHV-r5IMNEz5QUy')
     x.then((x) => {
       console.log(x)
       this.setState({lecture: x})
@@ -36,7 +38,11 @@ class TalkContent extends Component {
           <IntroAccordion intro={this.state.lecture.intro}/>
           <View style={styles.division} />
           <GuideList />
+          <Comment />
         </Content>
+        <View>
+          <Subscribe />
+        </View>
       </Container>
     )
   }

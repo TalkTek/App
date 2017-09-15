@@ -50,8 +50,7 @@ let buttons = {
   isPlaying: state.audio.isPlaying,
   capsules: state.audio.capsules,
   isCpAudioLoaded: state.audio.isCpAudioLoaded,
-  lastKey: state.capsule.lastKey,
-  memberUid: state.member.uid,
+  lastKey: state.capsule.lastKey
 }), dispatch => ({
   actions: bindActionCreators({...audioActions, ...analyticActions, ...capsuleAction, ...downloadActions}, dispatch),
 }))
@@ -212,8 +211,8 @@ export class KnowledgeCapsule extends Component {
                             </Animated.View> 
                           } 
                           <Icon 
-                            source={buttons.playing} 
-                            style={styles.capPlayPauseButtonImage} 
+                            source={buttons.playing}
+                            style={styles.capPlayPauseButtonImage}
                           />
                           </View>
                         </TouchableHighlight>

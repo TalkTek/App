@@ -7,8 +7,6 @@ import { bindActionCreators } from 'redux'
 import memberAction from '../../../reducer/member/memberAction'
 import { 
   View,
-  Text,
-  TouchableOpacity,
   ActivityIndicator
 } from 'react-native'
 import {
@@ -19,6 +17,10 @@ import {
   Toast
 } from 'native-base'
 import styles from '../styles'
+import { Button } from '../../../components/button'
+import { H3 } from '../../../components/text'
+import { COLORS } from 'StyleConfig'
+
 const feedBackStyle = {
   content: {
     ...styles.subBackground,
@@ -28,8 +30,7 @@ const feedBackStyle = {
   textLabel: {
     marginTop: 16,
     paddingLeft: 8,
-    paddingRight: 8,
-    color: 'rgb(158, 158, 158)'
+    paddingRight: 8
   },
   indicator: {
     flex: 1,
@@ -46,7 +47,6 @@ const feedBackStyle = {
     minHeight: 96
   },
   sendBtn: {
-    ...styles.paymentBtn,
     marginLeft: 0,
     marginRight: 0,
     marginTop: 24
@@ -146,9 +146,9 @@ class Feedback extends Component {
         {
           this.props.status !== 1 &&
           <Content style={feedBackStyle.content}>
-            <Text style={feedBackStyle.textLabel}> 
+            <H3 gray style={feedBackStyle.textLabel}> 
               選擇回饋類型
-            </Text> 
+            </H3> 
             <View>
               <Picker
                 mode="dropdown"
@@ -168,17 +168,21 @@ class Feedback extends Component {
                 }
               </Picker>
             </View>
-            <Text style={feedBackStyle.textLabel}>
+            <H3 gray style={feedBackStyle.textLabel}>
               內容（必填）
-            </Text>
+            </H3>
             <View style={[feedBackStyle.input, feedBackStyle.mutiInput]}>
               <Input onChangeText={(value: string) => this.setState({content: value})} multiline />
             </View>
-            <TouchableOpacity onPress={this.send} style={feedBackStyle.sendBtn}>
-              <Text style={feedBackStyle.sendText}>
-                送出
-              </Text>
-            </TouchableOpacity>
+            <Button
+              textColor="white"
+              backgroundColor={COLORS.green}
+              text="送出"
+              borderRadius={8}
+              padding={8}
+              style={feedBackStyle.sendBtn}
+              onPress={this.send}
+              />
           </Content>
         }
       </Container>
