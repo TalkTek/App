@@ -1,11 +1,11 @@
 import React from 'react'
-import {Scene} from 'react-native-router-flux'
+import {Scene, Stack} from 'react-native-router-flux'
 import talkContent from './index'
 import Icon from '../../components/img/icon/MediumIcon'
 import {Tabstyles, TabIconLink} from '../Tabstyles'
 
 export default (
-  <Scene
+  <Stack
     key='talkContent'
     tabBarLabel='小講'
     icon={(props) => {
@@ -28,6 +28,6 @@ export default (
       titleStyle={Tabstyles.titleStyle}
       navigationBarStyle={Tabstyles.headerStyle}
     />
-  </Scene>
+  </Stack>
 
 )
