@@ -50,8 +50,7 @@ let buttons = {
   isPlaying: state.audio.isPlaying,
   capsules: state.audio.capsules,
   isCpAudioLoaded: state.audio.isCpAudioLoaded,
-  lastKey: state.capsule.lastKey,
-  memberUid: state.member.uid,
+  lastKey: state.capsule.lastKey
 }), dispatch => ({
   actions: bindActionCreators({...audioActions, ...analyticActions, ...capsuleAction, ...downloadActions}, dispatch),
 }))
@@ -68,7 +67,7 @@ export class KnowledgeCapsule extends Component {
 
   touchY = -1
 
-  resolveData(lastKey) {
+  _resolveData(lastKey) {
     const { actions } = this.props
     actions.loadCpAudio({
       lastKey,
@@ -78,11 +77,11 @@ export class KnowledgeCapsule extends Component {
 
   componentDidMount() {
     const { actions, lastKey } = this.props
-    this.resolveData(lastKey)
+    this._resolveData(lastKey)
     actions.gaSetScreen('KnowledgeCapsule')
   }
 
-  onScroll = (event) => {
+  _onScroll = (event) => {
     const {
       actions
     } = this.props
@@ -101,18 +100,19 @@ export class KnowledgeCapsule extends Component {
     }
   }
 
-  onPress = (parentKey, childKey) => {
+  _onPress = (parentKey, childKey) => {
     const { actions } = this.props
-    actions.onPress(parentKey, childKey)
+    actions.onPress(parentKey, childKey, 'remote')
+    // 'remote' means which audioSource you want to use
   }
 
-  onScrollEndReached = () => {
+  _onScrollEndReached = () => {
     const { lastKey } = this.props
 
     if (lastKey === null) {
       return
     } else {
-      this.resolveData(lastKey)
+      this._resolveData(lastKey)
     }
   }
 
@@ -153,7 +153,7 @@ export class KnowledgeCapsule extends Component {
                     <View style={styles.capUnit} key={j}>
                       <TouchableHighlight
                         style={styles.capPlayPauseButton}
-                        onPress={this.onPress.bind(this, parentKey, childKey)}
+                        onPress={this._onPress.bind(this, parentKey, childKey)}
                         underlayColor="#fff"
                       >
                         <View style={styles.capAudio}>
@@ -166,7 +166,7 @@ export class KnowledgeCapsule extends Component {
                               {audio.audioName}
                             </H3>
                             <H4 gray style={styles.audioLengthText}>
-                                {audio.downloaded === null ? audio.length.formatted : `${audio.length.formatted} 已下載`}
+                                {audio.downloaded === false ? audio.length.formatted : `${audio.length.formatted} 已下載`}
                             </H4>
                           </View>
                         </View>
@@ -190,11 +190,11 @@ export class KnowledgeCapsule extends Component {
                           { 
                             audio.id && 
                             this.state.fabActive === audio.id && 
-                            <Animated.View style={{ transform: [{ scale: this.state.fabScale }], opacity: 0.9, position: 'absolute', padding: 5, right: 30, bottom: -10, minWidth: 70, backgroundColor: 'white', borderRadius: 20, shadowColor: 'rgba(0,0,0,0.2)', shadowOffset: { width: 0, height: 1 }, shadowRadius: 5, shadowOpacity: 10, zIndex: 5 }}> 
+                            <Animated.View style={{ transform: [{ scale: this.state.fabScale }], ...styles.fabStyle}}> 
                               <TouchableHighlight 
                                 onPress={() => { 
                                   console.log(audio.audioName + ' download') 
-                                  this.props.actions.cpAudioDownload(audio) 
+                                  this.props.actions.downloadCpAudio(audio) 
                                   }} 
                               > 
                                 <View> 
@@ -211,8 +211,8 @@ export class KnowledgeCapsule extends Component {
                             </Animated.View> 
                           } 
                           <Icon 
-                            source={buttons.playing} 
-                            style={styles.capPlayPauseButtonImage} 
+                            source={buttons.playing}
+                            style={styles.capPlayPauseButtonImage}
                           />
                           </View>
                         </TouchableHighlight>
@@ -227,11 +227,11 @@ export class KnowledgeCapsule extends Component {
     
     return (
       <Container style={styles.container}
-        onMoveShouldSetResponder={this.props.isPlaying? this.onScroll: null}
+        onMoveShouldSetResponder={this.props.isPlaying? this._onScroll: null}
         onStartShouldSetResponder={() => this.setState({fabActive: ''})}
       >
         <Content
-          onMomentumScrollEnd={this.onScrollEndReached}
+          onMomentumScrollEnd={this._onScrollEndReached}
         >
         <View>
           <ScrollBanner

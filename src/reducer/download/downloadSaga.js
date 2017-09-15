@@ -1,100 +1,133 @@
 import {
   fork,
-  takeLatest,
   call,
   put,
-  select
+  select,
+  take
 } from 'redux-saga/effects'
 import {
-  CP_AUDIO_DOWNLOAD,
-  CP_AUDIO_DOWNLOAD_SUCCESS,
-  CP_AUDIO_DOWNLOAD_FAILURE,
-  CP_AUDIO_DOWNLOADED_INFO_GET,
-  CP_AUDIO_DOWNLOADED_INFO_GET_SUCCESS,
-  CP_AUDIO_DOWNLOADED_INFO_GET_FAILURE,
-  CP_AUDIO_DOWNLOADED_REMOVE,
-  CP_AUDIO_DOWNLOADED_REMOVE_SUCCESS,
-  CP_AUDIO_DOWNLOADED_REMOVE_FAILURE
+  DOWNLOAD_CP_AUDIO,
+  DOWNLOAD_CP_AUDIO_REQUEST,
+  DOWNLOAD_CP_AUDIO_SUCCESS,
+  DOWNLOAD_CP_AUDIO_FAILURE,
+  GET_DOWNLOADED_CP_AUDIO,
+  GET_DOWNLOADED_CP_AUDIO_REQUEST,
+  GET_DOWNLOADED_CP_AUDIO_SUCCESS,
+  GET_DOWNLOADED_CP_AUDIO_FAILURE,
+  REMOVE_DOWNLOADED_CP_AUDIO,
+  REMOVE_DOWNLOADED_CP_AUDIO_REQUEST,
+  REMOVE_DOWNLOADED_CP_AUDIO_SUCCESS,
+  REMOVE_DOWNLOADED_CP_AUDIO_FAILURE
 } from './downloadTypes'
-import {
-  UPDATE_CP_AUDIO_ISDOWNLOADED
-} from '../audio/audioTypes'
-import {getCapsulePath} from './downloadSelector'
+import downloadActions from './downloadAction'
+import downloadAPI from './downloadAPI'
 
-import DownloadModule from '../../api/downloadModule'
+import {
+  UPDATE_CP_AUDIO_ISDOWNLOADED_SUCCESS
+} from '../audio/audioTypes'
+import audioActions from '../audio/audioAction'
 
 /**
  * save audio data to local storage
  * @param data : object
  */
 
-function * saveAudioFile (data) {
-  let filepath = yield call(() => new DownloadModule().downloadAudio(data.payload))
-  let capsules = yield call(() => new DownloadModule().getDownloadedCapsules())
-  let type
-  console.log(filepath)
-
-  if (typeof filepath === 'string') {
-    type = CP_AUDIO_DOWNLOAD_SUCCESS
-  } else {
-    type = CP_AUDIO_DOWNLOAD_FAILURE
+export function * saveAudioFileflow () {
+  while (true) {
+    try {
+      const { payload } = yield take(DOWNLOAD_CP_AUDIO)
+      yield put(downloadActions.downloadCpAudioRequest())
+      const filepath = yield call(downloadAPI.downloadAudio, payload)
+      let capsules = yield call(downloadAPI.getDownloadedCapsules)
+      let isdownloaded = yield call(downloadAPI.getDownloadedCapsulesID, payload.id)
+      if (typeof (filepath) !== 'string') throw new Error('incorrect filepath')
+      yield put({
+        type: DOWNLOAD_CP_AUDIO_SUCCESS,
+        payload: {
+          capsules
+        }
+      })
+      yield put(audioActions.updateCpAudioIsdownloadedRequest())
+      yield put({
+        type: UPDATE_CP_AUDIO_ISDOWNLOADED_SUCCESS,
+        payload: {
+          ...payload,
+          isdownloaded: isdownloaded
+        }
+      })
+    } catch (error) {
+      yield put({
+        type: DOWNLOAD_CP_AUDIO_FAILURE
+      })
+    }
   }
-  yield put({
-    type,
-    payload: {
-      capsules
-    }
-  })
-  yield put({
-    type: UPDATE_CP_AUDIO_ISDOWNLOADED,
-    payload: {
-      ...data.payload,
-      url: filepath
-    }
-  })
 }
 
 /**
  * get downloaded capsules
  */
-function * getDownloadedCapsules () {
-  let capsules = yield call(() => new DownloadModule().getDownloadedCapsules())
-  let type
-  console.log(capsules)
+export function * getDownloadedCapsulesflow () {
+  while (true) {
+    try {
+      yield take(GET_DOWNLOADED_CP_AUDIO)
+      yield put(downloadActions.getDownloadedCpAudioRequest())
+      let capsules = yield call(downloadAPI.getDownloadedCapsules)
+      console.log(capsules)
 
-  if (typeof (capsules) === 'object') {
-    type = CP_AUDIO_DOWNLOADED_INFO_GET_SUCCESS
-  } else {
-    type = CP_AUDIO_DOWNLOADED_INFO_GET_FAILURE
+      if (typeof (capsules) !== 'object') throw new Error('get downloaded capsules failed')
+      yield put({
+        type: GET_DOWNLOADED_CP_AUDIO_SUCCESS,
+        payload: {
+          capsules
+        }
+      })
+    } catch (error) {
+      yield put({type: GET_DOWNLOADED_CP_AUDIO_FAILURE})
+    }
   }
-  yield put({
-    type,
-    payload: {
-      capsules
-    }
-  })
 }
-function * removeDownloadedCapsule (data) {
-  let path = yield select(getCapsulePath(data.payload.parentKey, data.payload.childKey))
-  yield call(() => new DownloadModule().removeCapsuleFromCache(path))
-  yield call(() => new DownloadModule().removeCapsuleFromStorage(data.payload))
-  yield put({
-    type: UPDATE_CP_AUDIO_ISDOWNLOADED,
-    payload: {
-      ...data.payload,
-      url: null
+/**
+ * remove downloaded capsules
+ * @param {*} data
+ */
+export function * removeDownloadedCapsuleflow () {
+  while (true) {
+    try {
+      const { payload } = yield take(REMOVE_DOWNLOADED_CP_AUDIO)
+      yield put(downloadActions.removeDownloadedCpAudioRequest())
+      let path = payload.url
+      yield call(downloadAPI.removeCapsuleFromCache, path)
+      yield call(downloadAPI.removeCapsuleFromStorage, payload.id)
+      let isdownloaded = yield call(downloadAPI.getDownloadedCapsulesID, payload.id)
+      yield put(audioActions.updateCpAudioIsdownloadedRequest())
+      yield put({
+        type: UPDATE_CP_AUDIO_ISDOWNLOADED_SUCCESS,
+        payload: {
+          ...payload,
+          isdownloaded: isdownloaded
+        }
+      })
+      let capsules = yield call(downloadAPI.getDownloadedCapsules)
+      console.log(capsules)
+  
+      if (typeof (capsules) !== 'object') throw new Error('remove downloaded capsules failed')
+      yield put({
+        type: REMOVE_DOWNLOADED_CP_AUDIO_SUCCESS,
+        payload: {
+          capsules
+        }
+      })
+    } catch (error) {
+      yield put({type: REMOVE_DOWNLOADED_CP_AUDIO_FAILURE})
     }
-  })
+  }
 }
 /***
  * watcher
  */
-function * downloadSaga () {
-  yield takeLatest(CP_AUDIO_DOWNLOAD, saveAudioFile)
-  yield takeLatest(CP_AUDIO_DOWNLOADED_INFO_GET, getDownloadedCapsules)
-  yield takeLatest(CP_AUDIO_DOWNLOADED_REMOVE, removeDownloadedCapsule)
-}
 
 export default [
-  fork(downloadSaga)
+  fork(saveAudioFileflow),
+  fork(getDownloadedCapsulesflow),
+  fork(removeDownloadedCapsuleflow)
 ]
