@@ -51,6 +51,7 @@
     "react-dom": "^15.6.1",
     "react-native-debugger-open": "^0.3.12",
     "react-test-renderer": "^15.6.1",
+    "redux-saga-test-plan": "^3.1.0",
     "standard": "^10.0.2"
   },
   "jest": {
