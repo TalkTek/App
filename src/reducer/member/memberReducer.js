@@ -7,7 +7,7 @@ import {
   SEND_FEEDBACK_SUCCESS,
   MEMBER_FAIL,
   MEMBER_SUCCESS,
-  MEMBER_STATE_GET_SUCCESS,
+  GET_MEMBER_STATE_SUCCESS,
   SET_FAVORITE_CAPSULE_ON_USER_SUCCESS,
   REMOVE_FAVORITE_CAPSULE_ON_USER_SUCCESS,
 } from './memberTypes.js'
@@ -101,7 +101,7 @@ export default createReducder({
       message: action.payload.message
     }
   }),
-  [MEMBER_STATE_GET_SUCCESS]: (state, {payload}) => {
+  ['GET_MEMBER_STATE_SUCCESS']: (state, {payload}) => {
     return {
       ...state,
       favoriteCapsule: payload.favorite||{},
