@@ -5,4 +5,5 @@ jest.mock('react-native-fetch-blob', () => {
     polyfill: () => {}
   }
 })
+// jest.mock('native-base', () => {})
 mock()

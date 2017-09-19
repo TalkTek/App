@@ -4,7 +4,8 @@ import {
   View,
   Animated,
   Easing,
-  Dimensions
+  Dimensions,
+  Image
 } from 'react-native'
 import { COLORS } from 'StyleConfig'
 
@@ -12,10 +13,10 @@ const style = {
   wrapper: {
     width: '100%',
     overflow: 'hidden',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   scroller: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   indicatorView: {
     position: 'absolute',
@@ -62,7 +63,7 @@ class ScrollBanner extends Component {
   }
 
   scrollAnimate() {
-    const totalTime = this.props.aniTime||1000
+    const totalTime = this.props.anyTime||1000
     const {index} = this.state
     Animated.timing(
       this.state.scrollPercent,
@@ -133,11 +134,13 @@ class ScrollBanner extends Component {
     const {source} = this.props
     
     return (
-      <View 
-        onTouchStart={this._touchStart}
-        onTouchMove={this._touchMove}
-        onTouchEnd={this._touchEnd}
-        style={style.wrapper} removeClippedSubviews>
+      <View
+        // onTouchStart={this._touchStart}
+        // onTouchMove={this._touchMove}
+        // onTouchEnd={this._touchEnd}
+        // style={style.wrapper}
+        // removeClippedSubviews
+      >
         {/* scroll view */}
         <Animated.View style={[style.scroller, {
           left: scrollPercent
@@ -149,7 +152,7 @@ class ScrollBanner extends Component {
               )
             })
           }
-          <Banner source={source[0]} />
+          <Image source={source[0]} />
         </Animated.View>
         {/*scroll dot*/}
         <View style={style.indicatorView}>
