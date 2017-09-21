@@ -184,7 +184,7 @@ export default class Login extends Component {
   render() {
     const { navigate } = this.props.navigation
     return (
-      <Container style={styles.container}>
+      <Container testID='Login' style={styles.container}>
         <Content>
           <View style={styles.bg}>
             <Image source={require('../../assets/img/logo.png')} style={styles.logo} />

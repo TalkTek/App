@@ -1,14 +1,16 @@
 // @flow
 'use strict'
 
-import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
-import audioActions from '../../reducer/audio/audioAction'
-import analyticActions from '../../reducer/analytic/analyticAction'
-import capsuleAction from '../../reducer/capsule/capsuleAction'
-import downloadActions from '../../reducer/download/downloadAction'
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
+import React, { Component } from 'react'
+
+import analyticActions from '../../reducer/analytic/analyticAction'
+import audioActions from '../../reducer/audio/audioAction'
+import capsuleAction from '../../reducer/capsule/capsuleAction'
+import downloadActions from '../../reducer/download/downloadAction'
+
 import {
   TouchableHighlight,
   Animated,
@@ -35,8 +37,8 @@ import { LAYOUT } from 'StyleConfig'
 import jwt from 'react-native-jwt-io'
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
-console.log('screenHeight', screenHeight);
-console.log('screenWidth', screenWidth);
+console.log('screenHeight', screenHeight)
+console.log('screenWidth', screenWidth)
 
 let buttons = {
   'playingOnAudioBar': require('../../assets/img/audioElement/play.png'),
@@ -173,6 +175,7 @@ export class KnowledgeCapsule extends Component {
                       </TouchableHighlight>
                       <TouchableHighlight 
                         underlayColor="#fff" 
+                        testID={`floatActionButton${childKey}`}
                         onPress={() => { 
                           this.setState({ fabActive: audio.id, fabScale: new Animated.Value(0) }, 
                             () => 
@@ -191,7 +194,8 @@ export class KnowledgeCapsule extends Component {
                             audio.id && 
                             this.state.fabActive === audio.id && 
                             <Animated.View style={{ transform: [{ scale: this.state.fabScale }], ...styles.fabStyle}}> 
-                              <TouchableHighlight 
+                              <TouchableHighlight
+                                testID={`downloadButton${childKey}`} 
                                 onPress={() => { 
                                   console.log(audio.audioName + ' download') 
                                   this.props.actions.downloadCpAudio(audio) 
@@ -226,7 +230,7 @@ export class KnowledgeCapsule extends Component {
     }
     
     return (
-      <Container style={styles.container}
+      <Container testID='knowledgeCapsule' style={styles.container}
         onMoveShouldSetResponder={this.props.isPlaying? this._onScroll: null}
         onStartShouldSetResponder={() => this.setState({fabActive: ''})}
       >
