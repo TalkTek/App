@@ -1,5 +1,7 @@
-import React, { Component } from 'react'
+// @flow
 import { bindActionCreators } from 'redux'
+import React, { Component } from 'react'
+
 import {
   Image,
   TouchableHighlight
@@ -48,10 +50,15 @@ const mapDispatchToProps = (dispatch) => ({
 })
 
 export class Download extends Component {
+  props: {
+    capsules: Object,
+    lastKey: string,
+    actions: Object
+  }
   componentDidMount(){
     this.props.actions.getDownloadedCpAudio()
   }
-  _onPress = (parentKey, childKey) => {
+  _onPress = (parentKey: string, childKey: string) => {
     const { actions } = this.props
     actions.onPress(parentKey, childKey, 'local')
   }
@@ -73,7 +80,7 @@ export class Download extends Component {
             <SwipeRow
             rightOpenValue={-75}
             disableRightSwipe
-            body={<View key={i + j} style={{width: '100%'}}>
+            body={<View testID='SwipeRow' key={i + j} style={{width: '100%'}}>
               <TouchableHighlight
                 onPress={() => this._onPress(parentKey, childKey)}
                 underlayColor="#fff"
@@ -94,7 +101,7 @@ export class Download extends Component {
             </View>
             }
             right={
-              <TouchableHighlight onPress={() => this.props.actions.removeDownloadedCpAudio({...capsules[parentKey].audios[childKey], parentKey: parentKey})}>
+              <TouchableHighlight testID='SwipeRow.RightItem' onPress={() => this.props.actions.removeDownloadedCpAudio({...capsules[parentKey].audios[childKey], parentKey: parentKey})}>
                 <View style={{backgroundColor: 'red', height: '100%', justifyContent: 'center', alignItems: 'center'}}>
                   <Text style={{color: 'white'}}>Delete</Text>
                 </View>

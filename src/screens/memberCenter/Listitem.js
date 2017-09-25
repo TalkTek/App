@@ -54,6 +54,7 @@ export default class Listitem extends Component {
         return (
           <TouchableOpacity
             key={rowData.key}
+            testID={`${rowData.key}`}
             onPress={() => rowData.func()}
             style={[styles.mainBackground, styles.listItem]}
           >

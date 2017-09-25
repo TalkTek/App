@@ -1,11 +1,13 @@
 // @flow
 'use strict'
 
-import React, { Component } from 'react'
 import { Provider } from 'react-redux'
-import createStore from './lib/configureStore'
 import CodePush from 'react-native-code-push'
+import React, { Component } from 'react'
+
 import './lib/global'
+import createStore from './lib/configureStore'
+
 import {
   StatusBar,
   View
@@ -91,7 +93,7 @@ class App extends Component {
                     }}
                     activeTintColor='rgb(31, 191, 179)'
                   >
-                  {TalkContent}
+                    {TalkContent}
                     {KnowledgeCapsuleTab}
                     {MemberCenterTab}
                   </Tabs>

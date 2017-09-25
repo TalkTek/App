@@ -78,7 +78,6 @@ class DownlaodAPI {
       id: id
     })
   }
-  
   removeCapsuleFromCache (path) {
     RNFetchBlob.fs.unlink(path.slice(0, 6))
   }
