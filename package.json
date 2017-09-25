@@ -7,7 +7,7 @@
     "test": "jest --setupTestFrameworkScriptFile=./jest/setup-unit-tests.js",
     "test-e2e": "jest __e2e__ --setupTestFrameworkScriptFile=./jest/setup-e2e-tests.js ",
     "test-watch": "jest --watch",
-    "postinstall": "rndebugger-open"
+    "postinstall": "rndebugger-open",
     "precommit": "lint-staged"
   },
   "pre-commit": {
