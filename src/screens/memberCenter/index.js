@@ -27,6 +27,7 @@ import Listitem from './Listitem'
 import { H4 } from '../../components/text'
 import { Button } from '../../components/button'
 import {auth} from '../../lib/firebase'
+import TabChager from './component/TabChanger'
 
 const { width: screenWidth } = Dimensions.get('window')
 
@@ -157,10 +158,11 @@ export default class MemberCenter extends Component {
   render() {
     return (
       <Container style={styles.container}>
-        <Content>
-          <View>
-            {this._renderUserAvater()}
-          </View>
+        <View style={{flex: 0.65}}>
+          {this._renderUserAvater()}
+          <TabChager />
+        </View>
+        <Content style={{flex: 1}}>
           <View style={styles.container}>
               <Listitem listsData={this.listsData}/>
             {

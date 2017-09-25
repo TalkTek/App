@@ -7,7 +7,7 @@ import { COLORS } from 'StyleConfig'
 const { width: number } = Dimensions.get('window')
 const style: Object = {
   container: {
-    backgroundColor: 'rgb(245, 245, 245)'
+    backgroundColor: COLORS.pureWhite
   },
   mainBackground: {
     backgroundColor: COLORS.pureWhite
