@@ -137,7 +137,7 @@ class ScrollBanner extends Component {
         onTouchStart={this._touchStart}
         onTouchMove={this._touchMove}
         onTouchEnd={this._touchEnd}
-        style={style.wrapper} removeClippedSubviews>
+        style={style.wrapper}>
         {/* scroll view */}
         <Animated.View style={[style.scroller, {
           left: scrollPercent
