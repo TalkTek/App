@@ -21,7 +21,7 @@ import {
   Modal,
   Stack
 } from 'react-native-router-flux'
-import CardStackStyleInterpolator from 'react-navigation/src/views/CardStackStyleInterpolator'
+import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
 import Launch from './screens/Launch'
 import PlayAudioScreen from './screens/playAudio'
 import Login from './screens/loginOrRegister/login'

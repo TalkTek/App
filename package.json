@@ -20,10 +20,10 @@
     "key-mirror": "^1.0.1",
     "lodash": "^4.17.4",
     "mock-async-storage": "^1.0.3",
-    "native-base": "2.2.0",
+    "native-base": "2.2.1",
     "prop-types": "^15.5.10",
-    "react": "16.0.0-alpha.6",
-    "react-native": "0.44.0",
+    "react": "16.0.0-alpha.8",
+    "react-native": "0.46.1",
     "react-native-audio-toolkit": "^1.0.5",
     "react-native-code-push": "latest",
     "react-native-easy-grid": "^0.1.8",
@@ -56,10 +56,10 @@
     "detox": "^5.6.2",
     "enzyme": "^2.9.1",
     "flow-bin": "^0.52.0",
-    "jest": "20.0.1",
     "mocha": "^3.5.3",
     "lint-staged": "^4.2.1",
     "pre-commit": "^1.2.2",
+    "jest": "^21.1.0",
     "react-dom": "^15.6.1",
     "react-native-debugger-open": "^0.3.12",
     "react-test-renderer": "^15.6.1",
@@ -68,7 +68,14 @@
   },
   "jest": {
     "preset": "react-native",
-    "bail": true
+    "bail": true,
+    "transformIgnorePatterns": [
+      "node_modules/(?!react-native|native-base-shoutem-theme|@shoutem/animation|@shoutem/ui|tcomb-form-native)",
+      "node_modules/(?!react-native|native-base)/"
+    ],
+    "setupFiles": [
+      "./setup.js"
+    ]
   },
   "lint-staged": {
     "*.test.js": [

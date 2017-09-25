@@ -16,7 +16,7 @@ import {
   Animated,
   Dimensions,
   ActivityIndicator,
-  Share
+  Share,
 } from 'react-native'
 import {
   Container,
@@ -27,7 +27,8 @@ import {
   Button,
   List,
   ListItem,
-  Footer
+  Footer,
+  Image
 } from 'native-base'
 import styles from './styles'
 import Icon from '../../components/img/icon/SmallIcon'
@@ -35,6 +36,7 @@ import ScrollBanner from '../../components/ScrollBanner'
 import { H3, H4 } from '../../components/text'
 import { LAYOUT } from 'StyleConfig'
 import jwt from 'react-native-jwt-io'
+import Banner from '../../components/img/banner/fullWidthBanner'
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 console.log('screenHeight', screenHeight)
@@ -237,7 +239,6 @@ export class KnowledgeCapsule extends Component {
         <Content
           onMomentumScrollEnd={this._onScrollEndReached}
         >
-        <View>
           <ScrollBanner
             source={[
               require('../../assets/img/knowledgeCapsule/banner.png'),
@@ -245,7 +246,6 @@ export class KnowledgeCapsule extends Component {
               require('../../assets/img/TalkListbanner.png')
             ]}
           />
-        </View>
           {
             isCpAudioLoaded
               ? CapUnit

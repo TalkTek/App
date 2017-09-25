@@ -20,11 +20,9 @@ import {
   SwipeRow
 } from 'native-base'
 import { connect } from 'react-redux'
-import MemberAction from '../../../reducer/member/memberAction'
 import analyticActions from '../../../reducer/analytic/analyticAction'
 import audioActions from '../../../reducer/audio/audioAction'
 import downloadActions from '../../../reducer/download/downloadAction'
-import RNFetchBlob from 'react-native-fetch-blob'
 import '../../../lib/global'
 import styles from '../../knowledgeCapsule/styles'
 import Icon from '../../../components/img/icon/SmallIcon'

@@ -10,8 +10,8 @@ import { COLORS, LAYOUT } from 'StyleConfig'
 import Slider from 'react-native-slider'
 
 let icons = {
-  'play': require('../../../assets/img/play@2x.png'),
-  'stop': require('../../../assets/img/pause@2x.png')
+  'play': require('../../../assets/img/audioElement/play.png'),
+  'stop': require('../../../assets/img/audioElement/pause.png')
 }
 
 class guideAudioList extends Component {
