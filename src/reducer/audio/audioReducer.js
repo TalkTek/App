@@ -27,17 +27,28 @@ import {
   SAVE_PREVIOUS_KEY_SUCCESS,
   PLAY_SUCCESS,
   PAUSE_SUCCESS,
-  UPDATE_CP_AUDIO_ISDOWNLOADED,
+  UPDATE_CP_AUDIO_ISDOWNLOADED_SUCCESS,
   
   SET_LIKE_EVALUATION_ON_CAPSULE_SUCCESS,
   REMOVE_LIKE_EVALUATION_ON_CAPSULE_SUCCESS,
+
+  SET_AUDIO_SOURCE_SUCCESS
 } from './audioTypes'
+
+import {
+  DOWNLOAD_CP_AUDIO_SUCCESS,
+  GET_DOWNLOADED_CP_AUDIO_SUCCESS,
+  REMOVE_DOWNLOADED_CP_AUDIO_SUCCESS
+} from '../download/downloadTypes'
+
+import { getAudioCapsules } from './audioSelector'
 /* eslint-disable*/
 
 const initialState = {
   isPlayed: false, // user already play audio or not ?
   isPlaying: false,
   capsules: {},
+  downloadedcapsules: {},
   isCpAudioLoaded: false,
   previousKey:{
     father: '',
@@ -62,7 +73,8 @@ const initialState = {
       sec: '',
     },
   },
-  isAudioPopOutBarActive: false
+  isAudioPopOutBarActive: false,
+  audioSource: 'local'
 }
 
 export default createReducder({
@@ -114,20 +126,22 @@ export default createReducder({
   [ADD_COLOR_SUCCESS]: (state, action) => {
     let parentKey = action.payload.parentKey
     let childKey = action.payload.childKey
+    let targetCapsules = state.audioSource === 'remote' ? state.capsules : state.downloadedcapsules
     let finalCapsules = {
       audios: {
-        ...state.capsules[parentKey].audios,
+        ...targetCapsules[parentKey].audios,
         [childKey]: {
-          ...state.capsules[parentKey].audios[childKey],
+          ...targetCapsules[parentKey].audios[childKey],
           active: true
         }
       },
-      title: state.capsules[parentKey].title,
+      title: targetCapsules[parentKey].title,
     }
-    return {
+    let capsulesNeedToChange = state.audioSource === 'remote' ? 'capsules' : 'downloadedcapsules'
+     return {
       ...state,
-      capsules: {
-        ...state.capsules,
+      [capsulesNeedToChange]: {
+        ...targetCapsules,
         [parentKey]: finalCapsules
       }
     }
@@ -135,20 +149,22 @@ export default createReducder({
   [REMOVE_COLOR_SUCCESS]: (state, action) => {
     let parentKey = action.payload.parentKey
     let childKey = action.payload.childKey
+    let targetCapsules = state.audioSource === 'remote' ? state.capsules : state.downloadedcapsules
     let finalCapsules = {
       audios: {
-        ...state.capsules[parentKey].audios,
+        ...targetCapsules[parentKey].audios,
         [childKey]: {
-          ...state.capsules[parentKey].audios[childKey],
+          ...targetCapsules[parentKey].audios[childKey],
           active: false
         }
       },
-      title: state.capsules[parentKey].title,
+      title: targetCapsules[parentKey].title,
     }
+    let capsulesNeedToChange = state.audioSource === 'remote' ? 'capsules' : 'downloadedcapsules'
     return {
       ...state,
-      capsules: {
-        ...state.capsules,
+      [capsulesNeedToChange]: {
+        ...targetCapsules,
         [parentKey]: finalCapsules
       }
     }
@@ -201,22 +217,38 @@ export default createReducder({
       isPlaying: false
     }
   },
-  [UPDATE_CP_AUDIO_ISDOWNLOADED]: (state, {payload}) => {
-    const {parentKey, id, url} = payload
-    console.log(state)
+  [UPDATE_CP_AUDIO_ISDOWNLOADED_SUCCESS]: (state, {payload}) => {
+    const {parentKey, id, isdownloaded} = payload
     let capsules = Object.assign({}, state.capsules)
-    if(url === null) {
-      console
-      capsules[parentKey].audios[payload.childKey].url = capsules[parentKey].audios[payload.childKey].downloaded
-      capsules[parentKey].audios[payload.childKey].downloaded = null
-    }
-    else {
-      capsules[parentKey].audios[id].downloaded = capsules[parentKey].audios[id].url
-      capsules[parentKey].audios[id].url = url
-    }
+    console.log(capsules)
+    capsules[parentKey].audios[id].downloaded = isdownloaded
     return {
       ...state,
       capsules
+    }
+  },
+  [DOWNLOAD_CP_AUDIO_SUCCESS]: (state, { payload }) => {
+    return {
+      ...state,
+      downloadedcapsules: payload.capsules
+    }
+  },
+  [GET_DOWNLOADED_CP_AUDIO_SUCCESS]: (state, { payload }) => {
+    return {
+      ...state,
+      downloadedcapsules: payload.capsules
+    }
+  },
+  [REMOVE_DOWNLOADED_CP_AUDIO_SUCCESS]: (state, { payload }) => {
+    return {
+      ...state,
+      downloadedcapsules: payload.capsules
+    }
+  },
+  [SET_AUDIO_SOURCE_SUCCESS]: (state, { payload }) => {
+    return {
+      ...state,
+      audioSource: payload
     }
   }
 }, initialState)

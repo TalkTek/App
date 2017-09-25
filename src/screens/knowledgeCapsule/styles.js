@@ -55,5 +55,20 @@ export default {
   capAudioTextNotPlaying: {
     width: screenWidth * 0.65,
     marginRight: 5
+  },
+  fabStyle: {
+    opacity: 0.9,
+    position: 'absolute',
+    padding: 5,
+    right: 30,
+    bottom: -10,
+    minWidth: 70,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    shadowColor: 'rgba(0,0,0,0.2)',
+    shadowOffset: { width: 0, height: 1 },
+    shadowRadius: 5,
+    shadowOpacity: 10,
+    zIndex: 5
   }
 }
