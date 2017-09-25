@@ -3,7 +3,7 @@
 type UserType = { avatarUrl: string|null, email: string, from: string, uid: string }
 
 export type ActionType = 
-    { type: 'MEMBER_STATE_GET', payload: { uid: string } }
+    { type: 'GET_MEMBER_STATE', payload: { uid: string } }
   | { type: 'CHANGE_MEMBER_STATE', payload: UserType }
   | { type: 'LOGOUT_MEMBER' }
   | { type: 'LOGIN_MEMBER', payload: { post: UserType } }

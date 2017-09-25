@@ -14,8 +14,8 @@ import {
   MEMBER_FAIL,
   MEMBER_SUCCESS,
   GET_MEMBER_INFO,
-  MEMBER_STATE_GET_SUCCESS,
-  MEMBER_STATE_GET_FAILURE,
+  GET_MEMBER_STATE_SUCCESS,
+  GET_MEMBER_STATE_FAILURE,
   CREATE_MEMBER,
   LOGIN_MEMBER,
   LOGIN_MEMBER_EMAIL,
@@ -54,9 +54,9 @@ function * getMemberInfo () {
     let member = yield call(() => MemberAPI.getMemberInfo(uid))
     if (member) {
       // yield put({type: CHANGE_MEMBER_STATE, payload: {...member, uid}})
-      yield put({type: MEMBER_STATE_GET_SUCCESS, payload: {...member, uid}})
+      yield put({type: GET_MEMBER_STATE_SUCCESS, payload: {...member, uid}})
     } else {
-      yield put({ type: MEMBER_STATE_GET_FAILURE })
+      yield put({ type: GET_MEMBER_STATE_FAILURE })
     }
   }
 }
@@ -64,7 +64,7 @@ function * getMemberInfo () {
 function * createMemberFlow () {
   while (true) {
     const { payload: { email, password } } = yield take(CREATE_MEMBER)
-    let res = yield call(() => MemberAPI.registerMember(email, password))
+    let res = yield call(MemberAPI.registerMember, email, password)
     yield call(() => resStatus(res))
   }
 }
@@ -80,8 +80,8 @@ function * loginMemberFlow () {
 function * loginMemberEmailFlow () {
   while (true) {
     const { payload: {email, password} } = yield take(LOGIN_MEMBER_EMAIL)
-    let res = yield call(() => MemberAPI.loginMemberEmail(email, password))
-    yield call(() => resStatus(res))
+    let res = yield call(MemberAPI.loginMemberEmail, email, password)
+    yield call(resStatus, res)
   }
 }
 
@@ -138,3 +138,9 @@ export default [
   fork(sendFeedBackFlow),
   fork(sendResetPasswordEmail)
 ]
+
+export {
+  createMemberFlow,
+  loginMemberEmailFlow,
+  resStatus
+}

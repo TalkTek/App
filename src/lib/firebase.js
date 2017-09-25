@@ -9,4 +9,4 @@ if (__DEV__) {
 
 export const database = firebase.database()
 export const auth = firebase.auth()
-export const storage = firebase.storage()
+// export const storage = firebase.storage()

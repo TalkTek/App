@@ -56,7 +56,7 @@ class MemberAPI extends FirebaseDB {
   }
 
   async loginMemberEmail (email, password) {
-    console.log(auth)
+    // console.log(auth)
     try {
       let user = await auth.signInWithEmailAndPassword(email, password)
       return user
