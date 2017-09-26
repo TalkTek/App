@@ -28,6 +28,9 @@ import { H4 } from '../../components/text'
 import { Button } from '../../components/button'
 import {auth} from '../../lib/firebase'
 import TabChager from './component/TabChanger'
+import KnowLedgeCapsule from '../knowledgeCapsule/index'
+import TalkList from '../talkList'
+import Commnet from '../talkContent/comment'
 
 const { width: screenWidth } = Dimensions.get('window')
 
@@ -40,6 +43,10 @@ const { width: screenWidth } = Dimensions.get('window')
   ga: bindActionCreators(analyticAction, dispatch)
 }))
 export default class MemberCenter extends Component {
+  state = {
+    index: 0
+  }
+
   listsData = {
     my: [{
       key: 'iconmyTalk',
@@ -155,16 +162,42 @@ export default class MemberCenter extends Component {
     )
   }
 
-  render() {
-    return (
-      <Container style={styles.container}>
-        <View style={{flex: 0.65}}>
-          {this._renderUserAvater()}
-          <TabChager />
-        </View>
-        <Content style={{flex: 1}}>
-          <View style={styles.container}>
-              <Listitem listsData={this.listsData}/>
+  _onChange = (index: number) => {
+    this.setState({
+      index
+    })
+  }
+
+  _renderContent() {
+    switch(this.state.index) {
+      case 0:
+        return (
+          <View>
+            <H4>一些簡介</H4>
+          </View>
+        )
+      case 1:
+        return (
+          <View>
+            <TalkList />
+          </View>
+        )
+      case 2:
+        return (
+          <View>
+            <KnowLedgeCapsule />
+          </View>
+        )
+      case 3:
+        return (
+          <View>
+            <Commnet />
+          </View>
+        )
+      case 4:
+        return (
+          <View>
+            <Listitem listsData={this.listsData}/>
             {
               this.props.memberUid
               &&
@@ -178,6 +211,23 @@ export default class MemberCenter extends Component {
                 style={styles.logout}
                 />  
             }
+          </View>
+        )
+      default:
+        break
+    }
+  }
+
+  render() {
+    return (
+      <Container style={styles.container}>
+        <View style={{flex: 0.65}}>
+          {this._renderUserAvater()}
+          <TabChager onChange={this._onChange} />
+        </View>
+        <Content style={{flex: 1}}>
+          <View style={styles.container}>
+            {this._renderContent()}
           </View>
         </Content>
       </Container>

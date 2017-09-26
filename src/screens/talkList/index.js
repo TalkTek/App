@@ -28,12 +28,12 @@ const { width } = Dimensions.get('window')
 
 export default class TalkList extends Component {
   render () {
-    const { navigate } = this.props.navigation
+    // const { navigate } = this.props.navigation
     return (
       <Container>
         <Content style={styles.content}>
           <TouchableOpacity
-            onPress={() => navigate('TalkContent')}
+            onPress={() => {}}
           >
             <Card style={styles.cardContainer}>
               <CardItem style={styles.cardItem}>

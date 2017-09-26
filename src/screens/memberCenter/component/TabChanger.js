@@ -11,7 +11,6 @@ const style = {
   wrapper: {
   },
   btnText: {
-    textAlign: 'center', 
     marginTop: 5
   },
   spaceAround: {
@@ -25,6 +24,11 @@ export default class TabChanger extends Component {
   state = {
     index: 0
   }
+
+  _events = {
+    change: () => {}
+  }
+
   _lists = [
     { 
       active: require('../../../assets/img/tab_info_icon_active.png'), 
@@ -54,10 +58,16 @@ export default class TabChanger extends Component {
   ]
 
   _changeTab = (index) => {
+    this._events.change(index)
     this.setState({
       index
     })
   }
+
+  componentWillMount() {
+    this._events.change = this.props.onChange
+  }
+
   render() {
     return (
       <View style={[LAYOUT.horizontal, style.spaceAround, style.wrapper]} >
@@ -73,7 +83,6 @@ export default class TabChanger extends Component {
                       <H5 style={style.btnText}>{src.text}</H5>
                     </View>
                   }
-                  style={style.spaceAround}
                 />
               </View>
             )
