@@ -54,12 +54,12 @@ class ScrollBanner extends Component {
     this.startTimer()
   }
   
-  _animateScroll = () => {
+  _animateScroll = async () => {
     const {index} = this.state
     const imgList = this.props.source
-    this._changeImg()
-    this.state.scrollPercent.setValue(width*(index>imgList.length-1?0:index)*-1)
-    this.scrollAnimate()
+    await this._changeImg()
+    await this.state.scrollPercent.setValue(width*(index>imgList.length-1?0:index)*-1)
+    await this.scrollAnimate()
   }
 
   scrollAnimate() {
