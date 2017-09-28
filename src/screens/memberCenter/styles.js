@@ -44,6 +44,12 @@ const style: Object = {
     flexDirection: 'row',
     justifyContent: 'center',
     borderRadius: 8
+  },
+  padding: {
+    padding: 30
+  },
+  marginTop: {
+    marginTop: 10
   }
 }
 

@@ -24,8 +24,9 @@ import ListIcon from '../../components/img/icon/SmallIcon'
 import OpenIcon from '../../components/img/icon/LargeIcon'
 import Avatar from '../../components/img/Thumbnail/LargeThumb'
 import Listitem from './Listitem'
-import { H4 } from '../../components/text'
+import { H3, H4 } from '../../components/text'
 import { Button } from '../../components/button'
+import { COLORS } from 'StyleConfig'
 import {auth} from '../../lib/firebase'
 import TabChager from './component/TabChanger'
 import KnowLedgeCapsule from '../knowledgeCapsule/index'
@@ -172,8 +173,9 @@ export default class MemberCenter extends Component {
     switch(this.state.index) {
       case 0:
         return (
-          <View>
-            <H4>一些簡介</H4>
+          <View style={styles.padding}>
+            <H3 bold color={COLORS.green}>簡介</H3>
+            <H4 style={styles.marginTop}>一些簡介</H4>
           </View>
         )
       case 1:
