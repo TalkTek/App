@@ -31,9 +31,11 @@ export default {
   },
   capUnit: {
     paddingVertical: 16,
+    paddingHorizontal: 16,
     borderBottomColor: 'rgb(224, 224, 224)',
     borderBottomWidth: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent: 'space-around'
   },
   capPlayPauseButton: {
     marginRight: 8
