@@ -21,6 +21,7 @@ import {
   Modal,
   Stack
 } from 'react-native-router-flux'
+import { Root } from 'native-base'
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
 import Launch from './screens/Launch'
 import PlayAudioScreen from './screens/playAudio'
@@ -50,6 +51,7 @@ class App extends Component {
 
     return (
       <Provider store={store}>
+        <Root>
         <View style={{ flex: 1 }}>
           <StatusBar
             barStyle='light-content'
@@ -110,6 +112,7 @@ class App extends Component {
             </Overlay>
           </Router>
         </View>
+        </Root>
       </Provider>
     )
   }

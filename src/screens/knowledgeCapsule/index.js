@@ -28,10 +28,12 @@ import {
   List,
   ListItem,
   Footer,
-  Image
+  Image,
+  ActionSheet
 } from 'native-base'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import styles from './styles'
-import Icon from '../../components/img/icon/SmallIcon'
+import Icon from '../../components/img/icon/XLIcon'
 import ScrollBanner from '../../components/ScrollBanner'
 import { H3, H4 } from '../../components/text'
 import { LAYOUT } from 'StyleConfig'
@@ -49,6 +51,7 @@ let buttons = {
   'expand': require('../../assets/img/knowledgeCapsule/expend.png'),
   'playable': require('../../assets/img/audioElement/playing1.png')
 }
+let cover = require('../../assets/img/twice.png')
 
 @connect(state => ({
   isPlaying: state.audio.isPlaying,
@@ -120,7 +123,7 @@ export class KnowledgeCapsule extends Component {
     }
   }
 
-  _callShare(capsuleId, parentId) {
+  _callShare = (capsuleId, parentId) => {
     // const token = btoa(`{"parentId": "${capsuleId}", "capsuleId": "${parentId}"}`)
     const token = jwt.encode({
       capsuleId,
@@ -145,11 +148,11 @@ export class KnowledgeCapsule extends Component {
       CapUnit = Object.keys(capsules).map((parentKey, i) => {
         return (
           <View key={i} style={styles.capContainer}>
-            <View style={styles.capTitle}>
+            {/* <View style={styles.capTitle}>
               <H3>
                 {capsules[parentKey].title}
               </H3>
-            </View>
+            </View> */}
               {
                 Object.keys(capsules[parentKey].audios).map((childKey, j) => {
                   let audio = capsules[parentKey].audios[childKey]
@@ -162,9 +165,21 @@ export class KnowledgeCapsule extends Component {
                       >
                         <View style={styles.capAudio}>
                           <Icon
-                            source={audio.active ? buttons.playing : buttons.playable}
+                            source={cover}
                             marginRight={12}
-                          />
+                            style={{justifyContent: 'space-around'}}
+                          >
+                            {/* <Icon
+                              source={audio.active ? buttons.playing : buttons.playable}
+                              style={{opacity: 0.6}}
+                            /> */}
+                            <Ionicons
+                              style={{textAlign: 'center'}}
+                              name={audio.active ? 'ios-more' : 'ios-play'}
+                              size={40}
+                              color='#fff'
+                            />
+                          </Icon>
                           <View style={LAYOUT.vertical}>
                             <H3 style={audio.active ? styles.capAudioTextPlaying : styles.capAudioTextNotPlaying}>
                               {audio.audioName}
@@ -177,9 +192,30 @@ export class KnowledgeCapsule extends Component {
                       </TouchableHighlight>
                       <TouchableHighlight 
                         underlayColor="#fff" 
+                        style={{justifyContent: 'center'}}
                         testID={`floatActionButton${childKey}`}
                         onPress={() => { 
-                          this.setState({ fabActive: audio.id, fabScale: new Animated.Value(0) }, 
+                          ActionSheet.show(
+                            {
+                              options: ['下載', '分享', '取消'],
+                              cancelButtonIndex: 2,
+                              title: '功能',
+                              tintColor: 'rgb(31, 191, 179)'
+                            },
+                            buttonIndex => {
+                              switch (buttonIndex){
+                                case 0:
+                                  console.log(audio.audioName + ' download') 
+                                  this.props.actions.downloadCpAudio(audio) 
+                                  break
+                                case 1:
+                                  console.log(audio.audioName + 'share')
+                                  this._callShare(audio.id, audio.parentKey)
+                                  break
+                              }
+                            }
+                          )
+                          {/* this.setState({ fabActive: audio.id, fabScale: new Animated.Value(0) }, 
                             () => 
                               Animated.spring( 
                                 this.state.fabScale, 
@@ -189,10 +225,10 @@ export class KnowledgeCapsule extends Component {
                                   bounciness: 12 
                                 } 
                               ).start() 
-                          ) 
+                          )  */}
                         }}>
                         <View>
-                          { 
+                          {/* { 
                             audio.id && 
                             this.state.fabActive === audio.id && 
                             <Animated.View style={{ transform: [{ scale: this.state.fabScale }], ...styles.fabStyle}}> 
@@ -215,11 +251,8 @@ export class KnowledgeCapsule extends Component {
                                 </View> 
                               </TouchableHighlight>
                             </Animated.View> 
-                          } 
-                          <Icon 
-                            source={buttons.playing}
-                            style={styles.capPlayPauseButtonImage}
-                          />
+                          }  */}
+                          <Ionicons color='gray' style={{textAlign: 'center'}} name='ios-more' size={40}/>
                           </View>
                         </TouchableHighlight>
                     </View>
